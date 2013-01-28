@@ -1,0 +1,22 @@
+# Translation for dbFin YAWL Gnome-Shell extension
+# Copyright (C) 2013 Vadim@dbFin.com
+# This file is distributed under the same license as dbFin YAWL Gnome-Shell Extension.
+# Vadim @ dbFin <vadim@dbfin.com>, 2013
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: YAWL 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-01-23 00:38-0600\n"
+"PO-Revision-Date: 2013-01-23 00:38-0600\n"
+"Last-Translator: Vadim @ dbFin <vadim@dbfin.com>\n"
+"Language-Team: dbFin\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/prefs.js:40
+msgid "Hello!"
+msgstr "Привет!"

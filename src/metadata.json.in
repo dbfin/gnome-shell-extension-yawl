@@ -1,0 +1,11 @@
+{
+    "shell-version": ["3.6"],
+    "uuid": "@UUID@",
+    "name": "YAWL (Yet Another Window List)",
+    "version": @EXTENSIONVERSION@,
+    "original-author": "Vadim@dbFin.com",
+    "url": "@EXTENSIONURL@",
+    "description": "YAWL (Yet Another Window List) Gnome-Shell Extension",
+    "gettext-domain": "@EXTENSIONID@",
+    "settings-schema": "@GSCHEMANAME@"
+}

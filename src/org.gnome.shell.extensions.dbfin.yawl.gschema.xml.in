@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gnome-shell-extension-yawl">
+  <schema id="org.gnome.shell.extensions.dbfin.yawl" path="/org/gnome/shell/extensions/dbfin/yawl/">
+    <key name="panel-name" type="s">
+      <default>'YAWL'</default>
+      <_summary>Alternative panel name.</_summary>
+      <_description>If not empty, it contains the panel name.</_description>
+    </key>
+  </schema>
+</schemalist>
+

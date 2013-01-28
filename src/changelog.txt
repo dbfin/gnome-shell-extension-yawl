@@ -1,0 +1,5 @@
+v0.1	2013-01-27
+    	- Initial commit: empty extension
+		- Support for autogen and make
+    	- Support for GSettings and Localization
+		- Support for debuggin and logging

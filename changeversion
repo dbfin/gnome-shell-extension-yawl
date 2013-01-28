@@ -1,0 +1,87 @@
+#!/bin/bash --
+#
+# This script changes the version in all scripts and include files where necessary
+# It also updates po files accordingly
+# Useful when the version of the extension changes
+#
+# Copyright (c) 2012 Vadim@dbFin <vadim@dbfin.com>
+# This file is distributed under the same license as dbFin YAWL Gnome-Shell Extension.
+#
+# Notes:
+#   Also adds messages to src/changelog.txt for current version
+#   Error messages are kept in changeversion.log file
+#
+# Special note about po/*.po files:
+#   When a new version of the extension is out use this script to substitute
+#   the new version tag into all files where necessary, including script pos
+#   that can further be used to generate .po files in the po/ subdirectory.
+#   After succesfully running this script manually delete all po/*.po files,
+#   and run bash pos: this will regenerate all fresh copies of po/*.po files
+#   WITHOUT any translations (but the resulting po/.po files will be in sync
+#   with the current version of the extension). Script pos itself is renewed
+#   by this script to generate fresh .po files with the new version tags.
+#   In this case scenario ALL YOUR PREVIOUS TRANSLATIONS WILL BE LOST: IT IS
+#   ASSUMED that you USE SOME EXTERNAL TRANSLATION SOFTWARE that keeps track
+#   of all your previous translations, and can automatically substitute them
+#   into new fresh and empty .po files. Note that script pos will regenerate
+#   only those .po files that were removed.
+#   IF YOU ARE NOT USING such software you can uncomment block of code below
+#   that will substitute the new version tag into all po/*.po files as well,
+#   it will also update .po files using msgmerge: previous translations plus
+#   fuzzy matching (I guess?)
+#
+
+echo 'Changing version'
+
+# getting older version
+vd=$( cat include.mk | grep '^\s*extensionversion\s*=\s*' )
+vd=${vd#*extensionversion = }
+
+read -p "Older version: [$vd] " v
+if [ -z "$v" ]; then v="$vd"; fi
+read -p "Current version: " vn
+
+# logging errors
+(
+
+f='include.mk'
+echo "Modifying $f..."
+sed -i "s|\(^\s*extensionversion\s*=\s*\)$v|\1$vn|" $f && echo 'Done.' || echo -e "Cannot modify \e[0;31m$f\e[0m: refer to changeversion.log for details"
+
+f='configure.ac'
+echo "Modifying $f..."
+sed -i "s|\(^\s*AC_INIT\s*(\s*\[\s*gnome-shell-extension-yawl\s*\]\s*,\s*\[\s*\)$v\(\s*\][^)]*)\)|\1$vn\2|" $f && echo 'Done.' || echo -e "Cannot modify \e[0;31m$f\e[0m: refer to changeversion.log for details"
+
+f='pos'
+echo "Modifying $f..."
+sed -i "s|\(s\|PACKAGE\s\+VERSION\|YAWL\s\+\)$v\(\|\)|\1$vn\2|" $f && echo 'Done.' || echo -e "Cannot modify \e[0;31m$f\e[0m: refer to changeversion.log for details"
+
+##
+# this block of code changes the version in po/.po files and updates them
+#   the new version of the extension may have different or additional strings
+#   to translate: we use msgmerge to update them
+##
+#xgettext -k_ -kN_ -L Java -f po/POTFILES.in -o po/messages.pot
+#while read -d '' f; do
+#  echo "Modifying ${f#*po\/}..."
+#  sed -i "s|\(Project-Id-Version:\s*YAWL\s\+\)$v|\1$vn|" $f && echo 'Done.' || echo -e "Cannot modify \e[0;31m${f#*po\/}\e[0m: refer to changeversion.log for details"
+#  msgmerge --width=120 --update $f po/messages.pot
+#done < <( find ./po/ -type f -name '*.po' -print0 )
+
+# logging errors
+) 2> >( ( echo "$(date)"; while read e; do echo "$e"; done ) >>changeversion.log )
+
+# working with src/changelog.txt (if it exists)
+if [ -f src/changelog.txt ]; then
+  m=$( cat src/changelog.txt | grep "^v$vn\s\+.*" )
+  if [ -z "$m" ]; then
+    read -p 'src/changelog.txt does not contain messages for current version, would you like to add some? ' yn
+    if [[ "$yn" =~ ^[yY]$ ]]; then
+		echo -e "v$vn\t$(date +%Y-%m-%d)" >>src/changelog.txt
+    	while read l; do
+    		echo -e "    \t- $l" >>src/changelog.txt
+    	done
+    fi
+  fi
+fi
+

@@ -1,0 +1,46 @@
+#!/bin/bash --
+#
+# This script creates .po files in po/ subdirectory given the list of languages
+# in po/LINGUAS and list of source files in po/POTFILES.in
+#
+# Copyright (c) 2012 Vadim@dbFin <vadim@dbfin.com>
+# This file is distributed under the same license as dbFin YAWL Gnome-Shell Extension.
+#
+# Notes:
+#   A new .po file is generated only if it does not exist in po/
+#   Error messages are kept in pos.log file
+#
+
+# check current version of extension against the version of this script
+vd=$( cat include.mk | grep '^\s*extensionversion\s*=\s*' )
+vd=${vd#*extensionversion = }
+v="$( cat $0 | grep 'PACKAGE\s*VERSION|YAWL\s*[^|]*' )"
+v="$( echo $v | sed 's|^.*YAWL\s*\(.*\)\|.*|\1|' )"
+if [ ! "$vd" == "$v" ]; then
+	echo -e "\e[0;31mError\e[0m: the version of this script is $v, the current version of the extension is $vd, please run bash changeversion"
+	exit 1
+fi
+
+while read l; do
+  if [ -f po/$l.po ]; then
+  	echo -e "\e[0;33mpo/$l.po\e[0m already exists: delete the file if you want a fresh copy"
+  else
+  	xgettext -k_ -kN_ -L Java -f po/POTFILES.in -o po/$l.po 2> >( while read e; do echo "$(date): $e"; done >> ./pos.log ) \
+          && echo -e "\e[0;32mpo/$l.po\e[0m was created successfully, ready to be translated" \
+          && sed -i \
+             -e 's|SOME DESCRIPTIVE TITLE.|Translation for dbFin YAWL Gnome-Shell extension|' \
+             -e 's|YEAR THE PACKAGE'"'"'S COPYRIGHT HOLDER|'"$(date +%Y)"' Vadim@dbFin.com|' \
+             -e 's|the PACKAGE package|dbFin YAWL Gnome-Shell Extension|' \
+             -e 's|FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.|Vadim @ dbFin <vadim@dbfin.com>, '"$(date +%Y)"'|' \
+             -e 's|PACKAGE VERSION|YAWL 0.1|' \
+             -e 's|YEAR-MO-DA HO:MI+ZONE|'"$(date +%Y-%m-%d\ %H:%M%z)"'|' \
+             -e 's|FULL NAME <EMAIL@ADDRESS>|Vadim @ dbFin <vadim@dbfin.com>|' \
+             -e 's|LANGUAGE <LL@li.org>|dbFin|' \
+             -e 's|charset=CHARSET|charset=UTF-8|' \
+             -e 's|||' \
+             -e 's|||' \
+		  po/$l.po 2> >( while read e; do echo "$(date): $e"; done >> ./pos.log ) \
+		  || echo -e "\e[0;31mpo/$l.po\e[0m: failed to modify file, check log file pos.log"
+  fi
+done < po/LINGUAS
+

@@ -1,0 +1,18 @@
+#!/bin/bash --
+
+[ ! -d ./Build ] || rm -rf ./Build
+
+mkdir -p ./Build && cd Build || [ echo 'Cannot create Build directory' && exit 1 ]
+
+v=0
+while [ ! "$v" == "1" -a ! "$v" == "2" ]; do
+  echo -e "\nChoose installation type:\n\t1. Local\n\t2. Global (you may need su privilegies)"
+  read -p 'Your choice: ' v
+done
+
+if [ $v -eq 1 ]; then
+  ../autogen.sh --prefix=$(readlink -f ~/.local) && make && make install
+else
+  ../autogen.sh --prefix=/usr && make && make install
+fi
+
