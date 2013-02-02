@@ -3,6 +3,7 @@ include ../include.mk
 dist_extension_DATA = \
 	convenience2.js \
 	dbfindebug.js \
+	dbfinmovecenter.js \
 	dbfinutils.js \
 	dbfinyawl.js \
 	extension.js \

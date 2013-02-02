@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="gnome-shell-extension-yawl">
   <schema id="org.gnome.shell.extensions.dbfin.yawl" path="/org/gnome/shell/extensions/dbfin/yawl/">
-    <key name="panel-name" type="s">
-      <default>'YAWL'</default>
-      <_summary>Alternative panel name.</_summary>
-      <_description>If not empty, it contains the panel name.</_description>
+    <key name="move-clock" type="b">
+      <default>false</default>
+      <_summary>Move clock to the right.</_summary>
+      <_description>If true the clock is moved to the right.</_description>
     </key>
   </schema>
 </schemalist>
-

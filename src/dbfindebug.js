@@ -45,27 +45,29 @@ const dbFinYAWLDebug = new Lang.Class({
         msg = '' + msg;
 		if (!msg.length) return;
 		let msgs = [];
-		let (level = this.level) {
+		let (level = this.level, levelnew = this.level) {
 			msg.split('\n').forEach(function (s) {
 				while (s.length) {
 					if (s[0] == '>') {
 						level++;
+                        levelnew++;
 						s = s.substring(1);
 					}
 					else if (s[0] == '<') {
-						if (level > 0) {
-							level--;
+						if (levelnew > 0) {
+							levelnew--;
 						}
 						s = s.substring(1); // in any case, whether level has been decreased or not
 					}
 					else {
 						msgs.push([ level, s ]);
+                        level = levelnew;
 						break;
 					}
 				} // while (s.length)
 			}); // msg.split().forEach
 			this.level = level;
-		} // let (level)
+		} // let (level, levelnew)
 		if (!msgs.length) return;
 		let (gfLog = null, gfosLog = null, gbosLog = null) {
 			if (DEBUGLEVEL) {
