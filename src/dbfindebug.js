@@ -49,12 +49,15 @@ const dbFinYAWLDebug = new Lang.Class({
 			msg.split('\n').forEach(function (s) {
 				while (s.length) {
 					if (s[0] == '>') {
-						level++;
                         levelnew++;
 						s = s.substring(1);
 					}
 					else if (s[0] == '<') {
-						if (levelnew > 0) {
+						if (level > 0) {
+							level--;
+							levelnew--;
+						}
+						else if (levelnew > 0) {
 							levelnew--;
 						}
 						s = s.substring(1); // in any case, whether level has been decreased or not

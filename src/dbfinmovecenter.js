@@ -34,35 +34,57 @@ const dbFinMoveCenter = new Lang.Class({
         _D('>dbFinMoveCenter._init()');
         this._settings = Convenience.getSettings();
 		this._signals = new dbFinUtils.Signals();
-        this._movecenter();
-		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::move-clock',
-                                    callback: this._movecenter, scope: this });
+		this._panelbuttonstoggle = new dbFinUtils.PanelButtonToggle();
+        this._moveCenter();
+        this._hideActivities();
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::move-center',
+                                    callback: this._moveCenter, scope: this });
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::hide-activities',
+                                    callback: this._hideActivities, scope: this });
         _D('<dbFinMoveCenter._init()');
     },
 
     destroy: function() {
         _D('>dbFinMoveCenter.destroy()');
+        if (this._panelbuttonstoggle) {
+            this._panelbuttonstoggle.destroy(); // this should restore Activities button
+            this._panelbuttonstoggle = null;
+        }
         if (this._signals) {
             this._signals.destroy(); // this should disconnect everything and move central panel back
             this._signals = null;
-            Main.panel._updatePanel();
+            this._updatePanel();
         }
         this._settings = null;
         _D('<dbFinMoveCenter.destroy()');
     },
 
-	_movecenter: function () {
-        _D('>dbFinMoveCenter._movecenter()');
-        if (this._settings.get_boolean('move-clock'))
+	_moveCenter: function () {
+        _D('>dbFinMoveCenter._moveCenter()');
+        if (this._settings.get_boolean('move-center'))
             this._signals.connectId('panel-allocate', { emitter: Main.panel.actor, signal: 'allocate',
                                                         callback: this._allocate, scope: this });
         else
             this._signals.disconnectId('panel-allocate');
-        Main.panel._updatePanel();
-        _D('<dbFinMoveCenter._movecenter()');
+        this._updatePanel();
+        _D('<dbFinMoveCenter._moveCenter()');
     },
 
-	// modified from ui/panel.js, class Panel
+    _hideActivities: function() {
+        _D('>dbFinMoveCenter._hideActivities()');
+        if (this._settings.get_boolean('hide-activities')) this._panelbuttonstoggle.hide('activities', 'left');
+        else this._panelbuttonstoggle.restore('activities');
+        _D('<dbFinMoveCenter._hideActivities()');
+    },
+
+	// GNOMENEXT: ui/panel.js, class Panel
+	_updatePanel: function() {
+        _D('>dbFinMoveCenter._updatePanel()');
+		Main.panel._updatePanel();
+        _D('<dbFinMoveCenter._updatePanel()');
+	},
+
+	// GNOMENEXT: modified from ui/panel.js, class Panel
     _allocate: function (actor, box, flags) {
         //_D('>dbFinMoveCenter._allocate()'); // This is called whenever GS needs to reallocate the panel, debug will cause lots of records
 		let (   w = box.x2 - box.x1, // what do we have?

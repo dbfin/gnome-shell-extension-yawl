@@ -45,11 +45,21 @@
  *						disconnectAllId()											Disconnect all signals with text IDs
  *						disconnectAll()												Disconnect all signals
  *
+ * PanelButtonToggle    hides and restores panel buttons with roles
+ *                  Methods:
+ *                      hide(role, panelid)                 hides button with role=('dateMenu', 'activities', ...)
+ *                                                          on panelid=('left', 'center', 'right')
+ *                      restore(role)                       restores previously hidden button with role
+ *                      restoreAll()						restores all previously hidden buttons
+ *
  */
 
 const Lang = imports.lang;
 
 const Clutter = imports.gi.Clutter;
+
+const Main = imports.ui.main;
+const SessionMode = imports.ui.sessionMode;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -93,7 +103,7 @@ function setBox(box, x1, y1, x2, y2) {
     box.y2 = y2;
 }
 
-/* class ArrayHash		array of pairs ( key, value )
+/* class ArrayHash: array of pairs [ key, value ]
  */
 const ArrayHash = new Lang.Class({
 	Name: 'dbFinUtils.ArrayHash',
@@ -258,10 +268,12 @@ const Signals = new Lang.Class({
 
     destroy: function() {
         _D('>dbFinUtils.Signals.destroy()');
-        this.disconnectAll();
-        this._signalsNoId = null;
-		this._signalsId.destroy();
-		this._signalsId = null;
+		if (this._signalsNoId && this._signalsId) {
+			this.disconnectAll();
+			this._signalsNoId = null;
+			this._signalsId.destroy();
+			this._signalsId = null;
+		}
         _D('<dbFinUtils.Signals.destroy()');
     },
 
@@ -325,5 +337,82 @@ const Signals = new Lang.Class({
 		this.disconnectAllNoId();
 		this.disconnectAllId();
         _D('<dbFinUtils.Signals.disconnectAll()');
+	}
+});
+
+/* class PanelButtonToggle    hides and restores panel buttons with roles
+*/
+const PanelButtonToggle = new Lang.Class({
+	Name: 'dbFinUtils.PanelButtonToggle',
+
+	_init: function() {
+        _D('>dbFinUtils.PanelButtonToggle._init()');
+        this._hiddenroles = new ArrayHash();
+        _D('<dbFinUtils.PanelButtonToggle._init()');
+	},
+
+	destroy: function() {
+        _D('>dbFinUtils.PanelButtonToggle.destroy()');
+		if (this._hiddenroles) {
+            this.restoreAll();
+            this._hiddenroles.destroy();
+            this._hiddenroles = null;
+		}
+        _D('<dbFinUtils.PanelButtonToggle.destroy()');
+	},
+
+	// GNOMENEXT: ui/sessionmode.js, ui/panel.js
+	hide: function(role, panelid) {
+        _D('>dbFinUtils.PanelButtonToggle.hide()');
+		if (!this._hiddenroles) {
+			_D('this._hiddenroles === null');
+	        _D('<dbFinUtils.PanelButtonToggle.hide()');
+			return;
+		}
+        let (panel = SessionMode._modes['user'].panel) {
+			let (i = panel[panelid].indexOf(role)) {
+				if (i == -1) {
+			        _D('<dbFinUtils.PanelButtonToggle.hide()');
+					return;
+				}
+				panel[panelid].splice(i, 1);
+				Main.panel._updatePanel();
+				this._hiddenroles.set(role, { 'panelid': panelid, 'index': i });
+			} // let (i)
+		} // let (panel)
+        _D('<dbFinUtils.PanelButtonToggle.hide()');
+	},
+
+	restore: function(role) {
+        _D('>dbFinUtils.PanelButtonToggle.restore()');
+		if (!this._hiddenroles) {
+			_D('this._hiddenroles === null');
+	        _D('<dbFinUtils.PanelButtonToggle.restore()');
+			return;
+		}
+		let (hr = this._hiddenroles.remove(role)) {
+			if (hr === undefined) {
+		        _D('<dbFinUtils.PanelButtonToggle.restore()');
+				return;
+			}
+			let (	panel = SessionMode._modes['user'].panel,
+			     	panelid = hr['panelid'],
+			     	i = hr['index']) {
+				if (i > panel[panelid].length) i = panel[panelid].length;
+				panel[panelid].splice(i, 0, role);
+				Main.panel._updatePanel();
+			} // let (panel, panelid, i)
+		} // let (hr)
+        _D('<dbFinUtils.PanelButtonToggle.restore()');
+	},
+
+	restoreAll: function() {
+        _D('>dbFinUtils.PanelButtonToggle.restoreAll()');
+		let (roles = this._hiddenroles.getKeys()) {
+			for (let i = roles.length - 1; i >= 0; --i) {
+				this.restore(roles[i]); // not optimal but stable
+			}
+		}
+        _D('<dbFinUtils.PanelButtonToggle.restoreAll()');
 	}
 });

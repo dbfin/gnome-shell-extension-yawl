@@ -35,14 +35,23 @@ function buildPrefsWidget() {
 	let (pagePanel = new Gtk.Grid({ margin: 7, row_spacing: 7, column_spacing: 7 }),
 	     pagePanelLabel = new Gtk.Label({ label: _("Panel") })) {
 
-		// Move clock
-		let (panelClockLabel = new Gtk.Label({ label: _("Move clock"), halign: Gtk.Align.START, hexpand: true }),
-             panelClockSwitch = new Gtk.Switch({ halign: Gtk.Align.END })) {
-            panelClockSwitch.set_active(widget._settings.get_boolean('move-clock'));
-			widget._settings.bind('move-clock', panelClockSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-            pagePanel.attach(panelClockLabel, 0, 0, 1, 1);
-            pagePanel.attach(panelClockSwitch, 1, 0, 1, 1);
-        } // let (panelClockLabel, panelClockSwitch)
+		// Move central panel
+		let (panelCenterLabel = new Gtk.Label({ label: _("Move central panel"), halign: Gtk.Align.START, hexpand: true }),
+             panelCenterSwitch = new Gtk.Switch({ halign: Gtk.Align.END })) {
+            panelCenterSwitch.set_active(widget._settings.get_boolean('move-center'));
+			widget._settings.bind('move-center', panelCenterSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+            pagePanel.attach(panelCenterLabel, 0, 0, 7, 1);
+            pagePanel.attach(panelCenterSwitch, 7, 0, 1, 1);
+        } // let (panelCenterLabel, panelCenterSwitch)
+
+		// Hide Activities button
+		let (panelHideActivitiesLabel = new Gtk.Label({ label: _("Hide Activities button"), halign: Gtk.Align.START, hexpand: true }),
+             panelHideActivitiesSwitch = new Gtk.Switch({ halign: Gtk.Align.END })) {
+            panelHideActivitiesSwitch.set_active(widget._settings.get_boolean('hide-activities'));
+			widget._settings.bind('hide-activities', panelHideActivitiesSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+            pagePanel.attach(panelHideActivitiesLabel, 0, 1, 7, 1);
+            pagePanel.attach(panelHideActivitiesSwitch, 7, 1, 1, 1);
+        } // let (panelHideActivitiesLabel, panelHideActivitiesSwitch)
 
 		widget.append_page(/* child = */pagePanel, /* tab_label = */pagePanelLabel);
 	} // let (pagePanel, pagePanelLabel)

@@ -6,8 +6,8 @@
 msgid ""
 msgstr "Project-Id-Version: YAWL 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 15:49-0600\n"
-"PO-Revision-Date: 2013-02-02 15:49-0600\n"
+"POT-Creation-Date: 2013-02-03 18:40-0600\n"
+"PO-Revision-Date: 2013-02-03 18:40-0600\n"
 "Last-Translator: Vadim @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -20,5 +20,9 @@ msgid "Panel"
 msgstr "Панель"
 
 #: src/prefs.js:39
-msgid "Move clock"
-msgstr "Передвинуть часы"
+msgid "Move central panel"
+msgstr "Сдвинуть центральную панель"
+
+#: src/prefs.js:48
+msgid "Hide Activities button"
+msgstr "Скрыть кнопку Обзор"
