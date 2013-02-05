@@ -24,22 +24,22 @@ const _D = dbFinDebug._D;
 var dbfinyawl = null;
 
 function init() {
-    _D('Initializing YAWL extension...');
+    _D('>Initializing YAWL extension...');
     Convenience.initTranslations();
-    _D('YAWL extension initialized');
+    _D('<YAWL extension initialized.');
 }
 
 function enable() {
-    _D('Enabling YAWL extension...');
+    _D('>Enabling YAWL extension...');
     dbfinyawl = new dbFinYAWL.dbFinYAWL();
-    _D('YAWL extension enabled');
+    _D('<YAWL extension enabled.');
 }
 
 function disable() {
-    _D('Disabling YAWL extension...');
+    _D('>Disabling YAWL extension...');
     if (dbfinyawl) {
         dbfinyawl.destroy();
         dbfinyawl = null;
     }
-    _D('YAWL extension disabled');
+    _D('<YAWL extension disabled.');
 }

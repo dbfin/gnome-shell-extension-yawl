@@ -30,7 +30,7 @@ const dbFinYAWL = new Lang.Class({
     _init: function() {
         _D('>dbFinYAWL._init()');
 		this._movecenter = new dbFinMoveCenter.dbFinMoveCenter();
-        _D('<dbFinYAWL._init()');
+        _D('<. . .');
     },
 
     destroy: function() {
@@ -39,6 +39,6 @@ const dbFinYAWL = new Lang.Class({
 			this._movecenter.destroy();
 			this._movecenter = null;
 		}
-        _D('<dbFinYAWL.destroy()');
+        _D('<. . .');
     }
 });

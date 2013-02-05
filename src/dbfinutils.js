@@ -47,8 +47,8 @@
  *
  * PanelButtonToggle    hides and restores panel buttons with roles
  *                  Methods:
- *                      hide(role, panelid)                 hides button with role=('dateMenu', 'activities', ...)
- *                                                          on panelid=('left', 'center', 'right')
+ *                      hide(role, panelid)					hides button with role=('dateMenu', 'activities', ...)
+ *															on panelid=('left', 'center', 'right')
  *                      restore(role)                       restores previously hidden button with role
  *                      restoreAll()						restores all previously hidden buttons
  *
@@ -106,14 +106,14 @@ function setBox(box, x1, y1, x2, y2) {
 /* class ArrayHash: array of pairs [ key, value ]
  */
 const ArrayHash = new Lang.Class({
-	Name: 'dbFinUtils.ArrayHash',
+	Name: 'dbFin.Utils.ArrayHash',
 
 	_init: function() {
         _D('>dbFinUtils.ArrayHash._init()');
 		this._keys = [];
 		this._values = [];
 		this.length = 0;
-        _D('<dbFinUtils.ArrayHash._init()');
+        _D('<. . .');
 	},
 
 	destroy: function() {
@@ -122,25 +122,25 @@ const ArrayHash = new Lang.Class({
 		this._keys = null;
 		this._values = null;
 		this.length = null;
-        _D('<dbFinUtils.ArrayHash.destroy()');
+        _D('<. . .');
 	},
 
 	getKeys: function() {
         _D('>dbFinUtils.ArrayHash.getKeys()');
-        _D('<dbFinUtils.ArrayHash.getKeys()');
+        _D('<. . .');
 		return this._keys.slice();
 	},
 
 	getValues: function() {
         _D('>dbFinUtils.ArrayHash.getValues()');
-        _D('<dbFinUtils.ArrayHash.getValues()');
+        _D('<. . .');
 		return this._values.slice();
 	},
 
 	get: function(k) {
         _D('>dbFinUtils.ArrayHash.get()');
 		let (i = this._keys.indexOf(k)) {
-	        _D('<dbFinUtils.ArrayHash.get()');
+	        _D('<. . .');
 			if (i == -1) return undefined;
 			else return this._values[i];
 		}
@@ -158,32 +158,32 @@ const ArrayHash = new Lang.Class({
 				this._values[i] = v;
 			}
 		}
-        _D('<dbFinUtils.ArrayHash.set()');
+        _D('<. . .');
 	},
 
 	setArray: function(kvs) {
         _D('>dbFinUtils.ArrayHash.setArray()');
 		kvs.forEach(Lang.bind(this, function (kv) { this.set(kv[0], kv[1]); }));
-        _D('<dbFinUtils.ArrayHash.setArray()');
+        _D('<. . .');
 	},
 
 	setMap: function(ks, map) {
         _D('>dbFinUtils.ArrayHash.setMap()');
 		ks.forEach(Lang.bind(this, function (k) { this.set(k, map(k)); }));
-        _D('<dbFinUtils.ArrayHash.setMap()');
+        _D('<. . .');
 	},
 
 	remove: function(k) {
         _D('>dbFinUtils.ArrayHash.remove()');
 		let (i = this._keys.indexOf(k)) {
 			if (i == -1) {
-		        _D('<dbFinUtils.ArrayHash.remove()');
+		        _D('<. . .');
 				return undefined;
 			}
 			else {
 				this.length--;
 				this._keys.splice(i, 1);
-		        _D('<dbFinUtils.ArrayHash.remove()');
+		        _D('<. . .');
 				return (this._values.splice(i, 1))[0];
 			}
 		}
@@ -198,7 +198,7 @@ const ArrayHash = new Lang.Class({
 		this._keys = [];
 		this._values = [];
 		this.length = 0;
-        _D('<dbFinUtils.ArrayHash.removeAll()');
+        _D('<. . .');
 	},
 
     // sort functions are not optimal
@@ -209,7 +209,7 @@ const ArrayHash = new Lang.Class({
 			this.removeAll();
 			this.setArray(kvs);
 		}
-        _D('<dbFinUtils.ArrayHash.sort()');
+        _D('<. . .');
 	},
 
 	sortK: function(compare) {
@@ -219,7 +219,7 @@ const ArrayHash = new Lang.Class({
 			this.removeAll();
 			this.setArray(kvs);
 		}
-        _D('<dbFinUtils.ArrayHash.sortK()');
+        _D('<. . .');
 	},
 
 	sortV: function(compare) {
@@ -229,27 +229,27 @@ const ArrayHash = new Lang.Class({
 			this.removeAll();
 			this.setArray(kvs);
 		}
-        _D('<dbFinUtils.ArrayHash.sortV()');
+        _D('<. . .');
 	},
 
 	forEach: function(callback) {
         _D('>dbFinUtils.ArrayHash.forEach()');
 		for (let i = 0; i < this.length; ++i) callback(this._keys[i], this._values[i]);
-        _D('<dbFinUtils.ArrayHash.forEach()');
+        _D('<. . .');
 	},
 
 	toArray: function() {
         _D('>dbFinUtils.ArrayHash.toArray()');
 		let (a = []) {
 			for (let i = 0; i < this.length; ++i) a.push([this._keys[i], this._values[i]]);
-	        _D('<dbFinUtils.ArrayHash.toArray()');
+	        _D('<. . .');
 			return a;
 		}
 	},
 
 	toString: function() {
         _D('>dbFinUtils.ArrayHash.toString()');
-        _D('<dbFinUtils.ArrayHash.toString()');
+        _D('<. . .');
 		return this.toArray().toString();
 	}
 });
@@ -257,13 +257,13 @@ const ArrayHash = new Lang.Class({
 /* class Signals: keeps track of connected signals
  */
 const Signals = new Lang.Class({
-    Name: 'dbFinUtils.Signals',
+    Name: 'dbFin.Utils.Signals',
 
     _init: function() {
         _D('>dbFinUtils.Signals._init()');
         this._signalsNoId = [];
 		this._signalsId = new ArrayHash();
-        _D('<dbFinUtils.Signals._init()');
+        _D('<. . .');
     },
 
     destroy: function() {
@@ -274,7 +274,7 @@ const Signals = new Lang.Class({
 			this._signalsId.destroy();
 			this._signalsId = null;
 		}
-        _D('<dbFinUtils.Signals.destroy()');
+        _D('<. . .');
     },
 
     connectNoId: function(escs) {
@@ -286,7 +286,7 @@ const Signals = new Lang.Class({
             let id = emitter.connect(signal, Lang.bind(scope, callback));
 			this._signalsNoId.push({ 'id': id, 'emitter': emitter, 'signal': signal });
 		}
-        _D('<dbFinUtils.Signals.connectNoId()');
+        _D('<. . .');
     },
 
 	disconnectAllNoId: function() {
@@ -296,7 +296,7 @@ const Signals = new Lang.Class({
 				ies['emitter'].disconnect(ies['id']);
 			}
 		}
-        _D('<dbFinUtils.Signals.disconnectAllNoId()');
+        _D('<. . .');
 	},
 
 	connectId: function (textId, escs) {
@@ -309,7 +309,7 @@ const Signals = new Lang.Class({
             let id = emitter.connect(signal, Lang.bind(scope, callback));
 			this._signalsId.set(textId, { 'id': id, 'emitter': emitter, 'signal': signal });
 		}
-        _D('<dbFinUtils.Signals.connectId()');
+        _D('<. . .');
 	},
 
 	disconnectId: function (textId) {
@@ -319,7 +319,7 @@ const Signals = new Lang.Class({
 				ies['emitter'].disconnect(ies['id']);
 			}
 		}
-        _D('<dbFinUtils.Signals.disconnectId()');
+        _D('<. . .');
 	},
 
 	disconnectAllId: function () {
@@ -329,36 +329,36 @@ const Signals = new Lang.Class({
 				this.disconnectId(ids[i]); // not optimal but stable
 			}
 		}
-        _D('<dbFinUtils.Signals.disconnectAllId()');
+        _D('<. . .');
 	},
 
 	disconnectAll: function () {
         _D('>dbFinUtils.Signals.disconnectAll()');
 		this.disconnectAllNoId();
 		this.disconnectAllId();
-        _D('<dbFinUtils.Signals.disconnectAll()');
+        _D('<. . .');
 	}
 });
 
 /* class PanelButtonToggle    hides and restores panel buttons with roles
 */
 const PanelButtonToggle = new Lang.Class({
-	Name: 'dbFinUtils.PanelButtonToggle',
+	Name: 'dbFin.Utils.PanelButtonToggle',
 
 	_init: function() {
         _D('>dbFinUtils.PanelButtonToggle._init()');
         this._hiddenroles = new ArrayHash();
-        _D('<dbFinUtils.PanelButtonToggle._init()');
+        _D('<. . .');
 	},
 
 	destroy: function() {
         _D('>dbFinUtils.PanelButtonToggle.destroy()');
 		if (this._hiddenroles) {
-            this.restoreAll();
+            this.restoreAll(); // This should restore all buttons if they were hidden
             this._hiddenroles.destroy();
             this._hiddenroles = null;
 		}
-        _D('<dbFinUtils.PanelButtonToggle.destroy()');
+        _D('<. . .');
 	},
 
 	// GNOMENEXT: ui/sessionmode.js, ui/panel.js
@@ -366,13 +366,18 @@ const PanelButtonToggle = new Lang.Class({
         _D('>dbFinUtils.PanelButtonToggle.hide()');
 		if (!this._hiddenroles) {
 			_D('this._hiddenroles === null');
-	        _D('<dbFinUtils.PanelButtonToggle.hide()');
+	        _D('<. . .');
 			return;
 		}
-        let (panel = SessionMode._modes['user'].panel) {
+		let (panel = SessionMode._modes['user'].panel) {
+			if (!panel[panelid]) {
+				_D('Panel "' + panelid + '" not found.');
+				_D('<. . .');
+				return;
+			}
 			let (i = panel[panelid].indexOf(role)) {
 				if (i == -1) {
-			        _D('<dbFinUtils.PanelButtonToggle.hide()');
+					_D('<. . .');
 					return;
 				}
 				panel[panelid].splice(i, 1);
@@ -380,19 +385,19 @@ const PanelButtonToggle = new Lang.Class({
 				this._hiddenroles.set(role, { 'panelid': panelid, 'index': i });
 			} // let (i)
 		} // let (panel)
-        _D('<dbFinUtils.PanelButtonToggle.hide()');
+        _D('<. . .');
 	},
 
 	restore: function(role) {
         _D('>dbFinUtils.PanelButtonToggle.restore()');
 		if (!this._hiddenroles) {
 			_D('this._hiddenroles === null');
-	        _D('<dbFinUtils.PanelButtonToggle.restore()');
+	        _D('<. . .');
 			return;
 		}
 		let (hr = this._hiddenroles.remove(role)) {
 			if (hr === undefined) {
-		        _D('<dbFinUtils.PanelButtonToggle.restore()');
+		        _D('<. . .');
 				return;
 			}
 			let (	panel = SessionMode._modes['user'].panel,
@@ -403,7 +408,7 @@ const PanelButtonToggle = new Lang.Class({
 				Main.panel._updatePanel();
 			} // let (panel, panelid, i)
 		} // let (hr)
-        _D('<dbFinUtils.PanelButtonToggle.restore()');
+        _D('<. . .');
 	},
 
 	restoreAll: function() {
@@ -413,6 +418,6 @@ const PanelButtonToggle = new Lang.Class({
 				this.restore(roles[i]); // not optimal but stable
 			}
 		}
-        _D('<dbFinUtils.PanelButtonToggle.restoreAll()');
+        _D('<. . .');
 	}
 });

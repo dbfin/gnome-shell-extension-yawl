@@ -53,6 +53,17 @@ function buildPrefsWidget() {
             pagePanel.attach(panelHideActivitiesSwitch, 7, 1, 1, 1);
         } // let (panelHideActivitiesLabel, panelHideActivitiesSwitch)
 
+		// Preserve Hot Corner
+		let (panelPreserveHotCornerLabel = new Gtk.Label({ label: _("Preserve Hot Corner"), halign: Gtk.Align.START, hexpand: true }),
+             panelPreserveHotCornerSwitch = new Gtk.Switch({ halign: Gtk.Align.END })) {
+            panelPreserveHotCornerSwitch.set_active(widget._settings.get_boolean('preserve-hot-corner'));
+			widget._settings.bind('preserve-hot-corner', panelPreserveHotCornerSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+			widget._settings.bind('hide-activities', panelPreserveHotCornerLabel, 'sensitive', Gio.SettingsBindFlags.DEFAULT);
+			widget._settings.bind('hide-activities', panelPreserveHotCornerSwitch, 'sensitive', Gio.SettingsBindFlags.DEFAULT);
+            pagePanel.attach(panelPreserveHotCornerLabel, 1, 2, 6, 1);
+            pagePanel.attach(panelPreserveHotCornerSwitch, 7, 2, 1, 1);
+        } // let (panelPreserveHotCornerLabel, panelPreserveHotCornerSwitch)
+
 		widget.append_page(/* child = */pagePanel, /* tab_label = */pagePanelLabel);
 	} // let (pagePanel, pagePanelLabel)
 
