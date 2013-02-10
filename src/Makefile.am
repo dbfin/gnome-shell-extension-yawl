@@ -4,7 +4,9 @@ dist_extension_DATA = \
 	convenience2.js \
 	dbfindebug.js \
 	dbfinmovecenter.js \
+	dbfinpanelenhancements.js \
 	dbfinutils.js \
+	dbfinutilsprefs.js \
 	dbfinyawl.js \
 	extension.js \
 	prefs.js \
@@ -34,4 +36,3 @@ metadata.json: metadata.json.in $(top_builddir)/config.status
 		-e "s|[@]EXTENSIONURL@|$(extensionurl)|" \
 		-e "s|[@]GSCHEMANAME@|$(gschemaname)|" \
 		$< > $@
-
