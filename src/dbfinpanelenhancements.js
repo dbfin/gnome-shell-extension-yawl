@@ -70,16 +70,21 @@ const dbFinPanelEnhancements = new Lang.Class({
 
 	_updatePanelStyle: function() {
         _D('>dbFinPanelEnhancements._updatePanelStyle()');
-        let (style = null) {
+        let (style = null, stylecorner = null) {
 			if (this._settings.get_boolean('panel-background')) {
 				let (rgba = new Gdk.RGBA(),
                      opacity = parseInt(this._settings.get_string('panel-opacity')) / 100.) {
                     rgba.parse(this._settings.get_string('panel-color'));
-    				style = 'background-color: ' + rgba.to_string().replace(/rgba?(\s*\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+).*?(\))/, 'rgba$1, ' + opacity + '$2');
+					let (color = rgba.to_string().replace(/rgba?(\s*\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+).*?(\))/, 'rgba$1, ' + opacity + '$2')) {
+	    				style = 'background-color: ' + color;
+	    				stylecorner = '-panel-corner-border-width: 0; -panel-corner-border-color: ' + color + '; -panel-corner-background-color: ' + color;
+					} // let (color)
                 } // let (rgba)
 			}
     		Main.panel.actor.set_style(style);
-		} // let (style)
+    		Main.panel._leftCorner.actor.set_style(stylecorner);
+    		Main.panel._rightCorner.actor.set_style(stylecorner);
+		} // let (style, stylecorner)
         _D('<. . .');
 	},
 
