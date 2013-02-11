@@ -88,10 +88,14 @@ const dbFinMoveCenter = new Lang.Class({
 		this._signals = new dbFinUtils.Signals();
 		this._panelbuttonstoggle = new dbFinUtils.PanelButtonToggle();
 		this._hotcorner = null;
-        this._moveCenter();
+		this._signals.connectNoId({ emitter: Main.panel.actor, signal: 'allocate',
+									callback: this._allocate, scope: this });
+        this._updatePanel();
         this._hideActivities();
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::yawl-panel-position',
+                                    callback: this._updatePanel, scope: this });
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::move-center',
-                                    callback: this._moveCenter, scope: this });
+                                    callback: this._updatePanel, scope: this });
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::hide-activities',
                                     callback: this._hideActivities, scope: this });
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::preserve-hot-corner',
@@ -115,17 +119,6 @@ const dbFinMoveCenter = new Lang.Class({
             this._panelbuttonstoggle = null;
         }
         this._settings = null;
-        _D('<. . .');
-    },
-
-	_moveCenter: function () {
-        _D('>dbFinMoveCenter._moveCenter()');
-        if (this._settings.get_boolean('move-center'))
-            this._signals.connectId('panel-allocate', { emitter: Main.panel.actor, signal: 'allocate',
-                                                        callback: this._allocate, scope: this });
-        else
-            this._signals.disconnectId('panel-allocate');
-        this._updatePanel();
         _D('<. . .');
     },
 
@@ -161,25 +154,41 @@ const dbFinMoveCenter = new Lang.Class({
         //_D('>dbFinMoveCenter._allocate()'); // This is called whenever GS needs to reallocate the panel, debug will cause lots of records
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
-                [wlm, wl] = Main.panel._leftBox.get_preferred_width(-1), // minimum and natural widths
-                [wcm, wc] = Main.panel._centerBox.get_preferred_width(-1),
-                [wrm, wr] = Main.panel._rightBox.get_preferred_width(-1),
+                [wlm, wln] = Main.panel._leftBox.get_preferred_width(-1), // minimum and natural widths
+                [wcm, wcn] = Main.panel._centerBox.get_preferred_width(-1),
+                [wrm, wrn] = Main.panel._rightBox.get_preferred_width(-1),
                 boxChild = new Clutter.ActorBox(),
                 drl = (Main.panel.actor.get_text_direction() == Clutter.TextDirection.RTL)) {
-            wl = w - wc - wr; // let left box occupy the rest
-            let xl = (drl ? w - wl : 0);
-            let xr = xl + wl;
-            dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-            Main.panel._leftBox.allocate(boxChild, flags);
-            if (drl) { xr = xl; xl -= wc; } else { xl = xr; xr += wc; }
-            dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-            Main.panel._centerBox.allocate(boxChild, flags);
-            if (drl) { xr = xl; xl -= wr; } else { xl = xr; xr += wr; }
-            dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-            Main.panel._rightBox.allocate(boxChild, flags);
-			// Who needs the corners?.. Well, maybe someone does.
-			// But we do not need to reallocate them
-		} // let (w, h, wlm, wl, wcm, wc, wrm, wr, boxChild, drl)
+			let (wly, wl, wy, wr, xl, xr) {
+				if (this._settings.get_boolean('move-center')) {
+					// let left box + YAWL panel occupy all the space on the left, but no less than (w - wcn) / 2
+					// let right box occupy as much as it needs on the right, but no more than (w - wcn) / 2
+					wly = Math.max(w - wcn - wrn, Math.ceil((w - wcn) / 2));
+					wr = Math.min(wrn, Math.floor((w - wcn) / 2));
+				}
+				else {
+					wly = Math.ceil((w - wcn) / 2);
+					wr = Math.floor((w - wcn) / 2);
+				}
+				wl = Math.min(Math.max(wlm, Math.floor(w * parseInt(this._settings.get_string('yawl-panel-position')) / 100.)), wly - 42);
+				wy = wly - wl;
+				xl = (drl ? w - wl : 0);
+				xr = xl + wl;
+				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
+				Main.panel._leftBox.allocate(boxChild, flags);
+				if (drl) { xr = xl; xl -= wy; } else { xl = xr; xr += wy; }
+				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
+				if (Main.panel._yawl) Main.panel._yawl.allocate(boxChild, flags);
+				if (drl) { xr = xl; xl -= wcn; } else { xl = xr; xr += wcn; }
+				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
+				Main.panel._centerBox.allocate(boxChild, flags);
+				if (drl) { xr = Math.min(wrn, xl); xl = 0; } else { xl = Math.max(w - wrn, xr); xr = w; }
+				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
+				Main.panel._rightBox.allocate(boxChild, flags);
+				// Who needs the corners?.. Well, maybe someone does.
+				// But we do not need to reallocate them
+			} // let (wly, wl, wy, wr, xl, xr)
+		} // let (w, h, wlm, wln, wcm, wcn, wrm, wrn, boxChild, drl)
         //_D('<. . .');
     }
 });

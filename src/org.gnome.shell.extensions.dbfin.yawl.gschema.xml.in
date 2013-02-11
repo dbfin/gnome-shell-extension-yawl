@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="gnome-shell-extension-yawl">
   <schema id="org.gnome.shell.extensions.dbfin.yawl" path="/org/gnome/shell/extensions/dbfin/yawl/">
+    <key name="yawl-panel-position" type="s">
+      <default>'25'</default>
+      <_summary>YAWL-panel position in percentage.</_summary>
+      <_description>The position of the left side of the YAWL panel as percentage of the top panel width.</_description>
+    </key>
     <key name="move-center" type="b">
       <default>true</default>
       <_summary>Move central panel to the right.</_summary>
