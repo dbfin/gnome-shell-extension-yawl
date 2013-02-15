@@ -17,6 +17,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const dbFinMoveCenter = Me.imports.dbfinmovecenter;
 const dbFinPanelEnhancements = Me.imports.dbfinpanelenhancements;
 const dbFinUtils = Me.imports.dbfinutils;
+const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
 const Convenience = Me.imports.convenience2;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -32,11 +33,16 @@ const dbFinYAWL = new Lang.Class({
         _D('>dbFinYAWL._init()');
 		this._movecenter = new dbFinMoveCenter.dbFinMoveCenter();
         this._panelenhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
+        this._yawlpanel = new dbFinYAWLPanel.dbFinYAWLPanel();
         _D('<. . .');
     },
 
     destroy: function() {
         _D('>dbFinYAWL.destroy()');
+        if (this._yawlpanel) {
+            this._yawlpanel.destroy();
+            this._yawlpanel = null;
+        }
         if (this._panelenhancements) {
             this._panelenhancements.destroy();
             this._panelenhancements = null;

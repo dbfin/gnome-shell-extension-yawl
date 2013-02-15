@@ -5,9 +5,11 @@ dist_extension_DATA = \
 	dbfindebug.js \
 	dbfinmovecenter.js \
 	dbfinpanelenhancements.js \
+	dbfintracker.js \
 	dbfinutils.js \
 	dbfinutilsprefs.js \
 	dbfinyawl.js \
+	dbfinyawlpanel.js \
 	extension.js \
 	prefs.js \
 	stylesheet.css

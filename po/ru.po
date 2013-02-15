@@ -6,8 +6,8 @@
 msgid ""
 msgstr "Project-Id-Version: YAWL 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-10 16:49-0600\n"
-"PO-Revision-Date: 2013-02-10 16:49-0600\n"
+"POT-Creation-Date: 2013-02-15 04:11-0600\n"
+"PO-Revision-Date: 2013-02-15 04:11-0600\n"
 "Last-Translator: Vadim @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -20,25 +20,29 @@ msgid "Panel"
 msgstr "Панель"
 
 #: src/prefs.js:41
+msgid "YAWL-panel position"
+msgstr "Позиция панели YAWL"
+
+#: src/prefs.js:53
 msgid "Move central panel"
 msgstr "Сдвинуть центральную панель"
 
-#: src/prefs.js:50
+#: src/prefs.js:62
 msgid "Hide Activities button"
 msgstr "Скрыть кнопку Обзор"
 
-#: src/prefs.js:59
+#: src/prefs.js:71
 msgid "Preserve Hot Corner"
 msgstr "Оставить «горячий» угол"
 
-#: src/prefs.js:75
+#: src/prefs.js:87
 msgid "Custom panel background"
 msgstr "Изменить фон панели"
 
-#: src/prefs.js:84
+#: src/prefs.js:96
 msgid "Panel color"
 msgstr "Цвет панели"
 
-#: src/prefs.js:99
+#: src/prefs.js:111
 msgid "Panel opacity"
 msgstr "Непрозрачность панели"

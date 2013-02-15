@@ -8,13 +8,21 @@
  * Common utilities.
  *
  * 1) functions
- * now              returns current date/time as a toString string or as a 'yyyyMMddHHmmss' string
- * 					Parameters:
- *						justnumbers		set true to return just numbers, otherwise returns Date.toString()
+ * now:justnumbers->string		returns current date/time as a toString string or as a 'yyyyMMddHHmmss' string
+ * 								Parameters:
+ *									justnumbers		set true to return just numbers, otherwise returns Date.toString()
  *
- * setBox           sets x1, y1, x2, y2 of Clutter.ActorBox (or another class supporting these properties)
- * 					Parameters:
- *						box, x1, y1, x2, y2
+ * setBox:box,x1,y1,x2,y2		sets x1, y1, x2, y2 of Clutter.ActorBox (or another class supporting these properties)
+ * 								Parameters:
+ *									box, x1, y1, x2, y2
+ *
+ * zip:[a],[b],l?->[[a,b]]		Haskell-like function zipping two arrays (used in ArrayHash)
+ *								Parameters:
+ * 									[a] and [b] are input arrays
+ * 									l if specified defines the length or the resulting array
+ * unzip:[[a,b]]->[[a],[b]]		Haskell-like function unzipping array of pairs
+ *								Parameters:
+ * 									[[a,b]] is the input array of pairs
  *
  * 2) classes
  * ArrayHash		array of pairs ( key, value )
@@ -38,12 +46,14 @@
  *
  * Signals          keeps track of connected signals (identified by unique text ID's, or no-name signals)
  *                  Methods:
- *						connectNoId({ emitter:, signal:, callback:, scope: })		Connect signal, no text ID
- *						disconnectAllNoId()											Remove all connected no-ID signals
- *						connectId(textId, { emitter:, signal:, callback:, scope: })	Connect signal with text ID
- *						disconnectId(textId)										Disconnect signal by text ID
- *						disconnectAllId()											Disconnect all signals with text IDs
- *						disconnectAll()												Disconnect all signals
+ *						connectNoId({ emitter:, signal:, callback:, scope: }, after?)		Connect signal, no text ID
+ *                                                                                          after: if true use connect_after
+ *						disconnectAllNoId()     											Remove all connected no-ID signals
+ *						connectId(textId, { emitter:, signal:, callback:, scope: }, after?)	Connect signal with text ID
+ *                                                                                          after: if true use connect_after
+ *						disconnectId(textId)        										Disconnect signal by text ID
+ *						disconnectAllId()       											Disconnect all signals with text IDs
+ *						disconnectAll()     												Disconnect all signals
  *
  * PanelButtonToggle    hides and restores panel buttons with roles
  *                  Methods:
@@ -101,6 +111,25 @@ function setBox(box, x1, y1, x2, y2) {
     box.y1 = y1;
     box.x2 = x2;
     box.y2 = y2;
+}
+
+/* function zip: zips two arrays into one array of pairs
+ */
+function zip(as, bs, l) {
+	l = l || Math.min(as.length, bs.length);
+	let (abs = []) {
+		for (let i = 0; i < l; ++i) abs.push( [ as[i], bs[i] ] );
+		return abs;
+	}
+}
+
+/* function unzip: unzips array of pairs into two arrays
+ */
+function unzip(abs) {
+	let(as = [], bs = []) {
+		abs.forEach(function (ab) { as.push(ab[0]); bs.push(ab[1]); });
+		return [ as, bs ];
+	}
 }
 
 /* class ArrayHash: array of pairs [ key, value ]
@@ -232,19 +261,18 @@ const ArrayHash = new Lang.Class({
         _D('<. . .');
 	},
 
-	forEach: function(callback) {
+	forEach: function(callback) { // this is a very delicate function: what if something changes this in callback?
         _D('>dbFinUtils.ArrayHash.forEach()');
-		for (let i = 0; i < this.length; ++i) callback(this._keys[i], this._values[i]);
+        let (ks = this._keys.slice(), vs = this._values.slice(), l = this.length) {
+    		for (let i = 0; i < l; ++i) callback(ks[i], vs[i]);
+        }
         _D('<. . .');
 	},
 
 	toArray: function() {
         _D('>dbFinUtils.ArrayHash.toArray()');
-		let (a = []) {
-			for (let i = 0; i < this.length; ++i) a.push([this._keys[i], this._values[i]]);
-	        _D('<. . .');
-			return a;
-		}
+        _D('<. . .');
+		return zip(this._keys, this._values, this.length);
 	},
 
 	toString: function() {
@@ -277,14 +305,17 @@ const Signals = new Lang.Class({
         _D('<. . .');
     },
 
-    connectNoId: function(escs) {
+    connectNoId: function(escs, after/* = false*/) {
         _D('>dbFinUtils.Signals.connectNoId()');
+        after = after || false;
 		let (	emitter = escs['emitter'],
 				signal = escs['signal'],
 				callback = escs['callback'],
 				scope = escs['scope']) {
-            let id = emitter.connect(signal, Lang.bind(scope, callback));
-			this._signalsNoId.push({ 'id': id, 'emitter': emitter, 'signal': signal });
+            let (id = (!after   ? emitter.connect(signal, Lang.bind(scope, callback))
+                                : emitter.connect_after(signal, Lang.bind(scope, callback)))) {
+    			this._signalsNoId.push({ 'id': id, 'emitter': emitter, 'signal': signal });
+            }
 		}
         _D('<. . .');
     },
@@ -293,21 +324,27 @@ const Signals = new Lang.Class({
         _D('>dbFinUtils.Signals.disconnectAllNoId()');
 		while (this._signalsNoId.length) {
 			let (ies = this._signalsNoId.pop()) {
-				ies['emitter'].disconnect(ies['id']);
+				if (ies['emitter']) {
+                    ies['emitter'].disconnect(ies['id']);
+                    ies['emitter'] = null;
+                }
 			}
 		}
         _D('<. . .');
 	},
 
-	connectId: function (textId, escs) {
+	connectId: function (textId, escs, after/* = false*/) {
         _D('>dbFinUtils.Signals.connectId()');
+        after = after || false;
 		this.disconnectId(textId);
 		let (	emitter = escs['emitter'],
 				signal = escs['signal'],
 				callback = escs['callback'],
 				scope = escs['scope']) {
-            let id = emitter.connect(signal, Lang.bind(scope, callback));
-			this._signalsId.set(textId, { 'id': id, 'emitter': emitter, 'signal': signal });
+            let (id = (!after   ? emitter.connect(signal, Lang.bind(scope, callback))
+                                : emitter.connect_after(signal, Lang.bind(scope, callback)))) {
+    			this._signalsId.set(textId, { 'id': id, 'emitter': emitter, 'signal': signal });
+            }
 		}
         _D('<. . .');
 	},
@@ -315,8 +352,9 @@ const Signals = new Lang.Class({
 	disconnectId: function (textId) {
         _D('>dbFinUtils.Signals.disconnectId()');
 		let (ies = this._signalsId.remove(textId)) {
-			if (ies !== undefined) {
+			if (ies !== undefined && ies['emitter']) {
 				ies['emitter'].disconnect(ies['id']);
+                ies['emitter'] = null;
 			}
 		}
         _D('<. . .');
