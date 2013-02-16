@@ -5,14 +5,22 @@
  * You should have received a copy of the License along with this program.
  *
  * dbfindebug.js
- * Debugging: Logging to file.
+ * Debugging: Logging to file (or standard system log).
+ *
+ * Use			const _D = Me.imports.dbfindebug._D;	to initialize debugging
+ *				_D(msg)									to report a message
+ *
+ * Messages may have submessages divided by '\n'.
+ *
+ * The first symbol of every (sub)message may have one of the following special meanings:
+ *				'>function_name'			report entrance into a function, this will increase the level
+ * 				'@function_name'			report entrance into a 'silent' function, this will increase the level
+ * 											no messages will be reported until exiting from the function
+ * 				'<'							report exiting from a function, this will decrease the level
+ *
+ * Messages of level 0 are also reported to the standard system log.
  *
  */
-
-const DEBUGLEVEL = 255; // 0: only 0-level messages go to standard log
-						// n=1,2,3,...: 0-to-n level messages go to debug.log
-const DEBUGSPLIT = true; // true: separate debug file for each session and preferences
-						 // false: put date/time header in one file
 
 const Lang = imports.lang;
 
@@ -34,102 +42,97 @@ const dbFinYAWLDebug = new Lang.Class({
     Name: 'dbFin.YAWL.Debug',
 
     _init: function(debugfilename) {
-        this.level = 0;
+        this._prefix = '';
+        this._stoplevel = 0;
 		this.logfilename = debugfilename;
     },
 
     destroy: function() {
     },
 
-    _log: function(msg) {
+    log: function(msg) {
         msg = '' + msg;
 		if (!msg.length) return;
-		let msgs = [];
-		let (level = this.level, levelnew = this.level) {
-			msg.split('\n').forEach(function (s) {
-				while (s.length) {
+		let (msgs = []) {
+			msg.split('\n').forEach(Lang.bind(this, function (s) {
+				if (!s.length) return;
+				let (shift = 0) {
 					if (s[0] == '>') {
-                        levelnew++;
-						s = s.substring(1);
+						shift = +1;
+						if (this._stoplevel) this._stoplevel++;
+						s = String.fromCharCode(0x250d) + s.substring(1)
+                                + dbFinUtils.stringRepeat(String.fromCharCode(0x2501), 7);
+					}
+					else if (s[0] == '@') {
+						shift = +1;
+						this._stoplevel++;
+						s = String.fromCharCode(0x250d) + s.substring(1)
+                                + dbFinUtils.stringRepeat(String.fromCharCode(0x2501), 7);
 					}
 					else if (s[0] == '<') {
-						if (level > 0) {
-							level--;
-							levelnew--;
-						}
-						else if (levelnew > 0) {
-							levelnew--;
-						}
-						s = s.substring(1); // in any case, whether level has been decreased or not
+						shift = -1;
+						if (this._prefix.length) this._prefix = this._prefix.substring(4);
+						s = String.fromCharCode(0x2514) + dbFinUtils.stringRepeat(String.fromCharCode(0x2500), 7)
+								+ s.substring(1) + dbFinUtils.stringRepeat(String.fromCharCode(0x2500), 3);
 					}
-					else {
-						msgs.push([ level, s ]);
-                        level = levelnew;
-						break;
+					if (!this._stoplevel && s.length) {
+						if (!this._prefix.length) {
+							log(s);
+							msgs.push(s);
+						}
+						else {
+							msgs.push(this._prefix + s);
+						}
 					}
-				} // while (s.length)
-			}); // msg.split().forEach
-			this.level = level;
-		} // let (level, levelnew)
-		if (!msgs.length) return;
-		let (gfLog = null, gfosLog = null, gbosLog = null) {
-			if (DEBUGLEVEL) {
+					if (shift == -1) {
+						if (this._stoplevel) this._stoplevel--;
+					}
+					else if (shift == +1) {
+						this._prefix = String.fromCharCode(0x2502) + '   ' + this._prefix;
+					}
+				} // let (shift)
+			})); // msg.split('\n').forEach
+			if (!msgs.length) return;
+			let (gfLog = null, gfosLog = null, gbosLog = null) {
 				if (	   !(gfLog = Gio.file_new_for_path(this.logfilename))
-					    || !(gfosLog = gfLog.append_to(/* flags = */Gio.FileCreateFlags.NONE,
+						|| !(gfosLog = gfLog.append_to(/* flags = */Gio.FileCreateFlags.NONE,
 													   /* cancellable = */null))
-					    || !(gbosLog = Gio.DataOutputStream.new(/* base_stream = */gfosLog))) {
+						|| !(gbosLog = Gio.DataOutputStream.new(/* base_stream = */gfosLog))) {
 					log('Cannot append to file ' + this.logfilename + '.');
 				}
-			}
-			msgs.forEach(function (ls) {
-				let l, s;
-				[ l, s ] = ls;
-				if (l <= DEBUGLEVEL) {
-					if (!DEBUGLEVEL) {
+				msgs.forEach(function (s) {
+					if (	   !gbosLog
+							|| !gbosLog.put_string(/* str = */s + '\n',
+												   /* cancellable = */null)) {
 						log(s);
 					}
-					else {
-						while (l-- > 0) {
-							s = '.   ' + s;
-						}
-						if (	   !gbosLog
-							    || !gbosLog.put_string(/* str = */s + '\n',
-													   /* cancellable = */null)) {
-							log(s);
-						}
-					} // if (!DEBUGLEVEL) else
-				} // if (l <= DEBUGLEVEL)
-			}); // msgs.forEach
-			if (DEBUGLEVEL && gbosLog) {
-				gbosLog.close(null);
-			}
-		} // let gfLog, gfosLog, gbosLog
-    } // _log: function
+				}); // msgs.forEach
+				if (gbosLog) {
+					gbosLog.close(null);
+				}
+			} // let gfLog, gfosLog, gbosLog
+		} // let (msgs)
+    } // log: function
 });
 
-function _D(msg) {
-    if (!msg || (msg = '' + msg) == '') return;
+function ensuredbFinYAWLDebug() {
     if (!dbfinyawldebug) {
 		let subdir = '/logs';
         if (GLib.mkdir_with_parents(/* filename = */Me.path + subdir,
 				                	/* mode = */parseInt('755', 8)) != 0) {
 			subdir = '';
 		}
-		if (DEBUGSPLIT) {
-			dbfinyawldebug = new dbFinYAWLDebug(Me.path + subdir + '/debug_' + dbFinUtils.now(true) + '.log');
-		}
-		else {
-	        dbfinyawldebug = new dbFinYAWLDebug(Me.path + subdir + '/debug.log');
-		}
+		dbfinyawldebug = new dbFinYAWLDebug(Me.path + subdir + '/debug_' + dbFinUtils.now(true) + '.log');
 		if (!dbfinyawldebug) {
 			log('Cannot create dbFinYAWLDebug object.');
-			log(msg);
-			return;
+			return false;
 		}
-		msg = 'dbFinYAWLDebug initialized\n' + msg;
-		if (!DEBUGSPLIT) {
-			msg = dbFinUtils.now(false) + '\n' + msg;
-		}
+		dbfinyawldebug.log('dbFinYAWLDebug initialized.');
     } // if (!dbfinyawldebug)
-    dbfinyawldebug._log(msg);
+	return true;
+}
+
+function _D(msg) {
+    if (!msg || (msg = '' + msg) == '') return;
+	ensuredbFinYAWLDebug() ? dbfinyawldebug.log(msg) : log(msg);
 }

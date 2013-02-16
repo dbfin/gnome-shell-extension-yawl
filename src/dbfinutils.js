@@ -24,6 +24,8 @@
  *								Parameters:
  * 									[[a,b]] is the input array of pairs
  *
+ * stringRepeat(s, n)			returns the string s repeated n times
+ *
  * 2) classes
  * ArrayHash		array of pairs ( key, value )
  *					Properties:
@@ -77,8 +79,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
-const dbFinDebug = Me.imports.dbfindebug;
-const _D = dbFinDebug._D;
+const _D = Me.imports.dbfindebug._D;
 
 /* function now: returns current date/time
  * Parameters:
@@ -132,6 +133,20 @@ function unzip(abs) {
 	}
 }
 
+/* stringRepeat(s, n): returns the string s repeated n times
+ */
+function stringRepeat(s, n) {
+	if (!n || (n = parseInt(n)) <= 0) return '';
+	let (sn = '') {
+		while (n) {
+			if (n & 1) sn += s;
+			n >>= 1;
+			s += s;
+		}
+		return sn;
+	}
+}
+
 /* class ArrayHash: array of pairs [ key, value ]
  */
 const ArrayHash = new Lang.Class({
@@ -142,7 +157,7 @@ const ArrayHash = new Lang.Class({
 		this._keys = [];
 		this._values = [];
 		this.length = 0;
-        _D('<. . .');
+        _D('<');
 	},
 
 	destroy: function() {
@@ -151,25 +166,25 @@ const ArrayHash = new Lang.Class({
 		this._keys = null;
 		this._values = null;
 		this.length = null;
-        _D('<. . .');
+        _D('<');
 	},
 
 	getKeys: function() {
         _D('>dbFinUtils.ArrayHash.getKeys()');
-        _D('<. . .');
+        _D('<');
 		return this._keys.slice();
 	},
 
 	getValues: function() {
         _D('>dbFinUtils.ArrayHash.getValues()');
-        _D('<. . .');
+        _D('<');
 		return this._values.slice();
 	},
 
 	get: function(k) {
         _D('>dbFinUtils.ArrayHash.get()');
 		let (i = this._keys.indexOf(k)) {
-	        _D('<. . .');
+	        _D('<');
 			if (i == -1) return undefined;
 			else return this._values[i];
 		}
@@ -187,32 +202,32 @@ const ArrayHash = new Lang.Class({
 				this._values[i] = v;
 			}
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	setArray: function(kvs) {
         _D('>dbFinUtils.ArrayHash.setArray()');
 		kvs.forEach(Lang.bind(this, function (kv) { this.set(kv[0], kv[1]); }));
-        _D('<. . .');
+        _D('<');
 	},
 
 	setMap: function(ks, map) {
         _D('>dbFinUtils.ArrayHash.setMap()');
 		ks.forEach(Lang.bind(this, function (k) { this.set(k, map(k)); }));
-        _D('<. . .');
+        _D('<');
 	},
 
 	remove: function(k) {
         _D('>dbFinUtils.ArrayHash.remove()');
 		let (i = this._keys.indexOf(k)) {
 			if (i == -1) {
-		        _D('<. . .');
+		        _D('<');
 				return undefined;
 			}
 			else {
 				this.length--;
 				this._keys.splice(i, 1);
-		        _D('<. . .');
+		        _D('<');
 				return (this._values.splice(i, 1))[0];
 			}
 		}
@@ -227,7 +242,7 @@ const ArrayHash = new Lang.Class({
 		this._keys = [];
 		this._values = [];
 		this.length = 0;
-        _D('<. . .');
+        _D('<');
 	},
 
     // sort functions are not optimal
@@ -238,7 +253,7 @@ const ArrayHash = new Lang.Class({
 			this.removeAll();
 			this.setArray(kvs);
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	sortK: function(compare) {
@@ -248,7 +263,7 @@ const ArrayHash = new Lang.Class({
 			this.removeAll();
 			this.setArray(kvs);
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	sortV: function(compare) {
@@ -258,7 +273,7 @@ const ArrayHash = new Lang.Class({
 			this.removeAll();
 			this.setArray(kvs);
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	forEach: function(callback) { // this is a very delicate function: what if something changes this in callback?
@@ -266,18 +281,18 @@ const ArrayHash = new Lang.Class({
         let (ks = this._keys.slice(), vs = this._values.slice(), l = this.length) {
     		for (let i = 0; i < l; ++i) callback(ks[i], vs[i]);
         }
-        _D('<. . .');
+        _D('<');
 	},
 
 	toArray: function() {
         _D('>dbFinUtils.ArrayHash.toArray()');
-        _D('<. . .');
+        _D('<');
 		return zip(this._keys, this._values, this.length);
 	},
 
 	toString: function() {
         _D('>dbFinUtils.ArrayHash.toString()');
-        _D('<. . .');
+        _D('<');
 		return this.toArray().toString();
 	}
 });
@@ -291,7 +306,7 @@ const Signals = new Lang.Class({
         _D('>dbFinUtils.Signals._init()');
         this._signalsNoId = [];
 		this._signalsId = new ArrayHash();
-        _D('<. . .');
+        _D('<');
     },
 
     destroy: function() {
@@ -302,7 +317,7 @@ const Signals = new Lang.Class({
 			this._signalsId.destroy();
 			this._signalsId = null;
 		}
-        _D('<. . .');
+        _D('<');
     },
 
     connectNoId: function(escs, after/* = false*/) {
@@ -317,7 +332,7 @@ const Signals = new Lang.Class({
     			this._signalsNoId.push({ 'id': id, 'emitter': emitter, 'signal': signal });
             }
 		}
-        _D('<. . .');
+        _D('<');
     },
 
 	disconnectAllNoId: function() {
@@ -330,7 +345,7 @@ const Signals = new Lang.Class({
                 }
 			}
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	connectId: function (textId, escs, after/* = false*/) {
@@ -346,7 +361,7 @@ const Signals = new Lang.Class({
     			this._signalsId.set(textId, { 'id': id, 'emitter': emitter, 'signal': signal });
             }
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	disconnectId: function (textId) {
@@ -357,7 +372,7 @@ const Signals = new Lang.Class({
                 ies['emitter'] = null;
 			}
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	disconnectAllId: function () {
@@ -367,14 +382,14 @@ const Signals = new Lang.Class({
 				this.disconnectId(ids[i]); // not optimal but stable
 			}
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	disconnectAll: function () {
         _D('>dbFinUtils.Signals.disconnectAll()');
 		this.disconnectAllNoId();
 		this.disconnectAllId();
-        _D('<. . .');
+        _D('<');
 	}
 });
 
@@ -386,7 +401,7 @@ const PanelButtonToggle = new Lang.Class({
 	_init: function() {
         _D('>dbFinUtils.PanelButtonToggle._init()');
         this._hiddenroles = new ArrayHash();
-        _D('<. . .');
+        _D('<');
 	},
 
 	destroy: function() {
@@ -396,7 +411,7 @@ const PanelButtonToggle = new Lang.Class({
             this._hiddenroles.destroy();
             this._hiddenroles = null;
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	// GNOMENEXT: ui/sessionmode.js, ui/panel.js
@@ -404,18 +419,18 @@ const PanelButtonToggle = new Lang.Class({
         _D('>dbFinUtils.PanelButtonToggle.hide()');
 		if (!this._hiddenroles) {
 			_D('this._hiddenroles === null');
-	        _D('<. . .');
+	        _D('<');
 			return;
 		}
 		let (panel = SessionMode._modes['user'].panel) {
 			if (!panel[panelid]) {
 				_D('Panel "' + panelid + '" not found.');
-				_D('<. . .');
+				_D('<');
 				return;
 			}
 			let (i = panel[panelid].indexOf(role)) {
 				if (i == -1) {
-					_D('<. . .');
+					_D('<');
 					return;
 				}
 				panel[panelid].splice(i, 1);
@@ -423,19 +438,19 @@ const PanelButtonToggle = new Lang.Class({
 				this._hiddenroles.set(role, { 'panelid': panelid, 'index': i });
 			} // let (i)
 		} // let (panel)
-        _D('<. . .');
+        _D('<');
 	},
 
 	restore: function(role) {
         _D('>dbFinUtils.PanelButtonToggle.restore()');
 		if (!this._hiddenroles) {
 			_D('this._hiddenroles === null');
-	        _D('<. . .');
+	        _D('<');
 			return;
 		}
 		let (hr = this._hiddenroles.remove(role)) {
 			if (hr === undefined) {
-		        _D('<. . .');
+		        _D('<');
 				return;
 			}
 			let (	panel = SessionMode._modes['user'].panel,
@@ -446,7 +461,7 @@ const PanelButtonToggle = new Lang.Class({
 				Main.panel._updatePanel();
 			} // let (panel, panelid, i)
 		} // let (hr)
-        _D('<. . .');
+        _D('<');
 	},
 
 	restoreAll: function() {
@@ -456,6 +471,6 @@ const PanelButtonToggle = new Lang.Class({
 				this.restore(roles[i]); // not optimal but stable
 			}
 		}
-        _D('<. . .');
+        _D('<');
 	}
 });

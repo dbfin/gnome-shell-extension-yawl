@@ -25,8 +25,7 @@ const Convenience = Me.imports.convenience2;
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
-const dbFinDebug = Me.imports.dbfindebug;
-const _D = dbFinDebug._D;
+const _D = Me.imports.dbfindebug._D;
 
 // GNOMENEXT: ui/panel.js: class ActivitiesButton
 const dbFinHotCorner = new Lang.Class({
@@ -43,7 +42,7 @@ const dbFinHotCorner = new Lang.Class({
 		this._signals.connectNoId({ emitter: this._button.actor, signal: 'allocate',
 									callback: this._allocate, scope: this });
 		Main.panel['_leftBox'].insert_child_at_index(this._button.container, 0);
-        _D('<. . .');
+        _D('<');
     },
 
 	destroy: function() {
@@ -57,17 +56,17 @@ const dbFinHotCorner = new Lang.Class({
 			this._button.destroy();
 			this._button = null;
 		}
-        _D('<. . .');
+        _D('<');
 	},
 
 	_getPreferredSize: function(actor, forSize, alloc) {
-        // _D('>dbFinHotCorner._getPreferredSize()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
+        _D('@dbFinHotCorner._getPreferredSize()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
 		[ alloc.min_size, alloc.natural_size ] = [ 4, 4 ]; // for some reason smaller values generate lots of GS warnings
-		// _D('<. . .');
+		_D('<');
 	},
 
 	_allocate: function(actor, box, flags) {
-        // _D('>dbFinHotCorner._allocate()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
+        _D('@dbFinHotCorner._allocate()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
 		let (	children = actor.get_children(),
 		    	childBox = new Clutter.ActorBox()) {
 			if (children.length) {
@@ -75,7 +74,7 @@ const dbFinHotCorner = new Lang.Class({
 				children[0].allocate(childBox, flags);
 			}
 		} // let (childBox)
-		// _D('<. . .');
+		_D('<');
 	}
 });
 
@@ -100,7 +99,7 @@ const dbFinMoveCenter = new Lang.Class({
                                     callback: this._hideActivities, scope: this });
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::preserve-hot-corner',
                                     callback: this._hideActivities, scope: this });
-        _D('<. . .');
+        _D('<');
     },
 
     destroy: function() {
@@ -119,7 +118,7 @@ const dbFinMoveCenter = new Lang.Class({
             this._panelbuttonstoggle = null;
         }
         this._settings = null;
-        _D('<. . .');
+        _D('<');
     },
 
     _hideActivities: function() {
@@ -139,19 +138,19 @@ const dbFinMoveCenter = new Lang.Class({
 			if (hide) this._panelbuttonstoggle.hide('activities', 'left');
 			else this._panelbuttonstoggle.restore('activities');
 		} // let (hide)
-        _D('<. . .');
+        _D('<');
     },
 
 	// GNOMENEXT: ui/panel.js: class Panel
 	_updatePanel: function() {
         _D('>dbFinMoveCenter._updatePanel()');
 		Main.panel._updatePanel();
-        _D('<. . .');
+        _D('<');
 	},
 
 	// GNOMENEXT: modified from ui/panel.js: class Panel
     _allocate: function (actor, box, flags) {
-        //_D('>dbFinMoveCenter._allocate()'); // This is called whenever GS needs to reallocate the panel, debug will cause lots of records
+        _D('@dbFinMoveCenter._allocate()'); // This is called whenever GS needs to reallocate the panel, debug will cause lots of records
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
                 [wlm, wln] = Main.panel._leftBox.get_preferred_width(-1), // minimum and natural widths
@@ -189,6 +188,6 @@ const dbFinMoveCenter = new Lang.Class({
 				// But we do not need to reallocate them
 			} // let (wly, wl, wy, wr, xl, xr)
 		} // let (w, h, wlm, wln, wcm, wcn, wrm, wrn, boxChild, drl)
-        //_D('<. . .');
+        _D('<');
     }
 });

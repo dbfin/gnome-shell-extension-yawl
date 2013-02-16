@@ -25,8 +25,7 @@ const Convenience = Me.imports.convenience2;
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
-const dbFinDebug = Me.imports.dbfindebug;
-const _D = dbFinDebug._D;
+const _D = Me.imports.dbfindebug._D;
 
 const dbFinPanelEnhancements = new Lang.Class({
 	Name: 'dbFin.PanelEnhancements',
@@ -38,7 +37,7 @@ const dbFinPanelEnhancements = new Lang.Class({
         this._updateSignals();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::panel-background',
                                     callback: this._updateSignals, scope: this });
-        _D('<. . .');
+        _D('<');
     },
 
 	destroy: function() {
@@ -49,7 +48,7 @@ const dbFinPanelEnhancements = new Lang.Class({
         }
         this._restorePanelStyle();
         this._settings = null;
-        _D('<. . .');
+        _D('<');
 	},
 
     _updateSignals: function() {
@@ -65,7 +64,7 @@ const dbFinPanelEnhancements = new Lang.Class({
 			this._signals.disconnectId('panel-color');
 			this._signals.disconnectId('panel-opacity');
 		}
-        _D('<. . .');
+        _D('<');
     },
 
 	_updatePanelStyle: function() {
@@ -85,19 +84,19 @@ const dbFinPanelEnhancements = new Lang.Class({
     		Main.panel._leftCorner.actor.set_style(stylecorner);
     		Main.panel._rightCorner.actor.set_style(stylecorner);
 		} // let (style, stylecorner)
-        _D('<. . .');
+        _D('<');
 	},
 
 	_restorePanelStyle: function() {
         _D('>dbFinPanelEnhancements._restorePanelStyle()');
 		Main.panel.actor.set_style(null);
-        _D('<. . .');
+        _D('<');
 	},
 
 	// GNOMENEXT: ui/panel.js: class Panel
 	_updatePanel: function() {
         _D('>dbFinPanelEnhancements._updatePanel()');
 		Main.panel._updatePanel();
-        _D('<. . .');
+        _D('<');
 	}
 });

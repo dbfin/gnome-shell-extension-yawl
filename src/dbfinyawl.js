@@ -23,8 +23,7 @@ const Convenience = Me.imports.convenience2;
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
-const dbFinDebug = Me.imports.dbfindebug;
-const _D = dbFinDebug._D;
+const _D = Me.imports.dbfindebug._D;
 
 const dbFinYAWL = new Lang.Class({
     Name: 'dbFin.YAWL',
@@ -34,7 +33,7 @@ const dbFinYAWL = new Lang.Class({
 		this._movecenter = new dbFinMoveCenter.dbFinMoveCenter();
         this._panelenhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
         this._yawlpanel = new dbFinYAWLPanel.dbFinYAWLPanel();
-        _D('<. . .');
+        _D('<');
     },
 
     destroy: function() {
@@ -51,6 +50,6 @@ const dbFinYAWL = new Lang.Class({
 			this._movecenter.destroy();
 			this._movecenter = null;
 		}
-        _D('<. . .');
+        _D('<');
     }
 });

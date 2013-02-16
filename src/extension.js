@@ -18,8 +18,7 @@ const Convenience = Me.imports.convenience2;
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
-const dbFinDebug = Me.imports.dbfindebug;
-const _D = dbFinDebug._D;
+const _D = Me.imports.dbfindebug._D;
 
 var dbfinyawl = null;
 
@@ -32,11 +31,11 @@ function init() {
 function enable() {
     _D('>Enabling YAWL extension...');
     dbfinyawl = new dbFinYAWL.dbFinYAWL();
-    _D('<YAWL extension enabled.');
+    _D('<YAWL extension enabled.\n>YAWL is up and running...');
 }
 
 function disable() {
-    _D('>Disabling YAWL extension...');
+    _D('<\n>Disabling YAWL extension...');
     if (dbfinyawl) {
         dbfinyawl.destroy();
         dbfinyawl = null;

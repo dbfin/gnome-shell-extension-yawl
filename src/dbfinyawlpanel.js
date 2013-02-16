@@ -21,8 +21,7 @@ const Convenience = Me.imports.convenience2;
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
-const dbFinDebug = Me.imports.dbfindebug;
-const _D = dbFinDebug._D;
+const _D = Me.imports.dbfindebug._D;
 
 const dbFinYAWLPanel = new Lang.Class({
 	Name: 'dbFin.YAWLPanel',
@@ -30,7 +29,7 @@ const dbFinYAWLPanel = new Lang.Class({
     _init: function() {
         _D('>dbFinYAWLPanel._init()');
         this._tracker = new dbFinTracker.dbFinTracker(Lang.bind(this, this._refresh));
-        _D('<. . .');
+        _D('<');
     },
 
 	destroy: function() {
@@ -39,21 +38,24 @@ const dbFinYAWLPanel = new Lang.Class({
             this._tracker.destroy();
             this._tracker = null;
         }
-        _D('<. . .');
+        _D('<');
 	},
 
     _refresh: function(appsIn, appsOut, windowsIn, windowsOut) {
         _D('>dbFinYAWLPanel._refresh()');
 		log('');
-        log('Apps: -' + appsOut.length + ' +' + appsIn.length + ' Windows: -' + windowsOut.length + ' +' + windowsIn.length);
+		log('State:      ' + this._tracker.state);
+		log('State info: ' + this._tracker.stateInfo);
 		log('');
-		log('State: ' + this._tracker.state);
+        log('Apps: -' + appsOut.length + ' +' + appsIn.length + ' =' + this._tracker.apps.length
+                + ' Windows: -' + windowsOut.length + ' +' + windowsIn.length + ' =' + this._tracker.windows.length);
+		log('');
         this._tracker.apps.forEach(Lang.bind(this, function(metaApp, appProperties) {
             log(metaApp.get_name() + ':');
             appProperties.trackerApp.windows.forEach(Lang.bind(this, function(metaWindow) {
                 log('\t' + metaWindow.get_title());
             }));
         }));
-        _D('<. . .');
+        _D('<');
     }
 });
