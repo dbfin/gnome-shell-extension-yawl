@@ -30,4 +30,4 @@ stamp-*
 
 .anjuta/
 .git/
-
+/commit

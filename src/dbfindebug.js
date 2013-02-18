@@ -44,6 +44,8 @@ const dbFinYAWLDebug = new Lang.Class({
     _init: function(debugfilename) {
         this._prefix = '';
         this._stoplevel = 0;
+		this._lastlength = 0;
+		this._lastlengthlog = 0;
 		this.logfilename = debugfilename;
     },
 
@@ -60,29 +62,33 @@ const dbFinYAWLDebug = new Lang.Class({
 					if (s[0] == '>') {
 						shift = +1;
 						if (this._stoplevel) this._stoplevel++;
-						s = String.fromCharCode(0x250d) + s.substring(1)
-                                + dbFinUtils.stringRepeat(String.fromCharCode(0x2501), 7);
+						s = String.fromCharCode(0x250d) + s.substring(1);
 					}
 					else if (s[0] == '@') {
 						shift = +1;
 						this._stoplevel++;
-						s = String.fromCharCode(0x250d) + s.substring(1)
-                                + dbFinUtils.stringRepeat(String.fromCharCode(0x2501), 7);
+						s = String.fromCharCode(0x250d) + s.substring(1);
 					}
 					else if (s[0] == '<') {
 						shift = -1;
 						if (this._prefix.length) this._prefix = this._prefix.substring(4);
-						s = String.fromCharCode(0x2514) + dbFinUtils.stringRepeat(String.fromCharCode(0x2500), 7)
-								+ s.substring(1) + dbFinUtils.stringRepeat(String.fromCharCode(0x2500), 3);
+						s = String.fromCharCode(0x2514) + dbFinUtils.stringRepeat(String.fromCharCode(0x2500), 7) + s.substring(1);
 					}
 					if (!this._stoplevel && s.length) {
 						if (!this._prefix.length) {
-							log(s);
-							msgs.push(s);
+							let (slog = s) {
+								if (shift == -1 && slog.length < this._lastlengthlog)
+									slog += dbFinUtils.stringRepeat(String.fromCharCode(0x2500), this._lastlengthlog - slog.length);
+								log(slog);
+								this._lastlengthlog = slog.length;
+							}
 						}
-						else {
-							msgs.push(this._prefix + s);
+						s = this._prefix + s;
+						if (shift == -1 && s.length < this._lastlength) {
+							s += dbFinUtils.stringRepeat(String.fromCharCode(0x2500), this._lastlength - s.length);
 						}
+						msgs.push();
+						this._lastlength = s.length;
 					}
 					if (shift == -1) {
 						if (this._stoplevel) this._stoplevel--;
