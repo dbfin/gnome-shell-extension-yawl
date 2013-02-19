@@ -87,7 +87,7 @@ const dbFinYAWLDebug = new Lang.Class({
 						if (shift == -1 && s.length < this._lastlength) {
 							s += dbFinUtils.stringRepeat(String.fromCharCode(0x2500), this._lastlength - s.length);
 						}
-						msgs.push();
+						msgs.push(s);
 						this._lastlength = s.length;
 					}
 					if (shift == -1) {
