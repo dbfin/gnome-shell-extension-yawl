@@ -59,6 +59,11 @@ const dbFinYAWLPanel = new Lang.Class({
 
     _refresh: function(appsIn, appsOut, windowsIn, windowsOut) {
         _D('>dbFinYAWLPanel._refresh()');
+        if (!this._tracker) {
+            _D('this._tracker === null');
+            _D('<');
+            return;
+        }
         if (!Main.panel._yawlBox) {
             log('');
             log('State:      ' + this._tracker.state);
@@ -68,11 +73,18 @@ const dbFinYAWLPanel = new Lang.Class({
                     + ' Windows: -' + windowsOut.length + ' +' + windowsIn.length + ' =' + this._tracker.windows.length);
             log('');
             this._tracker.apps.forEach(Lang.bind(this, function(metaApp, appProperties) {
-                log(metaApp.get_name() + ':');
-                appProperties.trackerApp.windows.forEach(Lang.bind(this, function(metaWindow) {
-                    log('\t' + metaWindow.get_title());
-                }));
-            }));
+                if (!appProperties) return;
+                let (trackerApp = appProperties.trackerApp) {
+					if (!trackerApp) return;
+					log(trackerApp.appName + ':');
+					trackerApp.windows.forEach(Lang.bind(this, function(metaWindow) {
+						let (trackerWindow = this._tracker.getTrackerWindow(metaWindow)) {
+							if (!trackerWindow) return;
+							log('\t' + trackerWindow.windowTitle);
+						} // let (trackerWindow)
+					})); // trackerApp.windows.forEach
+				} // let (trackerApp)
+            })); // this._tracker.apps.forEach
             _D('<');
             return;
         } // if (!Main.panel._yawlBox)
