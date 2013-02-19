@@ -72,7 +72,13 @@ const dbFinTrackerWindow = new Lang.Class({
         _D('>dbFinTrackerWindow._init()');
         this.metaWindow = metaWindow;
 		this._tracker = tracker;
+		this.windowtitle = '?';
+		this._updateTitle();
         this.app = metaApp;
+		this.appname = '?';
+		if (this.app && this.app.get_name) {
+			try { this.appname = this.app.get_name(); } catch (e) { this.appname = '?'; }
+		}
         this._signals = new dbFinUtils.Signals();
         this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::title',
                                     callback: this._titleChanged, scope: this });
@@ -87,36 +93,32 @@ const dbFinTrackerWindow = new Lang.Class({
         }
         this.metaWindow = null;
 		this._tracker = null;
+		this.windowtitle = '?';
         this.app = null;
+		this.appname = '?';
         _D('<');
 	},
 
 	_titleChanged: function(metaWindow) {
         _D('>dbFinTrackerWindow._titleChanged()');
-		if (this._tracker) this._tracker.update(null, this.getWindowAppNameAndTitle(metaWindow) + ' changed title.');
+		if (metaWindow != this.metaWindow) {
+	        _D('<');
+			return;
+		}
+		let (msg = '"' + this.appname + ':' + this.windowtitle + '" changed title to "') {
+			this._updateTitle();
+			if (this._tracker) this._tracker.update(null, msg + this.windowtitle + '".');
+		}
         _D('<');
 	},
 
-	getWindowAppNameAndTitle: function(metaWindow/* = this.metaWindow*/) {
-        _D('>dbFinTrackerWindow.getWindowAppNameAndTitle()');
-		let (nat = '?') {
-			if (!metaWindow || metaWindow == this.metaWindow) {
-				if (!this.metaWindow) {
-					_D('this.metaWindow === null');
-					_D('<');
-					return '?:?';
-				}
-				if (this.app) nat = this.app.get_name();
-				nat = nat + ':' + this.metaWindow.get_title();
-			}
-			else let (metaApp = Shell.WindowTracker.get_default().get_window_app(metaWindow)) {
-				if (metaApp) nat = metaApp.get_name();
-				nat = nat + ':' + metaWindow.get_title();
-			}
-			_D('<');
-			return nat;
-		} // let (nat)
-	}
+	_updateTitle: function() {
+        _D('>dbFinTrackerWindow._updateTitle()');
+		if (this.metaWindow && this.metaWindow.get_title) {
+			try { this.windowtitle = this.metaWindow.get_title(); } catch (e) { this.windowtitle = '?'; }
+		}
+        _D('<');
+	},
 });
 
 /* class dbFinTracker: main class to track all apps and windows
@@ -360,7 +362,12 @@ const dbFinTracker = new Lang.Class({
 	_windowRemoved: function (metaWorkspace, metaWindow) {
         _D('>dbFinTracker._windowRemoved()');
 		let (windowProperties = this.windows.get(metaWindow)) {
-			this.update(null, 'Window "' + (windowProperties && windowProperties.trackerWindow ? windowProperties.trackerWindow.getWindowAppNameAndTitle() : dbFinTrackerWindow.prototype.getWindowAppNameAndTitle.call(metaWindow)) + '" was removed from workspace ' + (metaWorkspace && metaWorkspace.index ? metaWorkspace.index() + 1 : '?') + '.');
+			this.update(null, 'Window "'
+			            + (windowProperties && windowProperties.trackerWindow
+			            	? windowProperties.trackerWindow.appname + ':' + windowProperties.trackerWindow.windowtitle
+			            	: '?:?')
+			            + '" was removed from workspace '
+			            + (metaWorkspace && metaWorkspace.index ? metaWorkspace.index() + 1 : '?') + '.');
 		}
         _D('<');
 	}
