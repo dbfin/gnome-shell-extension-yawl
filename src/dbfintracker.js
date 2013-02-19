@@ -14,9 +14,12 @@ const Mainloop = imports.mainloop;
 
 const Shell = imports.gi.Shell;
 
+const Main = imports.ui.main;
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinUtils = Me.imports.dbfinutils;
 const Convenience = Me.imports.convenience2;
 
@@ -35,11 +38,16 @@ const dbFinTrackerApp = new Lang.Class({
 		this.metaApp = metaApp;
 		this._tracker = tracker;
         this.windows = (metaWindow ? [ metaWindow ] : []);
+        this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this._tracker);
         _D('<');
     },
 
 	destroy: function() {
         _D('>dbFinTrackerApp.destroy()');
+        if (this.appButton) {
+            this.appButton.destroy();
+            this.appButton = null;
+        }
 		this.metaApp = null;
 		this._tracker = null;
         this.windows = [];
@@ -128,6 +136,7 @@ const dbFinTracker = new Lang.Class({
         _D('>dbFinTracker._init()');
 		this._signals = new dbFinUtils.Signals();
 		this._callback = callback || null;
+        this._tracker = Shell.WindowTracker.get_default();
 		this.apps = new dbFinUtils.ArrayHash(); // [ [ metaApp, { state:, trackerApp: } ] ]
 		this.windows = new dbFinUtils.ArrayHash(); // [ [ metaWindow, { state:, trackerWindow: } ] ]
 		this.state = 0; // when refreshing we increase the state to indicate apps and windows that are no longer there
@@ -166,8 +175,15 @@ const dbFinTracker = new Lang.Class({
 			this.windows.destroy();
 			this.windows = null;
 		}
+        this._tracker = null;
         _D('<');
 	},
+
+    getTracker: function() {
+        _D('>dbFinTracker.getTracker()');
+        _D('<');
+        return this._tracker;
+    },
 
 	getTrackerApp: function(metaApp) {
         _D('>dbFinTracker.getTrackerApp()');
@@ -206,6 +222,11 @@ const dbFinTracker = new Lang.Class({
 	        _D('<');
 			return;
 		}
+        if (!this._tracker) {
+            _D('this._tracker == null');
+            _D('<');
+            return;
+        }
 		if (!metaWorkspace || !metaWorkspace.list_windows) {
 			metaWorkspace = global.screen.get_active_workspace();
 		}
@@ -215,10 +236,10 @@ const dbFinTracker = new Lang.Class({
 		}
 		this.state ? this.state++ : (this.state = 1);
         this.stateInfo = (!stateInfo || stateInfo == '' ? '_refresh() call with no additional info.' : stateInfo);
-		let (appsIn = [], appsOut = [], windowsIn = [], windowsOut = [], tracker = Shell.WindowTracker.get_default()) {
+		let (appsIn = [], appsOut = [], windowsIn = [], windowsOut = []) {
 			metaWorkspace.list_windows().forEach(Lang.bind(this, function(metaWindow) {
-				if (!metaWindow || !tracker.is_window_interesting(metaWindow)) return;
-				let (metaApp = tracker.get_window_app(metaWindow)) {
+				if (!metaWindow || !this._tracker.is_window_interesting(metaWindow)) return;
+				let (metaApp = this._tracker.get_window_app(metaWindow)) {
 					if (!metaApp || metaApp.state == Shell.AppState.STOPPED) return;
 					let (	windowProperties = this.windows.get(metaWindow),
 							appProperties = this.apps.get(metaApp)) {
@@ -252,7 +273,7 @@ const dbFinTracker = new Lang.Class({
 										/*after = */true);
 			}
             if (this._callback) this._callback(appsIn, appsOut, windowsIn, windowsOut);
-		} // let (appsIn, appsOut, windowsIn, windowsOut, tracker)
+		} // let (appsIn, appsOut, windowsIn, windowsOut)
         _D('<');
 	},
 

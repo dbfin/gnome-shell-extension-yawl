@@ -28,11 +28,11 @@ const  = new Lang.Class({
 
     _init: function() {
         _D('>dbFin._init()');
-        _D('<. . .');
+        _D('<');
     },
 
 	destroy: function() {
         _D('>dbFin.destroy()');
-        _D('<. . .');
+        _D('<');
 	}
 });

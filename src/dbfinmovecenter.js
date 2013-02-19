@@ -177,7 +177,7 @@ const dbFinMoveCenter = new Lang.Class({
 				Main.panel._leftBox.allocate(boxChild, flags);
 				if (drl) { xr = xl; xl -= wy; } else { xl = xr; xr += wy; }
 				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-				if (Main.panel._yawl) Main.panel._yawl.allocate(boxChild, flags);
+				if (Main.panel._yawlBox) Main.panel._yawlBox.allocate(boxChild, flags);
 				if (drl) { xr = xl; xl -= wcn; } else { xl = xr; xr += wcn; }
 				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
 				Main.panel._centerBox.allocate(boxChild, flags);

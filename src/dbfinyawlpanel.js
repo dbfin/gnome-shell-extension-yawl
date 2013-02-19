@@ -11,6 +11,10 @@
 
 const Lang = imports.lang;
 
+const St = imports.gi.St;
+
+const Main = imports.ui.main;
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
@@ -26,8 +30,12 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinYAWLPanel = new Lang.Class({
 	Name: 'dbFin.YAWLPanel',
 
+    // GNOMENEXT: ui/panel.js: class Panel
     _init: function() {
         _D('>dbFinYAWLPanel._init()');
+		this._box = new St.BoxLayout({ name: 'panelYAWL', vertical: false, track_hover: true });
+        Main.panel._yawlBox = this._box;
+        Main.panel.actor.add_actor(Main.panel._yawlBox);
         this._tracker = new dbFinTracker.dbFinTracker(Lang.bind(this, this._refresh));
         _D('<');
     },
@@ -38,24 +46,43 @@ const dbFinYAWLPanel = new Lang.Class({
             this._tracker.destroy();
             this._tracker = null;
         }
+		if (this._box) {
+            if (Main.panel._yawlBox == this._box) {
+                Main.panel.actor.remove_actor(Main.panel._yawlBox);
+                Main.panel._yawlBox = null;
+            }
+			this._box.destroy();
+			this._box = null;
+		}
         _D('<');
 	},
 
     _refresh: function(appsIn, appsOut, windowsIn, windowsOut) {
         _D('>dbFinYAWLPanel._refresh()');
-		log('');
-		log('State:      ' + this._tracker.state);
-		log('State info: ' + this._tracker.stateInfo);
-		log('');
-        log('Apps: -' + appsOut.length + ' +' + appsIn.length + ' =' + this._tracker.apps.length
-                + ' Windows: -' + windowsOut.length + ' +' + windowsIn.length + ' =' + this._tracker.windows.length);
-		log('');
-        this._tracker.apps.forEach(Lang.bind(this, function(metaApp, appProperties) {
-            log(metaApp.get_name() + ':');
-            appProperties.trackerApp.windows.forEach(Lang.bind(this, function(metaWindow) {
-                log('\t' + metaWindow.get_title());
+        if (!Main.panel._yawlBox) {
+            log('');
+            log('State:      ' + this._tracker.state);
+            log('State info: ' + this._tracker.stateInfo);
+            log('');
+            log('Apps: -' + appsOut.length + ' +' + appsIn.length + ' =' + this._tracker.apps.length
+                    + ' Windows: -' + windowsOut.length + ' +' + windowsIn.length + ' =' + this._tracker.windows.length);
+            log('');
+            this._tracker.apps.forEach(Lang.bind(this, function(metaApp, appProperties) {
+                log(metaApp.get_name() + ':');
+                appProperties.trackerApp.windows.forEach(Lang.bind(this, function(metaWindow) {
+                    log('\t' + metaWindow.get_title());
+                }));
             }));
-        }));
+            _D('<');
+            return;
+        } // if (!Main.panel._yawlBox)
+        if (appsIn && appsIn.forEach) {
+            appsIn.forEach(Lang.bind(this, function(metaApp) {
+                let (trackerApp = this._tracker.getTrackerApp(metaApp)) {
+                    if (trackerApp) Main.panel._yawlBox.add_actor(trackerApp.appButton.container);
+                }
+            }));
+        }
         _D('<');
     }
 });
