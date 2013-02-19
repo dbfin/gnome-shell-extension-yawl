@@ -34,6 +34,8 @@ const dbFinHotCorner = new Lang.Class({
     _init: function() {
         _D('>dbFinHotCorner._init()');
 		this._button = new Panel.ActivitiesButton();
+		this._button._minHPadding = 0;
+		this._button._natHPadding = 0;
 		this._signals = new dbFinUtils.Signals();
 		this._signals.connectNoId({ emitter: this._button.actor, signal: 'get-preferred-width',
 									callback: this._getPreferredSize, scope: this });
@@ -41,6 +43,9 @@ const dbFinHotCorner = new Lang.Class({
 									callback: this._getPreferredSize, scope: this });
 		this._signals.connectNoId({ emitter: this._button.actor, signal: 'allocate',
 									callback: this._allocate, scope: this });
+		this._signals.connectNoId({ emitter: this._button.actor, signal: 'style-changed',
+									callback: this._styleChanged, scope: this },
+		                          	/*after = */true);
 		Main.panel['_leftBox'].insert_child_at_index(this._button.container, 0);
         _D('<');
     },
@@ -61,7 +66,7 @@ const dbFinHotCorner = new Lang.Class({
 
 	_getPreferredSize: function(actor, forSize, alloc) {
         _D('@dbFinHotCorner._getPreferredSize()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
-		[ alloc.min_size, alloc.natural_size ] = [ 4, 4 ]; // for some reason smaller values generate lots of GS warnings
+		[ alloc.min_size, alloc.natural_size ] = [ 1, 1 ];
 		_D('<');
 	},
 
@@ -73,7 +78,14 @@ const dbFinHotCorner = new Lang.Class({
 				dbFinUtils.setBox(childBox, 0, 0, 1, 1);
 				children[0].allocate(childBox, flags);
 			}
-		} // let (childBox)
+		} // let (children, childBox)
+		_D('<');
+	},
+
+	_styleChanged: function(actor) {
+        _D('@dbFinHotCorner._styleChanged()'); // This is called whenever the style of the button changes, debug will cause lots of records
+		this._button._minHPadding = 0;
+		this._button._natHPadding = 0;
 		_D('<');
 	}
 });
