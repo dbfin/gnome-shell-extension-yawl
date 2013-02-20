@@ -125,6 +125,68 @@ function buildPrefsWidget() {
 		widget.append_page(/* child = */pagePanel, /* tab_label = */pagePanelLabel);
 	} // let (pagePanel, pagePanelLabel)
 
+	// Icons
+	let (pageIcons = new Gtk.Grid({ margin: 7, row_spacing: 7, column_spacing: 3, column_homogeneous: true }),
+	     pageIconsLabel = new Gtk.Label({ label: _("Icons") })) {
+
+		// Icons Size
+		let (iconsSizeLabel = new Gtk.Label({ label: _("Icon size"), halign: Gtk.Align.START, hexpand: true }),
+             iconsSizeScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.START, hexpand: true, width_chars: 5 }),
+             iconsSizeScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 16, 64, 8, { halign: Gtk.Align.END, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+		     settingsbind = new dbFinUtilsPrefs.dbFinSettingsBindEntryScale()) {
+			widget._settingsbinds.push(settingsbind);
+			settingsbind.bind('icons-size', iconsSizeScaleEntry, iconsSizeScale);
+            pageIcons.attach(iconsSizeLabel, 0, 0, 5, 1);
+            pageIcons.attach(iconsSizeScaleEntry, 5, 0, 1, 1);
+            pageIcons.attach(iconsSizeScale, 6, 0, 2, 1);
+        } // let (iconsSizeLabel, iconsSizeScaleEntry, iconsSizeScale, settingsbind)
+
+		// Icons Distance
+		let (iconsDistanceLabel = new Gtk.Label({ label: _("Distance between icons"), halign: Gtk.Align.START, hexpand: true }),
+             iconsDistanceScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.START, hexpand: true, width_chars: 5 }),
+             iconsDistanceScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 14, 1, { halign: Gtk.Align.END, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+		     settingsbind = new dbFinUtilsPrefs.dbFinSettingsBindEntryScale()) {
+			widget._settingsbinds.push(settingsbind);
+			settingsbind.bind('icons-distance', iconsDistanceScaleEntry, iconsDistanceScale);
+            pageIcons.attach(iconsDistanceLabel, 0, 1, 5, 1);
+            pageIcons.attach(iconsDistanceScaleEntry, 5, 1, 1, 1);
+            pageIcons.attach(iconsDistanceScale, 6, 1, 2, 1);
+        } // let (iconsDistanceLabel, iconsDistanceScaleEntry, iconsDistanceScale, settingsbind)
+
+		// Separator
+		let (iconsSeparator = new Gtk.Separator({ hexpand: true })) {
+            pageIcons.attach(iconsSeparator, 0, 2, 8, 1);
+        } // let (iconsSeparator)
+
+		// Icons Faded
+		let (iconsFadedLabel = new Gtk.Label({ label: _("Faded icons"), halign: Gtk.Align.START, hexpand: true }),
+             iconsFadedSwitch = new Gtk.Switch({ halign: Gtk.Align.END })) {
+            iconsFadedSwitch.set_active(widget._settings.get_boolean('icons-faded'));
+			widget._settings.bind('icons-faded', iconsFadedSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+            pageIcons.attach(iconsFadedLabel, 0, 3, 7, 1);
+            pageIcons.attach(iconsFadedSwitch, 7, 3, 1, 1);
+        } // let (iconsFadedLabel, iconsFadedSwitch)
+
+		// Separator
+		let (iconsSeparator = new Gtk.Separator({ hexpand: true })) {
+            pageIcons.attach(iconsSeparator, 0, 4, 8, 1);
+        } // let (iconsSeparator)
+
+		// Icons Animation Time
+		let (iconsAnimationTimeLabel = new Gtk.Label({ label: _("Animation Time in ms (0: no animation)"), halign: Gtk.Align.START, hexpand: true }),
+             iconsAnimationTimeScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.START, hexpand: true, width_chars: 5 }),
+             iconsAnimationTimeScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 999, 9, { halign: Gtk.Align.END, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+		     settingsbind = new dbFinUtilsPrefs.dbFinSettingsBindEntryScale()) {
+			widget._settingsbinds.push(settingsbind);
+			settingsbind.bind('icons-animation-time', iconsAnimationTimeScaleEntry, iconsAnimationTimeScale);
+            pageIcons.attach(iconsAnimationTimeLabel, 0, 5, 5, 1);
+            pageIcons.attach(iconsAnimationTimeScaleEntry, 5, 5, 1, 1);
+            pageIcons.attach(iconsAnimationTimeScale, 6, 5, 2, 1);
+        } // let (iconsAnimationTimeLabel, iconsAnimationTimeScaleEntry, iconsAnimationTimeScale, settingsbind)
+
+		widget.append_page(/* child = */pageIcons, /* tab_label = */pageIconsLabel);
+	} // let (pageIcons, pageIconsLabel)
+
     widget.show_all();
     return widget;
 }
