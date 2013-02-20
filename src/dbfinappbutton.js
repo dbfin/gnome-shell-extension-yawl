@@ -14,8 +14,6 @@ const Lang = imports.lang;
 const Shell = imports.gi.Shell;
 
 const Main = imports.ui.main;
-const Overview = imports.ui.overview;
-const Panel = imports.ui.panel;
 const PanelMenu = imports.ui.panelMenu;
 const Tweener = imports.ui.tweener;
 
@@ -53,15 +51,10 @@ const dbFinAppButton = new Lang.Class({
         this.actor.add_actor(this._iconBox);
 		this._updateIcon();
 
-		this.hidden = Main.overview.visible;
-		if (this.hidden) this.actor.hide();
+		this.hidden = false;
         this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
-        this.actor.reactive = !this.hidden;
+        this.actor.reactive = true;
 
-		this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
-									callback: this.hide, scope: this });
-		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
-									callback: this.show, scope: this });
 		if (this._tracker) {
 			this._signals.connectNoId({	emitter: this._tracker.getTracker(), signal: 'notify::focus-app',
 										callback: this._notifyFocusApp, scope: this });
@@ -105,15 +98,15 @@ const dbFinAppButton = new Lang.Class({
 
     show: function() {
         _D('>dbFinAppButton.show()');
-        if (!this.hidden || Main.screenShield.locked) {
+        if (!this.hidden) {
             _D('<');
             return;
         }
-        this.actor.show();
-        this.actor.reactive = true;
+		Tweener.removeTweens(this.container);
+        this.container.show();
+        this.container.reactive = true;
         this.hidden = false;
-		Tweener.removeTweens(this.actor);
-		Tweener.addTween(this.actor, {	opacity: 255, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad' });
+		Tweener.addTween(this.container, {	opacity: 255, time: .777, transition: 'easeOutQuad' });
         _D('<');
     },
 
@@ -124,23 +117,23 @@ const dbFinAppButton = new Lang.Class({
             return;
         }
         this.hidden = true;
-        this.actor.reactive = false;
-		Tweener.removeTweens(this.actor);
-		Tweener.addTween(this.actor, {	opacity: 0, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad',
-										onComplete: function() { this.actor.hide(); }, onCompleteScope: this });
+		Tweener.removeTweens(this.container);
+        this.container.reactive = false;
+		Tweener.addTween(this.container, {	opacity: 0, time: .777, transition: 'easeOutQuad',
+										    onComplete: function() { this.container.hide(); }, onCompleteScope: this });
         _D('<');
     },
 
 	_iconBoxStyleChanged: function() {
         _D('>dbFinAppButton._iconBoxStyleChanged()');
-        if (!this._iconBox) {
-            _D('this._iconBox === null');
-            _D('<');
-            return;
-        }
-        let node = this._iconBox.get_theme_node();
-        this._iconBoxClip = node.get_length('app-icon-bottom-clip') || 0;
-        this._iconBoxAllocation();
+		let (themesource = (Main.panel.statusArea['appMenu'] ? Main.panel.statusArea['appMenu']._iconBox : this._iconBox)) {
+			if (themesource) {
+				let (node = themesource.get_theme_node()) {
+					this._iconBoxClip = node.get_length('app-icon-bottom-clip') || 0;
+					this._iconBoxAllocation();
+				}
+			}
+		}
         _D('<');
 	},
 
@@ -199,7 +192,7 @@ const dbFinAppButton = new Lang.Class({
 			_D('<');
 			return;
 		}
-		this._iconBox.set_child(this.app.create_icon_texture(2 * Panel.PANEL_ICON_SIZE));
+		this._iconBox.set_child(this.app.create_icon_texture(32));
         _D('<');
 	}
 });

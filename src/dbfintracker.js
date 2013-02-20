@@ -33,7 +33,7 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinTrackerApp = new Lang.Class({
 	Name: 'dbFin.TrackerApp',
 
-    _init: function(metaApp, tracker, metaWindow) {
+    _init: function(metaApp, tracker, metaWindow, autoHideShow/* = false*/) {
         _D('>dbFinTrackerApp._init()');
 		this.metaApp = metaApp;
 		this._tracker = tracker;
@@ -42,7 +42,9 @@ const dbFinTrackerApp = new Lang.Class({
 		if (this.metaApp && this.metaApp.get_name) {
 			try { this.appName = this.metaApp.get_name(); } catch (e) { this.appName = '?'; }
 		}
+		this._autohideshow = autoHideShow || false;
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this._tracker);
+		if (this.appButton && !metaWindow && this._autohideshow) this.appButton.hide();
         _D('<');
     },
 
@@ -61,16 +63,20 @@ const dbFinTrackerApp = new Lang.Class({
 
     addWindow: function(metaWindow) {
         _D('>dbFinTrackerApp.addWindow()');
-        if (metaWindow && this.windows.indexOf(metaWindow) == -1) this.windows.push(metaWindow);
+        if (metaWindow && this.windows && this.windows.indexOf(metaWindow) == -1) {
+            if (this._autohideshow && !this.windows.length && this.appButton) this.appButton.show();
+			this.windows.push(metaWindow);
+		}
         _D('<');
     },
 
     removeWindow: function(metaWindow) {
         _D('>dbFinTrackerApp.removeWindow()');
-        if (metaWindow) {
+        if (metaWindow && this.windows) {
             let (i = this.windows.indexOf(metaWindow)) {
                 if (i != -1) this.windows.splice(i, 1);
             }
+            if (this._autohideshow && !this.windows.length && this.appButton) this.appButton.hide();
         }
         _D('<');
     }
@@ -261,7 +267,7 @@ const dbFinTracker = new Lang.Class({
 						if (appProperties === undefined || !appProperties || !appProperties.trackerApp) { // new app
 							appsIn.push(metaApp);
 							appProperties = {};
-							appProperties.trackerApp = new dbFinTrackerApp(metaApp, this, metaWindow);
+							appProperties.trackerApp = new dbFinTrackerApp(metaApp, this, metaWindow, true);
 						}
 						windowProperties.state = this.state;
 						this.windows.set(metaWindow, windowProperties);
@@ -320,7 +326,7 @@ const dbFinTracker = new Lang.Class({
 			if (appProperties === undefined || !appProperties) {
 				_D('appProperties === null');
 			}
-			else if (appProperties.trackerApp && appProperties.trackerApp.windows && appProperties.trackerApp.windows.length) {
+			else if (appProperties.trackerApp && appProperties.trackerApp.windows/* && appProperties.trackerApp.windows.length*/) {
                 let (windows = appProperties.trackerApp.windows.slice()) {
     				windows.forEach(Lang.bind(this, function (metaWindow) { this._removeWindow(metaWindow); }));
                 }
@@ -336,7 +342,7 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	},
 
-	_removeWindow: function(metaWindow) { // calls _removeApp if no more windows belong to app
+	_removeWindow: function(metaWindow) { // not the case anymore: calls _removeApp if no more windows belong to app
         _D('>dbFinTracker._removeWindow()');
 		let (windowProperties = this.windows.remove(metaWindow)) {
 			if (windowProperties === undefined || !windowProperties) {
@@ -354,7 +360,7 @@ const dbFinTracker = new Lang.Class({
 							if (appProperties.trackerApp) {
 								appProperties.trackerApp.removeWindow(metaWindow);
 							}
-							if (!appProperties.trackerApp || !appProperties.trackerApp.windows || !appProperties.trackerApp.windows.length) {
+							if (!appProperties.trackerApp || !appProperties.trackerApp.windows/* || !appProperties.trackerApp.windows.length*/) {
 								this._removeApp(metaApp);
 							}
 						} // if (appProperties !== undefined && appProperties)

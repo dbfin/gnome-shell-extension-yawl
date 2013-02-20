@@ -14,6 +14,8 @@ const Lang = imports.lang;
 const St = imports.gi.St;
 
 const Main = imports.ui.main;
+const Overview = imports.ui.overview;
+const Tweener = imports.ui.tweener;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -33,15 +35,27 @@ const dbFinYAWLPanel = new Lang.Class({
     // GNOMENEXT: ui/panel.js: class Panel
     _init: function() {
         _D('>dbFinYAWLPanel._init()');
+		this._signals = new dbFinUtils.Signals();
 		this._box = new St.BoxLayout({ name: 'panelYAWL', vertical: false, track_hover: true });
         Main.panel._yawlBox = this._box;
         Main.panel.actor.add_actor(Main.panel._yawlBox);
         this._tracker = new dbFinTracker.dbFinTracker(Lang.bind(this, this._refresh));
+
+		this.hidden = Main.overview.visible;
+		if (this.hidden) this._box.hide();
+		this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
+									callback: this.hide, scope: this });
+		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
+									callback: this.show, scope: this });
         _D('<');
     },
 
 	destroy: function() {
         _D('>dbFinYAWLPanel.destroy()');
+		if (this._signals) {
+			this._signals.destroy();
+			this._signals = null;
+		}
         if (this._tracker) {
             this._tracker.destroy();
             this._tracker = null;
@@ -56,6 +70,32 @@ const dbFinYAWLPanel = new Lang.Class({
 		}
         _D('<');
 	},
+
+    show: function() {
+        _D('>dbFinAppButton.show()');
+        if (!this.hidden || Main.screenShield.locked) {
+            _D('<');
+            return;
+        }
+		Tweener.removeTweens(this._box);
+        this._box.show();
+        this.hidden = false;
+		Tweener.addTween(this._box, { opacity: 255, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad' });
+        _D('<');
+    },
+
+    hide: function() {
+        _D('>dbFinAppButton.hide()');
+        if (this.hidden) {
+            _D('<');
+            return;
+        }
+        this.hidden = true;
+		Tweener.removeTweens(this._box);
+		Tweener.addTween(this._box, {	opacity: 0, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad',
+										onComplete: function() { this._box.hide(); }, onCompleteScope: this });
+        _D('<');
+    },
 
     _refresh: function(appsIn, appsOut, windowsIn, windowsOut) {
         _D('>dbFinYAWLPanel._refresh()');
