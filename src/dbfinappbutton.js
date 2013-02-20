@@ -42,18 +42,25 @@ const dbFinAppButton = new Lang.Class({
 		this._tracker = tracker;
 		this._focused = this.isFocused();
 
+		this.hidden = false;
+        this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
+        this.actor.reactive = true;
+
+		this._minHPadding = 0;
+		this._natHPadding = 0;
+		this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
+									callback: this._styleChanged, scope: this },
+		                          	/*after = */true);
+
 		this._iconBox = new Shell.Slicer();
 		this._iconBoxClip = 0;
 		this._signals.connectNoId({	emitter: this._iconBox, signal: 'style-changed',
-									callback: this._iconBoxStyleChanged, scope: this });
+									callback: this._iconBoxStyleChanged, scope: this },
+                                    /*after = */true);
 		this._signals.connectNoId({	emitter: this._iconBox, signal: 'notify::allocation',
 									callback: this._iconBoxAllocation, scope: this });
         this.actor.add_actor(this._iconBox);
 		this._updateIcon();
-
-		this.hidden = false;
-        this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
-        this.actor.reactive = true;
 
 		if (this._tracker) {
 			this._signals.connectNoId({	emitter: this._tracker.getTracker(), signal: 'notify::focus-app',
@@ -106,7 +113,8 @@ const dbFinAppButton = new Lang.Class({
         this.container.show();
         this.container.reactive = true;
         this.hidden = false;
-		Tweener.addTween(this.container, {	opacity: 255, time: .777, transition: 'easeOutQuad' });
+		Tweener.addTween(this._iconBox, {	opacity: 255, width: 32, time: .777, transition: 'easeOutQuad',
+											onComplete: function() { }, onCompleteScope: this });
         _D('<');
     },
 
@@ -119,13 +127,20 @@ const dbFinAppButton = new Lang.Class({
         this.hidden = true;
 		Tweener.removeTweens(this.container);
         this.container.reactive = false;
-		Tweener.addTween(this.container, {	opacity: 0, time: .777, transition: 'easeOutQuad',
+		Tweener.addTween(this._iconBox, {	opacity: 0, width: 1, time: .777, transition: 'easeOutQuad',
 										    onComplete: function() { this.container.hide(); }, onCompleteScope: this });
         _D('<');
     },
 
+	_styleChanged: function(actor) {
+        _D('@dbFinAppButton._styleChanged()'); // This is called whenever the style of the button changes, debug will cause lots of records
+		this._minHPadding = 0;
+		this._natHPadding = 0;
+		_D('<');
+	},
+
 	_iconBoxStyleChanged: function() {
-        _D('>dbFinAppButton._iconBoxStyleChanged()');
+        _D('@dbFinAppButton._iconBoxStyleChanged()'); // This is called whenever the style of this._iconBox changes, debug will cause lots of records
 		let (themesource = (Main.panel.statusArea['appMenu'] ? Main.panel.statusArea['appMenu']._iconBox : this._iconBox)) {
 			if (themesource) {
 				let (node = themesource.get_theme_node()) {
