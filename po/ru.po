@@ -6,8 +6,8 @@
 msgid ""
 msgstr "Project-Id-Version: YAWL 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-15 14:14-0600\n"
-"PO-Revision-Date: 2013-02-15 14:14-0600\n"
+"POT-Creation-Date: 2013-02-20 19:59-0600\n"
+"PO-Revision-Date: 2013-02-20 19:59-0600\n"
 "Last-Translator: Vadim @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -46,3 +46,23 @@ msgstr "Цвет панели"
 #: src/prefs.js:111
 msgid "Panel opacity"
 msgstr "Непрозрачность панели"
+
+#: src/prefs.js:130
+msgid "Icons"
+msgstr "Иконки"
+
+#: src/prefs.js:133
+msgid "Icon size"
+msgstr "Размер иконок"
+
+#: src/prefs.js:145
+msgid "Distance between icons"
+msgstr "Расстояние между иконками"
+
+#: src/prefs.js:162
+msgid "Faded icons"
+msgstr "Затемнение"
+
+#: src/prefs.js:176
+msgid "Animation Time in ms (0: no animation)"
+msgstr "Время анимации (0: без анимации)"

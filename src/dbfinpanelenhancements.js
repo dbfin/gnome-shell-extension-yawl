@@ -34,9 +34,12 @@ const dbFinPanelEnhancements = new Lang.Class({
         _D('>dbFinPanelEnhancements._init()');
         this._settings = Convenience.getSettings();
 		this._signals = new dbFinUtils.Signals();
-        this._updateSignals();
+		this._panelBackground = false;
+		this._panelColor = '#000000';
+		this._panelOpacity = 100;
+        this._updatePanelBackground();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::panel-background',
-                                    callback: this._updateSignals, scope: this });
+                                    callback: this._updatePanelBackground, scope: this });
         _D('<');
     },
 
@@ -51,35 +54,62 @@ const dbFinPanelEnhancements = new Lang.Class({
         _D('<');
 	},
 
-    _updateSignals: function() {
-        _D('>dbFinPanelEnhancements._updateSignals()');
-		this._updatePanelStyle();
-        if (this._settings.get_boolean('panel-background')) {
+    _updatePanelBackground: function() {
+        _D('>dbFinPanelEnhancements._updatePanelBackground()');
+		if (this._settings) {
+			this._panelBackground = this._settings.get_boolean('panel-background');
+		}
+        if (this._panelBackground) {
+			this._updatePanelColor();
             this._signals.connectId('panel-color', {    emitter: this._settings, signal: 'changed::panel-color',
-                                                        callback: this._updatePanelStyle, scope: this });
+                                                        callback: this._updatePanelColor, scope: this });
+			this._updatePanelOpacity();
             this._signals.connectId('panel-opacity', {    emitter: this._settings, signal: 'changed::panel-opacity',
-                                                        callback: this._updatePanelStyle, scope: this });
+                                                        callback: this._updatePanelOpacity, scope: this });
         }
 		else {
 			this._signals.disconnectId('panel-color');
 			this._signals.disconnectId('panel-opacity');
+			this._restorePanelStyle();
 		}
         _D('<');
     },
 
+	_updatePanelColor: function() {
+        _D('>dbFinPanelEnhancements._updatePanelColor()');
+		if (this._settings) {
+			this._panelColor = this._settings.get_string('panel-color');
+		}
+		this._updatePanelStyle();
+        _D('<');
+	},
+
+	_updatePanelOpacity: function() {
+        _D('>dbFinPanelEnhancements._updatePanelOpacity()');
+		if (this._settings) {
+			let (opacitynew = parseInt(this._settings.get_string('panel-opacity'))) {
+                if (!isNaN(opacitynew)) {
+                    if (opacitynew < 0) opacitynew = 0;
+                    else if (opacitynew > 100) opacitynew = 100;
+                    this._panelOpacity = opacitynew;
+                } // if (!isNaN(opacitynew))
+			} // let (opacitynew)
+		} // if (this._settings)
+		this._updatePanelStyle();
+        _D('<');
+	},
+
 	_updatePanelStyle: function() {
         _D('>dbFinPanelEnhancements._updatePanelStyle()');
         let (style = null, stylecorner = null) {
-			if (this._settings.get_boolean('panel-background')) {
-				let (rgba = new Gdk.RGBA(),
-                     opacity = parseInt(this._settings.get_string('panel-opacity')) / 100.) {
-                    rgba.parse(this._settings.get_string('panel-color'));
-					let (color = rgba.to_string().replace(/rgba?(\s*\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+).*?(\))/, 'rgba$1, ' + opacity + '$2')) {
-	    				style = 'background-color: ' + color;
-	    				stylecorner = '-panel-corner-border-width: 0; -panel-corner-border-color: ' + color + '; -panel-corner-background-color: ' + color;
-					} // let (color)
-                } // let (rgba)
-			}
+			let (rgba = new Gdk.RGBA(),
+				 opacity = this._panelOpacity / 100.) {
+				rgba.parse(this._panelColor);
+				let (color = rgba.to_string().replace(/rgba?(\s*\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+).*?(\))/, 'rgba$1, ' + opacity + '$2')) {
+					style = 'background-color: ' + color;
+					stylecorner = '-panel-corner-border-width: 0; -panel-corner-border-color: ' + color + '; -panel-corner-background-color: ' + color;
+				} // let (color)
+			} // let (rgba)
     		Main.panel.actor.set_style(style);
     		Main.panel._leftCorner.actor.set_style(stylecorner);
     		Main.panel._rightCorner.actor.set_style(stylecorner);
@@ -90,13 +120,14 @@ const dbFinPanelEnhancements = new Lang.Class({
 	_restorePanelStyle: function() {
         _D('>dbFinPanelEnhancements._restorePanelStyle()');
 		Main.panel.actor.set_style(null);
+        Main.panel._leftCorner.actor.set_style(null);
+        Main.panel._rightCorner.actor.set_style(null);
         _D('<');
 	},
 
-	// GNOMENEXT: ui/panel.js: class Panel
 	_updatePanel: function() {
         _D('>dbFinPanelEnhancements._updatePanel()');
-		Main.panel._updatePanel();
+		Main.panel.actor.queue_relayout();
         _D('<');
 	}
 });

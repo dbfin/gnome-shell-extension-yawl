@@ -17,6 +17,7 @@
  * 				'@function_name'			report entrance into a 'silent' function, this will increase the level
  * 											no messages will be reported until exiting from the function
  * 				'<'							report exiting from a function, this will decrease the level
+ * 				'!'							report in system log (regardless of current level and whether in a silent function)
  *
  * Messages of level 0 are also reported to the standard system log.
  *
@@ -73,6 +74,10 @@ const dbFinYAWLDebug = new Lang.Class({
 						shift = -1;
 						if (this._prefix.length) this._prefix = this._prefix.substring(4);
 						s = String.fromCharCode(0x2514) + dbFinUtils.stringRepeat(String.fromCharCode(0x2500), 7) + s.substring(1);
+					}
+					else if (s[0] == '!') {
+						s = s.substring(1);
+						if (s.length) log(s);
 					}
 					if (!this._stoplevel && s.length) {
 						if (!this._prefix.length) {

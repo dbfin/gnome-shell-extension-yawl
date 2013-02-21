@@ -14,6 +14,7 @@ const Lang = imports.lang;
 const Shell = imports.gi.Shell;
 
 const Main = imports.ui.main;
+const Panel = imports.ui.panel;
 const PanelMenu = imports.ui.panelMenu;
 const Tweener = imports.ui.tweener;
 
@@ -37,6 +38,7 @@ const dbFinAppButton = new Lang.Class({
     _init: function(metaApp, tracker) {
         _D('>dbFinAppButton._init()');
 		this.parent(0.33, null, true);
+        this._settings = Convenience.getSettings();
 		this._signals = new dbFinUtils.Signals();
 		this.app = metaApp;
 		this._tracker = tracker;
@@ -48,24 +50,47 @@ const dbFinAppButton = new Lang.Class({
 
 		this._minHPadding = 0;
 		this._natHPadding = 0;
+		this._styleChanged();
 		this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
 									callback: this._styleChanged, scope: this },
 		                          	/*after = */true);
 
 		this._iconBox = new Shell.Slicer();
+		this._icons = new dbFinUtils.ArrayHash();
+		this._icon = null;
+        this._iconSize = Panel.PANEL_ICON_SIZE; // default size (if no settings)
+		this._iconFaded = false;
+
+		this._animationTime = 0; // no animation to hide
+		this.hide();
+		this._updateIcon();
+		this.hide(); // to set the width of this._iconBox back to 0
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-size',
+                                    callback: this._updateIcon, scope: this });
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-faded',
+                                    callback: this._updateIcon, scope: this });
+
 		this._iconBoxClip = 0;
+		this._iconBoxStyleChanged();
 		this._signals.connectNoId({	emitter: this._iconBox, signal: 'style-changed',
 									callback: this._iconBoxStyleChanged, scope: this },
                                     /*after = */true);
 		this._signals.connectNoId({	emitter: this._iconBox, signal: 'notify::allocation',
 									callback: this._iconBoxAllocation, scope: this });
-        this.actor.add_actor(this._iconBox);
-		this._updateIcon();
+
+		this.actor.add_actor(this._iconBox);
+
+		this._animationTime = 490; // default animation time
+		this._updateAnimationTime(); // animation time from settings
+		this.show(); // appear properly animated
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-animation-time',
+                                    callback: this._updateAnimationTime, scope: this });
 
 		if (this._tracker) {
 			this._signals.connectNoId({	emitter: this._tracker.getTracker(), signal: 'notify::focus-app',
 										callback: this._notifyFocusApp, scope: this });
 		}
+
 		if (this.app) {
 			this._signals.connectNoId({	emitter: this.app, signal: 'notify::menu',
 										callback: this._update, scope: this });
@@ -82,53 +107,47 @@ const dbFinAppButton = new Lang.Class({
 			this._signals = null;
 		}
 		if (this.container) {
-			let (box =  this.container.get_parent()) {
-				if (box) box.remove_actor(this.container);
+			if (this.container.get_parent) {
+				let (box = this.container.get_parent()) {
+					if (box && box.remove_actor) box.remove_actor(this.container);
+				}
 			}
+			this.container.hide();
 		}
 		if (this._iconBox) {
+			this._iconBox.set_child(null);
 			this._iconBox = null;
+		}
+		this._icon = null;
+		if (this._icons) {
+			this._icons.forEach(Lang.bind(this, function(size, icon) { this._icons.set(size, null); icon.destroy(); }));
+			this._icons.destroy();
+			this._icons = null;
 		}
 		if (this.actor) {
 			this.actor.hide();
 			this.actor.reactive = false;
 			this.actor.destroy_all_children();
 		}
-		this.hidden = true;
 		this._bindReactiveId = null;
+		this.hidden = true;
 		this._focused = false;
 		this._tracker = null;
 		this.app = null;
+		this._settings = null;
 		this.parent();
         _D('<');
 	},
 
     show: function() {
         _D('>dbFinAppButton.show()');
-        if (!this.hidden) {
-            _D('<');
-            return;
-        }
-		Tweener.removeTweens(this.container);
-        this.container.show();
-        this.container.reactive = true;
-        this.hidden = false;
-		Tweener.addTween(this._iconBox, {	opacity: 255, width: 32, time: .777, transition: 'easeOutQuad',
-											onComplete: function() { }, onCompleteScope: this });
+		this._iconAnimateToState(255);
         _D('<');
     },
 
     hide: function() {
         _D('>dbFinAppButton.hide()');
-        if (this.hidden) {
-            _D('<');
-            return;
-        }
-        this.hidden = true;
-		Tweener.removeTweens(this.container);
-        this.container.reactive = false;
-		Tweener.addTween(this._iconBox, {	opacity: 0, width: 1, time: .777, transition: 'easeOutQuad',
-										    onComplete: function() { this.container.hide(); }, onCompleteScope: this });
+		this._iconAnimateToState(0, 0);
         _D('<');
     },
 
@@ -183,7 +202,6 @@ const dbFinAppButton = new Lang.Class({
 		        this._focused = focused;
                 if (this._focused) this.actor.add_style_pseudo_class('active');
                 else this.actor.remove_style_pseudo_class('active');
-				this._update();
 			}
 		} // let (focused)
         _D('<');
@@ -192,7 +210,56 @@ const dbFinAppButton = new Lang.Class({
 	isFocused: function() {
         _D('>dbFinAppButton._notifyFocusApp()');
         _D('<');
-		return this._tracker && (this.app == this._tracker.getTracker().focus_app);
+		if (this._tracker)
+			return this.app == this._tracker.getTracker().focus_app;
+		else
+			return false;
+	},
+
+	_iconAnimateToState: function(opacity, width) {
+        _D('>dbFinAppButton._iconAnimateToState()');
+		if (opacity === undefined || opacity === null) {
+			opacity = this._iconBox ? this._iconBox.opacity : 255;
+		}
+		if (width === undefined || width === null) {
+			width = this._iconSize;
+		}
+		Tweener.removeTweens(this._iconBox);
+		let (visible = !!(opacity && width)) {
+			if (visible) {
+				if (this.container) {
+					this.container.show();
+			        this.container.reactive = true;
+				}
+		        this.hidden = false;
+				if (this._animationTime) {
+					Tweener.addTween(this._iconBox, {	opacity: opacity, width: width,
+														time: this._animationTime / 1000., transition: 'easeOutQuad',
+														onComplete: function() { }, onCompleteScope: this });
+				}
+				else {
+					this._iconBox.opacity = opacity;
+					this._iconBox.width = width;
+				}
+			} // if (visible)
+			else {
+		        this.hidden = true;
+				if (this.container) {
+			        this.container.reactive = false;
+				}
+				if (this._animationTime) {
+					Tweener.addTween(this._iconBox, {	opacity: opacity, width: width || 1,
+														time: this._animationTime / 1000., transition: 'easeOutQuad',
+														onComplete: function() { if (this.container) this.container.hide(); }, onCompleteScope: this });
+				}
+				else {
+					this._iconBox.opacity = opacity;
+					this._iconBox.width = width || 1;
+					if (this.container) this.container.hide();
+				}
+			} // if (visible) else
+		} // let (visible)
+        _D('<');
 	},
 
 	_update: function() {
@@ -207,7 +274,47 @@ const dbFinAppButton = new Lang.Class({
 			_D('<');
 			return;
 		}
-		this._iconBox.set_child(this.app.create_icon_texture(32));
+		let (icon = this._icon, iconnew = this._icon,
+		     size = this._iconSize, sizenew = this._iconSize,
+		     faded = this._iconFaded, fadednew = this._iconFaded) {
+			if (this._settings) {
+				sizenew = parseInt(this._settings.get_string('icons-size'));
+				if (isNaN(sizenew)) { sizenew = size; }
+				if (sizenew < 16) sizenew = 16;
+				else if (sizenew > 128) sizenew = 128;
+                sizenew = Math.floor((sizenew + 4) / 8) * 8; // sizes are 16, 24, ..., 128
+				fadednew = this._settings.get_boolean('icons-faded');
+			}
+			if (sizenew != size || fadednew != faded || !icon) {
+				iconnew = this._icons.get(fadednew ? -sizenew : sizenew);
+				if (iconnew === undefined || !iconnew) {
+					if (fadednew) iconnew = this.app.get_faded_icon(sizenew); // returns NULL sometimes
+					if (!fadednew || !iconnew) iconnew = this.app.create_icon_texture(sizenew);
+					if (iconnew) this._icons.set(fadednew ? -sizenew : sizenew, iconnew);
+				}
+				if (iconnew && iconnew != icon) {
+					this._icon = iconnew;
+					this._iconSize = sizenew;
+					this._iconFaded = fadednew;
+					this._iconBox.set_child(this._icon);
+					this._iconAnimateToState();
+				}
+			} // if (sizenew != size || fadednew != faded || !icon)
+		} // let (icon, iconnew, size, sizenew, faded, fadednew)
+        _D('<');
+	},
+
+	_updateAnimationTime: function() {
+        _D('>dbFinAppButton._updateAnimationTime()');
+		if (this._settings) {
+			let (timenew = parseInt(this._settings.get_string('icons-animation-time'))) {
+				if (!isNaN(timenew)) {
+					if (timenew < 0) timenew = 0;
+					else if (timenew > 3000) timenew = 3000;
+					this._animationTime = timenew;
+				} // if (!isNaN(timenew))
+			} // let (timenew)
+		} // if (this._settings)
         _D('<');
 	}
 });

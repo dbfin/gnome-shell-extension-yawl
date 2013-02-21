@@ -132,7 +132,7 @@ function buildPrefsWidget() {
 		// Icons Size
 		let (iconsSizeLabel = new Gtk.Label({ label: _("Icon size"), halign: Gtk.Align.START, hexpand: true }),
              iconsSizeScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.START, hexpand: true, width_chars: 5 }),
-             iconsSizeScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 16, 64, 8, { halign: Gtk.Align.END, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+             iconsSizeScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 16, 96, 8, { halign: Gtk.Align.END, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
 		     settingsbind = new dbFinUtilsPrefs.dbFinSettingsBindEntryScale()) {
 			widget._settingsbinds.push(settingsbind);
 			settingsbind.bind('icons-size', iconsSizeScaleEntry, iconsSizeScale);

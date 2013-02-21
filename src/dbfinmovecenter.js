@@ -101,16 +101,21 @@ const dbFinMoveCenter = new Lang.Class({
 		this._hotcorner = null;
 		this._signals.connectNoId({ emitter: Main.panel.actor, signal: 'allocate',
 									callback: this._allocate, scope: this });
-        this._updatePanel();
-        this._hideActivities();
+
+		this._panelPosition = 20;
+		this._updatePanelPosition();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::yawl-panel-position',
-                                    callback: this._updatePanel, scope: this });
+                                    callback: this._updatePanelPosition, scope: this });
+        this._moveCenter = false;
+        this._updateMoveCenter();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::move-center',
-                                    callback: this._updatePanel, scope: this });
+                                    callback: this._updateMoveCenter, scope: this });
+        this._hideActivities();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::hide-activities',
                                     callback: this._hideActivities, scope: this });
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::preserve-hot-corner',
                                     callback: this._hideActivities, scope: this });
+        this._updatePanel();
         _D('<');
     },
 
@@ -133,8 +138,36 @@ const dbFinMoveCenter = new Lang.Class({
         _D('<');
     },
 
+	_updatePanelPosition: function() {
+        _D('>dbFinMoveCenter._updatePanelPosition()');
+		if (this._settings) {
+			let (positionnew = parseInt(this._settings.get_string('yawl-panel-position'))) {
+				if (!isNaN(positionnew)) {
+					if (positionnew < 10) positionnew = 10;
+					else if (positionnew > 40) positionnew = 40;
+					this._panelPosition = positionnew;
+				} // if (!isNaN(positionnew))
+			} // let (positionnew)
+		} // if (this._settings)
+		this._updatePanel();
+        _D('<');
+	},
+
+	_updateMoveCenter: function() {
+        _D('>dbFinMoveCenter._updateMoveCenter()');
+		if (this._settings) {
+            this._moveCenter = this._settings.get_boolean('move-center');
+		}
+		this._updatePanel();
+        _D('<');
+	},
+
     _hideActivities: function() {
         _D('>dbFinMoveCenter._hideActivities()');
+        if (!this._settings) {
+            _D('<');
+            return;
+        }
 		let (hide = this._settings.get_boolean('hide-activities')) {
 			let (corner = hide && this._settings.get_boolean('preserve-hot-corner')) {
 				if (corner) {
@@ -153,10 +186,9 @@ const dbFinMoveCenter = new Lang.Class({
         _D('<');
     },
 
-	// GNOMENEXT: ui/panel.js: class Panel
 	_updatePanel: function() {
         _D('>dbFinMoveCenter._updatePanel()');
-		Main.panel._updatePanel();
+		if (Main.panel) Main.panel.actor.queue_relayout();
         _D('<');
 	},
 
@@ -171,7 +203,7 @@ const dbFinMoveCenter = new Lang.Class({
                 boxChild = new Clutter.ActorBox(),
                 drl = (Main.panel.actor.get_text_direction() == Clutter.TextDirection.RTL)) {
 			let (wly, wl, wy, wr, xl, xr) {
-				if (this._settings.get_boolean('move-center')) {
+				if (this._moveCenter) {
 					// let left box + YAWL panel occupy all the space on the left, but no less than (w - wcn) / 2
 					// let right box occupy as much as it needs on the right, but no more than (w - wcn) / 2
 					wly = Math.max(w - wcn - wrn, Math.ceil((w - wcn) / 2));
@@ -181,7 +213,7 @@ const dbFinMoveCenter = new Lang.Class({
 					wly = Math.ceil((w - wcn) / 2);
 					wr = Math.floor((w - wcn) / 2);
 				}
-				wl = Math.min(Math.max(wlm, Math.floor(w * parseInt(this._settings.get_string('yawl-panel-position')) / 100.)), wly - 42);
+				wl = Math.min(Math.max(wlm, Math.floor(w * this._panelPosition / 100.)), wly - 42);
 				wy = wly - wl;
 				xl = (drl ? w - wl : 0);
 				xr = xl + wl;
