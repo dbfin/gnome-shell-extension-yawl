@@ -144,7 +144,7 @@ function buildPrefsWidget() {
 		// Icons Distance
 		let (iconsDistanceLabel = new Gtk.Label({ label: _("Distance between icons"), halign: Gtk.Align.START, hexpand: true }),
              iconsDistanceScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.START, hexpand: true, width_chars: 5 }),
-             iconsDistanceScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 14, 1, { halign: Gtk.Align.END, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+             iconsDistanceScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 21, 1, { halign: Gtk.Align.END, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
 		     settingsbind = new dbFinUtilsPrefs.dbFinSettingsBindEntryScale()) {
 			widget._settingsbinds.push(settingsbind);
 			settingsbind.bind('icons-distance', iconsDistanceScaleEntry, iconsDistanceScale);

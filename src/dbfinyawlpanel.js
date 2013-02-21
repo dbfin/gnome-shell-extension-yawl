@@ -35,6 +35,7 @@ const dbFinYAWLPanel = new Lang.Class({
     // GNOMENEXT: ui/panel.js: class Panel
     _init: function() {
         _D('>dbFinYAWLPanel._init()');
+        this._settings = Convenience.getSettings();
 		this._signals = new dbFinUtils.Signals();
 		this._box = new St.BoxLayout({ name: 'panelYAWL', vertical: false, track_hover: true });
         Main.panel._yawlBox = this._box;
@@ -47,6 +48,11 @@ const dbFinYAWLPanel = new Lang.Class({
 									callback: this.hide, scope: this });
 		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
 									callback: this.show, scope: this });
+
+        this._iconsDistance = 3; // default
+        this._updateIconsDistance();
+        this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-distance',
+                                    callback: this._updateIconsDistance, scope: this });
         _D('<');
     },
 
@@ -68,6 +74,7 @@ const dbFinYAWLPanel = new Lang.Class({
 			this._box.destroy();
 			this._box = null;
 		}
+        this._settings = null;
         _D('<');
 	},
 
@@ -94,6 +101,12 @@ const dbFinYAWLPanel = new Lang.Class({
 		Tweener.removeTweens(this._box);
 		Tweener.addTween(this._box, {	opacity: 0, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad',
 										onComplete: function() { this._box.hide(); }, onCompleteScope: this });
+        _D('<');
+    },
+
+    _updateIconsDistance: function() {
+        _D('>dbFinAppButton._updateIconsDistance()');
+        this._iconsDistance = dbFinUtils.settingsParseInt(this._settings, 'icons-distance', 0, 32, this._iconsDistance);
         _D('<');
     },
 

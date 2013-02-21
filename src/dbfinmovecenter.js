@@ -140,15 +140,7 @@ const dbFinMoveCenter = new Lang.Class({
 
 	_updatePanelPosition: function() {
         _D('>dbFinMoveCenter._updatePanelPosition()');
-		if (this._settings) {
-			let (positionnew = parseInt(this._settings.get_string('yawl-panel-position'))) {
-				if (!isNaN(positionnew)) {
-					if (positionnew < 10) positionnew = 10;
-					else if (positionnew > 40) positionnew = 40;
-					this._panelPosition = positionnew;
-				} // if (!isNaN(positionnew))
-			} // let (positionnew)
-		} // if (this._settings)
+		this._panelPosition = dbFinUtils.settingsParseInt(this._settings, 'yawl-panel-position', 10, 40, this._panelPosition);
 		this._updatePanel();
         _D('<');
 	},

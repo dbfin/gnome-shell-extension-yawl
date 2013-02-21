@@ -278,10 +278,7 @@ const dbFinAppButton = new Lang.Class({
 		     size = this._iconSize, sizenew = this._iconSize,
 		     faded = this._iconFaded, fadednew = this._iconFaded) {
 			if (this._settings) {
-				sizenew = parseInt(this._settings.get_string('icons-size'));
-				if (isNaN(sizenew)) { sizenew = size; }
-				if (sizenew < 16) sizenew = 16;
-				else if (sizenew > 128) sizenew = 128;
+				sizenew = dbFinUtils.settingsParseInt(this._settings, 'icons-size', 16, 128, size);
                 sizenew = Math.floor((sizenew + 4) / 8) * 8; // sizes are 16, 24, ..., 128
 				fadednew = this._settings.get_boolean('icons-faded');
 			}
@@ -306,15 +303,7 @@ const dbFinAppButton = new Lang.Class({
 
 	_updateAnimationTime: function() {
         _D('>dbFinAppButton._updateAnimationTime()');
-		if (this._settings) {
-			let (timenew = parseInt(this._settings.get_string('icons-animation-time'))) {
-				if (!isNaN(timenew)) {
-					if (timenew < 0) timenew = 0;
-					else if (timenew > 3000) timenew = 3000;
-					this._animationTime = timenew;
-				} // if (!isNaN(timenew))
-			} // let (timenew)
-		} // if (this._settings)
+        this._animationTime = dbFinUtils.settingsParseInt(this._settings, 'icons-animation-time', 0, 3000, this._animationTime);
         _D('<');
 	}
 });

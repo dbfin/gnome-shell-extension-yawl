@@ -12,6 +12,13 @@
  * 								Parameters:
  *									justnumbers		set true to return just numbers, otherwise returns Date.toString()
  *
+ * settingsParseInt(s, k, min, max, d)  returns a number parsed from the settings key:string
+ *                              Parameters:
+ *                                  s               the settings
+ *                                  k               the key
+ *                                  min, max        minimum and maximum values allowed
+ *                                  d               default value (if cannot parse the string)
+ *
  * setBox:box,x1,y1,x2,y2		sets x1, y1, x2, y2 of Clutter.ActorBox (or another class supporting these properties)
  * 								Parameters:
  *									box, x1, y1, x2, y2
@@ -103,6 +110,26 @@ function now(justnumbers) {
             } // let (leading0)
         } // if (!justnumbers) else
     } // let (now)
+}
+
+/* function settingsParseInt(s, k, min, max, d): returns a number parsed from the settings key:string
+ * Parameters:
+ *     s               the settings
+ *     k               the key
+ *     min, max        minimum and maximum values allowed
+ *     d               default value (if cannot parse the string)
+ */
+function settingsParseInt(s, k, min, max, d) {
+    if (!s || !s.get_string || !k || k == '') return d;
+    if (min === undefined) min = null;
+    if (max === undefined) max = null;
+    if (min !== null && max !== null && min > max) return d;
+    let (value = parseInt(s.get_string(k))) {
+        if (isNaN(value)) return d;
+        if (min !== null && value < min) value = min;
+        else if (max !== null && value > max) value = max;
+        return value;
+    } // let (value)
 }
 
 /* function setBox: sets x1, y1, x2, y2 of box

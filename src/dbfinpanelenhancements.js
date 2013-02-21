@@ -86,15 +86,7 @@ const dbFinPanelEnhancements = new Lang.Class({
 
 	_updatePanelOpacity: function() {
         _D('>dbFinPanelEnhancements._updatePanelOpacity()');
-		if (this._settings) {
-			let (opacitynew = parseInt(this._settings.get_string('panel-opacity'))) {
-                if (!isNaN(opacitynew)) {
-                    if (opacitynew < 0) opacitynew = 0;
-                    else if (opacitynew > 100) opacitynew = 100;
-                    this._panelOpacity = opacitynew;
-                } // if (!isNaN(opacitynew))
-			} // let (opacitynew)
-		} // if (this._settings)
+        this._panelOpacity = dbFinUtils.settingsParseInt(this._settings, 'panel-opacity', 0, 100, this._panelOpacity);
 		this._updatePanelStyle();
         _D('<');
 	},
