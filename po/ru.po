@@ -6,8 +6,8 @@
 msgid ""
 msgstr "Project-Id-Version: YAWL 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-20 19:59-0600\n"
-"PO-Revision-Date: 2013-02-20 19:59-0600\n"
+"POT-Creation-Date: 2013-02-21 02:24-0600\n"
+"PO-Revision-Date: 2013-02-21 02:24-0600\n"
 "Last-Translator: Vadim @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -15,54 +15,58 @@ msgstr "Project-Id-Version: YAWL 0.1\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/prefs.js:38
+#: src/prefs.js:28
 msgid "Panel"
 msgstr "Панель"
 
-#: src/prefs.js:41
+#: src/prefs.js:29
 msgid "YAWL-panel position"
 msgstr "Позиция панели YAWL"
 
-#: src/prefs.js:53
+#: src/prefs.js:30
 msgid "Move central panel"
 msgstr "Сдвинуть центральную панель"
 
-#: src/prefs.js:62
+#: src/prefs.js:31
 msgid "Hide Activities button"
 msgstr "Скрыть кнопку Обзор"
 
-#: src/prefs.js:71
+#: src/prefs.js:32
 msgid "Preserve Hot Corner"
 msgstr "Оставить «горячий» угол"
 
-#: src/prefs.js:87
+#: src/prefs.js:34
 msgid "Custom panel background"
 msgstr "Изменить фон панели"
 
-#: src/prefs.js:96
+#: src/prefs.js:35
 msgid "Panel color"
 msgstr "Цвет панели"
 
-#: src/prefs.js:111
+#: src/prefs.js:35
+msgid "Choose Panel Color"
+msgstr "Выберите цвет панели"
+
+#: src/prefs.js:36
 msgid "Panel opacity"
 msgstr "Непрозрачность панели"
 
-#: src/prefs.js:130
+#: src/prefs.js:38
 msgid "Icons"
 msgstr "Иконки"
 
-#: src/prefs.js:133
+#: src/prefs.js:39
 msgid "Icon size"
 msgstr "Размер иконок"
 
-#: src/prefs.js:145
+#: src/prefs.js:40
 msgid "Distance between icons"
 msgstr "Расстояние между иконками"
 
-#: src/prefs.js:162
+#: src/prefs.js:42
 msgid "Faded icons"
 msgstr "Затемнение"
 
-#: src/prefs.js:176
+#: src/prefs.js:44
 msgid "Animation Time in ms (0: no animation)"
 msgstr "Время анимации (0: без анимации)"
