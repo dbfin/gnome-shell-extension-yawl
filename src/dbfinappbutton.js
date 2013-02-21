@@ -80,6 +80,9 @@ const dbFinAppButton = new Lang.Class({
 
 		this.actor.add_actor(this._iconBox);
 
+		this._signals.connectNoId({ emitter: this.actor, signal: 'get-preferred-width',
+									callback: this._iconBoxPreferredWidth, scope: this });
+
 		this._animationTime = 490; // default animation time
 		this._updateAnimationTime(); // animation time from settings
 		this.show(); // appear properly animated
@@ -305,5 +308,13 @@ const dbFinAppButton = new Lang.Class({
         _D('>dbFinAppButton._updateAnimationTime()');
         this._animationTime = dbFinUtils.settingsParseInt(this._settings, 'icons-animation-time', 0, 3000, this._animationTime);
         _D('<');
-	}
+	},
+
+    _iconBoxPreferredWidth: function(actor, forHeight, alloc) {
+        _D('>dbFinAppButton._iconBoxPreferredWidth()');
+		let (wn = this._iconBox ? this._iconBox.get_preferred_width(forHeight)[1] : this._iconSize || 24) {
+			[ alloc.min_size, alloc.natural_size ] = [ 1, wn ];
+		}
+        _D('<');
+    }
 });

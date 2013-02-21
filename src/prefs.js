@@ -184,6 +184,11 @@ function buildPrefsWidget() {
             pageIcons.attach(iconsAnimationTimeScale, 6, 5, 2, 1);
         } // let (iconsAnimationTimeLabel, iconsAnimationTimeScaleEntry, iconsAnimationTimeScale, settingsbind)
 
+		// Separator
+		let (iconsSeparator = new Gtk.Separator({ hexpand: true })) {
+            pageIcons.attach(iconsSeparator, 0, 6, 8, 1);
+        } // let (iconsSeparator)
+
 		widget.append_page(/* child = */pageIcons, /* tab_label = */pageIconsLabel);
 	} // let (pageIcons, pageIconsLabel)
 

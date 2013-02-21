@@ -117,7 +117,7 @@ const dbFinYAWLPanel = new Lang.Class({
             _D('<');
             return;
         }
-        if (!Main.panel._yawlBox) {
+        if (!Main.panel._yawlBox || Main.panel._yawlBox != this._box) {
             log('');
             log('State:      ' + this._tracker.state);
             log('State info: ' + this._tracker.stateInfo);
@@ -140,11 +140,11 @@ const dbFinYAWLPanel = new Lang.Class({
             })); // this._tracker.apps.forEach
             _D('<');
             return;
-        } // if (!Main.panel._yawlBox)
+        } // if (!Main.panel._yawlBox || Main.panel._yawlBox != this._box)
         if (appsIn && appsIn.forEach) {
             appsIn.forEach(Lang.bind(this, function(metaApp) {
                 let (trackerApp = this._tracker.getTrackerApp(metaApp)) {
-                    if (trackerApp) Main.panel._yawlBox.add_actor(trackerApp.appButton.container);
+                    if (trackerApp) this._box.add_actor(trackerApp.appButton.container);
                 }
             }));
         }
