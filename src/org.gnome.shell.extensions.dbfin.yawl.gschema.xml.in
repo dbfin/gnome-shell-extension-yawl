@@ -37,19 +37,29 @@
       <_description>Custom opacity to paint the top panel.</_description>
     </key>
     <key name="icons-size" type="s">
-      <default>'24'</default>
+      <default>'48'</default>
       <_summary>Size of application icons.</_summary>
       <_description>The size of application icons. It is better to be set to a value divisible by 8.</_description>
     </key>
-    <key name="icons-distance" type="s">
-      <default>'3'</default>
-      <_summary>Distance between icons.</_summary>
-      <_description>Distance between two icons in pixels.</_description>
-    </key>
     <key name="icons-faded" type="b">
-      <default>false</default>
+      <default>true</default>
       <_summary>Use faded icons.</_summary>
       <_description>Whether to use faded icons (like AppMenu button).</_description>
+    </key>
+    <key name="icons-distance" type="s">
+      <default>'20'</default>
+      <_summary>Distance between icons (%).</_summary>
+      <_description>Distance between two icons as % of the icon size.</_description>
+    </key>
+    <key name="icons-clip-top" type="s">
+      <default>'3'</default>
+      <_summary>Clip icons: top (px).</_summary>
+      <_description>Clip icons on top (in pixels).</_description>
+    </key>
+    <key name="icons-clip-bottom" type="s">
+      <default>'3'</default>
+      <_summary>Clip icons: bottom (px).</_summary>
+      <_description>Clip icons on bottom (in pixels).</_description>
     </key>
     <key name="icons-animation-time" type="s">
       <default>'490'</default>

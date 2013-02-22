@@ -6,6 +6,7 @@ dist_extension_DATA = \
 	dbfindebug.js \
 	dbfinmovecenter.js \
 	dbfinpanelenhancements.js \
+	dbfinslicericon.js \
 	dbfintracker.js \
 	dbfinutils.js \
 	dbfinutilsprefs.js \

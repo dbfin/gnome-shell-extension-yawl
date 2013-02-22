@@ -48,11 +48,6 @@ const dbFinYAWLPanel = new Lang.Class({
 									callback: this.hide, scope: this });
 		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
 									callback: this.show, scope: this });
-
-        this._iconsDistance = 3; // default
-        this._updateIconsDistance();
-        this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-distance',
-                                    callback: this._updateIconsDistance, scope: this });
         _D('<');
     },
 
@@ -79,7 +74,7 @@ const dbFinYAWLPanel = new Lang.Class({
 	},
 
     show: function() {
-        _D('>dbFinAppButton.show()');
+        _D('>dbFinYAWLPanel.show()');
         if (!this.hidden || Main.screenShield.locked) {
             _D('<');
             return;
@@ -92,7 +87,7 @@ const dbFinYAWLPanel = new Lang.Class({
     },
 
     hide: function() {
-        _D('>dbFinAppButton.hide()');
+        _D('>dbFinYAWLPanel.hide()');
         if (this.hidden) {
             _D('<');
             return;
@@ -101,12 +96,6 @@ const dbFinYAWLPanel = new Lang.Class({
 		Tweener.removeTweens(this._box);
 		Tweener.addTween(this._box, {	opacity: 0, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad',
 										onComplete: function() { this._box.hide(); }, onCompleteScope: this });
-        _D('<');
-    },
-
-    _updateIconsDistance: function() {
-        _D('>dbFinAppButton._updateIconsDistance()');
-        this._iconsDistance = dbFinUtils.settingsParseInt(this._settings, 'icons-distance', 0, 32, this._iconsDistance);
         _D('<');
     },
 
@@ -144,7 +133,10 @@ const dbFinYAWLPanel = new Lang.Class({
         if (appsIn && appsIn.forEach) {
             appsIn.forEach(Lang.bind(this, function(metaApp) {
                 let (trackerApp = this._tracker.getTrackerApp(metaApp)) {
-                    if (trackerApp) this._box.add_actor(trackerApp.appButton.container);
+                    if (trackerApp) {
+                        this._box.add_actor(trackerApp.appButton.container);
+                        trackerApp.appButton.show();
+                    }
                 }
             }));
         }

@@ -37,12 +37,13 @@ function buildPrefsWidget() {
 
         builder.addPage(_("Icons"));
         builder.addScale(_("Icon size"), 'icons-size', 16, 96, 8);
-        builder.addScale(_("Distance between icons"), 'icons-distance', 0, 21, 1);
-		builder.addSeparator();
         builder.addCheckBox(_("Faded icons"), 'icons-faded');
 		builder.addSeparator();
-        builder.addScale(_("Animation Time in ms (0: no animation)"), 'icons-animation-time', 0, 999, 9);
+        builder.addScale(_("Distance between icons (% of icon size)"), 'icons-distance', 0, 100, 1);
+        builder.addScale(_("Clip icons: top (px)"), 'icons-clip-top', 0, 7, 1);
+        builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);
 		builder.addSeparator();
+        builder.addScale(_("Animation Time in ms (0: no animation)"), 'icons-animation-time', 0, 999, 9);
 
         builder.widget.show_all();
         return builder.widget;
