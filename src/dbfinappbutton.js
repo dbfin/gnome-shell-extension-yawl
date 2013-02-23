@@ -11,6 +11,7 @@
 
 const Lang = imports.lang;
 
+const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -60,6 +61,7 @@ const dbFinAppButton = new Lang.Class({
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon(this);
 		this.actor.add_actor(this._slicerIcon.actor);
+        if (Main.panel) this._slicerIcon.actor.natural_height = Main.panel.actor.get_height();
 
 		this._icons = new dbFinUtils.ArrayHash();
         this._iconSize = 48;
