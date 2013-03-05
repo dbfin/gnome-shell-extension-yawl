@@ -11,6 +11,7 @@
 
 const Lang = imports.lang;
 
+const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
 
 const Tweener = imports.ui.tweener;
@@ -29,12 +30,10 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinSlicerIcon = new Lang.Class({
 	Name: 'dbFin.SlicerIcon',
 
-    _init: function(owner) {
+    _init: function() {
         _D('>dbFinSlicerIcon._init()');
-        this._owner = owner;
         this._signals = new dbFinUtils.Signals();
-		this.actor = new Shell.Slicer({ y_expand: true });
-        this.actor._delegate = this._owner;
+		this.actor = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }) });
 		this._icon = null; // icons are never destroyed when new are assigned
 		this._clipTop = 0; // px
 		this._clipBottom = 0; // px
@@ -133,12 +132,13 @@ const dbFinSlicerIcon = new Lang.Class({
 
 	animateToState: function(state, callback, scope, time, transition) {
         _D('>dbFinSlicerIcon.animateToState()');
-		Tweener.removeTweens(this.actor);
 		if (time === undefined || time === null) time = this.animationTime;
 		if (time > 0 && this.actor.get_stage()) { // we do not schedule animation for actors not in stage
             let (_state = {}, was = false) {
                 for (let p in state) { // animate only those that are already defined and new
+					p = '' + p;
                     if (this.actor[p] !== undefined && this.actor[p] !== state[p]) {
+						Tweener.removeTweens(this.actor, p);
                         _state[p] = state[p];
                         was = true;
                     }
@@ -154,9 +154,13 @@ const dbFinSlicerIcon = new Lang.Class({
             } // let (_state, was)
 		} // if (time > 0 && this.actor.get_stage())
 		else {
-			for (let p in state)
-                if (this.actor[p] !== undefined && this.actor[p] !== state[p])
+			for (let p in state) {
+				p = '' + p;
+                if (this.actor[p] !== undefined && this.actor[p] !== state[p]) {
+					Tweener.removeTweens(this.actor, p);
                     this.actor[p] = state[p];
+				}
+			}
 			if (callback) {
 				if (scope) Lang.bind(scope, callback)();
 				else callback();

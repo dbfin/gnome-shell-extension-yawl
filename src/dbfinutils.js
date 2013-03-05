@@ -12,12 +12,34 @@
  * 								Parameters:
  *									justnumbers		set true to return just numbers, otherwise returns Date.toString()
  *
- * settingsParseInt(s, k, min, max, d)  returns a number parsed from the settings key:string
+ * settingsParseInt(s, k, min, max, d)  returns a number parsed from settings key:string
  *                              Parameters:
  *                                  s               the settings
  *                                  k               the key
  *                                  min, max        minimum and maximum values allowed
- *                                  d               default value (if cannot parse the string)
+ *                                  d               default value (if cannot read or parse the value)
+ *
+ * settingsGetBoolean(s, k, d)	returns a boolean value from settings key:boolean
+ * 								Parameters:
+ * 									s				the settings
+ * 									k				the key
+ * 									d				default value (if cannot read the value)
+ *
+ * settingsGetString(s, k, d)	returns a string value from settings key:string
+ * 								Parameters:
+ * 									s				the settings
+ * 									k				the key
+ * 									d				default value (if cannot read the value)
+ *
+ * settingsGetInteger(s, k, d)	returns an integer value from settings key:integer
+ * 								Parameters:
+ * 									s				the settings
+ * 									k				the key
+ * 									d				default value (if cannot read the value)
+ *
+ * settingsGetGlobalSettings(schemaName)   returns Gio.Settings object corresponding to schemaName or null
+ *
+ * opacity100to255(opacity)		converts opacity 0-100 to 0-255
  *
  * setBox:box,x1,y1,x2,y2		sets x1, y1, x2, y2 of Clutter.ActorBox (or another class supporting these properties)
  * 								Parameters:
@@ -76,6 +98,7 @@
 const Lang = imports.lang;
 
 const Clutter = imports.gi.Clutter;
+const Gio = imports.gi.Gio;
 
 const Main = imports.ui.main;
 const SessionMode = imports.ui.sessionMode;
@@ -112,7 +135,7 @@ function now(justnumbers) {
     } // let (now)
 }
 
-/* function settingsParseInt(s, k, min, max, d): returns a number parsed from the settings key:string
+/* function settingsParseInt(s, k, min, max, d): returns a number parsed from settings key:string
  * Parameters:
  *     s               the settings
  *     k               the key
@@ -120,16 +143,70 @@ function now(justnumbers) {
  *     d               default value (if cannot parse the string)
  */
 function settingsParseInt(s, k, min, max, d) {
-    if (!s || !s.get_string || !k || k == '') return d;
+    if (!s || !s.list_keys || !s.get_string || !k || k == '') return d;
+	if (s.list_keys().indexOf(k) == -1) return d;
     if (min === undefined) min = null;
     if (max === undefined) max = null;
     if (min !== null && max !== null && min > max) return d;
     let (value = parseInt(s.get_string(k))) {
         if (isNaN(value)) return d;
-        if (min !== null && value < min) value = min;
-        else if (max !== null && value > max) value = max;
+        if (min !== null && value < min) value = min; // else is fine: the two conditions never happen simultaneously
+        else if (max !== null && value > max) value = max; // (because if min !== null & max !== null then min <= max)
         return value;
     } // let (value)
+}
+
+/* function settingsGetBoolean(s, k, d): returns a boolean value from settings key:boolean
+ * Parameters:
+ * 		s				the settings
+ * 		k				the key
+ * 		d				default value (if cannot read the value)
+ */
+function settingsGetBoolean(s, k, d) {
+    if (!s || !s.list_keys || !s.get_boolean || !k || k == '') return d;
+	if (s.list_keys().indexOf(k) == -1) return d;
+	return s.get_boolean(k);
+}
+
+/* function settingsGetString(s, k, d): returns a string value from settings key:string
+ * Parameters:
+ * 		s				the settings
+ * 		k				the key
+ * 		d				default value (if cannot read the value)
+ */
+function settingsGetString(s, k, d) {
+    if (!s || !s.list_keys || !s.get_string || !k || k == '') return d;
+	if (s.list_keys().indexOf(k) == -1) return d;
+	return s.get_string(k);
+}
+
+/* function settingsGetInteger(s, k, d): returns an integer value from settings key:integer
+ * Parameters:
+ * 		s				the settings
+ * 		k				the key
+ * 		d				default value (if cannot read the value)
+ */
+function settingsGetInteger(s, k, d) {
+    if (!s || !s.list_keys || !s.get_int || !k || k == '') return d;
+	if (s.list_keys().indexOf(k) == -1) return d;
+	return s.get_int(k);
+}
+
+/* settingsGetGlobalSettings(schemaName): returns Gio.Settings object corresponding to schemaName or null
+ */
+function settingsGetGlobalSettings(schemaName) {
+    if (!schemaName || (schemaName = '' + schemaName) == '') return null;
+    let (schemaSource = Gio.SettingsSchemaSource.get_default()) {
+        let (schemaObject = schemaSource && schemaSource.lookup(schemaName, true)) {
+            return schemaObject ? new Gio.Settings({ settings_schema: schemaObject }) : null;
+        }
+    }
+}
+
+/* function opacity100to255(opacity)
+ */
+function opacity100to255(opacity) {
+	return Math.round(opacity * 2.55);
 }
 
 /* function setBox: sets x1, y1, x2, y2 of box
@@ -160,7 +237,7 @@ function unzip(abs) {
 	}
 }
 
-/* stringRepeat(s, n): returns the string s repeated n times
+/* function stringRepeat(s, n): returns the string s repeated n times
  */
 function stringRepeat(s, n) {
 	if (!n || (n = parseInt(n)) <= 0) return '';
@@ -272,7 +349,7 @@ const ArrayHash = new Lang.Class({
         _D('<');
 	},
 
-    // sort functions are not optimal
+    // TODO: sort functions are not optimal
 	sort: function(compare) {
         _D('>dbFinUtils.ArrayHash.sort()');
 		let (kvs = this.toArray()) {

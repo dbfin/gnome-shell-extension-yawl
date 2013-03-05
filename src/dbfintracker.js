@@ -14,12 +14,11 @@ const Mainloop = imports.mainloop;
 
 const Shell = imports.gi.Shell;
 
-const Main = imports.ui.main;
-
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const dbFinAppButton = Me.imports.dbfinappbutton;
+const dbFinTrackerApp = Me.imports.dbfintrackerapp;
+const dbFinTrackerWindow = Me.imports.dbfintrackerwindow;
 const dbFinUtils = Me.imports.dbfinutils;
 const Convenience = Me.imports.convenience2;
 
@@ -27,118 +26,6 @@ const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
 const _D = Me.imports.dbfindebug._D;
-
-/* class dbFinTrackerApp: all stuff associated with an app
- */
-const dbFinTrackerApp = new Lang.Class({
-	Name: 'dbFin.TrackerApp',
-
-    _init: function(metaApp, tracker, metaWindow, autoHideShow/* = false*/) {
-        _D('>dbFinTrackerApp._init()');
-		this.metaApp = metaApp;
-		this._tracker = tracker;
-        this.windows = (metaWindow ? [ metaWindow ] : []);
-		this.appName = '?';
-		if (this.metaApp && this.metaApp.get_name) {
-			try { this.appName = this.metaApp.get_name(); } catch (e) { this.appName = '?'; }
-		}
-		this._autohideshow = autoHideShow || false;
-        this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this._tracker);
-		if (this.appButton && !metaWindow && this._autohideshow) this.appButton.hide();
-        _D('<');
-    },
-
-	destroy: function() {
-        _D('>dbFinTrackerApp.destroy()');
-        if (this.appButton) {
-            this.appButton.destroy();
-            this.appButton = null;
-        }
-		this.metaApp = null;
-		this._tracker = null;
-        this.windows = [];
-		this.appName = '?';
-        _D('<');
-	},
-
-    addWindow: function(metaWindow) {
-        _D('>dbFinTrackerApp.addWindow()');
-        if (metaWindow && this.windows && this.windows.indexOf(metaWindow) == -1) {
-            if (this._autohideshow && !this.windows.length && this.appButton) this.appButton.show();
-			this.windows.push(metaWindow);
-		}
-        _D('<');
-    },
-
-    removeWindow: function(metaWindow) {
-        _D('>dbFinTrackerApp.removeWindow()');
-        if (metaWindow && this.windows) {
-            let (i = this.windows.indexOf(metaWindow)) {
-                if (i != -1) this.windows.splice(i, 1);
-            }
-            if (this._autohideshow && !this.windows.length && this.appButton) this.appButton.hide();
-        }
-        _D('<');
-    }
-});
-
-/* class dbFinTrackerWindow: all stuff associated with a window
- */
-const dbFinTrackerWindow = new Lang.Class({
-	Name: 'dbFin.TrackerWindow',
-
-    _init: function(metaWindow, tracker, metaApp) {
-        _D('>dbFinTrackerWindow._init()');
-        this.metaWindow = metaWindow;
-		this._tracker = tracker;
-		this.windowTitle = '?';
-		this._updateTitle();
-        this.app = metaApp;
-		this.appName = '?';
-		if (this.app && this.app.get_name) {
-			try { this.appName = this.app.get_name(); } catch (e) { this.appName = '?'; }
-		}
-        this._signals = new dbFinUtils.Signals();
-        this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::title',
-                                    callback: this._titleChanged, scope: this });
-        _D('<');
-    },
-
-	destroy: function() {
-        _D('>dbFinTrackerWindow.destroy()');
-        if (this._signals) {
-            this._signals.destroy();
-            this._signals = null;
-        }
-        this.metaWindow = null;
-		this._tracker = null;
-		this.windowTitle = '?';
-        this.app = null;
-		this.appName = '?';
-        _D('<');
-	},
-
-	_titleChanged: function(metaWindow) {
-        _D('>dbFinTrackerWindow._titleChanged()');
-		if (metaWindow != this.metaWindow) {
-	        _D('<');
-			return;
-		}
-		let (msg = '"' + this.appName + ':' + this.windowTitle + '" changed title to "') {
-			this._updateTitle();
-			if (this._tracker) this._tracker.update(null, msg + this.windowTitle + '".');
-		}
-        _D('<');
-	},
-
-	_updateTitle: function() {
-        _D('>dbFinTrackerWindow._updateTitle()');
-		if (this.metaWindow && this.metaWindow.get_title) {
-			try { this.windowTitle = this.metaWindow.get_title(); } catch (e) { this.windowTitle = '?'; }
-		}
-        _D('<');
-	},
-});
 
 /* class dbFinTracker: main class to track all apps and windows
  */
@@ -259,7 +146,7 @@ const dbFinTracker = new Lang.Class({
 						if (windowProperties === undefined || !windowProperties) { // new window
 							windowsIn.push(metaWindow);
 							windowProperties = {};
-							windowProperties.trackerWindow = new dbFinTrackerWindow(metaWindow, this, metaApp);
+							windowProperties.trackerWindow = new dbFinTrackerWindow.dbFinTrackerWindow(metaWindow, this, metaApp);
 							if (appProperties !== undefined && appProperties && appProperties.trackerApp) {
 								appProperties.trackerApp.addWindow(metaWindow);
 							}
@@ -267,7 +154,7 @@ const dbFinTracker = new Lang.Class({
 						if (appProperties === undefined || !appProperties || !appProperties.trackerApp) { // new app
 							appsIn.push(metaApp);
 							appProperties = {};
-							appProperties.trackerApp = new dbFinTrackerApp(metaApp, this, metaWindow, true);
+							appProperties.trackerApp = new dbFinTrackerApp.dbFinTrackerApp(metaApp, this, metaWindow, true);
 						}
 						windowProperties.state = this.state;
 						this.windows.set(metaWindow, windowProperties);
@@ -310,7 +197,7 @@ const dbFinTracker = new Lang.Class({
 			})); // this.apps.forEach
 			this.windows.forEach(Lang.bind(this, function (metaWindow, windowProperties) {
 				if (!windowProperties || !windowProperties.state || windowProperties.state < this.state
-				        || !windowProperties.trackerWindow || !windowProperties.trackerWindow.app) {
+				        || !windowProperties.trackerWindow || !windowProperties.trackerWindow.metaApp) {
 					windowsOut.push(metaWindow);
 					this._removeWindow(metaWindow);
 				}
@@ -351,7 +238,7 @@ const dbFinTracker = new Lang.Class({
                 return;
 			}
 			if (windowProperties.trackerWindow) {
-				let (metaApp = windowProperties.trackerWindow.app) {
+				let (metaApp = windowProperties.trackerWindow.metaApp) {
 					windowProperties.trackerWindow.destroy();
 					windowProperties.trackerWindow = null;
 					// this.windows.remove(metaWindow); // no need as we use remove instead of get above

@@ -56,9 +56,7 @@ const dbFinPanelEnhancements = new Lang.Class({
 
     _updatePanelBackground: function() {
         _D('>dbFinPanelEnhancements._updatePanelBackground()');
-		if (this._settings) {
-			this._panelBackground = this._settings.get_boolean('panel-background');
-		}
+		this._panelBackground = dbFinUtils.settingsGetBoolean(this._settings, 'panel-background', this._panelBackground);
         if (this._panelBackground) {
 			this._updatePanelColor();
             this._signals.connectId('panel-color', {    emitter: this._settings, signal: 'changed::panel-color',
@@ -77,9 +75,7 @@ const dbFinPanelEnhancements = new Lang.Class({
 
 	_updatePanelColor: function() {
         _D('>dbFinPanelEnhancements._updatePanelColor()');
-		if (this._settings) {
-			this._panelColor = this._settings.get_string('panel-color');
-		}
+		this._panelColor = dbFinUtils.settingsGetString(this._settings, 'panel-color', this._panelColor);
 		this._updatePanelStyle();
         _D('<');
 	},

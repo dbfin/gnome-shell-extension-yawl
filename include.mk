@@ -9,6 +9,7 @@ extensionurl = https://github.com/dbfin/$(EXTENSION_ID)
 
 topextensiondir = $(datadir)/gnome-shell/extensions
 extensiondir = $(topextensiondir)/$(uuid)
+imagesdir = $(extensiondir)/images
 
 localprefix = $(HOME)/.local/share/gnome-shell/extensions
 localextensiondir = $(localprefix)/$(uuid)

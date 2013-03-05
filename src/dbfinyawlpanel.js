@@ -79,7 +79,7 @@ const dbFinYAWLPanel = new Lang.Class({
             _D('<');
             return;
         }
-		Tweener.removeTweens(this._box);
+		Tweener.removeTweens(this._box, "opacity");
         this._box.show();
         this.hidden = false;
 		Tweener.addTween(this._box, { opacity: 255, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad' });
@@ -93,7 +93,7 @@ const dbFinYAWLPanel = new Lang.Class({
             return;
         }
         this.hidden = true;
-		Tweener.removeTweens(this._box);
+		Tweener.removeTweens(this._box, "opacity");
 		Tweener.addTween(this._box, {	opacity: 0, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad',
 										onComplete: function() { this._box.hide(); }, onCompleteScope: this });
         _D('<');

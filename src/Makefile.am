@@ -3,11 +3,16 @@ include ../include.mk
 dist_extension_DATA = \
 	convenience2.js \
 	dbfinappbutton.js \
+	dbfinclicked.js \
+	dbfinclickmeter.js \
+	dbfinconsts.js \
 	dbfindebug.js \
 	dbfinmovecenter.js \
 	dbfinpanelenhancements.js \
 	dbfinslicericon.js \
 	dbfintracker.js \
+	dbfintrackerapp.js \
+	dbfintrackerwindow.js \
 	dbfinutils.js \
 	dbfinutilsprefs.js \
 	dbfinyawl.js \
@@ -30,6 +35,9 @@ gschemas_in = $(gschemaname).gschema.xml.in
 gsettings_SCHEMAS = $(gschemas_in:.xml.in=.xml)
 @GSETTINGS_RULES@
 CLEANFILES += $(gschemas_in:.xml.in=.valid) $(gsettings_SCHEMAS)
+
+SUBDIRS = \
+	images
 EXTRA_DIST += $(gschemas_in)
 
 metadata.json: metadata.json.in $(top_builddir)/config.status

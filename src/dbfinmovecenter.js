@@ -110,11 +110,14 @@ const dbFinMoveCenter = new Lang.Class({
         this._updateMoveCenter();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::move-center',
                                     callback: this._updateMoveCenter, scope: this });
-        this._hideActivities();
+
+		this._hideActivities = false;
+		this._preserveHotCorner = false;
+        this._updateHideActivities();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::hide-activities',
-                                    callback: this._hideActivities, scope: this });
+                                    callback: this._updateHideActivities, scope: this });
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::preserve-hot-corner',
-                                    callback: this._hideActivities, scope: this });
+                                    callback: this._updateHideActivities, scope: this });
         this._updatePanel();
         _D('<');
     },
@@ -147,34 +150,24 @@ const dbFinMoveCenter = new Lang.Class({
 
 	_updateMoveCenter: function() {
         _D('>dbFinMoveCenter._updateMoveCenter()');
-		if (this._settings) {
-            this._moveCenter = this._settings.get_boolean('move-center');
-		}
+		this._moveCenter = dbFinUtils.settingsGetBoolean(this._settings, 'move-center', this._moveCenter);
 		this._updatePanel();
         _D('<');
 	},
 
-    _hideActivities: function() {
-        _D('>dbFinMoveCenter._hideActivities()');
-        if (!this._settings) {
-            _D('<');
-            return;
-        }
-		let (hide = this._settings.get_boolean('hide-activities')) {
-			let (corner = hide && this._settings.get_boolean('preserve-hot-corner')) {
-				if (corner) {
-					if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
-				}
-				else {
-					if (this._hotcorner) {
-						this._hotcorner.destroy();
-						this._hotcorner = null;
-					}
-				}
-			} // let (corner)
-			if (hide) this._panelbuttonstoggle.hide('activities', 'left');
-			else this._panelbuttonstoggle.restore('activities');
-		} // let (hide)
+    _updateHideActivities: function() {
+        _D('>dbFinMoveCenter._updateHideActivities()');
+		this._hideActivities = dbFinUtils.settingsGetBoolean(this._settings, 'hide-activities', this._hideActivities);
+		this._preserveHotCorner = dbFinUtils.settingsGetBoolean(this._settings, 'preserve-hot-corner', this._preserveHotCorner);
+		if (this._hideActivities && this._preserveHotCorner) {
+			if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
+		}
+		else if (this._hotcorner) {
+			this._hotcorner.destroy();
+			this._hotcorner = null;
+		}
+		if (this._hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
+		else this._panelbuttonstoggle.restore('activities');
         _D('<');
     },
 

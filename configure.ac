@@ -22,6 +22,7 @@ AC_CONFIG_FILES([
   Makefile
   po/Makefile.in
   src/Makefile
+  src/images/Makefile
 ])
 AC_OUTPUT
 

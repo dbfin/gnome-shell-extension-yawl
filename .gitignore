@@ -31,3 +31,4 @@ stamp-*
 .anjuta/
 .git/
 /commit
+*.svg
