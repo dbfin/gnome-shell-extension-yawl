@@ -137,10 +137,12 @@ const dbFinSlicerIcon = new Lang.Class({
             let (_state = {}, was = false) {
                 for (let p in state) { // animate only those that are already defined and new
 					p = '' + p;
-                    if (this.actor[p] !== undefined && this.actor[p] !== state[p]) {
+                    if (this.actor[p] !== undefined) {
 						Tweener.removeTweens(this.actor, p);
-                        _state[p] = state[p];
-                        was = true;
+                        if (this.actor[p] !== state[p]) {
+							_state[p] = state[p];
+	                        was = true;
+						}
                     }
                 } // for (let p)
                 if (was) { // anything to animate?
@@ -151,16 +153,22 @@ const dbFinSlicerIcon = new Lang.Class({
                     if (scope) _state.onCompleteScope = scope;
                     Tweener.addTween(this.actor, _state);
                 } // if (was)
+				else if (callback) {
+					if (scope) Lang.bind(scope, callback)();
+					else callback();
+				} // if (was) else
             } // let (_state, was)
 		} // if (time > 0 && this.actor.get_stage())
 		else {
 			for (let p in state) {
 				p = '' + p;
-                if (this.actor[p] !== undefined && this.actor[p] !== state[p]) {
+                if (this.actor[p] !== undefined) {
 					Tweener.removeTweens(this.actor, p);
-                    this.actor[p] = state[p];
+					if (this.actor[p] !== state[p]) {
+	                    this.actor[p] = state[p];
+					}
 				}
-			}
+			} // for (let p)
 			if (callback) {
 				if (scope) Lang.bind(scope, callback)();
 				else callback();
