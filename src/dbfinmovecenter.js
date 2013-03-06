@@ -104,10 +104,16 @@ const dbFinMoveCenter = new Lang.Class({
 		this._signals.connectNoId({ emitter: Main.panel.actor, signal: 'allocate',
 									callback: this._allocate, scope: this });
 
-		this._panelPosition = 20;
+		this._panelPosition = 21;
 		this._updatePanelPosition();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::yawl-panel-position',
                                     callback: this._updatePanelPosition, scope: this });
+
+		this._panelWidth = 100;
+		this._updatePanelWidth();
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::yawl-panel-width',
+                                    callback: this._updatePanelWidth, scope: this });
+
         this._moveCenter = false;
         this._updateMoveCenter();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::move-center',
@@ -151,7 +157,14 @@ const dbFinMoveCenter = new Lang.Class({
 
 	_updatePanelPosition: function() {
         _D('>dbFinMoveCenter._updatePanelPosition()');
-		this._panelPosition = dbFinUtils.settingsParseInt(this._settings, 'yawl-panel-position', 10, 40, this._panelPosition);
+		this._panelPosition = dbFinUtils.settingsParseInt(this._settings, 'yawl-panel-position', 0, 50, this._panelPosition);
+		this._updatePanel();
+        _D('<');
+	},
+
+	_updatePanelWidth: function() {
+        _D('>dbFinMoveCenter._updatePanelWidth()');
+		this._panelWidth = dbFinUtils.settingsParseInt(this._settings, 'yawl-panel-width', 1, 100, this._panelWidth);
 		this._updatePanel();
         _D('<');
 	},
@@ -199,6 +212,7 @@ const dbFinMoveCenter = new Lang.Class({
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
                 [wlm, wln] = Main.panel._leftBox.get_preferred_width(-1), // minimum and natural widths
+		     	wym = Main.panel._yawlBox ? Main.panel._yawlBox.get_n_children() : 0,
                 [wcm, wcn] = Main.panel._centerBox.get_preferred_width(-1),
                 [wrm, wrn] = Main.panel._rightBox.get_preferred_width(-1),
                 boxChild = new Clutter.ActorBox(),
@@ -214,21 +228,30 @@ const dbFinMoveCenter = new Lang.Class({
 					wly = Math.ceil((w - wcn) / 2);
 					wr = Math.floor((w - wcn) / 2);
 				}
-				wl = Math.min(Math.max(wlm, Math.floor(w * this._panelPosition / 100.)), wly - 42);
-				wy = wly - wl;
-				xl = (drl ? w - wl : 0);
-				xr = xl + wl;
-				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-				Main.panel._leftBox.allocate(boxChild, flags);
-				if (drl) { xr = xl; xl -= wy; } else { xl = xr; xr += wy; }
-				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-				if (Main.panel._yawlBox) Main.panel._yawlBox.allocate(boxChild, flags);
-				if (drl) { xr = xl; xl -= wcn; } else { xl = xr; xr += wcn; }
-				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-				Main.panel._centerBox.allocate(boxChild, flags);
-				if (drl) { xr = Math.min(wrn, xl); xl = 0; } else { xl = Math.max(w - wrn, xr); xr = w; }
-				dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-				Main.panel._rightBox.allocate(boxChild, flags);
+				wl = Math.max(wlm, Math.min(Math.floor(w * this._panelPosition / 100), wly - wym));
+				wy = Math.max(wym, Math.min(wly - wl, Math.floor(w * this._panelWidth / 100)));
+				wly = Math.max(wly, wl + wy);
+				[ xl, xr ] = drl ? [ w, w ] : [ 0, 0 ];
+				if (wl) {
+					if (drl) xl = w - wl; else xr = wl;
+					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
+					Main.panel._leftBox.allocate(boxChild, flags);
+				}
+				if (Main.panel._yawlBox && wy) {
+					if (drl) { xr = xl; xl -= wy; } else { xl = xr; xr += wy; }
+					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
+					Main.panel._yawlBox.allocate(boxChild, flags);
+				}
+				if (wcn) {
+					if (drl) { xr = w - wly; xl = xr - wcn; } else { xl = wly; xr = xl + wcn; }
+					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
+					Main.panel._centerBox.allocate(boxChild, flags);
+				}
+				if (wrn) {
+					if (drl) { xr = Math.min(wrn, xl); xl = 0; } else { xl = Math.max(w - wrn, xr); xr = w; }
+					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
+					Main.panel._rightBox.allocate(boxChild, flags);
+				}
 				// Who needs the corners?.. Well, maybe someone does.
 				// But we do not need to reallocate them
 			} // let (wly, wl, wy, wr, xl, xr)

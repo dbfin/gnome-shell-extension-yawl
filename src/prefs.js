@@ -126,7 +126,9 @@ function buildPrefsWidget() {
 
         builder.addNotebook(_("Interface"));
             builder.addNotebook(_("Panel"), 'panel.png');
-                builder.addScale(_("YAWL-panel position"), 'yawl-panel-position', 10, 40, 1);
+                builder.addScale(_("YAWL-panel position"), 'yawl-panel-position', 0, 50, 1);
+                builder.addScale(_("YAWL-panel width"), 'yawl-panel-width', 1, 100, 1);
+                builder.addSeparator();
                 builder.addCheckBox(_("Move central panel"), 'move-center');
                 builder.addCheckBox(_("Hide Activities button"), 'hide-activities');
                 builder.shift();
@@ -145,9 +147,10 @@ function buildPrefsWidget() {
                 builder.addCheckBox(_("Faded icons"), 'icons-faded');
 				builder.addScale(_("Default icon opacity"), 'icons-opacity', 50, 100, 1);
                 builder.addSeparator();
-                builder.addScale(_("Distance between icons (% of icon size)"), 'icons-distance', 0, 100, 1);
                 builder.addScale(_("Clip icons: top (px)"), 'icons-clip-top', 0, 7, 1);
                 builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);
+                builder.addSeparator();
+                builder.addScale(_("Distance between icons (% of icon size)"), 'icons-distance', 0, 100, 1);
 
             builder.addPage(_("Animation"), 'animation.png');
                 builder.addScale(_("Animation Time in ms (0: no animation)"), 'icons-animation-time', 0, 1000, 1, null, true);
@@ -182,21 +185,23 @@ function buildPrefsWidget() {
 	                builder.addSeparator();
                     let threshold = new dbFinClicksThreshold();
                     builder.getWidget()._threshold = threshold;
-					builder.addRow(new Gtk.Label({ label: _("Make a fast series of SINGLE clicks"), halign: Gtk.Align.START, hexpand: true }),
-                                   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
-                                    	[ new Gtk.Label({ label: _("here:"), halign: Gtk.Align.END, hexpand: false }), 1 ],
-                                    	[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
-                                    ]);
+					builder.addLabel(_("This will measure the SHORTEST time between two consecutive SINGLE clicks."));
 					builder.shift();
+						builder.addRow(new Gtk.Label({ label: _("Make a fast series of SINGLE clicks"), halign: Gtk.Align.START, hexpand: true }),
+									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
+											[ new Gtk.Label({ label: _("here:"), halign: Gtk.Align.END, hexpand: false }), 1 ],
+											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
+										]);
 	                    widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
 	                    if (widgets && widgets.length) threshold.scaleSingle = widgets[widgets.length - 1];
 					builder.unshift();
-					builder.addRow(new Gtk.Label({ label: _("Make a series of DOUBLE clicks:"), halign: Gtk.Align.START, hexpand: true }),
-                                   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
-                                    	[ new Gtk.Label({ label: _("here:"), halign: Gtk.Align.END, hexpand: false }), 1 ],
-                                    	[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
-                                    ]);
+					builder.addLabel(_("This will measure the LONGEST time between two clicks of one DOUBLE click."));
 					builder.shift();
+						builder.addRow(new Gtk.Label({ label: _("Make a series of DOUBLE clicks"), halign: Gtk.Align.START, hexpand: true }),
+									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
+											[ new Gtk.Label({ label: _("here:"), halign: Gtk.Align.END, hexpand: false }), 1 ],
+											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
+										]);
 	                    widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
 	                    if (widgets && widgets.length) threshold.scaleDouble = widgets[widgets.length - 1];
 					builder.unshift();

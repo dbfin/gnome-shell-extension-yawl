@@ -288,7 +288,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 	},
 
 	addNotebook: function(label/* = null*/, iconfile/* = null*/) {
-        let (notebook = new Gtk.Notebook({ tab_pos: 2 - this._notebooks.length % 2 * 2/* (this._notebooks.length * 3 + 2) % 5*/ })) { // why not? ;)
+        let (notebook = new Gtk.Notebook({ vexpand: true, tab_pos: 2 - this._notebooks.length % 2 * 2/* (this._notebooks.length * 3 + 2) % 5*/ })) { // why not? ;)
 			if (this._notebook && this._notebook.page)
 				this._notebook.page.attach(notebook,
 				                           this._notebook.shift, this._notebook.row,
