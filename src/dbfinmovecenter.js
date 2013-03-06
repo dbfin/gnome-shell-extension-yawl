@@ -19,6 +19,8 @@ const Panel = imports.ui.panel;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinPanelButtonToggle = Me.imports.dbfinpanelbuttontoggle;
+const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinUtils = Me.imports.dbfinutils;
 const Convenience = Me.imports.convenience2;
 
@@ -36,7 +38,7 @@ const dbFinHotCorner = new Lang.Class({
 		this._button = new Panel.ActivitiesButton();
 		this._button._minHPadding = 0;
 		this._button._natHPadding = 0;
-		this._signals = new dbFinUtils.Signals();
+		this._signals = new dbFinSignals.dbFinSignals();
 		this._signals.connectNoId({ emitter: this._button.actor, signal: 'get-preferred-width',
 									callback: this._getPreferredSize, scope: this });
 		this._signals.connectNoId({ emitter: this._button.actor, signal: 'get-preferred-height',
@@ -53,7 +55,7 @@ const dbFinHotCorner = new Lang.Class({
 	destroy: function() {
         _D('>dbFinHotCorner.destroy()');
 		if (this._signals) {
-			this._signals.destroy(); // This should disconnect all signals
+			this._signals.destroy();
 			this._signals = null;
 		}
 		if (this._button) {
@@ -96,8 +98,8 @@ const dbFinMoveCenter = new Lang.Class({
     _init: function() {
         _D('>dbFinMoveCenter._init()');
         this._settings = Convenience.getSettings();
-		this._signals = new dbFinUtils.Signals();
-		this._panelbuttonstoggle = new dbFinUtils.PanelButtonToggle();
+		this._signals = new dbFinSignals.dbFinSignals();
+		this._panelbuttonstoggle = new dbFinPanelButtonToggle.dbFinPanelButtonToggle();
 		this._hotcorner = null;
 		this._signals.connectNoId({ emitter: Main.panel.actor, signal: 'allocate',
 									callback: this._allocate, scope: this });

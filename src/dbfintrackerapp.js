@@ -21,8 +21,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAppButton = Me.imports.dbfinappbutton;
-const dbFinUtils = Me.imports.dbfinutils;
-const Convenience = Me.imports.convenience2;
+const dbFinSignals = Me.imports.dbfinsignals;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -36,7 +35,7 @@ const dbFinTrackerApp = new Lang.Class({
 
     _init: function(metaApp, tracker, metaWindow, autoHideShow/* = false*/) {
         _D('>dbFinTrackerApp._init()');
-		this._signals = new dbFinUtils.Signals();
+		this._signals = new dbFinSignals.dbFinSignals();
 		this.metaApp = metaApp;
 		this._tracker = tracker;
         this.windows = (metaWindow ? [ metaWindow ] : []);

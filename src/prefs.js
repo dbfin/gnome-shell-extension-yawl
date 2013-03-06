@@ -19,6 +19,8 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience2;
 const dbFinClickMeter = Me.imports.dbfinclickmeter;
 const dbFinConsts = Me.imports.dbfinconsts;
+const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinUtils = Me.imports.dbfinutils;
 const dbFinUtilsPrefs = Me.imports.dbfinutilsprefs;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -33,45 +35,66 @@ const dbFinClicksThreshold = new Lang.Class({
     Name: 'dbFin.ClicksThreshold',
 
     _init: function() {
+        this._signals = new dbFinSignals.dbFinSignals();
 		this._settings = Convenience.getSettings();
 
-        this.scaleSingle = null;
-        this.scaleDouble = null;
-        this.scaleThreshold = null;
+        this._scaleSingle = null;
+        this._scaleDouble = null;
+        this._scaleThreshold = null;
 
 		this._timeSingle = [];
-		let (time = parseInt(this._settings.get_string('mouse-clicks-time-single'))) {
-			if (isNaN(time)) time = 300;
+		let (time = dbFinUtils.settingsParseInt(this._settings, 'mouse-clicks-time-single', 250, 750, 400)) {
 			for (let i = 0; i < 7; ++i) this._timeSingle[i] = time;
 			this._timeSingleSum = time * this._timeSingle.length;
 		}
 		this._timeDouble = [];
-		let (time = parseInt(this._settings.get_string('mouse-clicks-time-double'))) {
-			if (isNaN(time)) time = 400;
+		let (time = dbFinUtils.settingsParseInt(this._settings, 'mouse-clicks-time-double', 100, 450, 250)) {
 			for (let i = 0; i < 7; ++i) this._timeDouble[i] = time;
 			this._timeDoubleSum = time * this._timeDouble.length;
 		}
 
-		this._signalSingle = this._settings.connect('changed::mouse-clicks-time-single', Lang.bind(this, this._updateThreshold));
-		this._signalDouble = this._settings.connect('changed::mouse-clicks-time-double', Lang.bind(this, this._updateThreshold));
+        this._signals.connectNoId({ emitter: this._settings, signal: 'changed::mouse-clicks-time-single',
+                                    callback: this._updateThreshold, scope: this });
+        this._signals.connectNoId({ emitter: this._settings, signal: 'changed::mouse-clicks-time-double',
+                                    callback: this._updateThreshold, scope: this });
     },
 
     destroy: function() {
-		if (this._settings) {
-			if (this._signalSingle) this._settings.disconnect(this._signalSingle);
-			if (this._signalDouble) this._settings.disconnect(this._signalDouble);
-			this._signalSingle = null;
-			this._signalDouble = null;
-			this._settings = null;
-		}
+        if (this._signals) {
+            this._signals.destroy();
+            this._signals = null;
+        }
+        this._settings = null;
     },
 
+	set scaleSingle(scale) {
+		this._scaleSingle = scale;
+		this._signals.disconnectId('scale-single-value-changed');
+		if (this._scaleSingle) {
+			this._signals.connectId('scale-single-value-changed', {	emitter: this._scaleSingle, signal: 'value-changed',
+                                                                    callback: this._updateThreshold, scope: this });
+		}
+	},
+
+	set scaleDouble(scale) {
+		this._scaleDouble = scale;
+		this._signals.disconnectId('scale-double-value-changed');
+		if (this._scaleDouble) {
+			this._signals.connectId('scale-double-value-changed', {	emitter: this._scaleDouble, signal: 'value-changed',
+                                                                    callback: this._updateThreshold, scope: this });
+		}
+	},
+
+	set scaleThreshold(scale) {
+		this._scaleThreshold = scale;
+	},
+
 	_updateThreshold: function() {
-		if (!this || !this.scaleSingle || !this.scaleDouble || !this.scaleThreshold) return;
-		let (s = this.scaleSingle.get_value(), d = this.scaleDouble.get_value()) {
+		if (!this || !this._scaleSingle || !this._scaleDouble || !this._scaleThreshold) return;
+		let (s = this._scaleSingle.get_value(), d = this._scaleDouble.get_value()) {
 			if (s && d) {
 				let (v = Math.floor(Math.max(d * 8 / 7, s * 1 / 3 + d * 2 / 3))) {
-					if (v !== this.scaleThreshold.get_value()) try { this.scaleThreshold.set_value(v); } catch(e) {}
+					if (v !== this._scaleThreshold.get_value()) try { this._scaleThreshold.set_value(v); } catch(e) {}
 				}
 			}
 		}
@@ -82,7 +105,7 @@ const dbFinClicksThreshold = new Lang.Class({
 			this._timeSingleSum -= this._timeSingle.pop() - time;
 			this._timeSingle.unshift(time);
 			let (v = Math.floor(this._timeSingleSum / this._timeSingle.length)) {
-				if (this.scaleSingle && v !== this.scaleSingle.get_value()) this.scaleSingle.set_value(v);
+				if (this._scaleSingle && v !== this._scaleSingle.get_value()) this._scaleSingle.set_value(v);
 			}
 		}
     },
@@ -92,7 +115,7 @@ const dbFinClicksThreshold = new Lang.Class({
 			this._timeDoubleSum -= this._timeDouble.pop() - time;
 			this._timeDouble.unshift(time);
 			let (v = Math.floor(this._timeDoubleSum / this._timeDouble.length)) {
-				if (this.scaleDouble && v !== this.scaleDouble.get_value()) this.scaleDouble.set_value(v);
+				if (this._scaleDouble && v !== this._scaleDouble.get_value()) this._scaleDouble.set_value(v);
 			}
 		}
     }

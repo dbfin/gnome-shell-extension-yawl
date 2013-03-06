@@ -20,8 +20,8 @@ const Tweener = imports.ui.tweener;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinTracker = Me.imports.dbfintracker;
-const dbFinUtils = Me.imports.dbfinutils;
 const Convenience = Me.imports.convenience2;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -36,7 +36,7 @@ const dbFinYAWLPanel = new Lang.Class({
     _init: function() {
         _D('>dbFinYAWLPanel._init()');
         this._settings = Convenience.getSettings();
-		this._signals = new dbFinUtils.Signals();
+		this._signals = new dbFinSignals.dbFinSignals();
 		this._box = new St.BoxLayout({ name: 'panelYAWL', vertical: false, track_hover: true });
         Main.panel._yawlBox = this._box;
         Main.panel.actor.add_actor(Main.panel._yawlBox);

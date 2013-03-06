@@ -19,6 +19,7 @@ const Panel = imports.ui.panel;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinUtils = Me.imports.dbfinutils;
 const Convenience = Me.imports.convenience2;
 
@@ -33,7 +34,7 @@ const dbFinPanelEnhancements = new Lang.Class({
     _init: function() {
         _D('>dbFinPanelEnhancements._init()');
         this._settings = Convenience.getSettings();
-		this._signals = new dbFinUtils.Signals();
+		this._signals = new dbFinSignals.dbFinSignals();
 		this._panelBackground = false;
 		this._panelColor = '#000000';
 		this._panelOpacity = 100;

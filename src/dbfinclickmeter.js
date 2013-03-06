@@ -20,7 +20,7 @@ const Gtk = imports.gi.Gtk;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.convenience2;
+const dbFinSignals = Me.imports.dbfinsignals;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -29,30 +29,33 @@ const dbFinClickMeter = new Lang.Class({
     Name: 'dbFin.ClickMeter',
 
     _init: function(minTime, maxTime, clicksCallback, clicksCallbackScope) {
+        this._signals = new dbFinSignals.dbFinSignals();
 		this._minTime = minTime || 1;
 		this._maxTime = maxTime || this._minTime;
 		this._clicksCallback = clicksCallback || null;
 		this._clicksCallbackScope = clicksCallbackScope || null;
         this.widget = new Gtk.DrawingArea();
-		this.widget.connect('draw', Lang.bind(this, this._draw));
+		this._signals.connectNoId({ emitter: this.widget, signal: 'draw',
+                                    callback: this._draw, scope: this });
 		this._clicks = [];
 		this._clicksi = 0;
 		this._clicksilast = undefined;
 		for (let i = 0; i < 256; ++i) this._clicks[i] = 0;
 		this._timeout = Mainloop.timeout_add(25, Lang.bind(this, this._onTimeout));
-		this._connectId = this.widget.connect('button-press-event', Lang.bind(this, this._onButtonPress));
+		this._signals.connectNoId({ emitter: this.widget, signal: 'button-press-event',
+                                    callback: this._onButtonPress, scope: this });
 		this.widget.add_events(1 << 8);
     },
 
     destroy: function() {
+        if (this._signals) {
+            this._signals.destroy();
+            this._signals = null;
+        }
         if (this._timeout) {
             Mainloop.source_remove(this._timeout);
             this._timeout = null;
         }
-		if (this._connectId) {
-			this.widget.disconnect(this._connectId);
-			this._connectId = null;
-		}
 		if (this.widget) {
 			this.widget.destroy();
 			this.widget = null;

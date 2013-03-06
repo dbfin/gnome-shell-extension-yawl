@@ -17,10 +17,10 @@ const Shell = imports.gi.Shell;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinArrayHash = Me.imports.dbfinarrayhash;
+const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinTrackerApp = Me.imports.dbfintrackerapp;
 const dbFinTrackerWindow = Me.imports.dbfintrackerwindow;
-const dbFinUtils = Me.imports.dbfinutils;
-const Convenience = Me.imports.convenience2;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -34,11 +34,11 @@ const dbFinTracker = new Lang.Class({
 
     _init: function(callback) { // callback: function(appsIn, appsOut, windowsIn, windowsOut) called by update (_refresh)
         _D('>dbFinTracker._init()');
-		this._signals = new dbFinUtils.Signals();
+		this._signals = new dbFinSignals.dbFinSignals();
 		this._callback = callback || null;
         this._tracker = Shell.WindowTracker.get_default();
-		this.apps = new dbFinUtils.ArrayHash(); // [ [ metaApp, { state:, trackerApp: } ] ]
-		this.windows = new dbFinUtils.ArrayHash(); // [ [ metaWindow, { state:, trackerWindow: } ] ]
+		this.apps = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, { state:, trackerApp: } ] ]
+		this.windows = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaWindow, { state:, trackerWindow: } ] ]
 		this.state = 0; // when refreshing we increase the state to indicate apps and windows that are no longer there
         this.stateInfo = '';
 		this.update(null, 'Tracker: initial update.');

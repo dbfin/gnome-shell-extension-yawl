@@ -58,6 +58,8 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const Convenience = Me.imports.convenience2;
+const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -68,24 +70,25 @@ const dbFinSettingsBindEntry = new Lang.Class({
 	Name: 'dbFin.SettingsBindEntry',
 
 	_init: function() {
+        this._signals = new dbFinSignals.dbFinSignals();
 		this._settings = Convenience.getSettings();
 		this._settingsKey = null;
 		this._gtkEntry = null;
 		this._gtkWidget = null;
 		this._gtkWidgetNotifySignal = null;
-		this._signalEntry = null;
-		this._signalWidget = null;
 		this._callbackWidgetToEntry = null;
 		this._callbackEntryToWidget = null;
 	},
 
 	destroy: function() {
+        if (this._signals) {
+            this._signals.destroy();
+            this._signals = null;
+        }
 		if (this._settingsKey) {
 			if (this._settings && this._gtkEntry) this._settings.unbind(this._gtkEntry, 'text');
 			this._settingsKey = null;
 		}
-		this._disconnectEntry();
-		this._disconnectWidget();
 		this._gtkEntry = null;
 		this._gtkWidget = null;
 		this._gtkWidgetNotifySignal = null;
@@ -101,40 +104,33 @@ const dbFinSettingsBindEntry = new Lang.Class({
 		this._gtkWidgetNotifySignal = '' + gtkWidgetNotifySignal;
 		this._callbackWidgetToEntry = callbackWidgetToEntry;
 		this._callbackEntryToWidget = callbackEntryToWidget;
-        let (text = this._settings.list_keys().indexOf(this._settingsKey) != -1 && this._settings.get_string(this._settingsKey) || null) {
+        let (text = dbFinUtils.settingsGetString(this._settings, this._settingsKey, null)) {
     		if (text === null) return;
             this._gtkEntry.set_text(text);
         }
-		this._callbackEntryToWidget();
-		this._settings.bind(this._settingsKey, this._gtkEntry, 'text', Gio.SettingsBindFlags.DEFAULT);
+		if (this._callbackEntryToWidget) this._callbackEntryToWidget();
+        if (this._settingsKey && this._settings && this._gtkEntry)
+            this._settings.bind(this._settingsKey, this._gtkEntry, 'text', Gio.SettingsBindFlags.DEFAULT);
 		this._connectEntry();
 		this._connectWidget();
 	},
 
 	_connectEntry: function() {
-		if (!this._signalEntry && this._gtkEntry && this._callbackEntryToWidget) {
-			this._signalEntry = this._gtkEntry.connect('notify::text', this._callbackEntryToWidget);
-		}
+        this._signals.connectId('entry', {  emitter: this._gtkEntry, signal: 'notify::text',
+                                            callback: this._callbackEntryToWidget, scope: this });
 	},
 
 	_disconnectEntry: function() {
-		if (this._signalEntry) {
-			if (this._gtkEntry) this._gtkEntry.disconnect(this._signalEntry);
-			this._signalEntry = null;
-		}
+        this._signals.disconnectId('entry');
 	},
 
 	_connectWidget: function() {
-		if (!this._signalWidget && this._gtkWidget && this._gtkWidgetNotifySignal && this._callbackWidgetToEntry) {
-			this._signalWidget = this._gtkWidget.connect(this._gtkWidgetNotifySignal, this._callbackWidgetToEntry);
-		}
+        this._signals.connectId('widget', { emitter: this._gtkWidget, signal: this._gtkWidgetNotifySignal,
+                                            callback: this._callbackWidgetToEntry, scope: this });
 	},
 
 	_disconnectWidget: function() {
-		if (this._signalWidget) {
-			if (this._gtkWidget) this._gtkWidget.disconnect(this._signalWidget);
-			this._signalWidget = null;
-		}
+        this._signals.disconnectId('widget');
 	}
 });
 

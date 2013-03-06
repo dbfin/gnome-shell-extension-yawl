@@ -3,12 +3,15 @@ include ../include.mk
 dist_extension_DATA = \
 	convenience2.js \
 	dbfinappbutton.js \
+	dbfinarrayhash.js \
 	dbfinclicked.js \
 	dbfinclickmeter.js \
 	dbfinconsts.js \
 	dbfindebug.js \
 	dbfinmovecenter.js \
+	dbfinpanelbuttontoggle.js \
 	dbfinpanelenhancements.js \
+	dbfinsignals.js \
 	dbfinslicericon.js \
 	dbfintracker.js \
 	dbfintrackerapp.js \

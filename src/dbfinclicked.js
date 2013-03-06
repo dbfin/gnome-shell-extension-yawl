@@ -17,6 +17,8 @@ const Clutter = imports.gi.Clutter;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinArrayHash = Me.imports.dbfinarrayhash;
+const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinUtils = Me.imports.dbfinutils;
 const Convenience = Me.imports.convenience2;
 
@@ -37,7 +39,7 @@ const dbFinClicked = new Lang.Class({
     _init: function(emitter, callback, scope, doubleClicks/* = false*/, scroll/* = false*/,
                     sendSingleClicksImmediately/* = false*/, clickOnRelease/* = false*/) {
         _D('>dbFinClicked._init()');
-        this._signals = new dbFinUtils.Signals();
+        this._signals = new dbFinSignals.dbFinSignals();
         this._settings = Convenience.getSettings();
         this._settingsGlobal = dbFinUtils.settingsGetGlobalSettings('org.gnome.settings-daemon.peripherals.mouse');
 		this._emitter = emitter;
@@ -48,7 +50,7 @@ const dbFinClicked = new Lang.Class({
 		this._single = !!sendSingleClicksImmediately;
 		this._release = !!clickOnRelease;
 		this._state = {};
-		this._stateTimeouts = new dbFinUtils.ArrayHash();
+		this._stateTimeouts = new dbFinArrayHash.dbFinArrayHash();
         for (let stateNumber = 0; stateNumber < 16; ++stateNumber) this._stateTimeouts.set(stateNumber, null);
 
 		this._timeoutTime = 333;

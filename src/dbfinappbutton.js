@@ -21,8 +21,10 @@ const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinConsts = Me.imports.dbfinconsts;
+const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerIcon = Me.imports.dbfinslicericon;
 const dbFinUtils = Me.imports.dbfinutils;
 const Convenience = Me.imports.convenience2;
@@ -41,7 +43,7 @@ const dbFinAppButton = new Lang.Class({
         _D('>dbFinAppButton._init()');
 		this.parent(0.0, null, true);
         this._settings = Convenience.getSettings();
-		this._signals = new dbFinUtils.Signals();
+		this._signals = new dbFinSignals.dbFinSignals();
 		this.metaApp = metaApp;
 		this._tracker = tracker;
         this._trackerApp = trackerApp;
@@ -75,7 +77,7 @@ const dbFinAppButton = new Lang.Class({
 		this.actor.add_actor(this._slicerIcon.actor);
         if (Main.panel) this._slicerIcon.actor.natural_height = Main.panel.actor.get_height();
 
-		this._icons = new dbFinUtils.ArrayHash();
+		this._icons = new dbFinArrayHash.dbFinArrayHash();
         this._iconSize = 48;
 		this._iconFaded = false;
 

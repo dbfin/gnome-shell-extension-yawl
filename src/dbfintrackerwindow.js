@@ -14,8 +14,7 @@ const Lang = imports.lang;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const dbFinUtils = Me.imports.dbfinutils;
-const Convenience = Me.imports.convenience2;
+const dbFinSignals = Me.imports.dbfinsignals;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -29,7 +28,7 @@ const dbFinTrackerWindow = new Lang.Class({
 
     _init: function(metaWindow, tracker, metaApp) {
         _D('>dbFinTrackerWindow._init()');
-        this._signals = new dbFinUtils.Signals();
+        this._signals = new dbFinSignals.dbFinSignals();
         this.metaWindow = metaWindow;
 		this._tracker = tracker;
 		this.windowTitle = '?';

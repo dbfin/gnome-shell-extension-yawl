@@ -19,8 +19,7 @@ const Tweener = imports.ui.tweener;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const dbFinUtils = Me.imports.dbfinutils;
-const Convenience = Me.imports.convenience2;
+const dbFinSignals = Me.imports.dbfinsignals;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -32,7 +31,7 @@ const dbFinSlicerIcon = new Lang.Class({
 
     _init: function() {
         _D('>dbFinSlicerIcon._init()');
-        this._signals = new dbFinUtils.Signals();
+        this._signals = new dbFinSignals.dbFinSignals();
 		this.actor = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }) });
 		this._icon = null; // icons are never destroyed when new are assigned
 		this._clipTop = 0; // px
