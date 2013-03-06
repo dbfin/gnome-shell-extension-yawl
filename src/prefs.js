@@ -28,7 +28,7 @@ function init() {
     Convenience.initTranslations();
 }
 
-
+// TODO: something more "sophisticated"?
 const dbFinClicksThreshold = new Lang.Class({
     Name: 'dbFin.ClicksThreshold',
 
@@ -109,6 +109,7 @@ function buildPrefsWidget() {
                 builder.shift();
                     builder.addCheckBox(_("Preserve Hot Corner"), 'preserve-hot-corner', 'hide-activities');
                 builder.unshift();
+                builder.addCheckBox(_("Hide AppMenu button"), 'hide-app-menu');
                 builder.addSeparator();
                 builder.addCheckBox(_("Custom panel background"), 'panel-background');
                 builder.shift();

@@ -25,5 +25,6 @@ const arrayAppClickFunctions = [
     [   _("Minimize top : all windows"),	        	'minimizeTopWindow',            'minimizeAllWindows'            ],
     [   _("(Un)Maximize top : all windows"),        	'maximizeTopWindow',            'maximizeAllWindows'            ],
     [   _("Open new window : none"),	            	'openNewWindowThisWorkspace',   ''                              ],
-    [   _("Open new window (new workspace) : none"),	'openNewWindowNewWorkspace',    ''                              ]
+    [   _("Open new window (new workspace) : none"),	'openNewWindowNewWorkspace',    ''                              ],
+    [   _("Open menu : none"),                       	'openMenu',                     ''                              ]
 ];

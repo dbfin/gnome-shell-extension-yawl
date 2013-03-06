@@ -89,14 +89,12 @@ const dbFinTrackerApp = new Lang.Class({
             return;
         }
 		let (focused = (this.metaApp == this._tracker.getTracker().focus_app)) {
-			if (this._focused !== focused) {
-		        this._focused = focused;
-                if (this.appButton && this.appButton.actor) {
-                    if (this._focused) this.appButton.actor.add_style_pseudo_class('active');
-                    else this.appButton.actor.remove_style_pseudo_class('active');
-                }
-				//this._resetNextWindows(); // this gets called every time a window of the same application is changed
-			} // if (this._focused !== focused)
+            this._focused = focused;
+            if (this.appButton && this.appButton.actor) {
+                if (this._focused) this.appButton.actor.add_style_pseudo_class('active');
+                else this.appButton.actor.remove_style_pseudo_class('active');
+            }
+            //this._resetNextWindows(); // commented out: gets called when a window of the same application is changed
 		} // let (focused)
         _D('<');
 	},
@@ -343,4 +341,10 @@ const dbFinTrackerApp = new Lang.Class({
 		this._openNewWindow(global.screen.n_workspaces ? global.screen.n_workspaces - 1 : 0); // just in case
         _D('<');
     },
+
+    openMenu: function() {
+        _D('>dbFinTrackerApp.openMenu()');
+        if (this.appButton) this.appButton.menuToggle();
+        _D('<');
+    }
 });

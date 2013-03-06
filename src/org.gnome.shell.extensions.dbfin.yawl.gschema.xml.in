@@ -16,6 +16,11 @@
       <_summary>Hide Activities button.</_summary>
       <_description>If true the Activities button is hidden.</_description>
     </key>
+    <key name="hide-app-menu" type="b">
+      <default>false</default>
+      <_summary>Hide AppMenu button.</_summary>
+      <_description>If true the AppMenu button is hidden.</_description>
+    </key>
     <key name="preserve-hot-corner" type="b">
       <default>true</default>
       <_summary>Preserve Hot Corner.</_summary>
@@ -135,6 +140,11 @@
       <default>'4'</default>
       <_summary>App mouse scroll function.</_summary>
       <_description>App mouse scroll function.</_description>
+    </key>
+    <key name="mouse-app-right" type="s">
+      <default>'10'</default>
+      <_summary>App right click/double click function.</_summary>
+      <_description>App right click/double click function.</_description>
     </key>
     <key name="mouse-click-release" type="b">
       <default>false</default>

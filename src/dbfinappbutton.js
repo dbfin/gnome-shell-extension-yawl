@@ -11,8 +11,12 @@
 
 const Lang = imports.lang;
 
+const Shell = imports.gi.Shell;
+const St = imports.gi.St;
+
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
+const PopupMenu = imports.ui.popupMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -35,7 +39,7 @@ const dbFinAppButton = new Lang.Class({
 
     _init: function(metaApp, tracker, trackerApp) {
         _D('>dbFinAppButton._init()');
-		this.parent(0.33, null, true);
+		this.parent(0.0, null, true);
         this._settings = Convenience.getSettings();
 		this._signals = new dbFinUtils.Signals();
 		this.metaApp = metaApp;
@@ -127,12 +131,17 @@ const dbFinAppButton = new Lang.Class({
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-animation-time',
                                     callback: this._updateAnimationTime, scope: this });
 
+		this._menuManager = Main.panel && Main.panel.menuManager || null;
+		this._updateMenu();
 		if (this.metaApp) {
 			this._signals.connectNoId({	emitter: this.metaApp, signal: 'notify::menu',
 										callback: this._update, scope: this });
 			this._signals.connectNoId({	emitter: this.metaApp, signal: 'notify::action-group',
 										callback: this._update, scope: this });
 		}
+
+		this._signals.connectNoId({ emitter: Shell.AppSystem.get_default(), signal: 'app-state-changed',
+									callback: this._updateAppState, scope: this });
 		_D('<');
     },
 
@@ -331,8 +340,67 @@ const dbFinAppButton = new Lang.Class({
 	_update: function() {
         _D('>dbFinAppButton._update()');
 //		if (this._slicerIcon) this._slicerIcon.actor.queue_relayout();
+		this._updateMenu();
         _D('<');
 	},
+
+	_updateAppState: function(appSys, app) {
+        _D('>dbFinAppButton._updateAppState()');
+		if (app && this.metaApp == app && app.state == Shell.AppState.RUNNING) {
+			this._updateMenu();
+		}
+        _D('<');
+	},
+
+	// GNOMENEXT: ui/panel.js: class AppMenuButton
+	_updateMenu: function() {
+        _D('>dbFinAppButton._updateMenu()');
+		if (!this.metaApp || this.metaApp.state != Shell.AppState.RUNNING) {
+	        _D('<');
+            return;
+		}
+		let (	menu = null,
+		     	actionGroup = this.metaApp.menu && this.metaApp.action_group,
+		     	thisRemote = this.menu && (this.menu instanceof PopupMenu.RemoteMenu)) {
+			if (actionGroup) {
+				if (!thisRemote || this.menu.actionGroup != actionGroup) {
+					menu = new PopupMenu.RemoteMenu(this.actor, this.metaApp.menu, actionGroup);
+				}
+			} // if (actionGroup)
+			else {
+				if (!this.menu || thisRemote) {
+					menu = new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.TOP, 0); // set up standard menu
+					menu.addAction(_("Quit"), Lang.bind(this, function() { if (this.metaApp) this.metaApp.request_quit(); }));
+				}
+			} // if (actionGroup) else
+			if (menu && this.menu != menu) {
+				this._signals.disconnectId('menu-toggled');
+				this.setMenu(menu);
+				this._menuManager.addMenu(menu);
+				// GNOMENEXT: ui/popupMenu.js: class PopupMenu
+				this._signals.connectId('menu-toggled', {	emitter: this.menu, signal: 'open-state-changed',
+				 											callback: this._menuToggled, scope: this });
+			}
+		}
+        _D('<');
+	},
+
+    menuToggle: function() {
+        _D('>dbFinAppButton.menuToggle()');
+        if (this.menu) {
+			this.menu.toggle();
+		}
+        _D('<');
+    },
+
+    _menuToggled: function(menu, state) {
+        _D('>dbFinAppButton._menuToggled()');
+		if (menu == this.menu && !state) {
+			// make sure we are still "active" if focused
+			if (this._trackerApp && this._trackerApp._updateFocused) this._trackerApp._updateFocused();
+		}
+        _D('<');
+    },
 
 	_styleChanged: function() {
         _D('>dbFinAppButton._styleChanged()');
@@ -371,5 +439,11 @@ const dbFinAppButton = new Lang.Class({
             } // if (functionIndex)
         } // let (functionIndex)
         _D('<');
+	},
+
+	_onButtonPress: function() {
+        _D('>dbFinAppButton._onButtonPress()');
+		// nothing to do here
+		_D('<');
 	}
 });

@@ -62,6 +62,7 @@
  * 					Methods:
  * 						getKeys()							array of keys
  * 						getValues()							array of values
+ *                      has(k)                              true or false
  *						get(k)						    	returns value or undefined
  *						set(k, v)					    	sets/adds value by key
  *						setArray([[k, v]])			    	sets/adds keys and values taken from array of pairs
@@ -285,6 +286,12 @@ const ArrayHash = new Lang.Class({
 		return this._values.slice();
 	},
 
+	has: function(k) {
+        _D('>dbFinUtils.ArrayHash.has()');
+        _D('<');
+		return this._keys.indexOf(k) != -1;
+	},
+
 	get: function(k) {
         _D('>dbFinUtils.ArrayHash.get()');
 		let (i = this._keys.indexOf(k)) {
@@ -505,6 +512,7 @@ const PanelButtonToggle = new Lang.Class({
 	_init: function() {
         _D('>dbFinUtils.PanelButtonToggle._init()');
         this._hiddenroles = new ArrayHash();
+		this._panelIds = new ArrayHash();
         _D('<');
 	},
 
@@ -515,22 +523,29 @@ const PanelButtonToggle = new Lang.Class({
             this._hiddenroles.destroy();
             this._hiddenroles = null;
 		}
+		if (this._panelIds) {
+			this._panelIds.destroy();
+			this._panelIds = null;
+		}
         _D('<');
 	},
 
 	// GNOMENEXT: ui/sessionmode.js, ui/panel.js
 	hide: function(role, panelid) {
         _D('>dbFinUtils.PanelButtonToggle.hide()');
-		if (!this._hiddenroles) {
-			_D('this._hiddenroles === null');
+		if (!this._hiddenroles || !this._panelIds) {
+			_D(!this._hiddenroles ? 'this._hiddenroles === null' : 'this._panelIds === null');
 	        _D('<');
 			return;
 		}
 		let (panel = SessionMode._modes['user'].panel) {
-			if (!panel[panelid]) {
+			if (!panel || !panel[panelid]) {
 				_D('Panel "' + panelid + '" not found.');
 				_D('<');
 				return;
+			}
+			if (!this._panelIds.has(panelid)) {
+				this._panelIds.set(panelid, panel[panelid].slice()); // store a copy
 			}
 			let (i = panel[panelid].indexOf(role)) {
 				if (i == -1) {
@@ -538,8 +553,8 @@ const PanelButtonToggle = new Lang.Class({
 					return;
 				}
 				panel[panelid].splice(i, 1);
+				this._hiddenroles.set(role, panelid);
 				Main.panel._updatePanel();
-				this._hiddenroles.set(role, { 'panelid': panelid, 'index': i });
 			} // let (i)
 		} // let (panel)
         _D('<');
@@ -547,24 +562,30 @@ const PanelButtonToggle = new Lang.Class({
 
 	restore: function(role) {
         _D('>dbFinUtils.PanelButtonToggle.restore()');
-		if (!this._hiddenroles) {
-			_D('this._hiddenroles === null');
+		if (!this._hiddenroles || !this._panelIds) {
+			_D(!this._hiddenroles ? 'this._hiddenroles === null' : 'this._panelIds === null');
 	        _D('<');
 			return;
 		}
-		let (hr = this._hiddenroles.remove(role)) {
-			if (hr === undefined) {
+		let (panelid = this._hiddenroles.remove(role)) {
+			if (panelid === undefined) {
 		        _D('<');
 				return;
 			}
-			let (	panel = SessionMode._modes['user'].panel,
-			     	panelid = hr['panelid'],
-			     	i = hr['index']) {
-				if (i > panel[panelid].length) i = panel[panelid].length;
-				panel[panelid].splice(i, 0, role);
+			let (	panelRoles = SessionMode._modes['user'].panel[panelid],
+			     	savedRoles = this._panelIds.get(panelid),
+			     	position = 0) {
+				if (savedRoles) { // try to restore position
+					for (let i = 0; i < savedRoles.length; ++i) {
+						if (savedRoles[i] == role) break;
+						if (!this._hiddenroles.has(savedRoles[i])) ++position;
+					}
+				}
+				if (position < panelRoles.length) panelRoles.splice(position, 0, role);
+				else panelRoles.push(role);
 				Main.panel._updatePanel();
-			} // let (panel, panelid, i)
-		} // let (hr)
+			} // let (panelRoles, savedRoles, position)
+		} // let (panelid)
         _D('<');
 	},
 

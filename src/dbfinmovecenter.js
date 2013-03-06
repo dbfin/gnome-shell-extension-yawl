@@ -118,7 +118,13 @@ const dbFinMoveCenter = new Lang.Class({
                                     callback: this._updateHideActivities, scope: this });
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::preserve-hot-corner',
                                     callback: this._updateHideActivities, scope: this });
-        this._updatePanel();
+
+		this._hideAppMenu = false;
+		this._updateHideAppMenu();
+		this._signals.connectNoId({	emitter: this._settings, signal: 'changed::hide-app-menu',
+									callback: this._updateHideAppMenu, scope: this });
+
+		this._updatePanel();
         _D('<');
     },
 
@@ -168,6 +174,14 @@ const dbFinMoveCenter = new Lang.Class({
 		}
 		if (this._hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
 		else this._panelbuttonstoggle.restore('activities');
+        _D('<');
+    },
+
+    _updateHideAppMenu: function() {
+        _D('>dbFinMoveCenter._updateHideAppMenu()');
+		this._hideAppMenu = dbFinUtils.settingsGetBoolean(this._settings, 'hide-app-menu', this._hideAppMenu);
+		if (this._hideAppMenu) this._panelbuttonstoggle.hide('appMenu', 'left');
+		else this._panelbuttonstoggle.restore('appMenu');
         _D('<');
     },
 
