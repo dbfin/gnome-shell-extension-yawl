@@ -114,6 +114,11 @@ const dbFinMoveCenter = new Lang.Class({
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::yawl-panel-width',
                                     callback: this._updatePanelWidth, scope: this });
 
+		this._iconsAlignCenter = false;
+		this._updateIconsAlignCenter();
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-align-center',
+                                    callback: this._updateIconsAlignCenter, scope: this });
+
         this._moveCenter = false;
         this._updateMoveCenter();
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::move-center',
@@ -169,6 +174,13 @@ const dbFinMoveCenter = new Lang.Class({
         _D('<');
 	},
 
+	_updateIconsAlignCenter: function() {
+        _D('>dbFinMoveCenter._updateIconsAlignCenter()');
+		this._iconsAlignCenter = dbFinUtils.settingsGetBoolean(this._settings, 'icons-align-center', this._iconsAlignCenter);
+		this._updatePanel();
+        _D('<');
+	},
+
 	_updateMoveCenter: function() {
         _D('>dbFinMoveCenter._updateMoveCenter()');
 		this._moveCenter = dbFinUtils.settingsGetBoolean(this._settings, 'move-center', this._moveCenter);
@@ -212,11 +224,12 @@ const dbFinMoveCenter = new Lang.Class({
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
                 [wlm, wln] = Main.panel._leftBox.get_preferred_width(-1), // minimum and natural widths
-		     	wym = Main.panel._yawlBox ? Main.panel._yawlBox.get_n_children() : 0,
+		     	[wym, wyn] = Main.panel._yawlBox ? Main.panel._yawlBox.get_preferred_width(-1) : [ 0, 0 ],
                 [wcm, wcn] = Main.panel._centerBox.get_preferred_width(-1),
                 [wrm, wrn] = Main.panel._rightBox.get_preferred_width(-1),
                 boxChild = new Clutter.ActorBox(),
                 drl = (Main.panel.actor.get_text_direction() == Clutter.TextDirection.RTL)) {
+			if (!wym && Main.panel._yawlBox) wym = Main.panel._yawlBox.get_n_children();
 			let (wly, wl, wy, wr, xl, xr) {
 				if (this._moveCenter) {
 					// let left box + YAWL panel occupy all the space on the left, but no less than (w - wcn) / 2
@@ -239,6 +252,7 @@ const dbFinMoveCenter = new Lang.Class({
 				}
 				if (Main.panel._yawlBox && wy) {
 					if (drl) { xr = xl; xl -= wy; } else { xl = xr; xr += wy; }
+                    if (this._iconsAlignCenter && wy - wyn > 1) { xl += (wy - wyn) >> 1; xr = xl + wyn; }
 					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
 					Main.panel._yawlBox.allocate(boxChild, flags);
 				}

@@ -61,11 +61,6 @@
       <_summary>Default icons opacity.</_summary>
       <_description>Icon opacity when not hovered (and when hovered if not otherwise set).</_description>
     </key>
-    <key name="icons-distance" type="s">
-      <default>'49'</default>
-      <_summary>Distance between icons (%).</_summary>
-      <_description>Distance between two icons as % of the icon size.</_description>
-    </key>
     <key name="icons-clip-top" type="s">
       <default>'3'</default>
       <_summary>Clip icons: top (px).</_summary>
@@ -75,6 +70,16 @@
       <default>'3'</default>
       <_summary>Clip icons: bottom (px).</_summary>
       <_description>Clip icons on bottom (in pixels).</_description>
+    </key>
+    <key name="icons-align-center" type="b">
+      <default>false</default>
+      <_summary>Align icons to the center of panel.</_summary>
+      <_description>If true, icons are aligned to the center of YAWL panel.</_description>
+    </key>
+    <key name="icons-distance" type="s">
+      <default>'21'</default>
+      <_summary>Distance between icons (%).</_summary>
+      <_description>Distance between two icons as % of the icon size.</_description>
     </key>
     <key name="icons-animation-time" type="s">
       <default>'490'</default>
