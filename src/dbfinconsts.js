@@ -28,3 +28,9 @@ const arrayAppClickFunctions = [
     [   _("Open new window (new workspace) : none"),	'openNewWindowNewWorkspace',    ''                              ],
     [   _("Open menu : none"),                       	'openMenu',                     ''                              ]
 ];
+
+const arrayAppMenuItems = [
+    [   _("New window"),            					'openNewWindowThisWorkspace'	],
+    [   '',                         					null							],
+    [   _("Quit"),                  					'quitApplication'				]
+];

@@ -345,5 +345,11 @@ const dbFinTrackerApp = new Lang.Class({
         _D('>dbFinTrackerApp.openMenu()');
         if (this.appButton) this.appButton.menuToggle();
         _D('<');
+    },
+
+    quitApplication: function() {
+        _D('>dbFinTrackerApp.quitApplication()');
+        if (this.metaApp) this.metaApp.request_quit();
+        _D('<');
     }
 });
