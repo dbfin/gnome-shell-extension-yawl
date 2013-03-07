@@ -374,7 +374,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 
     addSeparator: function() {
 		if (!this._notebook) return [];
-		return this.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), this._notebook.width ] ]);
+		return this.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), this._notebook.width - this._notebook.shift ] ]);
     },
 
     addLabel: function(label, bindSensitive/* = null*/) {

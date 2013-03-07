@@ -15,6 +15,31 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
+const arrayAnimationTransitions = [
+    [   'Linear',   									'linear'						],
+    [	'Quad: slower at the end', 						'easeOutQuad'					],
+    [	'Quad: slower at the beginning',  				'easeInQuad'					],
+    [	'Quad: effect on both sides',   				'easeInOutQuad'					],
+    [	'Cubic: slower at the end',   					'easeOutCubic'   				],
+    [	'Cubic: slower at the beginning',				'easeInCubic'   				],
+    [	'Cubic: effect on both sides',      			'easeInOutCubic'   				],
+    [	'Expo: slower at the end',						'easeOutExpo'					],
+    [	'Expo: slower at the beginning',   				'easeInExpo'					],
+    [	'Expo: effect on both sides',      				'easeInOutExpo'					],
+    [	'Circ: slower at the end',						'easeOutCirc'					],
+    [	'Circ: slower at the beginning',   				'easeInCirc'					],
+    [	'Circ: effect on both sides',      				'easeInOutCirc'					],
+    [	'Bounce: effect at the end',  					'easeOutBounce'  				],
+    [	'Bounce: effect at the beginning',     			'easeInBounce'  				],
+    [	'Bounce: effect on both sides',     			'easeInOutBounce'  				]//,
+//    [	'Back: effect at the end',						'easeOutBack'					],
+//    [	'Back: effect at the beginning',   				'easeInBack'					],
+//    [	'Back: effect on both sides',      				'easeInOutBack'					],
+//    [	'Elastic: slower at the end', 					'easeOutElastic' 				],
+//    [	'Elastic: slower at the beginning',    			'easeInElastic' 				],
+//    [	'Elastic: effect on both sides',    			'easeInOutElastic' 				]
+];
+
 const arrayAppClickFunctions = [
     [   _("No action"),	                            	'',                             ''                              ],
     [   _("Show next : all non-minimized windows"), 	'nextWindowNonMinimized',       'showAllWindowsNonMinimized'    ],

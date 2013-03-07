@@ -133,6 +133,21 @@ const dbFinAppButton = new Lang.Class({
 		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-animation-time',
                                     callback: this._updateAnimationTime, scope: this });
 
+		this.animationEffect = 1;
+		this._updateAnimationEffect();
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-animation-effect',
+                                    callback: this._updateAnimationEffect, scope: this });
+
+		this.hoverAnimationTime = 33;
+		this._updateHoverAnimationTime();
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-hover-animation-time',
+                                    callback: this._updateHoverAnimationTime, scope: this });
+
+		this.hoverAnimationEffect = 0;
+		this._updateHoverAnimationEffect();
+		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-hover-animation-effect',
+                                    callback: this._updateHoverAnimationEffect, scope: this });
+
 		this._menuManager = Main.panel && Main.panel.menuManager || null;
 		this._updateMenu();
 		if (this.metaApp) {
@@ -238,7 +253,11 @@ const dbFinAppButton = new Lang.Class({
 				if (this._iconHoverOpacity) state.opacity = dbFinUtils.opacity100to255(this._iconHoverOpacity);
 				if (this._iconHoverSize) state.scale_x = state.scale_y = this._iconHoverSize / 100.;
 				if (this._iconHoverFit && this._iconSize) state.min_width = this._iconSize;
-				this._slicerIcon.animateToState(state, null, null, this.animationTime ? this.animationTime / 3 : 0);
+				this._slicerIcon.animateToState(state, null, null,
+                                                this.animationTime && this.hoverAnimationTime
+                                                        ? Math.floor(this.animationTime * this.hoverAnimationTime / 100)
+                                                        : 0,
+                                                dbFinConsts.arrayAnimationTransitions[this.hoverAnimationEffect][1]);
 			}
 		}
         _D('<');
@@ -251,7 +270,11 @@ const dbFinAppButton = new Lang.Class({
 				if (this._iconOpacity) state.opacity = dbFinUtils.opacity100to255(this._iconOpacity);
 				state.scale_x = state.scale_y = 1.;
                 state.min_width = 0;
-				this._slicerIcon.animateToState(state, null, null, this.animationTime ? this.animationTime / 3 : 0);
+				this._slicerIcon.animateToState(state, null, null,
+                                                this.animationTime && this.hoverAnimationTime
+                                                        ? Math.floor(this.animationTime * this.hoverAnimationTime / 100)
+                                                        : 0,
+                                                dbFinConsts.arrayAnimationTransitions[this.hoverAnimationEffect][1]);
 			}
 		}
         _D('<');
@@ -273,6 +296,27 @@ const dbFinAppButton = new Lang.Class({
         _D('>dbFinAppButton._updateAnimationTime()');
         this.animationTime = dbFinUtils.settingsParseInt(this._settings, 'icons-animation-time', 0, 3000, this.animationTime);
 		if (this._slicerIcon) this._slicerIcon.animationTime = this.animationTime;
+        _D('<');
+	},
+
+	_updateAnimationEffect: function() {
+        _D('>dbFinAppButton._updateAnimationEffect()');
+        this.animationEffect = dbFinUtils.settingsParseInt(this._settings, 'icons-animation-effect',
+                                                           0, dbFinConsts.arrayAnimationTransitions.length - 1, this.animationEffect);
+		if (this._slicerIcon) this._slicerIcon.animationEffect = this.animationEffect;
+        _D('<');
+	},
+
+	_updateHoverAnimationTime: function() {
+        _D('>dbFinAppButton._updateHoverAnimationTime()');
+        this.hoverAnimationTime = dbFinUtils.settingsParseInt(this._settings, 'icons-hover-animation-time', 1, 100, this.hoverAnimationTime);
+        _D('<');
+	},
+
+	_updateHoverAnimationEffect: function() {
+        _D('>dbFinAppButton._updateHoverAnimationEffect()');
+        this.hoverAnimationEffect = dbFinUtils.settingsParseInt(this._settings, 'icons-hover-animation-effect',
+                                                                0, dbFinConsts.arrayAnimationTransitions.length - 1, this.hoverAnimationEffect);
         _D('<');
 	},
 

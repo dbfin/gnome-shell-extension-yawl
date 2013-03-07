@@ -86,6 +86,11 @@
       <_summary>Icons animation time.</_summary>
       <_description>Icons animation time in ms. If 0 then no animation is used.</_description>
     </key>
+    <key name="icons-animation-effect" type="s">
+      <default>'1'</default>
+      <_summary>Icons animation effect.</_summary>
+      <_description>Icons animation effect.</_description>
+    </key>
     <key name="icons-hover-animation" type="b">
       <default>true</default>
       <_summary>Whether to animate icons when hovered.</_summary>
@@ -105,6 +110,16 @@
       <default>false</default>
       <_summary>Whether to show full icon when hovered.</_summary>
       <_description>If true icons are shown full width when hovered.</_description>
+    </key>
+    <key name="icons-hover-animation-time" type="s">
+      <default>'33'</default>
+      <_summary>Icons on hover animation time (%).</_summary>
+      <_description>Icons animation time when hovered as % of animation time.</_description>
+    </key>
+    <key name="icons-hover-animation-effect" type="s">
+      <default>'0'</default>
+      <_summary>Icons on hover animation effect.</_summary>
+      <_description>Icons animation effect when hovered.</_description>
     </key>
     <key name="mouse-app-left" type="s">
       <default>'1'</default>

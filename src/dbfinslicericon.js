@@ -19,6 +19,7 @@ const Tweener = imports.ui.tweener;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinSignals = Me.imports.dbfinsignals;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -38,6 +39,7 @@ const dbFinSlicerIcon = new Lang.Class({
 		this._clipBottom = 0; // px
 		this._paddingH = 0; // %
 		this.animationTime = 0;
+        this.animationEffect = 0;
         this.actor.natural_width = 0;
         this._signals.connectNoId({	emitter: this.actor, signal: 'notify::allocation',
 									callback: this._updateAllocation, scope: this });
@@ -145,7 +147,8 @@ const dbFinSlicerIcon = new Lang.Class({
                     }
                 } // for (let p)
                 if (was) { // anything to animate?
-                    if (transition === undefined || transition === null) transition = 'easeOutQuad';
+                    if (transition === undefined || transition === null)
+                        transition = dbFinConsts.arrayAnimationTransitions[this.animationEffect][1];
                     _state.time = time / 1000.;
                     _state.transition = transition;
                     if (callback) _state.onComplete = callback;
