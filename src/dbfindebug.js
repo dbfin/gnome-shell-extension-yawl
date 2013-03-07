@@ -62,17 +62,17 @@ const dbFinYAWLDebug = new Lang.Class({
 					if (s[0] == '>') {
 						shift = +1;
 						if (this._stoplevel) this._stoplevel++;
-						s = String.fromCharCode(0x250d) + s.substring(1);
+						s = '\u250d' + s.substring(1);
 					}
 					else if (s[0] == '@') {
 						shift = +1;
 						this._stoplevel++;
-						s = String.fromCharCode(0x250d) + s.substring(1);
+						s = '\u250d' + s.substring(1);
 					}
 					else if (s[0] == '<') {
 						shift = -1;
 						if (this._prefix.length) this._prefix = this._prefix.substring(4);
-						s = String.fromCharCode(0x2514) + dbFinUtils.stringRepeat(String.fromCharCode(0x2500), 7) + s.substring(1);
+						s = '\u2514' + dbFinUtils.stringRepeat('\u2500', 7) + s.substring(1);
 					}
 					else if (s[0] == '!') {
 						s = s.substring(1);
@@ -82,14 +82,14 @@ const dbFinYAWLDebug = new Lang.Class({
 						if (!this._prefix.length) {
 							let (slog = s) {
 								if (shift == -1 && slog.length < this._lastlengthlog)
-									slog += dbFinUtils.stringRepeat(String.fromCharCode(0x2500), this._lastlengthlog - slog.length);
+									slog += dbFinUtils.stringRepeat('\u2500', this._lastlengthlog - slog.length);
 								log(slog);
 								this._lastlengthlog = slog.length;
 							}
 						}
 						s = this._prefix + s;
 						if (shift == -1 && s.length < this._lastlength) {
-							s += dbFinUtils.stringRepeat(String.fromCharCode(0x2500), this._lastlength - s.length);
+							s += dbFinUtils.stringRepeat('\u2500', this._lastlength - s.length);
 						}
 						msgs.push(s);
 						this._lastlength = s.length;
@@ -98,7 +98,7 @@ const dbFinYAWLDebug = new Lang.Class({
 						if (this._stoplevel) this._stoplevel--;
 					}
 					else if (shift == +1) {
-						this._prefix = String.fromCharCode(0x2502) + '   ' + this._prefix;
+						this._prefix = '\u2502   ' + this._prefix;
 					}
 				} // let (shift)
 			})); // msg.split('\n').forEach

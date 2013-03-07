@@ -44,13 +44,11 @@ const dbFinClicksThreshold = new Lang.Class({
 
 		this._timeSingle = [];
 		let (time = dbFinUtils.settingsParseInt(this._settings, 'mouse-clicks-time-single', 250, 750, 400)) {
-			for (let i = 0; i < 7; ++i) this._timeSingle[i] = time;
-			this._timeSingleSum = time * this._timeSingle.length;
+			for (let i = 0; i < 14; ++i) this._timeSingle[i] = time;
 		}
 		this._timeDouble = [];
 		let (time = dbFinUtils.settingsParseInt(this._settings, 'mouse-clicks-time-double', 100, 450, 250)) {
-			for (let i = 0; i < 7; ++i) this._timeDouble[i] = time;
-			this._timeDoubleSum = time * this._timeDouble.length;
+			for (let i = 0; i < 14; ++i) this._timeDouble[i] = time;
 		}
 
         this._signals.connectNoId({ emitter: this._settings, signal: 'changed::mouse-clicks-time-single',
@@ -101,21 +99,31 @@ const dbFinClicksThreshold = new Lang.Class({
 	},
 
     clickSingle: function(time) {
-		if (this._timeSingle && this._timeSingle.length) {
-			this._timeSingleSum -= this._timeSingle.pop() - time;
+		if (this._timeSingle && this._timeSingle.length > 1) {
+			this._timeSingle.pop();
 			this._timeSingle.unshift(time);
-			let (v = Math.floor(this._timeSingleSum / this._timeSingle.length)) {
-				if (this._scaleSingle && v !== this._scaleSingle.get_value()) this._scaleSingle.set_value(v);
+			// not efficient, but might be for small arrays
+			let (	heap = this._timeSingle.slice().sort(function(a, b) { return a - b; }).slice(0, this._timeSingle.length >> 1),
+			     	sum = 0) {
+				heap.forEach(function (t) { sum += t; });
+				let (v = Math.floor(sum / heap.length)) {
+					if (this._scaleSingle && v !== this._scaleSingle.get_value()) this._scaleSingle.set_value(v);
+				}
 			}
 		}
     },
 
     clickDouble: function(time) {
-		if (this._timeDouble && this._timeDouble.length) {
-			this._timeDoubleSum -= this._timeDouble.pop() - time;
+		if (this._timeDouble && this._timeDouble.length > 1) {
+			this._timeDouble.pop();
 			this._timeDouble.unshift(time);
-			let (v = Math.floor(this._timeDoubleSum / this._timeDouble.length)) {
-				if (this._scaleDouble && v !== this._scaleDouble.get_value()) this._scaleDouble.set_value(v);
+			// not efficient, but might be for small arrays
+			let (	heap = this._timeDouble.slice().sort(function(a, b) { return b - a; }).slice(0, this._timeDouble.length >> 1),
+			     	sum = 0) {
+				heap.forEach(function (t) { sum += t; });
+				let (v = Math.floor(sum / heap.length)) {
+					if (this._scaleDouble && v !== this._scaleDouble.get_value()) this._scaleDouble.set_value(v);
+				}
 			}
 		}
     }
@@ -189,7 +197,7 @@ function buildPrefsWidget() {
 					builder.shift();
 						builder.addRow(new Gtk.Label({ label: _("Make a fast series of SINGLE clicks"), halign: Gtk.Align.START, hexpand: true }),
 									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
-											[ new Gtk.Label({ label: _("here:"), halign: Gtk.Align.END, hexpand: false }), 1 ],
+											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
 										]);
 	                    widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
@@ -199,13 +207,16 @@ function buildPrefsWidget() {
 					builder.shift();
 						builder.addRow(new Gtk.Label({ label: _("Make a series of DOUBLE clicks"), halign: Gtk.Align.START, hexpand: true }),
 									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
-											[ new Gtk.Label({ label: _("here:"), halign: Gtk.Align.END, hexpand: false }), 1 ],
+											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
 										]);
 	                    widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
 	                    if (widgets && widgets.length) threshold.scaleDouble = widgets[widgets.length - 1];
 					builder.unshift();
-                    widgets = builder.addScale(_("Single/Double clicks threshold:"), 'mouse-clicks-time-threshold', 150, 550, 1);
+					builder.addLabel(_("Based on the data provided above we set the following value (you can adjust it manually):"));
+					builder.shift();
+	                    widgets = builder.addScale(_("Single/Double clicks threshold:"), 'mouse-clicks-time-threshold', 150, 550, 1);
+					builder.unshift();
                     if (widgets && widgets.length) threshold.scaleThreshold = widgets[widgets.length - 1];
 
                 builder.closeNotebook();
