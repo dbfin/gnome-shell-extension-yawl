@@ -37,7 +37,17 @@
  * 									k				the key
  * 									d				default value (if cannot read the value)
  *
- * settingsGetGlobalSettings(schemaName)   returns Gio.Settings object corresponding to schemaName or null
+ * settingsGetGlobalSettings(schemaName)    returns Gio.Settings object corresponding to schemaName or null
+ *
+ * settingsVariable(s, k, i, p, c)  given s._settings key k=='settings-key' creates s._settingsKey=i
+ *                                  and binds it (using s._signals) to the settings key k,
+ *                                  automatically updates it (using additional properties p if needed),
+ *                                  and calls callback c after that
+ * 									s				scope (the variable's object)
+ * 									k				the settings key
+ * 									i				the variable's initial value
+ * 									p				additional parameters for updating (like { min:, max: })
+ * 									c				the callback function after updating
  *
  * opacity100to255(opacity)		converts opacity 0-100 to 0-255
  *
@@ -56,6 +66,8 @@
  * stringRepeat(s, n)			returns the string s repeated n times
  *
  */
+
+const Lang = imports.lang;
 
 const Gio = imports.gi.Gio;
 
@@ -155,6 +167,54 @@ function settingsGetGlobalSettings(schemaName) {
             return schemaObject ? new Gio.Settings({ settings_schema: schemaObject }) : null;
         }
     }
+}
+
+/* settingsVariable(s, k, i, p, c)  given s._settings key k=='settings-key' creates s._settingsKey=i
+ *                                  and binds it (using s._signals) to the settings key k,
+ *                                  automatically updates it (using additional properties p if needed),
+ *                                  and calls callback c after that
+ * 									s				scope (the variable's object)
+ * 									k				the settings key
+ * 									i				the variable's initial value
+ * 									p				additional parameters for updating (like { min:, max: })
+ * 									c				the callback function after updating
+ */
+function settingsVariable(s, k, i, p, c) {
+    if (!s || !s._settings || !s._settings.connect || !s._settings.list_keys
+        || !s._signals || !s._signals.connectNoId
+        || i === undefined || i === null
+        || !k || (k = '' + k) == '' || s._settings.list_keys().indexOf(k) == -1) return;
+	p = p || {};
+	if (c === undefined) c = null;
+	let (n = '_' + k.replace(/[ \t]/g, '').replace(/\-[^-]+/g, function (m) { return m[1].toUpperCase() + m.substring(2); })) {
+		let (cn = '_updated' + n[1].toUpperCase() + n.substring(2),
+		     un = '_update' + n[1].toUpperCase() + n.substring(2)) {
+			if (s[n] !== undefined || s[cn] !== undefined || s[un] !== undefined) return;
+			s[n] = i;
+			s[cn] = c; // can be null
+            if (typeof i === 'number') {
+				s[un] = function (s, k, p, n, cn) {
+							return function () {
+								s[n] = settingsParseInt(s._settings, k, p.min, p.max, s[n]);
+								if (s[cn]) Lang.bind(s, s[cn])();
+							};
+						} (s, k, p, n, cn);
+            }
+            else if (typeof i === 'boolean') {
+                s[un] = function (s, k, n, cn) {
+                            return function () {
+                                s[n] = settingsGetBoolean(s._settings, k, s[n]);
+                                if (s[cn]) Lang.bind(s, s[cn])();
+                            }
+                        } (s, k, n, cn);
+            }
+			if (s[un]) {
+				s[un]();
+                s._signals.connectNoId({	emitter: s._settings, signal: 'changed::' + k,
+                                            callback: s[un], scope: s });
+			}
+		} // let (cn)
+	} // let (n)
 }
 
 /* function opacity100to255(opacity)

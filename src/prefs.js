@@ -26,6 +26,8 @@ const dbFinUtilsPrefs = Me.imports.dbfinutilsprefs;
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
+const _D = Me.imports.dbfindebug._D;
+
 function init() {
     Convenience.initTranslations();
 }
@@ -130,6 +132,7 @@ const dbFinClicksThreshold = new Lang.Class({
 });
 
 function buildPrefsWidget() {
+    _D('@'); // supress all debugging
     let (builder = new dbFinUtilsPrefs.dbFinSettingsWidgetBuilder(), widgets) {
 
         builder.addNotebook(_("Interface"));
@@ -169,10 +172,10 @@ function buildPrefsWidget() {
 				builder.shift();
 					builder.addScale(_("Icon hover size (%)"), 'icons-hover-size', 100, 200, 1, 'icons-hover-animation');
 					builder.addScale(_("Icon hover opacity"), 'icons-hover-opacity', 50, 100, 1, 'icons-hover-animation');
-					builder.addCheckBox(_("Show full width on hover"), 'icons-hover-fit', 'icons-hover-animation');
+					builder.addCheckBox(_("Show icon full width on hover"), 'icons-hover-fit', 'icons-hover-animation');
 	                builder.addSeparator();
 	                builder.addScale(_("Icon hover animation time (% of animation time)"), 'icons-hover-animation-time', 0, 100, 1, 'icons-hover-animation');
-                    builder.addComboBoxText(_("Hover animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
+                    builder.addComboBoxText(_("Icon hover animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
 				builder.unshift();
 
             builder.closeNotebook();

@@ -137,7 +137,6 @@ function ensuredbFinYAWLDebug() {
 			log('Cannot create dbFinYAWLDebug object.');
 			return false;
 		}
-		dbfinyawldebug.log('dbFinYAWLDebug initialized.');
     } // if (!dbfinyawldebug)
 	return true;
 }
