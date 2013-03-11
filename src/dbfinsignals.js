@@ -38,14 +38,14 @@ const dbFinSignals = new Lang.Class({
     Name: 'dbFin.Signals',
 
     _init: function() {
-        _D('>dbFinSignals._init()');
+        _D('>' + this.__name__ + '._init()');
         this._signalsNoId = [];
 		this._signalsId = new dbFinArrayHash.dbFinArrayHash();
         _D('<');
     },
 
     destroy: function() {
-        _D('>dbFinSignals.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
 		if (this._signalsNoId && this._signalsId) {
 			this.disconnectAll();
 			this._signalsNoId = null;
@@ -56,7 +56,7 @@ const dbFinSignals = new Lang.Class({
     },
 
     connectNoId: function(escs, after/* = false*/) {
-        _D('>dbFinSignals.connectNoId()');
+        _D('>' + this.__name__ + '.connectNoId()');
         if (!escs) {
             _D('escs === null');
             _D('<');
@@ -79,7 +79,7 @@ const dbFinSignals = new Lang.Class({
     },
 
 	disconnectAllNoId: function() {
-        _D('>dbFinSignals.disconnectAllNoId()');
+        _D('>' + this.__name__ + '.disconnectAllNoId()');
 		while (this._signalsNoId.length) {
 			let (ies = this._signalsNoId.pop()) {
 				if (ies['emitter']) {
@@ -92,7 +92,7 @@ const dbFinSignals = new Lang.Class({
 	},
 
 	connectId: function (textId, escs, after/* = false*/) {
-        _D('>dbFinSignals.connectId()');
+        _D('>' + this.__name__ + '.connectId()');
         if (!escs || !textId || textId == '') {
             _D(!escs ? 'escs === null' : 'textId === null');
             _D('<');
@@ -116,7 +116,7 @@ const dbFinSignals = new Lang.Class({
 	},
 
 	disconnectId: function (textId) {
-        _D('>dbFinSignals.disconnectId()');
+        _D('>' + this.__name__ + '.disconnectId()');
 		let (ies = this._signalsId.remove(textId)) {
 			if (ies !== undefined && ies['emitter']) {
 				ies['emitter'].disconnect(ies['id']);
@@ -127,7 +127,7 @@ const dbFinSignals = new Lang.Class({
 	},
 
 	disconnectAllId: function () {
-        _D('>dbFinSignals.disconnectAllId()');
+        _D('>' + this.__name__ + '.disconnectAllId()');
 		let (ids = this._signalsId.getKeys()) {
 			for (let i = ids.length - 1; i >= 0; --i) {
 				this.disconnectId(ids[i]); // not optimal but stable
@@ -137,7 +137,7 @@ const dbFinSignals = new Lang.Class({
 	},
 
 	disconnectAll: function () {
-        _D('>dbFinSignals.disconnectAll()');
+        _D('>' + this.__name__ + '.disconnectAll()');
 		this.disconnectAllNoId();
 		this.disconnectAllId();
         _D('<');

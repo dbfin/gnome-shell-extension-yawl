@@ -34,7 +34,7 @@ const dbFinYAWLPanel = new Lang.Class({
 
     // GNOMENEXT: ui/panel.js: class Panel
     _init: function() {
-        _D('>dbFinYAWLPanel._init()');
+        _D('>' + this.__name__ + '._init()');
         this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
 		this._box = new St.BoxLayout({ name: 'panelYAWL', vertical: false, track_hover: true });
@@ -52,7 +52,7 @@ const dbFinYAWLPanel = new Lang.Class({
     },
 
 	destroy: function() {
-        _D('>dbFinYAWLPanel.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
 		if (this._signals) {
 			this._signals.destroy();
 			this._signals = null;
@@ -74,7 +74,7 @@ const dbFinYAWLPanel = new Lang.Class({
 	},
 
     show: function() {
-        _D('>dbFinYAWLPanel.show()');
+        _D('>' + this.__name__ + '.show()');
         if (!this.hidden || Main.screenShield.locked) {
             _D('<');
             return;
@@ -87,7 +87,7 @@ const dbFinYAWLPanel = new Lang.Class({
     },
 
     hide: function() {
-        _D('>dbFinYAWLPanel.hide()');
+        _D('>' + this.__name__ + '.hide()');
         if (this.hidden) {
             _D('<');
             return;
@@ -100,7 +100,7 @@ const dbFinYAWLPanel = new Lang.Class({
     },
 
     _refresh: function(appsIn, appsOut, windowsIn, windowsOut) {
-        _D('>dbFinYAWLPanel._refresh()');
+        _D('>' + this.__name__ + '._refresh()');
         if (!this._tracker) {
             _D('this._tracker === null');
             _D('<');

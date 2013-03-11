@@ -40,7 +40,7 @@ const dbFinAppButton = new Lang.Class({
     Extends: PanelMenu.Button,
 
     _init: function(metaApp, tracker, trackerApp) {
-        _D('>dbFinAppButton._init()');
+        _D('>' + this.__name__ + '._init()');
 		this.parent(0.0, null, true);
         this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
@@ -127,7 +127,7 @@ const dbFinAppButton = new Lang.Class({
     },
 
 	destroy: function() {
-        _D('>dbFinAppButton.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
 		if (this._signals) {
 			this._signals.destroy();
 			this._signals = null;
@@ -172,7 +172,7 @@ const dbFinAppButton = new Lang.Class({
 	},
 
     show: function() {
-        _D('>dbFinAppButton.show()');
+        _D('>' + this.__name__ + '.show()');
 		if (this.container) {
 			this.container.show();
 			this.container.reactive = true;
@@ -184,7 +184,7 @@ const dbFinAppButton = new Lang.Class({
     },
 
     hide: function() {
-        _D('>dbFinAppButton.hide()');
+        _D('>' + this.__name__ + '.hide()');
 		this.hidden = true;
 		if (this.container) {
 			this.container.reactive = false;
@@ -197,7 +197,7 @@ const dbFinAppButton = new Lang.Class({
     },
 
 	_hoverEnter: function() {
-        _D('>dbFinAppButton._hoverEnter()');
+        _D('>' + this.__name__ + '._hoverEnter()');
 		if (this._iconsHoverAnimation && this._slicerIcon) {
 			let (state = {}) {
 				if (this._iconsHoverOpacity) state.opacity = dbFinUtils.opacity100to255(this._iconsHoverOpacity);
@@ -214,7 +214,7 @@ const dbFinAppButton = new Lang.Class({
 	},
 
 	_hoverLeave: function() {
-        _D('>dbFinAppButton._hoverLeave()');
+        _D('>' + this.__name__ + '._hoverLeave()');
 		if (this._slicerIcon) {
 			let (state = {}) {
 				if (this._iconsOpacity) state.opacity = dbFinUtils.opacity100to255(this._iconsOpacity);
@@ -231,7 +231,7 @@ const dbFinAppButton = new Lang.Class({
 	},
 
 	_updateIcon: function() {
-        _D('>dbFinAppButton._updateIcon()');
+        _D('>' + this.__name__ + '._updateIcon()');
 		if (!this.metaApp || !this._slicerIcon) {
 			_D(!this.metaApp ? 'this.metaApp === null' : 'this._slicerIcon === null');
 			_D('<');
@@ -251,14 +251,14 @@ const dbFinAppButton = new Lang.Class({
 	},
 
 	_update: function() {
-        _D('>dbFinAppButton._update()');
+        _D('>' + this.__name__ + '._update()');
 //		if (this._slicerIcon) this._slicerIcon.actor.queue_relayout();
 		this._updateMenu();
         _D('<');
 	},
 
 	_updateAppState: function(appSys, app) {
-        _D('>dbFinAppButton._updateAppState()');
+        _D('>' + this.__name__ + '._updateAppState()');
 		if (app && this.metaApp == app && app.state == Shell.AppState.RUNNING) {
 			this._updateMenu();
 		}
@@ -267,7 +267,7 @@ const dbFinAppButton = new Lang.Class({
 
 	// GNOMENEXT: ui/panel.js: class AppMenuButton
 	_updateMenu: function() {
-        _D('>dbFinAppButton._updateMenu()');
+        _D('>' + this.__name__ + '._updateMenu()');
 		if (!this.metaApp || this.metaApp.state != Shell.AppState.RUNNING) {
 	        _D('<');
             return;
@@ -312,7 +312,7 @@ const dbFinAppButton = new Lang.Class({
 	},
 
     menuToggle: function() {
-        _D('>dbFinAppButton.menuToggle()');
+        _D('>' + this.__name__ + '.menuToggle()');
         if (this.menu) {
 			this.menu.toggle();
 		}
@@ -320,7 +320,7 @@ const dbFinAppButton = new Lang.Class({
     },
 
     _menuToggled: function(menu, state) {
-        _D('>dbFinAppButton._menuToggled()');
+        _D('>' + this.__name__ + '._menuToggled()');
 		if (menu == this.menu && !state) {
 			// make sure we are still "active" if focused
 			if (this._trackerApp && this._trackerApp._updateFocused) this._trackerApp._updateFocused();
@@ -329,14 +329,14 @@ const dbFinAppButton = new Lang.Class({
     },
 
 	_styleChanged: function() {
-        _D('>dbFinAppButton._styleChanged()');
+        _D('>' + this.__name__ + '._styleChanged()');
 		this._minHPadding = 0;
 		this._natHPadding = 0;
         _D('<');
 	},
 
 	_buttonClicked: function(state, key) {
-        _D('>dbFinAppButton._buttonClicked()');
+        _D('>' + this.__name__ + '._buttonClicked()');
         if (!this._trackerApp) {
             _D('this._trackerApp === null');
             _D('<');
@@ -368,7 +368,7 @@ const dbFinAppButton = new Lang.Class({
 	},
 
 	_onButtonPress: function() {
-        _D('>dbFinAppButton._onButtonPress()');
+        _D('>' + this.__name__ + '._onButtonPress()');
 		// nothing to do here
 		_D('<');
 	}

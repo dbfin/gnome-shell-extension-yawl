@@ -32,7 +32,7 @@ const dbFinPanelEnhancements = new Lang.Class({
 	Name: 'dbFin.PanelEnhancements',
 
     _init: function() {
-        _D('>dbFinPanelEnhancements._init()');
+        _D('>' + this.__name__ + '._init()');
         this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
 		this._panelBackground = false;
@@ -45,7 +45,7 @@ const dbFinPanelEnhancements = new Lang.Class({
     },
 
 	destroy: function() {
-        _D('>dbFinPanelEnhancements.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
         if (this._signals) {
             this._signals.destroy();
             this._signals = null;
@@ -56,7 +56,7 @@ const dbFinPanelEnhancements = new Lang.Class({
 	},
 
     _updatePanelBackground: function() {
-        _D('>dbFinPanelEnhancements._updatePanelBackground()');
+        _D('>' + this.__name__ + '._updatePanelBackground()');
 		this._panelBackground = dbFinUtils.settingsGetBoolean(this._settings, 'panel-background', this._panelBackground);
         if (this._panelBackground) {
 			this._updatePanelColor();
@@ -75,21 +75,21 @@ const dbFinPanelEnhancements = new Lang.Class({
     },
 
 	_updatePanelColor: function() {
-        _D('>dbFinPanelEnhancements._updatePanelColor()');
+        _D('>' + this.__name__ + '._updatePanelColor()');
 		this._panelColor = dbFinUtils.settingsGetString(this._settings, 'panel-color', this._panelColor);
 		this._updatePanelStyle();
         _D('<');
 	},
 
 	_updatePanelOpacity: function() {
-        _D('>dbFinPanelEnhancements._updatePanelOpacity()');
+        _D('>' + this.__name__ + '._updatePanelOpacity()');
         this._panelOpacity = dbFinUtils.settingsParseInt(this._settings, 'panel-opacity', 0, 100, this._panelOpacity);
 		this._updatePanelStyle();
         _D('<');
 	},
 
 	_updatePanelStyle: function() {
-        _D('>dbFinPanelEnhancements._updatePanelStyle()');
+        _D('>' + this.__name__ + '._updatePanelStyle()');
         let (style = null, stylecorner = null) {
 			let (rgba = new Gdk.RGBA(),
 				 opacity = this._panelOpacity / 100.) {
@@ -107,7 +107,7 @@ const dbFinPanelEnhancements = new Lang.Class({
 	},
 
 	_restorePanelStyle: function() {
-        _D('>dbFinPanelEnhancements._restorePanelStyle()');
+        _D('>' + this.__name__ + '._restorePanelStyle()');
 		Main.panel.actor.set_style(null);
         Main.panel._leftCorner.actor.set_style(null);
         Main.panel._rightCorner.actor.set_style(null);
@@ -115,7 +115,7 @@ const dbFinPanelEnhancements = new Lang.Class({
 	},
 
 	_updatePanel: function() {
-        _D('>dbFinPanelEnhancements._updatePanel()');
+        _D('>' + this.__name__ + '._updatePanel()');
 		Main.panel.actor.queue_relayout();
         _D('<');
 	}

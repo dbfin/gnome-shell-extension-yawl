@@ -38,7 +38,7 @@ const dbFinClicked = new Lang.Class({
 	 */
     _init: function(emitter, callback, scope, doubleClicks/* = false*/, scroll/* = false*/,
                     sendSingleClicksImmediately/* = false*/, clickOnRelease/* = false*/) {
-        _D('>dbFinClicked._init()');
+        _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
         this._settings = Convenience.getSettings();
         this._settingsGlobal = dbFinUtils.settingsGetGlobalSettings('org.gnome.settings-daemon.peripherals.mouse');
@@ -74,7 +74,7 @@ const dbFinClicked = new Lang.Class({
     },
 
 	destroy: function() {
-        _D('>dbFinClicked.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
         if (this._signals) {
             this._signals.destroy();
             this._signals = null;
@@ -96,7 +96,7 @@ const dbFinClicked = new Lang.Class({
     },
 
     _updateTimeoutTime: function() {
-		_D('>dbFinClicked._updateTimeoutTime()');
+		_D('>' + this.__name__ + '._updateTimeoutTime()');
         //use global settings as a fallback
         let (time = dbFinUtils.settingsGetInteger(this._settingsGlobal, 'double-click', this._timeoutTime)) {
     		this._timeoutTime = dbFinUtils.settingsParseInt(this._settings, 'mouse-clicks-time-threshold', 150, 550, time);
@@ -105,7 +105,7 @@ const dbFinClicked = new Lang.Class({
     },
 
 	_getState: function(event) {
-		_D('>dbFinClicked._getState()');
+		_D('>' + this.__name__ + '._getState()');
 		if (!event || !event.get_button || !event.get_state) {
 			_D(!event ? 'event === null' : !event.get_button ? 'event.get_button === null' : 'event.get_state === null');
 			_D('<');
@@ -129,7 +129,7 @@ const dbFinClicked = new Lang.Class({
 	},
 
 	_getStateScroll: function(event) {
-		_D('>dbFinClicked._getStateScroll()');
+		_D('>' + this.__name__ + '._getStateScroll()');
 		if (!event || !event.get_scroll_direction) {
 			_D(!event ? 'event === null' : 'event.get_scroll_direction === null');
 			_D('<');
@@ -148,7 +148,7 @@ const dbFinClicked = new Lang.Class({
 	},
 
     _getStateNumber: function(state) { // state number: [shift][ctrl][middle/right][left/right]
-        _D('>dbFinClicked._getStateNumber()');
+        _D('>' + this.__name__ + '._getStateNumber()');
         let (stateNumber = 0) {
             if (state.left) stateNumber = 1;
             else if (state.right) stateNumber = 3;
@@ -163,7 +163,7 @@ const dbFinClicked = new Lang.Class({
     },
 
     _getStateByNumber: function(stateNumber) {
-        _D('>dbFinClicked._getStateNumber()');
+        _D('>' + this.__name__ + '._getStateByNumber()');
         let (state = {}, button = stateNumber & 3) {
             if (button) {
                 state.left = button == 1;
@@ -178,7 +178,7 @@ const dbFinClicked = new Lang.Class({
     },
 
 	_getStateSettingsKey: function(state) {
-        _D('>dbFinClicked._getStateSettingsKey()');
+        _D('>' + this.__name__ + '._getStateSettingsKey()');
 		let (key = '') {
 			if (state.left || state.right || state.middle) {
 				if (state.left) key = 'left';
@@ -196,7 +196,7 @@ const dbFinClicked = new Lang.Class({
 	},
 
     _buttonPressEvent: function(actor, event) {
-        _D('>dbFinClicked._buttonPressEvent()');
+        _D('>' + this.__name__ + '._buttonPressEvent()');
 		let (state = this._getState(event)) {
             if (state.left || state.right || state.middle) {
 				if (!this._release) {
@@ -215,7 +215,7 @@ const dbFinClicked = new Lang.Class({
 	},
 
     _buttonReleaseEvent: function(actor, event) {
-        _D('>dbFinClicked._buttonReleaseEvent()');
+        _D('>' + this.__name__ + '._buttonReleaseEvent()');
 		let (state = this._getState(event)) {
 			if (	this._state && state.left == this._state.left
 			    	&& state.right == this._state.right && state.middle == this._state.middle) {
@@ -227,7 +227,7 @@ const dbFinClicked = new Lang.Class({
 	},
 
 	_scrollEvent: function(actor, event) {
-        _D('>dbFinClicked._scrollEvent()');
+        _D('>' + this.__name__ + '._scrollEvent()');
 		let (state = this._getStateScroll(event)) {
 			if (state.scroll) this._callBack(state);
 		} // let (state)
@@ -235,7 +235,7 @@ const dbFinClicked = new Lang.Class({
 	},
 
 	_registerClick: function(state) {
-        _D('>dbFinClicked._registerClick()');
+        _D('>' + this.__name__ + '._registerClick()');
 		let (stateNumber = this._getStateNumber(state)) {
 			if (stateNumber) {
 				let (timeout = this._stateTimeouts.get(stateNumber)) {
@@ -262,7 +262,7 @@ const dbFinClicked = new Lang.Class({
 	},
 
     _onTimeout: function(stateNumber, clicks) {
-        _D('>dbFinClicked._onTimeout()');
+        _D('>' + this.__name__ + '._onTimeout()');
         if (!stateNumber) {
             _D('<');
             return false;
@@ -293,7 +293,7 @@ const dbFinClicked = new Lang.Class({
     },
 
 	_callBack: function(state) {
-        _D('>dbFinClicked._callBack()');
+        _D('>' + this.__name__ + '._callBack()');
 		if (this._callback) {
 			let (key = this._getStateSettingsKey(state)) {
 				Mainloop.timeout_add(77, Lang.bind(this, function() {

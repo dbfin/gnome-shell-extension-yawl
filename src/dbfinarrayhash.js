@@ -45,7 +45,7 @@ const dbFinArrayHash = new Lang.Class({
 	Name: 'dbFin.ArrayHash',
 
 	_init: function() {
-        _D('>dbFinArrayHash._init()');
+        _D('>' + this.__name__ + '._init()');
 		this._keys = [];
 		this._values = [];
 		this.length = 0;
@@ -53,7 +53,7 @@ const dbFinArrayHash = new Lang.Class({
 	},
 
 	destroy: function() {
-        _D('>dbFinArrayHash.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
 		this.removeAll();
 		this._keys = null;
 		this._values = null;
@@ -62,25 +62,25 @@ const dbFinArrayHash = new Lang.Class({
 	},
 
 	getKeys: function() {
-        _D('>dbFinArrayHash.getKeys()');
+        _D('>' + this.__name__ + '.getKeys()');
         _D('<');
 		return this._keys.slice();
 	},
 
 	getValues: function() {
-        _D('>dbFinArrayHash.getValues()');
+        _D('>' + this.__name__ + '.getValues()');
         _D('<');
 		return this._values.slice();
 	},
 
 	has: function(k) {
-        _D('>dbFinArrayHash.has()');
+        _D('>' + this.__name__ + '.has()');
         _D('<');
 		return this._keys.indexOf(k) != -1;
 	},
 
 	get: function(k) {
-        _D('>dbFinArrayHash.get()');
+        _D('>' + this.__name__ + '.get()');
 		let (i = this._keys.indexOf(k)) {
 	        _D('<');
 			if (i == -1) return undefined;
@@ -89,7 +89,7 @@ const dbFinArrayHash = new Lang.Class({
 	},
 
 	set: function(k, v) {
-        _D('>dbFinArrayHash.set()');
+        _D('>' + this.__name__ + '.set()');
 		let (i = this._keys.indexOf(k)) {
 			if (i == -1) {
 				this._keys.push(k);
@@ -104,19 +104,19 @@ const dbFinArrayHash = new Lang.Class({
 	},
 
 	setArray: function(kvs) {
-        _D('>dbFinArrayHash.setArray()');
+        _D('>' + this.__name__ + '.setArray()');
 		kvs.forEach(Lang.bind(this, function (kv) { this.set(kv[0], kv[1]); }));
         _D('<');
 	},
 
 	setMap: function(ks, map) {
-        _D('>dbFinArrayHash.setMap()');
+        _D('>' + this.__name__ + '.setMap()');
 		ks.forEach(Lang.bind(this, function (k) { this.set(k, map(k)); }));
         _D('<');
 	},
 
 	remove: function(k) {
-        _D('>dbFinArrayHash.remove()');
+        _D('>' + this.__name__ + '.remove()');
 		let (i = this._keys.indexOf(k)) {
 			if (i == -1) {
 		        _D('<');
@@ -132,7 +132,7 @@ const dbFinArrayHash = new Lang.Class({
 	},
 
 	removeAll: function() {
-        _D('>dbFinArrayHash.removeAll()');
+        _D('>' + this.__name__ + '.removeAll()');
 		for (let i = this.length - 1; i >= 0; --i) {
 			this._keys[i] = null;
 			this._values[i] = null;
@@ -145,7 +145,7 @@ const dbFinArrayHash = new Lang.Class({
 
     // TODO: sort functions are not optimal
 	sort: function(compare) {
-        _D('>dbFinArrayHash.sort()');
+        _D('>' + this.__name__ + '.sort()');
 		let (kvs = this.toArray()) {
 			kvs.sort(Lang.bind(this, function (kv1, kv2) { return compare(kv1, kv2); }));
 			this.removeAll();
@@ -155,7 +155,7 @@ const dbFinArrayHash = new Lang.Class({
 	},
 
 	sortK: function(compare) {
-        _D('>dbFinArrayHash.sortK()');
+        _D('>' + this.__name__ + '.sortK()');
 		let (kvs = this.toArray()) {
 			kvs.sort(Lang.bind(this, function (kv1, kv2) { return compare(kv1[0], kv2[0]); }));
 			this.removeAll();
@@ -165,7 +165,7 @@ const dbFinArrayHash = new Lang.Class({
 	},
 
 	sortV: function(compare) {
-        _D('>dbFinArrayHash.sortV()');
+        _D('>' + this.__name__ + '.sortV()');
 		let (kvs = this.toArray()) {
 			kvs.sort(Lang.bind(this, function (kv1, kv2) { return compare(kv1[1], kv2[1]); }));
 			this.removeAll();
@@ -175,7 +175,7 @@ const dbFinArrayHash = new Lang.Class({
 	},
 
 	forEach: function(callback) { // this is a very delicate function: what if something changes this in callback?
-        _D('>dbFinArrayHash.forEach()');
+        _D('>' + this.__name__ + '.forEach()');
         let (ks = this._keys.slice(), vs = this._values.slice(), l = this.length) {
     		for (let i = 0; i < l; ++i) callback(ks[i], vs[i]);
         }
@@ -183,13 +183,13 @@ const dbFinArrayHash = new Lang.Class({
 	},
 
 	toArray: function() {
-        _D('>dbFinArrayHash.toArray()');
+        _D('>' + this.__name__ + '.toArray()');
         _D('<');
 		return zip(this._keys, this._values, this.length);
 	},
 
 	toString: function() {
-        _D('>dbFinArrayHash.toString()');
+        _D('>' + this.__name__ + '.toString()');
         _D('<');
 		return this.toArray().toString();
 	}

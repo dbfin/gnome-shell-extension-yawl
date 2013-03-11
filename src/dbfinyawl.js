@@ -27,7 +27,7 @@ const dbFinYAWL = new Lang.Class({
     Name: 'dbFin.YAWL',
 
     _init: function() {
-        _D('>dbFinYAWL._init()');
+        _D('>' + this.__name__ + '._init()');
 		this._movecenter = new dbFinMoveCenter.dbFinMoveCenter();
         this._panelenhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
         this._yawlpanel = new dbFinYAWLPanel.dbFinYAWLPanel();
@@ -35,7 +35,7 @@ const dbFinYAWL = new Lang.Class({
     },
 
     destroy: function() {
-        _D('>dbFinYAWL.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
         if (this._yawlpanel) {
             this._yawlpanel.destroy();
             this._yawlpanel = null;

@@ -27,7 +27,7 @@ const dbFinTrackerWindow = new Lang.Class({
 	Name: 'dbFin.TrackerWindow',
 
     _init: function(metaWindow, tracker, metaApp) {
-        _D('>dbFinTrackerWindow._init()');
+        _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
         this.metaWindow = metaWindow;
 		this._tracker = tracker;
@@ -46,7 +46,7 @@ const dbFinTrackerWindow = new Lang.Class({
     },
 
 	destroy: function() {
-        _D('>dbFinTrackerWindow.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
         if (this._signals) {
             this._signals.destroy();
             this._signals = null;
@@ -60,7 +60,7 @@ const dbFinTrackerWindow = new Lang.Class({
 	},
 
 	_titleChanged: function(metaWindow) {
-        _D('@dbFinTrackerWindow._titleChanged()'); // This is called too often, debug will cause lots of records
+        _D('@' + this.__name__ + '._titleChanged()'); // This is called too often, debug will cause lots of records
 		if (metaWindow != this.metaWindow) {
 	        _D('<');
 			return;
@@ -73,7 +73,7 @@ const dbFinTrackerWindow = new Lang.Class({
 	},
 
 	_updateTitle: function() {
-        _D('>dbFinTrackerWindow._updateTitle()');
+        _D('>' + this.__name__ + '._updateTitle()');
 		if (this.metaWindow && this.metaWindow.get_title) {
 			try { this.windowTitle = this.metaWindow.get_title(); } catch (e) { this.windowTitle = '?'; }
 		}

@@ -33,7 +33,7 @@ const dbFinTracker = new Lang.Class({
 	Name: 'dbFin.Tracker',
 
     _init: function(callback) { // callback: function(appsIn, appsOut, windowsIn, windowsOut) called by update (_refresh)
-        _D('>dbFinTracker._init()');
+        _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
 		this._callback = callback || null;
         this._tracker = Shell.WindowTracker.get_default();
@@ -48,7 +48,7 @@ const dbFinTracker = new Lang.Class({
     },
 
 	destroy: function() {
-        _D('>dbFinTracker.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
 		if (this._signals) {
 			this._signals.destroy();
 			this._signals = null;
@@ -80,13 +80,13 @@ const dbFinTracker = new Lang.Class({
 	},
 
     getTracker: function() {
-        _D('>dbFinTracker.getTracker()');
+        _D('>' + this.__name__ + '.getTracker()');
         _D('<');
         return this._tracker;
     },
 
 	getTrackerApp: function(metaApp) {
-        _D('>dbFinTracker.getTrackerApp()');
+        _D('>' + this.__name__ + '.getTrackerApp()');
 		let (appProperties = this.apps.get(metaApp)) {
 			if (appProperties !== undefined && appProperties && appProperties.trackerApp) {
 		        _D('<');
@@ -101,7 +101,7 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	getTrackerWindow: function(metaWindow) {
-        _D('>dbFinTracker.getTrackerWindow()');
+        _D('>' + this.__name__ + '.getTrackerWindow()');
 		let (windowProperties = this.windows.get(metaWindow)) {
 			if (windowProperties !== undefined && windowProperties && windowProperties.trackerWindow) {
 		        _D('<');
@@ -116,7 +116,7 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	_refresh: function(metaWorkspace/* = global.screen.get_active_workspace()*/, stateInfo/* = '_refresh() call with no additional info.'*/) {
-        _D('@dbFinTracker._refresh()'); // This is called whenever tracker needs to refresh, debug will cause lots of records
+        _D('@' + this.__name__ + '._refresh()'); // This is called whenever tracker needs to refresh, debug will cause lots of records
 		if (!this.apps || !this.windows) {
 			_D(!this.apps ? 'this.apps == null' : 'this.windows == null');
 	        _D('<');
@@ -178,7 +178,7 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	_clean: function() { // returns [ appsOut, windowsOut ]
-        _D('>dbFinTracker._clean()');
+        _D('>' + this.__name__ + '._clean()');
 		if (!this.apps || !this.windows) {
 			_D(!this.apps ? 'this.apps == null' : 'this.windows == null');
 	        _D('<');
@@ -208,7 +208,7 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	_removeApp: function(metaApp) { // calls _removeWindow if there are any windows belonging to app
-        _D('>dbFinTracker._removeApp()');
+        _D('>' + this.__name__ + '._removeApp()');
 		let (appProperties = this.apps.get(metaApp)) {
 			if (appProperties === undefined || !appProperties) {
 				_D('appProperties === null');
@@ -230,7 +230,7 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	_removeWindow: function(metaWindow) { // not the case anymore: calls _removeApp if no more windows belong to app
-        _D('>dbFinTracker._removeWindow()');
+        _D('>' + this.__name__ + '._removeWindow()');
 		let (windowProperties = this.windows.remove(metaWindow)) {
 			if (windowProperties === undefined || !windowProperties) {
 				_D('windowProperties === null');
@@ -259,7 +259,7 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	update: function(metaWorkspace/* = null*/, stateInfo/* = 'update() call with no additional info.'*/) {
-        _D('@dbFinTracker.update()'); // This is called whenever tracker needs to update, debug will cause lots of records
+        _D('@' + this.__name__ + '.update()'); // This is called whenever tracker needs to update, debug will cause lots of records
 		metaWorkspace = metaWorkspace || null;
         if (!stateInfo || stateInfo == '') stateInfo = 'update() call with no additional info.';
 		Mainloop.idle_add(Lang.bind(this, this._refresh, metaWorkspace, stateInfo));
@@ -267,19 +267,19 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	_switchWorkspace: function (manager, wsiOld, wsiNew) {
-        _D('>dbFinTracker._switchWorkspace()');
+        _D('>' + this.__name__ + '._switchWorkspace()');
 		this.update(global.screen.get_workspace_by_index(wsiNew), 'Workspace switched from ' + (wsiOld + 1) + ' to ' + (wsiNew + 1) + '.');
         _D('<');
 	},
 
 	_windowAdded: function (metaWorkspace, metaWindow) {
-        _D('>dbFinTracker._windowAdded()');
+        _D('>' + this.__name__ + '._windowAdded()');
 		this.update(null, 'A window was added to workspace ' + (metaWorkspace && metaWorkspace.index ? metaWorkspace.index() + 1 : '?') + '.');
         _D('<');
 	},
 
 	_windowRemoved: function (metaWorkspace, metaWindow) {
-        _D('>dbFinTracker._windowRemoved()');
+        _D('>' + this.__name__ + '._windowRemoved()');
 		let (windowProperties = this.windows.get(metaWindow)) {
 			this.update(null, 'Window "'
 			            + (windowProperties && windowProperties.trackerWindow

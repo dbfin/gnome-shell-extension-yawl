@@ -31,7 +31,7 @@ const dbFinSlicerIcon = new Lang.Class({
 	Name: 'dbFin.SlicerIcon',
 
     _init: function() {
-        _D('>dbFinSlicerIcon._init()');
+        _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
 		this.actor = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }) });
 		this._icon = null; // icons are never destroyed when new are assigned
@@ -47,7 +47,7 @@ const dbFinSlicerIcon = new Lang.Class({
     },
 
 	destroy: function() {
-        _D('>dbFinSlicerIcon.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
         if (this._signals) {
             this._signals.destroy();
             this._signals = null;
@@ -62,7 +62,7 @@ const dbFinSlicerIcon = new Lang.Class({
 	},
 
 	setIcon: function(icon) {
-        _D('>dbFinSlicerIcon.setIcon()');
+        _D('>' + this.__name__ + '.setIcon()');
 		if (icon !== undefined && this._icon != icon) {
 			this._icon = icon;
             this.actor.set_child(icon);
@@ -72,7 +72,7 @@ const dbFinSlicerIcon = new Lang.Class({
 	},
 
 	setClipTop: function(clip) {
-        _D('>dbFinSlicerIcon.setClipTop()');
+        _D('>' + this.__name__ + '.setClipTop()');
 		if (clip !== undefined && this._clipTop != clip) {
 			this._clipTop = clip;
 			this._updateAllocation();
@@ -81,7 +81,7 @@ const dbFinSlicerIcon = new Lang.Class({
 	},
 
 	setClipBottom: function(clip) {
-        _D('>dbFinSlicerIcon.setClipBottom()');
+        _D('>' + this.__name__ + '.setClipBottom()');
 		if (clip !== undefined && this._clipBottom != clip) {
 			this._clipBottom = clip;
 			this._updateAllocation();
@@ -90,7 +90,7 @@ const dbFinSlicerIcon = new Lang.Class({
 	},
 
 	setPaddingH: function(padding) {
-        _D('>dbFinSlicerIcon.setPaddingH()');
+        _D('>' + this.__name__ + '.setPaddingH()');
 		if (padding !== undefined && this._paddingH != padding) {
 			this._paddingH = padding;
 			this.restoreNaturalWidth();
@@ -99,7 +99,7 @@ const dbFinSlicerIcon = new Lang.Class({
 	},
 
     getNaturalWidth: function() {
-        _D('>dbFinSlicerIcon.getNaturalWidth()');
+        _D('>' + this.__name__ + '.getNaturalWidth()');
 		let (wn = this._icon && this._icon.get_preferred_width ? this._icon.get_preferred_width(-1)[1] : 0) {
             wn = wn || 0;
             if (wn > 0 && this._paddingH > 0) {
@@ -111,13 +111,13 @@ const dbFinSlicerIcon = new Lang.Class({
     },
 
     restoreNaturalWidth: function() {
-        _D('>dbFinSlicerIcon.restoreNaturalWidth()');
+        _D('>' + this.__name__ + '.restoreNaturalWidth()');
 		this.animateToState({ natural_width: this.getNaturalWidth() });
         _D('<');
 	},
 
 	_updateAllocation: function() {
-        _D('>dbFinSlicerIcon._updateAllocation()');
+        _D('>' + this.__name__ + '._updateAllocation()');
         let (allocation = this.actor.allocation) {
 			if (this._clipTop > 0 || this._clipBottom > 0) {
 				this.actor.set_clip(0, Math.min(allocation.y2 - allocation.y1, this._clipTop),
@@ -132,7 +132,7 @@ const dbFinSlicerIcon = new Lang.Class({
 	},
 
 	animateToState: function(state, callback, scope, time, transition) {
-        _D('>dbFinSlicerIcon.animateToState()');
+        _D('>' + this.__name__ + '.animateToState()');
 		if (time === undefined || time === null) time = this.animationTime;
 		if (time > 0 && this.actor.get_stage()) { // we do not schedule animation for actors not in stage
             let (_state = {}, was = false) {

@@ -34,7 +34,7 @@ const dbFinHotCorner = new Lang.Class({
 	Name: 'dbFin.HotCorner',
 
     _init: function() {
-        _D('>dbFinHotCorner._init()');
+        _D('>' + this.__name__ + '._init()');
 		this._button = new Panel.ActivitiesButton();
 		this._button._minHPadding = 0;
 		this._button._natHPadding = 0;
@@ -53,7 +53,7 @@ const dbFinHotCorner = new Lang.Class({
     },
 
 	destroy: function() {
-        _D('>dbFinHotCorner.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
 		if (this._signals) {
 			this._signals.destroy();
 			this._signals = null;
@@ -67,13 +67,13 @@ const dbFinHotCorner = new Lang.Class({
 	},
 
 	_getPreferredSize: function(actor, forSize, alloc) {
-        _D('@dbFinHotCorner._getPreferredSize()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
+        _D('@' + this.__name__ + '._getPreferredSize()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
 		[ alloc.min_size, alloc.natural_size ] = [ 1, 1 ];
 		_D('<');
 	},
 
 	_allocate: function(actor, box, flags) {
-        _D('@dbFinHotCorner._allocate()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
+        _D('@' + this.__name__ + '._allocate()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
 		let (	children = actor.get_children(),
 		    	childBox = new Clutter.ActorBox()) {
 			if (children.length) {
@@ -85,7 +85,7 @@ const dbFinHotCorner = new Lang.Class({
 	},
 
 	_styleChanged: function(actor) {
-        _D('@dbFinHotCorner._styleChanged()'); // This is called whenever the style of the button changes, debug will cause lots of records
+        _D('@' + this.__name__ + '._styleChanged()'); // This is called whenever the style of the button changes, debug will cause lots of records
 		this._button._minHPadding = 0;
 		this._button._natHPadding = 0;
 		_D('<');
@@ -96,7 +96,7 @@ const dbFinMoveCenter = new Lang.Class({
     Name: 'dbFin.MoveCenter',
 
     _init: function() {
-        _D('>dbFinMoveCenter._init()');
+        _D('>' + this.__name__ + '._init()');
         this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
 		this._panelbuttonstoggle = new dbFinPanelButtonToggle.dbFinPanelButtonToggle();
@@ -142,7 +142,7 @@ const dbFinMoveCenter = new Lang.Class({
     },
 
     destroy: function() {
-        _D('>dbFinMoveCenter.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
         if (this._signals) {
             this._signals.destroy(); // this should disconnect everything and move central panel back
             this._signals = null;
@@ -161,35 +161,35 @@ const dbFinMoveCenter = new Lang.Class({
     },
 
 	_updatePanelPosition: function() {
-        _D('>dbFinMoveCenter._updatePanelPosition()');
+        _D('>' + this.__name__ + '._updatePanelPosition()');
 		this._panelPosition = dbFinUtils.settingsParseInt(this._settings, 'yawl-panel-position', 0, 50, this._panelPosition);
 		this._updatePanel();
         _D('<');
 	},
 
 	_updatePanelWidth: function() {
-        _D('>dbFinMoveCenter._updatePanelWidth()');
+        _D('>' + this.__name__ + '._updatePanelWidth()');
 		this._panelWidth = dbFinUtils.settingsParseInt(this._settings, 'yawl-panel-width', 1, 100, this._panelWidth);
 		this._updatePanel();
         _D('<');
 	},
 
 	_updateIconsAlignCenter: function() {
-        _D('>dbFinMoveCenter._updateIconsAlignCenter()');
+        _D('>' + this.__name__ + '._updateIconsAlignCenter()');
 		this._iconsAlignCenter = dbFinUtils.settingsGetBoolean(this._settings, 'icons-align-center', this._iconsAlignCenter);
 		this._updatePanel();
         _D('<');
 	},
 
 	_updateMoveCenter: function() {
-        _D('>dbFinMoveCenter._updateMoveCenter()');
+        _D('>' + this.__name__ + '._updateMoveCenter()');
 		this._moveCenter = dbFinUtils.settingsGetBoolean(this._settings, 'move-center', this._moveCenter);
 		this._updatePanel();
         _D('<');
 	},
 
     _updateHideActivities: function() {
-        _D('>dbFinMoveCenter._updateHideActivities()');
+        _D('>' + this.__name__ + '._updateHideActivities()');
 		this._hideActivities = dbFinUtils.settingsGetBoolean(this._settings, 'hide-activities', this._hideActivities);
 		this._preserveHotCorner = dbFinUtils.settingsGetBoolean(this._settings, 'preserve-hot-corner', this._preserveHotCorner);
 		if (this._hideActivities && this._preserveHotCorner) {
@@ -205,7 +205,7 @@ const dbFinMoveCenter = new Lang.Class({
     },
 
     _updateHideAppMenu: function() {
-        _D('>dbFinMoveCenter._updateHideAppMenu()');
+        _D('>' + this.__name__ + '._updateHideAppMenu()');
 		this._hideAppMenu = dbFinUtils.settingsGetBoolean(this._settings, 'hide-app-menu', this._hideAppMenu);
 		if (this._hideAppMenu) this._panelbuttonstoggle.hide('appMenu', 'left');
 		else this._panelbuttonstoggle.restore('appMenu');
@@ -213,14 +213,14 @@ const dbFinMoveCenter = new Lang.Class({
     },
 
 	_updatePanel: function() {
-        _D('>dbFinMoveCenter._updatePanel()');
+        _D('>' + this.__name__ + '._updatePanel()');
 		if (Main.panel) Main.panel.actor.queue_relayout();
         _D('<');
 	},
 
 	// GNOMENEXT: modified from ui/panel.js: class Panel
     _allocate: function (actor, box, flags) {
-        _D('@dbFinMoveCenter._allocate()'); // This is called whenever GS needs to reallocate the panel, debug will cause lots of records
+        _D('@' + this.__name__ + '._allocate()'); // This is called whenever GS needs to reallocate the panel, debug will cause lots of records
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
                 [wlm, wln] = Main.panel._leftBox.get_preferred_width(-1), // minimum and natural widths

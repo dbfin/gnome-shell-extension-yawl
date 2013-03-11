@@ -77,6 +77,8 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
+const _D = Me.imports.dbfindebug._D;
+
 /* function now: returns current date/time
  * Parameters:
  *     justnumbers == true:  returns in format 'yyyyMMddHHmmss'
@@ -195,16 +197,20 @@ function settingsVariable(s, k, i, p, c) {
             if (typeof i === 'number') {
 				s[un] = function (s, k, p, n, cn) {
 							return function () {
+								_D('>' + s.__name__ + '.' + un + '()');
 								s[n] = settingsParseInt(s._settings, k, p.min, p.max, s[n]);
 								if (s[cn]) Lang.bind(s, s[cn])();
+								_D('<');
 							};
 						} (s, k, p, n, cn);
             }
             else if (typeof i === 'boolean') {
                 s[un] = function (s, k, n, cn) {
                             return function () {
+								_D('>' + s.__name__ + '.' + un + '()');
                                 s[n] = settingsGetBoolean(s._settings, k, s[n]);
                                 if (s[cn]) Lang.bind(s, s[cn])();
+								_D('<');
                             }
                         } (s, k, n, cn);
             }

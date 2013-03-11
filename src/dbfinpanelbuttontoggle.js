@@ -37,14 +37,14 @@ const dbFinPanelButtonToggle = new Lang.Class({
 	Name: 'dbFin.PanelButtonToggle',
 
 	_init: function() {
-        _D('>dbFinPanelButtonToggle._init()');
+        _D('>' + this.__name__ + '._init()');
         this._hiddenroles = new dbFinArrayHash.dbFinArrayHash();
 		this._panelIds = new dbFinArrayHash.dbFinArrayHash();
         _D('<');
 	},
 
 	destroy: function() {
-        _D('>dbFinPanelButtonToggle.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
 		if (this._hiddenroles) {
             this.restoreAll(); // This should restore all buttons if they were hidden
             this._hiddenroles.destroy();
@@ -59,7 +59,7 @@ const dbFinPanelButtonToggle = new Lang.Class({
 
 	// GNOMENEXT: ui/sessionmode.js, ui/panel.js
 	hide: function(role, panelid) {
-        _D('>dbFinPanelButtonToggle.hide()');
+        _D('>' + this.__name__ + '.hide()');
 		if (!this._hiddenroles || !this._panelIds) {
 			_D(!this._hiddenroles ? 'this._hiddenroles === null' : 'this._panelIds === null');
 	        _D('<');
@@ -88,7 +88,7 @@ const dbFinPanelButtonToggle = new Lang.Class({
 	},
 
 	restore: function(role) {
-        _D('>dbFinPanelButtonToggle.restore()');
+        _D('>' + this.__name__ + '.restore()');
 		if (!this._hiddenroles || !this._panelIds) {
 			_D(!this._hiddenroles ? 'this._hiddenroles === null' : 'this._panelIds === null');
 	        _D('<');
@@ -117,7 +117,7 @@ const dbFinPanelButtonToggle = new Lang.Class({
 	},
 
 	restoreAll: function() {
-        _D('>dbFinPanelButtonToggle.restoreAll()');
+        _D('>' + this.__name__ + '.restoreAll()');
 		let (roles = this._hiddenroles.getKeys()) {
 			for (let i = roles.length - 1; i >= 0; --i) {
 				this.restore(roles[i]); // not optimal but stable
