@@ -283,7 +283,7 @@ const dbFinTracker = new Lang.Class({
 		let (windowProperties = this.windows.get(metaWindow)) {
 			this.update(null, 'Window "'
 			            + (windowProperties && windowProperties.trackerWindow
-			            	? windowProperties.trackerWindow.appName + ':' + windowProperties.trackerWindow.windowTitle
+			            	? windowProperties.trackerWindow.appName + ':' + windowProperties.trackerWindow.title
 			            	: '?:?')
 			            + '" was removed from workspace '
 			            + (metaWorkspace && metaWorkspace.index ? metaWorkspace.index() + 1 : '?') + '.');

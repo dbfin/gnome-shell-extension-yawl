@@ -122,7 +122,7 @@ const dbFinYAWLPanel = new Lang.Class({
 					trackerApp.windows.forEach(Lang.bind(this, function(metaWindow) {
 						let (trackerWindow = this._tracker.getTrackerWindow(metaWindow)) {
 							if (!trackerWindow) return;
-							log('\t' + trackerWindow.windowTitle);
+							log('\t' + trackerWindow.title);
 						} // let (trackerWindow)
 					})); // trackerApp.windows.forEach
 				} // let (trackerApp)

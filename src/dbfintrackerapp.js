@@ -49,7 +49,7 @@ const dbFinTrackerApp = new Lang.Class({
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this._tracker, this);
 		if (this.appButton && !metaWindow && this._autohideshow) this.appButton.hide();
 
-		this._focused = false;
+		this.focused = false;
 		this._updateFocused();
 		if (this._tracker && this._tracker.getTracker) {
 			this._signals.connectNoId({	emitter: this._tracker.getTracker(), signal: 'notify::focus-app',
@@ -76,7 +76,7 @@ const dbFinTrackerApp = new Lang.Class({
 		this._tracker = null;
         this.windows = [];
 		this.appName = '?';
-		this._focused = false;
+		this.focused = false;
         _D('<');
 	},
 
@@ -88,9 +88,9 @@ const dbFinTrackerApp = new Lang.Class({
             return;
         }
 		let (focused = (this.metaApp == this._tracker.getTracker().focus_app)) {
-            this._focused = focused;
+            this.focused = focused;
             if (this.appButton && this.appButton.actor) {
-                if (this._focused) this.appButton.actor.add_style_pseudo_class('active');
+                if (this.focused) this.appButton.actor.add_style_pseudo_class('active');
                 else this.appButton.actor.remove_style_pseudo_class('active');
             }
             //this._resetNextWindows(); // commented out: gets called when a window of the same application is changed
@@ -161,10 +161,10 @@ const dbFinTrackerApp = new Lang.Class({
         _D('>' + this.__name__ + '._nextWindow()');
 		let (windows = this._listWindowsFresh(minimized)) {
 			if (windows.length) {
-				if (!this._focused) {
+				if (!this.focused) {
 					Main.activateWindow(windows[0]);
                     this._resetNextWindows();
-				} // if (!this._focused)
+				} // if (!this.focused)
 				else {
 					if (!this._nextWindowsIndex || !this._nextWindowsLength
 					    	|| this._nextWindowsLength != windows.length
@@ -176,7 +176,7 @@ const dbFinTrackerApp = new Lang.Class({
 					Main.activateWindow(windows[Math.min(++this._nextWindowsIndex, this._nextWindowsLength - 1)]);
 					this._cancelNextWindowsTimeout();
 					this._nextWindowsTimeout = Mainloop.timeout_add(3333, Lang.bind(this, this._resetNextWindows));
-				} // if (!this._focused) else
+				} // if (!this.focused) else
 			} // if (windows.length)
 		} // let (windows)
         _D('<');
@@ -220,9 +220,9 @@ const dbFinTrackerApp = new Lang.Class({
         _D('>' + this.__name__ + '._rotateWindows()');
 		let (windows = this._listWindowsFresh()) {
             if (windows.length) {
-				if (!this._focused) {
+				if (!this.focused) {
 					Main.activateWindow(windows[0]);
-				} // if (!this._focused)
+				} // if (!this.focused)
 				else {
                     if (backward) {
                         if (windows.length > 1) Main.activateWindow(windows[windows.length - 1]);
@@ -230,7 +230,7 @@ const dbFinTrackerApp = new Lang.Class({
                     else {
                         for (let i = windows.length - 1; i > 0; --i) Main.activateWindow(windows[i]);
                     }
-				} // if (!this._focused) else
+				} // if (!this.focused) else
             } // if (windows.length)
 		} // let (windows)
         _D('<');

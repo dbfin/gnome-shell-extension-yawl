@@ -31,8 +31,6 @@ const dbFinTrackerWindow = new Lang.Class({
         this._signals = new dbFinSignals.dbFinSignals();
         this.metaWindow = metaWindow;
 		this._tracker = tracker;
-		this.windowTitle = '?';
-		this._updateTitle();
         this.metaApp = metaApp;
 
         this.appName = '?';
@@ -40,8 +38,20 @@ const dbFinTrackerWindow = new Lang.Class({
 			try { this.appName = this.metaApp.get_name(); } catch (e) { this.appName = '?'; }
 		}
 
+		this.title = '?';
+		this._updateTitle();
         this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::title',
                                     callback: this._titleChanged, scope: this });
+
+        this.focused = false;
+        this._updateFocused();
+        this._signals.connectNoId({ emitter: global.display.connect, signal: 'notify::focus-window',
+                                    callback: this._updateFocused, scope: this });
+
+        this.minimized = false;
+        this._updateMinimized();
+        this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::minimized',
+                                    callback: this._minimizedChanged, scope: this });
         _D('<');
     },
 
@@ -51,32 +61,62 @@ const dbFinTrackerWindow = new Lang.Class({
             this._signals.destroy();
             this._signals = null;
         }
-        this.metaWindow = null;
-		this._tracker = null;
-		this.windowTitle = '?';
-        this.metaApp = null;
+        this.minimized = false;
+        this.focused = false;
+		this.title = '?';
 		this.appName = '?';
-        _D('<');
-	},
-
-	_titleChanged: function(metaWindow) {
-        _D('@' + this.__name__ + '._titleChanged()'); // This is called too often, debug will cause lots of records
-		if (metaWindow != this.metaWindow) {
-	        _D('<');
-			return;
-		}
-		let (msg = '"' + this.appName + ':' + this.windowTitle + '" changed title to "') {
-			this._updateTitle();
-			if (this._tracker) this._tracker.update(null, msg + this.windowTitle + '".');
-		}
+        this.metaApp = null;
+		this._tracker = null;
+        this.metaWindow = null;
         _D('<');
 	},
 
 	_updateTitle: function() {
         _D('>' + this.__name__ + '._updateTitle()');
 		if (this.metaWindow && this.metaWindow.get_title) {
-			try { this.windowTitle = this.metaWindow.get_title(); } catch (e) { this.windowTitle = '?'; }
+			try { this.title = this.metaWindow.get_title(); } catch (e) { this.title = '?'; }
 		}
         _D('<');
 	},
+
+	_titleChanged: function() {
+        _D('@' + this.__name__ + '._titleChanged()'); // This is called too often, debug will cause lots of records
+        let (title = this.title) {
+			this._updateTitle();
+			if (this._tracker && title !== this.title) {
+                this._tracker.update(null, '"' + this.appName + ':' + title + '" changed title to "' + this.title + '".');
+            }
+        }
+        _D('<');
+	},
+
+	_updateFocused: function() {
+        _D('>' + this.__name__ + '._updateFocused()');
+        let (focusedWindow = global.display.focus_window) {
+            this.focused = this.metaWindow && focusedWindow
+                                && (focusedWindow == this.metaWindow
+                                    || focusedWindow.get_transient_for() == this.metaWindow);
+        }
+        _D('<');
+	},
+
+	_updateMinimized: function() {
+        _D('>' + this.__name__ + '._updateMinimized()');
+        this.minimized = this.metaWindow
+                && (this.metaWindow.showing_on_its_workspace && !this.metaWindow.showing_on_its_workspace()
+                    || this.metaWindow.minimized);
+        _D('<');
+	},
+
+	_minimizedChanged: function() {
+        _D('@' + this.__name__ + '._minimizedChanged()'); // This is called too often, debug will cause lots of records
+        let (minimized = this.minimized) {
+			this._updateMinimized();
+			if (this._tracker && minimized !== this.minimized) {
+                this._tracker.update(null, '"' + this.appName + ':' + this.title + '" was '
+                                     + (this.minimized ? '' : 'un') + 'minimized.');
+            }
+        }
+        _D('<');
+	}
 });
