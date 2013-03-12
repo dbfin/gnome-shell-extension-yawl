@@ -104,38 +104,16 @@ const dbFinMoveCenter = new Lang.Class({
 		this._signals.connectNoId({ emitter: Main.panel.actor, signal: 'allocate',
 									callback: this._allocate, scope: this });
 
-		this._panelPosition = 21;
-		this._updatePanelPosition();
-		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::yawl-panel-position',
-                                    callback: this._updatePanelPosition, scope: this });
-
-		this._panelWidth = 100;
-		this._updatePanelWidth();
-		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::yawl-panel-width',
-                                    callback: this._updatePanelWidth, scope: this });
-
-		this._iconsAlignCenter = false;
-		this._updateIconsAlignCenter();
-		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::icons-align-center',
-                                    callback: this._updateIconsAlignCenter, scope: this });
-
-        this._moveCenter = false;
-        this._updateMoveCenter();
-		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::move-center',
-                                    callback: this._updateMoveCenter, scope: this });
-
-		this._hideActivities = false;
-		this._preserveHotCorner = false;
-        this._updateHideActivities();
-		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::hide-activities',
-                                    callback: this._updateHideActivities, scope: this });
-		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::preserve-hot-corner',
-                                    callback: this._updateHideActivities, scope: this });
-
-		this._hideAppMenu = false;
-		this._updateHideAppMenu();
-		this._signals.connectNoId({	emitter: this._settings, signal: 'changed::hide-app-menu',
-									callback: this._updateHideAppMenu, scope: this });
+        dbFinUtils.settingsVariable(this, 'yawl-panel-position', 21, { min: 0, max: 50 }, this._updatePanel );
+        dbFinUtils.settingsVariable(this, 'yawl-panel-width', 100, { min: 1, max: 100 }, this._updatePanel );
+        dbFinUtils.settingsVariable(this, 'icons-align-center', false, null, this._updatePanel );
+        dbFinUtils.settingsVariable(this, 'move-center', false, null, this._updatePanel );
+        dbFinUtils.settingsVariable(this, 'hide-activities', false); // callback: _updatedHideActivities
+        dbFinUtils.settingsVariable(this, 'preserve-hot-corner', false, null, this._updatedHideActivities);
+        dbFinUtils.settingsVariable(this, 'hide-app-menu', false, null, function () {
+            if (this._hideAppMenu) this._panelbuttonstoggle.hide('appMenu', 'left');
+            else this._panelbuttonstoggle.restore('appMenu');
+        });
 
 		this._updatePanel();
         _D('<');
@@ -160,38 +138,14 @@ const dbFinMoveCenter = new Lang.Class({
         _D('<');
     },
 
-	_updatePanelPosition: function() {
-        _D('>' + this.__name__ + '._updatePanelPosition()');
-		this._panelPosition = dbFinUtils.settingsParseInt(this._settings, 'yawl-panel-position', 0, 50, this._panelPosition);
-		this._updatePanel();
+	_updatePanel: function() {
+        _D('>' + this.__name__ + '._updatePanel()');
+		if (Main.panel) Main.panel.actor.queue_relayout();
         _D('<');
 	},
 
-	_updatePanelWidth: function() {
-        _D('>' + this.__name__ + '._updatePanelWidth()');
-		this._panelWidth = dbFinUtils.settingsParseInt(this._settings, 'yawl-panel-width', 1, 100, this._panelWidth);
-		this._updatePanel();
-        _D('<');
-	},
-
-	_updateIconsAlignCenter: function() {
-        _D('>' + this.__name__ + '._updateIconsAlignCenter()');
-		this._iconsAlignCenter = dbFinUtils.settingsGetBoolean(this._settings, 'icons-align-center', this._iconsAlignCenter);
-		this._updatePanel();
-        _D('<');
-	},
-
-	_updateMoveCenter: function() {
-        _D('>' + this.__name__ + '._updateMoveCenter()');
-		this._moveCenter = dbFinUtils.settingsGetBoolean(this._settings, 'move-center', this._moveCenter);
-		this._updatePanel();
-        _D('<');
-	},
-
-    _updateHideActivities: function() {
-        _D('>' + this.__name__ + '._updateHideActivities()');
-		this._hideActivities = dbFinUtils.settingsGetBoolean(this._settings, 'hide-activities', this._hideActivities);
-		this._preserveHotCorner = dbFinUtils.settingsGetBoolean(this._settings, 'preserve-hot-corner', this._preserveHotCorner);
+    _updatedHideActivities: function() {
+        _D('>' + this.__name__ + '._updatedHideActivities()');
 		if (this._hideActivities && this._preserveHotCorner) {
 			if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
 		}
@@ -203,20 +157,6 @@ const dbFinMoveCenter = new Lang.Class({
 		else this._panelbuttonstoggle.restore('activities');
         _D('<');
     },
-
-    _updateHideAppMenu: function() {
-        _D('>' + this.__name__ + '._updateHideAppMenu()');
-		this._hideAppMenu = dbFinUtils.settingsGetBoolean(this._settings, 'hide-app-menu', this._hideAppMenu);
-		if (this._hideAppMenu) this._panelbuttonstoggle.hide('appMenu', 'left');
-		else this._panelbuttonstoggle.restore('appMenu');
-        _D('<');
-    },
-
-	_updatePanel: function() {
-        _D('>' + this.__name__ + '._updatePanel()');
-		if (Main.panel) Main.panel.actor.queue_relayout();
-        _D('<');
-	},
 
 	// GNOMENEXT: modified from ui/panel.js: class Panel
     _allocate: function (actor, box, flags) {
@@ -241,8 +181,8 @@ const dbFinMoveCenter = new Lang.Class({
 					wly = Math.ceil((w - wcn) / 2);
 					wr = Math.floor((w - wcn) / 2);
 				}
-				wl = Math.max(wlm, Math.min(Math.floor(w * this._panelPosition / 100), wly - wym));
-				wy = Math.max(wym, Math.min(wly - wl, Math.floor(w * this._panelWidth / 100)));
+				wl = Math.max(wlm, Math.min(Math.floor(w * this._yawlPanelPosition / 100), wly - wym));
+				wy = Math.max(wym, Math.min(wly - wl, Math.floor(w * this._yawlPanelWidth / 100)));
 				wly = Math.max(wly, wl + wy);
 				[ xl, xr ] = drl ? [ w, w ] : [ 0, 0 ];
 				if (wl) {

@@ -35,12 +35,12 @@ const dbFinPanelEnhancements = new Lang.Class({
         _D('>' + this.__name__ + '._init()');
         this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
-		this._panelBackground = false;
-		this._panelColor = '#000000';
-		this._panelOpacity = 100;
-        this._updatePanelBackground();
-		this._signals.connectNoId({ emitter: this._settings, signal: 'changed::panel-background',
-                                    callback: this._updatePanelBackground, scope: this });
+        dbFinUtils.settingsVariable(this, 'panel-color', '#000000', null, this._updatePanelStyle);
+        dbFinUtils.settingsVariable(this, 'panel-opacity', 100, { min: 0, max: 100 }, this._updatePanelStyle);
+        dbFinUtils.settingsVariable(this, 'panel-background', false, null, function () {
+            if (this._panelBackground) this._updatePanelStyle();
+            else this._restorePanelStyle();
+        });
         _D('<');
     },
 
@@ -55,41 +55,12 @@ const dbFinPanelEnhancements = new Lang.Class({
         _D('<');
 	},
 
-    _updatePanelBackground: function() {
-        _D('>' + this.__name__ + '._updatePanelBackground()');
-		this._panelBackground = dbFinUtils.settingsGetBoolean(this._settings, 'panel-background', this._panelBackground);
-        if (this._panelBackground) {
-			this._updatePanelColor();
-            this._signals.connectId('panel-color', {    emitter: this._settings, signal: 'changed::panel-color',
-                                                        callback: this._updatePanelColor, scope: this });
-			this._updatePanelOpacity();
-            this._signals.connectId('panel-opacity', {    emitter: this._settings, signal: 'changed::panel-opacity',
-                                                        callback: this._updatePanelOpacity, scope: this });
-        }
-		else {
-			this._signals.disconnectId('panel-color');
-			this._signals.disconnectId('panel-opacity');
-			this._restorePanelStyle();
-		}
-        _D('<');
-    },
-
-	_updatePanelColor: function() {
-        _D('>' + this.__name__ + '._updatePanelColor()');
-		this._panelColor = dbFinUtils.settingsGetString(this._settings, 'panel-color', this._panelColor);
-		this._updatePanelStyle();
-        _D('<');
-	},
-
-	_updatePanelOpacity: function() {
-        _D('>' + this.__name__ + '._updatePanelOpacity()');
-        this._panelOpacity = dbFinUtils.settingsParseInt(this._settings, 'panel-opacity', 0, 100, this._panelOpacity);
-		this._updatePanelStyle();
-        _D('<');
-	},
-
 	_updatePanelStyle: function() {
         _D('>' + this.__name__ + '._updatePanelStyle()');
+		if (!this._panelBackground) {
+			_D('<');
+			return;
+		}
         let (style = null, stylecorner = null) {
 			let (rgba = new Gdk.RGBA(),
 				 opacity = this._panelOpacity / 100.) {
@@ -111,12 +82,6 @@ const dbFinPanelEnhancements = new Lang.Class({
 		Main.panel.actor.set_style(null);
         Main.panel._leftCorner.actor.set_style(null);
         Main.panel._rightCorner.actor.set_style(null);
-        _D('<');
-	},
-
-	_updatePanel: function() {
-        _D('>' + this.__name__ + '._updatePanel()');
-		Main.panel.actor.queue_relayout();
         _D('<');
 	}
 });

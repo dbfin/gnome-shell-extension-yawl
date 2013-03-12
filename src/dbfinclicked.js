@@ -53,12 +53,10 @@ const dbFinClicked = new Lang.Class({
 		this._stateTimeouts = new dbFinArrayHash.dbFinArrayHash();
         for (let stateNumber = 0; stateNumber < 16; ++stateNumber) this._stateTimeouts.set(stateNumber, null);
 
-		this._timeoutTime = 333;
-		this._updateTimeoutTime();
-        this._signals.connectNoId({ emitter: this._settings, signal: 'changed::mouse-clicks-time-threshold',
-                                    callback: this._updateTimeoutTime, scope: this });
-		this._signals.connectNoId({	emitter: this._settingsGlobal, signal: 'changed::double-click',
-									callback: this._updateTimeoutTime, scope: this });
+		dbFinUtils.settingsVariable(this, 'mouse-clicks-time-threshold',
+		                            //use global settings as a fallback
+		                            dbFinUtils.settingsGetInteger(this._settingsGlobal, 'double-click', 333),
+		                            { min: 150, max: 550 });
 
 		this._signals.connectNoId({	emitter: this._emitter, signal: 'button-press-event',
 								  	callback: this._buttonPressEvent, scope: this });
@@ -92,15 +90,6 @@ const dbFinClicked = new Lang.Class({
 		this._state = {};
         this._settingsGlobal = null;
         this._settings = null;
-        _D('<');
-    },
-
-    _updateTimeoutTime: function() {
-		_D('>' + this.__name__ + '._updateTimeoutTime()');
-        //use global settings as a fallback
-        let (time = dbFinUtils.settingsGetInteger(this._settingsGlobal, 'double-click', this._timeoutTime)) {
-    		this._timeoutTime = dbFinUtils.settingsParseInt(this._settings, 'mouse-clicks-time-threshold', 150, 550, time);
-        }
         _D('<');
     },
 
@@ -244,7 +233,7 @@ const dbFinClicked = new Lang.Class({
 							this._onTimeout(stateNumber, 1);
 						}
 						if (this._double) { // if double clicks
-							timeout = Mainloop.timeout_add(this._timeoutTime, Lang.bind(this, function() {
+							timeout = Mainloop.timeout_add(this._mouseClicksTimeThreshold, Lang.bind(this, function() {
 								Lang.bind(this, this._onTimeout)(stateNumber, this._single ? 0 : 1);
 							}));
 							this._stateTimeouts.set(stateNumber, timeout);

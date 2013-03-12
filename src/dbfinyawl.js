@@ -28,25 +28,25 @@ const dbFinYAWL = new Lang.Class({
 
     _init: function() {
         _D('>' + this.__name__ + '._init()');
-		this._movecenter = new dbFinMoveCenter.dbFinMoveCenter();
-        this._panelenhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
-        this._yawlpanel = new dbFinYAWLPanel.dbFinYAWLPanel();
+		this._moveCenter = new dbFinMoveCenter.dbFinMoveCenter();
+        this._panelEnhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
+        this._yawlPanel = new dbFinYAWLPanel.dbFinYAWLPanel();
         _D('<');
     },
 
     destroy: function() {
         _D('>' + this.__name__ + '.destroy()');
-        if (this._yawlpanel) {
-            this._yawlpanel.destroy();
-            this._yawlpanel = null;
+        if (this._yawlPanel) {
+            this._yawlPanel.destroy();
+            this._yawlPanel = null;
         }
-        if (this._panelenhancements) {
-            this._panelenhancements.destroy();
-            this._panelenhancements = null;
+        if (this._panelEnhancements) {
+            this._panelEnhancements.destroy();
+            this._panelEnhancements = null;
         }
-		if (this._movecenter) {
-			this._movecenter.destroy();
-			this._movecenter = null;
+		if (this._moveCenter) {
+			this._moveCenter.destroy();
+			this._moveCenter = null;
 		}
         _D('<');
     }

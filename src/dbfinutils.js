@@ -191,9 +191,9 @@ function settingsVariable(s, k, i, p, c) {
 	let (n = '_' + k.replace(/[ \t]/g, '').replace(/\-[^-]+/g, function (m) { return m[1].toUpperCase() + m.substring(2); })) {
 		let (cn = '_updated' + n[1].toUpperCase() + n.substring(2),
 		     un = '_update' + n[1].toUpperCase() + n.substring(2)) {
-			if (s[n] !== undefined || s[cn] !== undefined || s[un] !== undefined) return;
+			if (s[n] !== undefined || s[un] !== undefined) return;
 			s[n] = i;
-			s[cn] = c; // can be null
+			if (c && !s[cn]) s[cn] = c;
             if (typeof i === 'number') {
 				s[un] = function (s, k, p, n, cn) {
 							return function () {
@@ -213,6 +213,16 @@ function settingsVariable(s, k, i, p, c) {
 								_D('<');
                             }
                         } (s, k, n, cn);
+            }
+            else if (typeof i === 'string') {
+				s[un] = function (s, k, n, c) {
+							return function () {
+								_D('>' + s.__name__ + '.' + un + '()');
+                                s[n] = settingsGetString(s._settings, k, s[n]);
+                                if (s[cn]) Lang.bind(s, s[cn])();
+								_D('<');
+							}
+						} (s, k, n, c);
             }
 			if (s[un]) {
 				s[un]();
