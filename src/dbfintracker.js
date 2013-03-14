@@ -32,10 +32,11 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinTracker = new Lang.Class({
 	Name: 'dbFin.Tracker',
 
-    _init: function(callback) { // callback: function(appsIn, appsOut, windowsIn, windowsOut) called by update (_refresh)
+    _init: function(yawlPanelApps, yawlPanelWindows) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
-		this._callback = callback || null;
+        this.yawlPanelApps = yawlPanelApps || null;
+        this.yawlPanelWindows = yawlPanelWindows || null;
         this._tracker = Shell.WindowTracker.get_default();
 		this.apps = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, { state:, trackerApp: } ] ]
 		this.windows = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaWindow, { state:, trackerWindow: } ] ]
@@ -53,7 +54,6 @@ const dbFinTracker = new Lang.Class({
 			this._signals.destroy();
 			this._signals = null;
 		}
-		this._callback = null;
         this.state++;
 		if (this.apps) {
 			this.apps.forEach(Lang.bind(this, function(metaApp, appProperties) {
@@ -76,6 +76,8 @@ const dbFinTracker = new Lang.Class({
 			this.windows = null;
 		}
         this._tracker = null;
+        this.yawlPanelWindows = null;
+        this.yawlPanelApps = null;
         _D('<');
 	},
 
@@ -116,7 +118,7 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	_refresh: function(metaWorkspace/* = global.screen.get_active_workspace()*/, stateInfo/* = '_refresh() call with no additional info.'*/) {
-        _D('@' + this.__name__ + '._refresh()'); // This is called whenever tracker needs to refresh, debug will cause lots of records
+        _D('@' + this.__name__ + '._refresh()');
 		if (!this.apps || !this.windows) {
 			_D(!this.apps ? 'this.apps == null' : 'this.windows == null');
 	        _D('<');
@@ -172,7 +174,7 @@ const dbFinTracker = new Lang.Class({
 																	callback: this._windowRemoved, scope: this },
 										/*after = */true);
 			}
-            if (this._callback) this._callback(appsIn, appsOut, windowsIn, windowsOut);
+            this._updatePanels(appsIn, appsOut, windowsIn, windowsOut);
 		} // let (appsIn, appsOut, windowsIn, windowsOut)
         _D('<');
 	},
@@ -259,12 +261,81 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	update: function(metaWorkspace/* = null*/, stateInfo/* = 'update() call with no additional info.'*/) {
-        _D('@' + this.__name__ + '.update()'); // This is called whenever tracker needs to update, debug will cause lots of records
+        _D('@' + this.__name__ + '.update()');
 		metaWorkspace = metaWorkspace || null;
         if (!stateInfo || stateInfo == '') stateInfo = 'update() call with no additional info.';
 		Mainloop.idle_add(Lang.bind(this, this._refresh, metaWorkspace, stateInfo));
         _D('<');
 	},
+
+    _updatePanels: function(appsIn, appsOut, windowsIn, windowsOut) {
+        _D('>' + this.__name__ + '._updatePanels()');
+        if (!this.yawlPanelApps || !this.yawlPanelWindows) {
+            log('');
+            log('State:      ' + this.state);
+            log('State info: ' + this.stateInfo);
+            log('');
+            log('Apps: -' + appsOut.length + ' +' + appsIn.length + ' =' + this.apps.length
+                    + ' Windows: -' + windowsOut.length + ' +' + windowsIn.length + ' =' + this.windows.length);
+            log('');
+            this.apps.forEach(Lang.bind(this, function(metaApp, appProperties) {
+                if (!appProperties) return;
+                let (trackerApp = appProperties.trackerApp) {
+					if (!trackerApp) return;
+					log(trackerApp.appName + ':');
+					trackerApp.windows.forEach(Lang.bind(this, function(metaWindow) {
+						let (trackerWindow = this.getTrackerWindow(metaWindow)) {
+							if (!trackerWindow) return;
+							log('\t' + trackerWindow.title);
+						} // let (trackerWindow)
+					})); // trackerApp.windows.forEach
+				} // let (trackerApp)
+            })); // this.apps.forEach
+            _D('<');
+            return;
+        } // if (!this.yawlPanelApps || !this.yawlPanelWindows)
+		if (windowsOut && windowsOut.forEach) {
+            windowsOut.forEach(Lang.bind(this, function(metaWindow) {
+                let (trackerWindow = this.getTrackerWindow(metaWindow)) {
+                    if (trackerWindow) {
+                        trackerWindow.destroy();
+                    }
+                }
+            }));
+		}
+        if (appsIn && appsIn.forEach) {
+            appsIn.forEach(Lang.bind(this, function(metaApp) {
+                let (trackerApp = this.getTrackerApp(metaApp)) {
+                    if (trackerApp) {
+                        if (this.yawlPanelApps && this.yawlPanelApps.actor) {
+                            this.yawlPanelApps.actor.add_actor(trackerApp.appButton.container);
+                        }
+                        if (this.yawlPanelWindows && this.yawlPanelWindows.actor
+                            && trackerApp.yawlPanelWindowsGroup && trackerApp.yawlPanelWindowsGroup.actor) {
+                            this.yawlPanelWindows.actor.add_actor(trackerApp.yawlPanelWindowsGroup.actor);
+                        }
+                        trackerApp.appButton.show();
+                    }
+                }
+            }));
+        }
+		if (windowsIn && windowsIn.forEach) {
+            windowsIn.forEach(Lang.bind(this, function(metaWindow) {
+                let (trackerWindow = this.getTrackerWindow(metaWindow)) {
+                    if (trackerWindow) {
+						let (trackerApp = this.getTrackerApp(trackerWindow.metaApp)) {
+							if (trackerApp.yawlPanelWindowsGroup && trackerApp.yawlPanelWindowsGroup.actor
+							    && trackerWindow.windowThumbnail && trackerWindow.windowThumbnail.actor) {
+								trackerApp.yawlPanelWindowsGroup.actor.add_actor(trackerWindow.windowThumbnail.actor);
+							}
+						}
+                        trackerWindow.windowThumbnail.show();
+                    }
+                }
+            }));
+		}
+        _D('<');
+    },
 
 	_switchWorkspace: function (manager, wsiOld, wsiNew) {
         _D('>' + this.__name__ + '._switchWorkspace()');

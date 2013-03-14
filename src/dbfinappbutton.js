@@ -21,13 +21,13 @@ const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const Convenience = Me.imports.convenience2;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerIcon = Me.imports.dbfinslicericon;
 const dbFinUtils = Me.imports.dbfinutils;
-const Convenience = Me.imports.convenience2;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -39,20 +39,20 @@ const dbFinAppButton = new Lang.Class({
 	Name: 'dbFin.AppButton',
     Extends: PanelMenu.Button,
 
-    _init: function(metaApp, tracker, trackerApp) {
+    _init: function(metaApp, trackerApp) {
         _D('>' + this.__name__ + '._init()');
 		this.parent(0.0, null, true);
         this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
 		this.metaApp = metaApp;
-		this._tracker = tracker;
         this._trackerApp = trackerApp;
 
 		// this.actor and this.container related stuff
-		this.hidden = false;
+        this.actor._delegate = this;
+
+        this.hidden = false;
         this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
         this.actor.reactive = true;
-        this.actor._delegate = this;
 
 		this._minHPadding = 0;
 		this._natHPadding = 0;
@@ -107,11 +107,11 @@ const dbFinAppButton = new Lang.Class({
 		dbFinUtils.settingsVariable(this, 'icons-animation-time', 490, { min: 0, max: 3000 }, function () {
     		if (this._slicerIcon) this._slicerIcon.animationTime = this._iconsAnimationTime;
         });
-		dbFinUtils.settingsVariable(this, 'icons-animation-effect', 1, { min: 0, max: dbFinConsts.arrayAnimationTransitions.length - 1 }, function () {
+		dbFinUtils.settingsVariable(this, 'icons-animation-effect', 1, { min: 0 }, function () {
     		if (this._slicerIcon) this._slicerIcon.animationEffect = this._iconsAnimationEffect;
         });
 		dbFinUtils.settingsVariable(this, 'icons-hover-animation-time', 33, { min: 1, max: 100 });
-		dbFinUtils.settingsVariable(this, 'icons-hover-animation-effect', 0, { min: 0, max: dbFinConsts.arrayAnimationTransitions.length - 1 });
+		dbFinUtils.settingsVariable(this, 'icons-hover-animation-effect', 0, { min: 0 });
 
 		this._menuManager = Main.panel && Main.panel.menuManager || null;
 		this._updateMenu();
@@ -164,7 +164,6 @@ const dbFinAppButton = new Lang.Class({
 		this._bindReactiveId = null;
 		this.hidden = true;
 		this._trackerApp = null;
-		this._tracker = null;
 		this.metaApp = null;
 		this._settings = null;
 		this.parent();
@@ -207,9 +206,10 @@ const dbFinAppButton = new Lang.Class({
                                                 this._iconsAnimationTime && this._iconsHoverAnimationTime
                                                         ? Math.floor(this._iconsAnimationTime * this._iconsHoverAnimationTime / 100)
                                                         : 0,
-                                                dbFinConsts.arrayAnimationTransitions[this._iconsHoverAnimationEffect][1]);
+                                                this._iconsHoverAnimationEffect);
 			}
 		}
+        this.emit('enter-event');
         _D('<');
 	},
 
@@ -224,9 +224,10 @@ const dbFinAppButton = new Lang.Class({
                                                 this._iconsAnimationTime && this._iconsHoverAnimationTime
                                                         ? Math.floor(this._iconsAnimationTime * this._iconsHoverAnimationTime / 100)
                                                         : 0,
-                                                dbFinConsts.arrayAnimationTransitions[this._iconsHoverAnimationEffect][1]);
+                                                this._iconsHoverAnimationEffect);
 			}
 		}
+        this.emit('leave-event');
         _D('<');
 	},
 

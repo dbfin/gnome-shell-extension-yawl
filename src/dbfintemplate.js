@@ -14,8 +14,8 @@ const Lang = imports.lang;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const dbFinUtils = Me.imports.dbfinutils;
 const Convenience = Me.imports.convenience2;
+const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -26,12 +26,12 @@ const  = new Lang.Class({
 	Name: 'dbFin.',
 
     _init: function() {
-        _D('>dbFin._init()');
+        _D('>' + this.__name__ + '._init()');
         _D('<');
     },
 
 	destroy: function() {
-        _D('>dbFin.destroy()');
+        _D('>' + this.__name__ + '.destroy()');
         _D('<');
 	}
 });

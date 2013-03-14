@@ -19,10 +19,10 @@ const Panel = imports.ui.panel;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const Convenience = Me.imports.convenience2;
 const dbFinPanelButtonToggle = Me.imports.dbfinpanelbuttontoggle;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinUtils = Me.imports.dbfinutils;
-const Convenience = Me.imports.convenience2;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -67,13 +67,13 @@ const dbFinHotCorner = new Lang.Class({
 	},
 
 	_getPreferredSize: function(actor, forSize, alloc) {
-        _D('@' + this.__name__ + '._getPreferredSize()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
+        _D('@' + this.__name__ + '._getPreferredSize()');
 		[ alloc.min_size, alloc.natural_size ] = [ 1, 1 ];
 		_D('<');
 	},
 
 	_allocate: function(actor, box, flags) {
-        _D('@' + this.__name__ + '._allocate()'); // This is called whenever GS needs to reallocate the button, debug will cause lots of records
+        _D('@' + this.__name__ + '._allocate()');
 		let (	children = actor.get_children(),
 		    	childBox = new Clutter.ActorBox()) {
 			if (children.length) {
@@ -85,7 +85,7 @@ const dbFinHotCorner = new Lang.Class({
 	},
 
 	_styleChanged: function(actor) {
-        _D('@' + this.__name__ + '._styleChanged()'); // This is called whenever the style of the button changes, debug will cause lots of records
+        _D('@' + this.__name__ + '._styleChanged()');
 		this._button._minHPadding = 0;
 		this._button._natHPadding = 0;
 		_D('<');
@@ -160,7 +160,7 @@ const dbFinMoveCenter = new Lang.Class({
 
 	// GNOMENEXT: modified from ui/panel.js: class Panel
     _allocate: function (actor, box, flags) {
-        _D('@' + this.__name__ + '._allocate()'); // This is called whenever GS needs to reallocate the panel, debug will cause lots of records
+        _D('@' + this.__name__ + '._allocate()');
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
                 [wlm, wln] = Main.panel._leftBox.get_preferred_width(-1), // minimum and natural widths

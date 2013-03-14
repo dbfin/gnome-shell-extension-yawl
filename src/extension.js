@@ -12,8 +12,8 @@
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const dbFinYAWL = Me.imports.dbfinyawl;
 const Convenience = Me.imports.convenience2;
+const dbFinYAWL = Me.imports.dbfinyawl;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;

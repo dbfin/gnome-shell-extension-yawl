@@ -22,6 +22,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -46,8 +47,17 @@ const dbFinTrackerApp = new Lang.Class({
 		}
 		this._autohideshow = autoHideShow || false;
 
-        this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this._tracker, this);
-		if (this.appButton && !metaWindow && this._autohideshow) this.appButton.hide();
+        this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel(null, 'panelYAWLWindowsGroup', null,
+                                                                       /*hidden = */true, /*autohideinoverview = */false);
+
+        this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
+		if (this.appButton) {
+            if (!metaWindow && this._autohideshow) this.appButton.hide();
+            this._signals.connectNoId({ emitter: this.appButton, signal: 'enter-event',
+                                        callback: this._appButtonHoverEnter, scope: this });
+            this._signals.connectNoId({ emitter: this.appButton, signal: 'leave-event',
+                                        callback: this._appButtonHoverLeave, scope: this });
+        }
 
 		this.focused = false;
 		this._updateFocused();
@@ -72,16 +82,20 @@ const dbFinTrackerApp = new Lang.Class({
             this.appButton.destroy();
             this.appButton = null;
         }
-		this.metaApp = null;
-		this._tracker = null;
-        this.windows = [];
-		this.appName = '?';
+        if (this.yawlPanelWindowsGroup) {
+            this.yawlPanelWindowsGroup.destroy();
+            this.yawlPanelWindowsGroup = null;
+        }
 		this.focused = false;
+		this.appName = '?';
+        this.windows = [];
+		this._tracker = null;
+		this.metaApp = null;
         _D('<');
 	},
 
 	_updateFocused: function() {
-        _D('@' + this.__name__ + '._updateFocused()'); // This is called too often, debug will cause lots of records
+        _D('@' + this.__name__ + '._updateFocused()');
         if (!this._tracker || !this._tracker.getTracker) {
             _D(!this._tracker ? 'this._tracker === null' : 'this._tracker.getTracker === null');
             _D('<');
@@ -119,6 +133,18 @@ const dbFinTrackerApp = new Lang.Class({
             }
             if (this._autohideshow && !this.windows.length && this.appButton) this.appButton.hide();
         }
+        _D('<');
+    },
+
+    _appButtonHoverEnter: function() {
+        _D('>' + this.__name__ + '._appButtonHoverEnter()');
+		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.show();
+        _D('<');
+    },
+
+    _appButtonHoverLeave: function() {
+        _D('>' + this.__name__ + '._appButtonHoverLeave()');
+		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.hide();
         _D('<');
     },
 

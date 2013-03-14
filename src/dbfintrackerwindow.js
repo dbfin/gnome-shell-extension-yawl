@@ -15,6 +15,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinWindowThumbnail = Me.imports.dbfinwindowthumbnail;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -43,6 +44,8 @@ const dbFinTrackerWindow = new Lang.Class({
         this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::title',
                                     callback: this._titleChanged, scope: this });
 
+        this.windowThumbnail = new dbFinWindowThumbnail.dbFinWindowThumbnail(metaWindow, this);
+
         this.focused = false;
         this._updateFocused();
         this._signals.connectNoId({ emitter: global.display.connect, signal: 'notify::focus-window',
@@ -60,6 +63,10 @@ const dbFinTrackerWindow = new Lang.Class({
         if (this._signals) {
             this._signals.destroy();
             this._signals = null;
+        }
+        if (this.windowThumbnail) {
+            this.windowThumbnail.destroy();
+            this.windowThumbnail = null;
         }
         this.minimized = false;
         this.focused = false;
@@ -80,7 +87,7 @@ const dbFinTrackerWindow = new Lang.Class({
 	},
 
 	_titleChanged: function() {
-        _D('@' + this.__name__ + '._titleChanged()'); // This is called too often, debug will cause lots of records
+        _D('@' + this.__name__ + '._titleChanged()');
         let (title = this.title) {
 			this._updateTitle();
 			if (this._tracker && title !== this.title) {
@@ -109,7 +116,7 @@ const dbFinTrackerWindow = new Lang.Class({
 	},
 
 	_minimizedChanged: function() {
-        _D('@' + this.__name__ + '._minimizedChanged()'); // This is called too often, debug will cause lots of records
+        _D('@' + this.__name__ + '._minimizedChanged()');
         let (minimized = this.minimized) {
 			this._updateMinimized();
 			if (this._tracker && minimized !== this.minimized) {

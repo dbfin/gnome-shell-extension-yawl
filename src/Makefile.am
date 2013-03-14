@@ -2,6 +2,7 @@ include ../include.mk
 
 dist_extension_DATA = \
 	convenience2.js \
+	dbfinanimation.js \
 	dbfinappbutton.js \
 	dbfinarrayhash.js \
 	dbfinclicked.js \
@@ -18,6 +19,7 @@ dist_extension_DATA = \
 	dbfintrackerwindow.js \
 	dbfinutils.js \
 	dbfinutilsprefs.js \
+	dbfinwindowthumbnail.js \
 	dbfinyawl.js \
 	dbfinyawlpanel.js \
 	extension.js \

@@ -15,14 +15,12 @@ const St = imports.gi.St;
 
 const Main = imports.ui.main;
 const Overview = imports.ui.overview;
-const Tweener = imports.ui.tweener;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinSignals = Me.imports.dbfinsignals;
-const dbFinTracker = Me.imports.dbfintracker;
-const Convenience = Me.imports.convenience2;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -33,21 +31,37 @@ const dbFinYAWLPanel = new Lang.Class({
 	Name: 'dbFin.YAWLPanel',
 
     // GNOMENEXT: ui/panel.js: class Panel
-    _init: function() {
+    _init: function(parent, name, boxname, hidden/* = false*/, autohideinoverview/* = false*/) { // e.g. Main.panel, 'panelYAWL', '_yawlBox'
         _D('>' + this.__name__ + '._init()');
-        this._settings = Convenience.getSettings();
+        this._parent = parent || null;
+        this._name = name || '';
+        this._boxName = boxname || '';
+        hidden = hidden || false;
+		autohideinoverview = autohideinoverview || false;
 		this._signals = new dbFinSignals.dbFinSignals();
-		this._box = new St.BoxLayout({ name: 'panelYAWL', vertical: false, track_hover: true });
-        Main.panel._yawlBox = this._box;
-        Main.panel.actor.add_actor(Main.panel._yawlBox);
-        this._tracker = new dbFinTracker.dbFinTracker(Lang.bind(this, this._refresh));
 
-		this.hidden = Main.overview.visible;
-		if (this.hidden) this._box.hide();
-		this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
-									callback: this.hide, scope: this });
-		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
-									callback: this.show, scope: this });
+		this.actor = this._name	? new St.BoxLayout({ name: this._name, vertical: false, reactive: true, track_hover: true })
+								: new St.BoxLayout({ vertical: false, reactive: true, track_hover: true });
+
+		this.hidden = false;
+		if (hidden || (autohideinoverview && Main.overview && Main.overview.visible)) this.hide();
+
+        if (this._parent) {
+            if (this._boxName) this._parent[this._boxName] = this.actor;
+            if (this._parent.add_actor) {
+                this._parent.add_actor(this.actor);
+            }
+            else if (this._parent.actor && this._parent.actor.add_actor) {
+                this._parent.actor.add_actor(this.actor);
+            }
+        }
+
+		if (autohideinoverview) {
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
+										callback: this.hide, scope: this });
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
+										callback: this.show, scope: this });
+		}
         _D('<');
     },
 
@@ -57,19 +71,27 @@ const dbFinYAWLPanel = new Lang.Class({
 			this._signals.destroy();
 			this._signals = null;
 		}
-        if (this._tracker) {
-            this._tracker.destroy();
-            this._tracker = null;
-        }
-		if (this._box) {
-            if (Main.panel._yawlBox == this._box) {
-                Main.panel.actor.remove_actor(Main.panel._yawlBox);
-                Main.panel._yawlBox = null;
+		if (this.actor) {
+            if (this._parent) {
+                if (this._boxName && this._parent[this._boxName] == this.actor) this._parent[this._boxName] = null;
+                if (this._parent.remove_actor) {
+                    this._parent.remove_actor(this.actor);
+                }
+                else if (this._parent.actor && this._parent.actor.remove_actor) {
+                    this._parent.actor.remove_actor(this.actor);
+                }
             }
-			this._box.destroy();
-			this._box = null;
+            // just in case parent was not set up initially or was changed
+            let (parent = this.actor.get_parent && this.actor.get_parent()) {
+                if (parent && parent.remove_actor) {
+                    parent.remove_actor(this.actor);
+                }
+            }
+			this.actor.destroy();
+			this.actor = null;
 		}
-        this._settings = null;
+        this.hidden = true;
+        this._parent = null;
         _D('<');
 	},
 
@@ -79,10 +101,12 @@ const dbFinYAWLPanel = new Lang.Class({
             _D('<');
             return;
         }
-		Tweener.removeTweens(this._box, "opacity");
-        this._box.show();
+        if (this.actor) {
+            this.actor.show();
+            this.actor.reactive = true;
+        }
         this.hidden = false;
-		Tweener.addTween(this._box, { opacity: 255, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad' });
+		this.animateToState({ opacity: 255 });
         _D('<');
     },
 
@@ -93,53 +117,20 @@ const dbFinYAWLPanel = new Lang.Class({
             return;
         }
         this.hidden = true;
-		Tweener.removeTweens(this._box, "opacity");
-		Tweener.addTween(this._box, {	opacity: 0, time: Overview.ANIMATION_TIME, transition: 'easeOutQuad',
-										onComplete: function() { this._box.hide(); }, onCompleteScope: this });
+        if (this.actor) {
+            this.actor.reactive = false;
+        }
+		this.animateToState({ opacity: 0 }, function() { this.actor.hide(); }, this);
         _D('<');
     },
 
-    _refresh: function(appsIn, appsOut, windowsIn, windowsOut) {
-        _D('>' + this.__name__ + '._refresh()');
-        if (!this._tracker) {
-            _D('this._tracker === null');
-            _D('<');
-            return;
-        }
-        if (!Main.panel._yawlBox || Main.panel._yawlBox != this._box) {
-            log('');
-            log('State:      ' + this._tracker.state);
-            log('State info: ' + this._tracker.stateInfo);
-            log('');
-            log('Apps: -' + appsOut.length + ' +' + appsIn.length + ' =' + this._tracker.apps.length
-                    + ' Windows: -' + windowsOut.length + ' +' + windowsIn.length + ' =' + this._tracker.windows.length);
-            log('');
-            this._tracker.apps.forEach(Lang.bind(this, function(metaApp, appProperties) {
-                if (!appProperties) return;
-                let (trackerApp = appProperties.trackerApp) {
-					if (!trackerApp) return;
-					log(trackerApp.appName + ':');
-					trackerApp.windows.forEach(Lang.bind(this, function(metaWindow) {
-						let (trackerWindow = this._tracker.getTrackerWindow(metaWindow)) {
-							if (!trackerWindow) return;
-							log('\t' + trackerWindow.title);
-						} // let (trackerWindow)
-					})); // trackerApp.windows.forEach
-				} // let (trackerApp)
-            })); // this._tracker.apps.forEach
-            _D('<');
-            return;
-        } // if (!Main.panel._yawlBox || Main.panel._yawlBox != this._box)
-        if (appsIn && appsIn.forEach) {
-            appsIn.forEach(Lang.bind(this, function(metaApp) {
-                let (trackerApp = this._tracker.getTrackerApp(metaApp)) {
-                    if (trackerApp) {
-                        this._box.add_actor(trackerApp.appButton.container);
-                        trackerApp.appButton.show();
-                    }
-                }
-            }));
-        }
+    animateToState: function(state, callback, scope, time, transition) {
+        _D('>' + this.__name__ + '.hide()');
+		if (time === undefined || time === null) time = Overview.ANIMATION_TIME * 3000;
+		if (transition === undefined || transition === null) {
+			transition = 'easeOutQuad'/* this.animationEffect*/;
+		}
+		dbFinAnimation.animateToState(this.actor, state, callback, scope, time, transition);
         _D('<');
     }
 });

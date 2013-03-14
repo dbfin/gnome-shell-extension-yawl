@@ -14,12 +14,10 @@ const Lang = imports.lang;
 const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
 
-const Tweener = imports.ui.tweener;
-
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const dbFinConsts = Me.imports.dbfinconsts;
+const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinSignals = Me.imports.dbfinsignals;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -134,48 +132,10 @@ const dbFinSlicerIcon = new Lang.Class({
 	animateToState: function(state, callback, scope, time, transition) {
         _D('>' + this.__name__ + '.animateToState()');
 		if (time === undefined || time === null) time = this.animationTime;
-		if (time > 0 && this.actor.get_stage()) { // we do not schedule animation for actors not in stage
-            let (_state = {}, was = false) {
-                for (let p in state) { // animate only those that are already defined and new
-					p = '' + p;
-                    if (this.actor[p] !== undefined) {
-						Tweener.removeTweens(this.actor, p);
-                        if (this.actor[p] !== state[p]) {
-							_state[p] = state[p];
-	                        was = true;
-						}
-                    }
-                } // for (let p)
-                if (was) { // anything to animate?
-                    if (transition === undefined || transition === null)
-                        transition = dbFinConsts.arrayAnimationTransitions[this.animationEffect][1];
-                    _state.time = time / 1000.;
-                    _state.transition = transition;
-                    if (callback) _state.onComplete = callback;
-                    if (scope) _state.onCompleteScope = scope;
-                    Tweener.addTween(this.actor, _state);
-                } // if (was)
-				else if (callback) {
-					if (scope) Lang.bind(scope, callback)();
-					else callback();
-				} // if (was) else
-            } // let (_state, was)
-		} // if (time > 0 && this.actor.get_stage())
-		else {
-			for (let p in state) {
-				p = '' + p;
-                if (this.actor[p] !== undefined) {
-					Tweener.removeTweens(this.actor, p);
-					if (this.actor[p] !== state[p]) {
-	                    this.actor[p] = state[p];
-					}
-				}
-			} // for (let p)
-			if (callback) {
-				if (scope) Lang.bind(scope, callback)();
-				else callback();
-			}
-		} // if (time > 0 && this.actor.get_stage()) else
+		if (transition === undefined || transition === null) {
+			transition = this.animationEffect;
+		}
+		dbFinAnimation.animateToState(this.actor, state, callback, scope, time, transition);
         _D('<');
 	}
 });
