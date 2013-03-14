@@ -20,8 +20,10 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const Convenience = Me.imports.convenience2;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinUtils = Me.imports.dbfinutils;
 const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -37,6 +39,7 @@ const dbFinTrackerApp = new Lang.Class({
     _init: function(metaApp, tracker, metaWindow, autoHideShow/* = false*/) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
+        this._settings = Convenience.getSettings();
 		this.metaApp = metaApp;
 		this._tracker = tracker;
         this.windows = (metaWindow ? [ metaWindow ] : []);
@@ -47,8 +50,15 @@ const dbFinTrackerApp = new Lang.Class({
 		}
 		this._autohideshow = autoHideShow || false;
 
-        this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel(null, null, null, null,
-                                                                       /*hidden = */true, /*autohideinoverview = */false);
+        this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel(null, null, null, null, /*hidden = */true,
+                                                        /*autohideinoverview = */false, /*hidechildren = */true);
+
+        dbFinUtils.settingsVariable(this, 'windows-animation-time', 490, { min: 0, max: 3000 }, function () {
+    		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = this._windowsAnimationTime;
+        });
+		dbFinUtils.settingsVariable(this, 'windows-animation-effect', 1, { min: 0 }, function () {
+    		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = this._windowsAnimationEffect;
+        });
 
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
 		if (this.appButton) {
@@ -91,6 +101,7 @@ const dbFinTrackerApp = new Lang.Class({
         this.windows = [];
 		this._tracker = null;
 		this.metaApp = null;
+        this._settings = null;
         _D('<');
 	},
 

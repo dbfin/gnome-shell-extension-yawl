@@ -294,25 +294,13 @@ const dbFinTracker = new Lang.Class({
             _D('<');
             return;
         } // if (!this.yawlPanelApps || !this.yawlPanelWindows)
-		if (windowsOut && windowsOut.forEach) {
-            windowsOut.forEach(Lang.bind(this, function(metaWindow) {
-                let (trackerWindow = this.getTrackerWindow(metaWindow)) {
-                    if (trackerWindow) {
-                        trackerWindow.destroy();
-                    }
-                }
-            }));
-		}
         if (appsIn && appsIn.forEach) {
             appsIn.forEach(Lang.bind(this, function(metaApp) {
                 let (trackerApp = this.getTrackerApp(metaApp)) {
                     if (trackerApp) {
-                        if (this.yawlPanelApps && this.yawlPanelApps.actor) {
-                            this.yawlPanelApps.actor.add_actor(trackerApp.appButton.container);
-                        }
-                        if (this.yawlPanelWindows && this.yawlPanelWindows.actor
-                            && trackerApp.yawlPanelWindowsGroup && trackerApp.yawlPanelWindowsGroup.container) {
-                            this.yawlPanelWindows.actor.add_actor(trackerApp.yawlPanelWindowsGroup.container);
+                        if (this.yawlPanelApps) this.yawlPanelApps.add(trackerApp.appButton);
+                        if (this.yawlPanelWindows && trackerApp.yawlPanelWindowsGroup) {
+                            this.yawlPanelWindows.add(trackerApp.yawlPanelWindowsGroup);
                         }
                         trackerApp.appButton.show();
                     }
@@ -324,12 +312,10 @@ const dbFinTracker = new Lang.Class({
                 let (trackerWindow = this.getTrackerWindow(metaWindow)) {
                     if (trackerWindow) {
 						let (trackerApp = this.getTrackerApp(trackerWindow.metaApp)) {
-							if (trackerApp.yawlPanelWindowsGroup && trackerApp.yawlPanelWindowsGroup.actor
-							    && trackerWindow.windowThumbnail && trackerWindow.windowThumbnail.actor) {
-								trackerApp.yawlPanelWindowsGroup.actor.add_actor(trackerWindow.windowThumbnail.actor);
+							if (trackerApp.yawlPanelWindowsGroup && trackerWindow.windowThumbnail) {
+								trackerApp.yawlPanelWindowsGroup.add(trackerWindow.windowThumbnail);
 							}
 						}
-                        trackerWindow.windowThumbnail.show();
                     }
                 }
             }));

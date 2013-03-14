@@ -87,32 +87,31 @@ const dbFinAppButton = new Lang.Class({
         dbFinUtils.settingsVariable(this, 'icons-opacity', 84, { min: 50, max: 100 }, function () {
             if (this._slicerIcon) this._slicerIcon.animateToState({ opacity: dbFinUtils.opacity100to255(this._iconsOpacity) });
         });
-		dbFinUtils.settingsVariable(this, 'icons-hover-animation', true);
-		dbFinUtils.settingsVariable(this, 'icons-hover-size', 100, { min: 100, max: 200 });
-		dbFinUtils.settingsVariable(this, 'icons-hover-opacity', 100, { min: 50, max: 100 });
-		dbFinUtils.settingsVariable(this, 'icons-hover-fit', false);
-		dbFinUtils.settingsVariable(this, 'icons-distance', 21, { min: 0, max: 100 }, function () {
-    		if (this._slicerIcon) this._slicerIcon.setPaddingH((this._iconsDistance + 1) >> 1);
-        });
 		dbFinUtils.settingsVariable(this, 'icons-clip-top', 3, { min: 0, max: 11 }, function () {
             if (this._slicerIcon) this._slicerIcon.setClipTop(this._iconsClipTop);
         });
 		dbFinUtils.settingsVariable(this, 'icons-clip-bottom', 3, { min: 0, max: 11 }, function () {
             if (this._slicerIcon) this._slicerIcon.setClipBottom(this._iconsClipBottom);
         });
-
-		this.hide(); // to set the width of this._slicerIcon to 0
-
-        // this and this.metaApp related stuff
+		dbFinUtils.settingsVariable(this, 'icons-distance', 21, { min: 0, max: 100 }, function () {
+    		if (this._slicerIcon) this._slicerIcon.setPaddingH((this._iconsDistance + 1) >> 1);
+        });
 		dbFinUtils.settingsVariable(this, 'icons-animation-time', 490, { min: 0, max: 3000 }, function () {
     		if (this._slicerIcon) this._slicerIcon.animationTime = this._iconsAnimationTime;
         });
 		dbFinUtils.settingsVariable(this, 'icons-animation-effect', 1, { min: 0 }, function () {
     		if (this._slicerIcon) this._slicerIcon.animationEffect = this._iconsAnimationEffect;
         });
+		dbFinUtils.settingsVariable(this, 'icons-hover-animation', true);
+		dbFinUtils.settingsVariable(this, 'icons-hover-size', 100, { min: 100, max: 200 });
+		dbFinUtils.settingsVariable(this, 'icons-hover-opacity', 100, { min: 50, max: 100 });
+		dbFinUtils.settingsVariable(this, 'icons-hover-fit', false);
 		dbFinUtils.settingsVariable(this, 'icons-hover-animation-time', 33, { min: 1, max: 100 });
 		dbFinUtils.settingsVariable(this, 'icons-hover-animation-effect', 0, { min: 0 });
 
+		this.hide(); // to set the width of this._slicerIcon to 0
+
+        // this and this.metaApp related stuff
 		this._menuManager = Main.panel && Main.panel.menuManager || null;
 		this._updateMenu();
 		if (this.metaApp) {
@@ -170,7 +169,7 @@ const dbFinAppButton = new Lang.Class({
         _D('<');
 	},
 
-    show: function() {
+    show: function(time) {
         _D('>' + this.__name__ + '.show()');
 		if (this.container) {
 			this.container.show();
@@ -178,11 +177,11 @@ const dbFinAppButton = new Lang.Class({
 		}
 		this.hidden = false;
 		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: this._iconsOpacity ? dbFinUtils.opacity100to255(this._iconsOpacity) : 255,
-																natural_width: this._slicerIcon.getNaturalWidth() });
+																natural_width: this._slicerIcon.getNaturalWidth() }, null, null, time);
         _D('<');
     },
 
-    hide: function() {
+    hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
 		if (this.container) {
 			this.container.reactive = false;
@@ -190,7 +189,8 @@ const dbFinAppButton = new Lang.Class({
 		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0,
 																natural_width: 0 },
 		                                                      	function () { if (this.container) this.container.hide(); this.hidden = true; },
-		                                                      	this);
+		                                                      	this,
+                                                                time);
         _D('<');
     },
 

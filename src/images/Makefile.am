@@ -11,7 +11,8 @@ images = \
 	tuning.png \
 	mouse-clicks-double.gif \
 	mouse-clicks-single.gif \
-	empty_16.png
+	empty_16.png \
+	window.png
 
 imagedir = $(extensiondir)/images
 dist_image_DATA = $(images)

@@ -164,7 +164,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
                 builder.addScale(_("Distance between icons (% of icon size)"), 'icons-distance', 0, 100, 1);
 
-            builder.addPage(_("Animation"), 'animation.png');
+            builder.addPage(_("Icons animation"), 'animation.png');
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'icons-animation-time', 0, 1000, 1, null, true);
                 builder.addComboBoxText(_("General animation effect"), 'icons-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
                 builder.addSeparator();
@@ -177,6 +177,10 @@ function buildPrefsWidget() {
 	                builder.addScale(_("Icon hover animation time (% of animation time)"), 'icons-hover-animation-time', 0, 100, 1, 'icons-hover-animation');
                     builder.addComboBoxText(_("Icon hover animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
 				builder.unshift();
+
+			builder.addPage(_("Windows"), 'window.png');
+                builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 1000, 1, null, true);
+                builder.addComboBoxText(_("General animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
 
             builder.closeNotebook();
 

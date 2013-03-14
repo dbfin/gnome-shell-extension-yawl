@@ -21,15 +21,15 @@
       <_summary>Hide Activities button.</_summary>
       <_description>If true the Activities button is hidden.</_description>
     </key>
-    <key name="hide-app-menu" type="b">
-      <default>false</default>
-      <_summary>Hide AppMenu button.</_summary>
-      <_description>If true the AppMenu button is hidden.</_description>
-    </key>
     <key name="preserve-hot-corner" type="b">
       <default>true</default>
       <_summary>Preserve Hot Corner.</_summary>
       <_description>If true the Hot Corner is available even if the Activities button is hidden.</_description>
+    </key>
+    <key name="hide-app-menu" type="b">
+      <default>false</default>
+      <_summary>Hide AppMenu button.</_summary>
+      <_description>If true the AppMenu button is hidden.</_description>
     </key>
     <key name="panel-background" type="b">
       <default>false</default>
@@ -46,6 +46,7 @@
       <_summary>Choose custom panel opacity.</_summary>
       <_description>Custom opacity to paint the top panel.</_description>
     </key>
+
     <key name="icons-size" type="s">
       <default>'48'</default>
       <_summary>Size of application icons.</_summary>
@@ -81,6 +82,7 @@
       <_summary>Distance between icons (%).</_summary>
       <_description>Distance between two icons as % of the icon size.</_description>
     </key>
+
     <key name="icons-animation-time" type="s">
       <default>'490'</default>
       <_summary>Icons animation time.</_summary>
@@ -121,6 +123,18 @@
       <_summary>Icons on hover animation effect.</_summary>
       <_description>Icons animation effect when hovered.</_description>
     </key>
+
+    <key name="windows-animation-time" type="s">
+      <default>'490'</default>
+      <_summary>Windows animation time.</_summary>
+      <_description>Windows animation time in ms. If 0 then no animation is used.</_description>
+    </key>
+    <key name="windows-animation-effect" type="s">
+      <default>'1'</default>
+      <_summary>Windows animation effect.</_summary>
+      <_description>Windows animation effect.</_description>
+    </key>
+
     <key name="mouse-app-left" type="s">
       <default>'1'</default>
       <_summary>App left click/double click function.</_summary>
@@ -141,6 +155,7 @@
       <_summary>App ctrl-shift-left click/double click function.</_summary>
       <_description>App ctrl-shift-left click/double click function.</_description>
     </key>
+
     <key name="mouse-app-middle" type="s">
       <default>'9'</default>
       <_summary>App middle click/double click function.</_summary>
@@ -166,11 +181,13 @@
       <_summary>App mouse scroll function.</_summary>
       <_description>App mouse scroll function.</_description>
     </key>
+
     <key name="mouse-app-right" type="s">
       <default>'10'</default>
       <_summary>App right click/double click function.</_summary>
       <_description>App right click/double click function.</_description>
     </key>
+
     <key name="mouse-click-release" type="b">
       <default>false</default>
       <_summary>Whether to send clicks on mouse release.</_summary>

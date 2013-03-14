@@ -10,6 +10,7 @@
  */
 
 const Lang = imports.lang;
+const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
@@ -22,6 +23,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAnimation = Me.imports.dbfinanimation;
+const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinUtils = Me.imports.dbfinutils;
 
@@ -35,18 +37,21 @@ const dbFinYAWLPanel = new Lang.Class({
 
     // GNOMENEXT: ui/panel.js: class Panel
     // e.g. Main.panel, 'panelYAWL', 'panelYAWLBox', '_yawlPanel'
-    _init: function(parent, panelname, boxname, parentproperty, hidden/* = false*/, autohideinoverview/* = false*/, gravity/* = 0.0*/) {
+    _init: function(parent, panelname, boxname, parentproperty,
+                    hidden/* = false*/, autohideinoverview/* = false*/, hidechildren/* = false*/, gravity/* = 0.0*/) {
         _D('>' + this.__name__ + '._init()');
         this._parent = parent || null;
         this._panelName = panelname || '';
         this._boxName = boxname || '';
         this._parentProperty = parentproperty || '';
+        hidden = hidden || false;
+		autohideinoverview = autohideinoverview || false;
+        this._hideChildren = hidechildren || false;
         this._gravity = gravity && parseFloat(gravity) || 0.0;
         this.animationTime = Overview.ANIMATION_TIME * 1000;
         this.animationEffect = 'easeOutQuad';
-        hidden = hidden || false;
-		autohideinoverview = autohideinoverview || false;
 		this._signals = new dbFinSignals.dbFinSignals();
+        this._childrenObjects = new dbFinArrayHash.dbFinArrayHash();
 
 		this.container = this._panelName	? new Shell.GenericContainer({ name: this._panelName, reactive: true, visible: true })
         									: new Shell.GenericContainer({ reactive: true, visible: true });
@@ -84,9 +89,9 @@ const dbFinYAWLPanel = new Lang.Class({
 
 		if (autohideinoverview) {
 			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
-										callback: this.hide, scope: this });
+										callback: function () { this.hide(); }, scope: this });
 			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
-										callback: this.show, scope: this });
+										callback: function () { this.show(); }, scope: this });
 		}
         _D('<');
     },
@@ -128,8 +133,12 @@ const dbFinYAWLPanel = new Lang.Class({
 			this.container.destroy();
 			this.container = null;
 		}
+        if (this._childrenObjects) {
+            this._childrenObjects.forEach(Lang.bind(this, function(childObject, signalId) { this.remove(childObject); }));
+        }
         this.hidden = true;
         this._parent = null;
+        this.emit('destroy');
         _D('<');
 	},
 
@@ -150,11 +159,13 @@ const dbFinYAWLPanel = new Lang.Class({
         let (	w = box.x2 - box.x1,
             	[ wm, wn ] = this.actor.get_preferred_width(-1)) {
             if (wn < w) {
-                let (   boxChild = new Clutter.ActorBox(),
-                        x = box.x1 + dbFinUtils.inRange(Math.floor(w * this._gravity - wn / 2), 0, w - wn)) {
-                    dbFinUtils.setBox(boxChild, x, box.y1, x + wn, box.y2);
-                    this.actor.allocate(boxChild, flags);
-                } // let (boxChild)
+                if (wn > 0) {
+                    let (   boxChild = new Clutter.ActorBox(),
+                            x = box.x1 + dbFinUtils.inRange(Math.floor(w * this._gravity - wn / 2), 0, w - wn)) {
+                        dbFinUtils.setBox(boxChild, x, box.y1, x + wn, box.y2);
+                        this.actor.allocate(boxChild, flags);
+                    } // let (boxChild)
+                }
             }
             else {
                 this.actor.allocate(box, flags);
@@ -163,7 +174,33 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('<');
     },
 
-    show: function() {
+    add: function(childObject) {
+        _D('>' + this.__name__ + '.add()');
+        if (childObject && this._childrenObjects.get(childObject) === undefined) {
+            let (actor = childObject.container || childObject.actor || childObject) {
+                if (actor instanceof Clutter.Actor) this.actor.add_actor(actor);
+            }
+            this._childrenObjects.set(childObject, childObject.connect('destroy', Lang.bind(this, this.remove)));
+        }
+        _D('<');
+    },
+
+    remove: function(childObject) {
+        _D('>' + this.__name__ + '.remove()');
+        if (childObject) {
+            let (signalId = this._childrenObjects.remove(childObject)) {
+                if (signalId !== undefined) {
+                    let (actor = childObject.container || childObject.actor || childObject) {
+                        if (actor.get_parent && actor.get_parent() == this.actor) this.actor.remove_actor(actor);
+                    }
+                    childObject.disconnect(signalId);
+                }
+            }
+        }
+        _D('<');
+    },
+
+    show: function(time) {
         _D('>' + this.__name__ + '.show()');
         if (Main.screenShield.locked) {
             _D('<');
@@ -174,16 +211,28 @@ const dbFinYAWLPanel = new Lang.Class({
             this.container.reactive = true;
         }
         this.hidden = false;
-		this.animateToState({ opacity: 255 });
+        if (this._hideChildren && this._childrenObjects) {
+            this._childrenObjects.forEach(function (childObject, signalId) {
+                if (childObject.show) childObject.show(time === undefined || time === null ? this.animationTime : time);
+            });
+        }
+		this.animateToState({ opacity: 255 }, null, null, time);
         _D('<');
     },
 
-    hide: function() {
+    hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
         if (this.container) {
             this.container.reactive = false;
         }
-		this.animateToState({ opacity: 0 }, function() { if (this.container) this.container.hide(); this.hidden = true; }, this);
+        if (this._hideChildren && this._childrenObjects) {
+            this._childrenObjects.forEach(function (childObject, signalId) {
+                if (childObject.hide) childObject.hide(time === undefined || time === null ? this.animationTime : time);
+            });
+        }
+		this.animateToState({ opacity: 0 }, function() {
+			if (this.container) this.container.hide(); this.hidden = true;
+		}, this, time);
         _D('<');
     },
 
@@ -204,3 +253,4 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('<');
     }
 });
+Signals.addSignalMethods(dbFinYAWLPanel.prototype);

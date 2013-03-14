@@ -10,6 +10,7 @@
  */
 
 const Lang = imports.lang;
+const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
 const St = imports.gi.St;
@@ -43,6 +44,13 @@ const dbFinWindowThumbnail = new Lang.Class({
 		this._slicerIcon.natural_height = 150;
 
         this._updateThumbnail();
+
+        dbFinUtils.settingsVariable(this, 'windows-animation-time', 490, { min: 0, max: 3000 }, function () {
+    		if (this._slicerIcon) this._slicerIcon.animationTime = this._windowsAnimationTime;
+        });
+		dbFinUtils.settingsVariable(this, 'windows-animation-effect', 1, { min: 0 }, function () {
+    		if (this._slicerIcon) this._slicerIcon.animationEffect = this._windowsAnimationEffect;
+        });
 
 		// this.actor related stuff
         this.actor = new St.Bin({ y_fill: true, x_fill: true, child: this._slicerIcon.actor });
@@ -82,10 +90,11 @@ const dbFinWindowThumbnail = new Lang.Class({
         this._trackerWindow = null;
         this.metaWindow = null;
         this._settings = null;
+        this.emit('destroy');
         _D('<');
 	},
 
-	show: function() {
+	show: function(time) {
         _D('>' + this.__name__ + '.show()');
 		if (this.actor) {
 			this.actor.show();
@@ -93,11 +102,11 @@ const dbFinWindowThumbnail = new Lang.Class({
 		}
 		this.hidden = false;
 		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: this._iconsOpacity ? dbFinUtils.opacity100to255(this._iconsOpacity) : 255,
-																natural_width: this._slicerIcon.getNaturalWidth() });
+																natural_width: this._slicerIcon.getNaturalWidth() }, null, null, time);
         _D('<');
 	},
 
-	hide: function() {
+	hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
 		if (this.actor) {
 			this.actor.reactive = false;
@@ -105,7 +114,8 @@ const dbFinWindowThumbnail = new Lang.Class({
 		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0,
 																natural_width: 0 },
 		                                                      	function () { if (this.actor) this.actor.hide(); this.hidden = true; },
-		                                                      	this);
+		                                                      	this,
+                                                                time);
         _D('<');
 	},
 
@@ -132,3 +142,4 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('<');
     }
 });
+Signals.addSignalMethods(dbFinWindowThumbnail.prototype);
