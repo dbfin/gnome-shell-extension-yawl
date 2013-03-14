@@ -71,10 +71,10 @@
       <_summary>Clip icons: bottom (px).</_summary>
       <_description>Clip icons on bottom (in pixels).</_description>
     </key>
-    <key name="icons-align-center" type="b">
-      <default>false</default>
-      <_summary>Align icons to the center of panel.</_summary>
-      <_description>If true, icons are aligned to the center of YAWL panel.</_description>
+    <key name="icons-align" type="s">
+      <default>'0'</default>
+      <_summary>Align icons on the panel.</_summary>
+      <_description>Icons center alignment on the panel (%).</_description>
     </key>
     <key name="icons-distance" type="s">
       <default>'21'</default>

@@ -311,8 +311,8 @@ const dbFinTracker = new Lang.Class({
                             this.yawlPanelApps.actor.add_actor(trackerApp.appButton.container);
                         }
                         if (this.yawlPanelWindows && this.yawlPanelWindows.actor
-                            && trackerApp.yawlPanelWindowsGroup && trackerApp.yawlPanelWindowsGroup.actor) {
-                            this.yawlPanelWindows.actor.add_actor(trackerApp.yawlPanelWindowsGroup.actor);
+                            && trackerApp.yawlPanelWindowsGroup && trackerApp.yawlPanelWindowsGroup.container) {
+                            this.yawlPanelWindows.actor.add_actor(trackerApp.yawlPanelWindowsGroup.container);
                         }
                         trackerApp.appButton.show();
                     }

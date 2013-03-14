@@ -47,16 +47,16 @@ const dbFinTrackerApp = new Lang.Class({
 		}
 		this._autohideshow = autoHideShow || false;
 
-        this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel(null, 'panelYAWLWindowsGroup', null,
+        this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel(null, null, null, null,
                                                                        /*hidden = */true, /*autohideinoverview = */false);
 
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
 		if (this.appButton) {
             if (!metaWindow && this._autohideshow) this.appButton.hide();
             this._signals.connectNoId({ emitter: this.appButton, signal: 'enter-event',
-                                        callback: this._appButtonHoverEnter, scope: this });
+                                        callback: this._showWindowsGroup, scope: this });
             this._signals.connectNoId({ emitter: this.appButton, signal: 'leave-event',
-                                        callback: this._appButtonHoverLeave, scope: this });
+                                        callback: this._hideWindowsGroup, scope: this });
         }
 
 		this.focused = false;
@@ -136,14 +136,14 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-    _appButtonHoverEnter: function() {
-        _D('>' + this.__name__ + '._appButtonHoverEnter()');
+    _showWindowsGroup: function() {
+        _D('>' + this.__name__ + '._showWindowsGroup()');
 		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.show();
         _D('<');
     },
 
-    _appButtonHoverLeave: function() {
-        _D('>' + this.__name__ + '._appButtonHoverLeave()');
+    _hideWindowsGroup: function() {
+        _D('>' + this.__name__ + '._hideWindowsGroup()');
 		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.hide();
         _D('<');
     },

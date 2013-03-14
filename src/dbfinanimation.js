@@ -45,7 +45,10 @@ function animateToState(actor, state, callback, scope, time, transition) {
         }
     }
     transition = transition || 'linear';
-    if (time > 0 && actor.get_stage && actor.get_stage()) { // we do not schedule animation for actors not in stage
+    // we do not schedule animation for actors not in stage
+    if (actor.get_stage) { if (!actor.get_stage()) time = 0; }
+    else if (actor.actor && actor.actor.get_stage) { if (!actor.actor.get_stage()) time = 0; }
+    if (time > 0) {
         let (_state = {}, was = false) {
             for (let p in state) { // animate only those that are already defined and different
                 p = '' + p;
@@ -69,7 +72,7 @@ function animateToState(actor, state, callback, scope, time, transition) {
                 else callback();
             } // if (was) else
         } // let (_state, was)
-    } // if (time > 0 && actor.get_stage && actor.get_stage())
+    } // if (time > 0)
     else {
         for (let p in state) {
             p = '' + p;
@@ -84,5 +87,5 @@ function animateToState(actor, state, callback, scope, time, transition) {
             if (scope) Lang.bind(scope, callback)();
             else callback();
         }
-    } // if (time > 0 && actor.get_stage && actor.get_stage()) else
+    } // if (time > 0) else
 }

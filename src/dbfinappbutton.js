@@ -184,13 +184,12 @@ const dbFinAppButton = new Lang.Class({
 
     hide: function() {
         _D('>' + this.__name__ + '.hide()');
-		this.hidden = true;
 		if (this.container) {
 			this.container.reactive = false;
 		}
 		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0,
 																natural_width: 0 },
-		                                                      	function () { if (this.container) this.container.hide(); },
+		                                                      	function () { if (this.container) this.container.hide(); this.hidden = true; },
 		                                                      	this);
         _D('<');
     },

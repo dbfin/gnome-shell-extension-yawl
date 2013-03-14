@@ -12,6 +12,8 @@
  * 								Parameters:
  *									justnumbers		set true to return just numbers, otherwise returns Date.toString()
  *
+ * inRange(value, min, max, d)  returns value or min (if value < min) or max (if value > max) or d (if min > max)
+ *
  * settingsParseInt(s, k, min, max, d)  returns a number parsed from settings key:string
  *                              Parameters:
  *                                  s               the settings
@@ -103,6 +105,17 @@ function now(justnumbers) {
     } // let (now)
 }
 
+/* function inRange(value, min, max, d): returns value or min (if value < min) or max (if value > max) or d (if min > max)
+ */
+function inRange(value, min, max, d) {
+    if (min === undefined) min = null;
+    if (max === undefined) max = null;
+    if (min !== null && max !== null && min > max) return d;
+    if (min !== null && value < min) return min;
+    if (max !== null && value > max) return max;
+    return value;
+}
+
 /* function settingsParseInt(s, k, min, max, d): returns a number parsed from settings key:string
  * Parameters:
  *     s               the settings
@@ -113,14 +126,9 @@ function now(justnumbers) {
 function settingsParseInt(s, k, min, max, d) {
     if (!s || !s.list_keys || !s.get_string || !k || k == '') return d;
 	if (s.list_keys().indexOf(k) == -1) return d;
-    if (min === undefined) min = null;
-    if (max === undefined) max = null;
-    if (min !== null && max !== null && min > max) return d;
     let (value = parseInt(s.get_string(k))) {
         if (isNaN(value)) return d;
-        if (min !== null && value < min) value = min; // else is fine: the two conditions never happen simultaneously
-        else if (max !== null && value > max) value = max; // (because if min !== null & max !== null then min <= max)
-        return value;
+        return inRange(value, min, max, d);
     } // let (value)
 }
 

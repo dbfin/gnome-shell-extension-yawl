@@ -161,7 +161,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Clip icons: top (px)"), 'icons-clip-top', 0, 7, 1);
                 builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);
                 builder.addSeparator();
-                builder.addCheckBox(_("Align icons to the center of panel"), 'icons-align-center');
+                builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
                 builder.addScale(_("Distance between icons (% of icon size)"), 'icons-distance', 0, 100, 1);
 
             builder.addPage(_("Animation"), 'animation.png');

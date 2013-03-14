@@ -106,7 +106,6 @@ const dbFinMoveCenter = new Lang.Class({
 
         dbFinUtils.settingsVariable(this, 'yawl-panel-position', 21, { min: 0, max: 50 }, this._updatePanel );
         dbFinUtils.settingsVariable(this, 'yawl-panel-width', 100, { min: 1, max: 100 }, this._updatePanel );
-        dbFinUtils.settingsVariable(this, 'icons-align-center', false, null, this._updatePanel );
         dbFinUtils.settingsVariable(this, 'move-center', false, null, this._updatePanel );
         dbFinUtils.settingsVariable(this, 'hide-activities', false); // callback: _updatedHideActivities
         dbFinUtils.settingsVariable(this, 'preserve-hot-corner', false, null, this._updatedHideActivities);
@@ -164,12 +163,12 @@ const dbFinMoveCenter = new Lang.Class({
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
                 [wlm, wln] = Main.panel._leftBox.get_preferred_width(-1), // minimum and natural widths
-		     	[wym, wyn] = Main.panel._yawlBox ? Main.panel._yawlBox.get_preferred_width(-1) : [ 0, 0 ],
+		     	[wym, wyn] = Main.panel._yawlPanel ? Main.panel._yawlPanel.get_preferred_width(-1) : [ 0, 0 ],
                 [wcm, wcn] = Main.panel._centerBox.get_preferred_width(-1),
                 [wrm, wrn] = Main.panel._rightBox.get_preferred_width(-1),
                 boxChild = new Clutter.ActorBox(),
                 drl = (Main.panel.actor.get_text_direction() == Clutter.TextDirection.RTL)) {
-			if (!wym && Main.panel._yawlBox) wym = Main.panel._yawlBox.get_n_children();
+			if (!wym && Main.panel._yawlPanel) wym = Main.panel._yawlPanel._box.get_n_children();
 			let (wly, wl, wy, wr, xl, xr) {
 				if (this._moveCenter) {
 					// let left box + YAWL panel occupy all the space on the left, but no less than (w - wcn) / 2
@@ -190,11 +189,10 @@ const dbFinMoveCenter = new Lang.Class({
 					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
 					Main.panel._leftBox.allocate(boxChild, flags);
 				}
-				if (Main.panel._yawlBox && wy) {
+				if (Main.panel._yawlPanel && wy) {
 					if (drl) { xr = xl; xl -= wy; } else { xl = xr; xr += wy; }
-                    if (this._iconsAlignCenter && wy - wyn > 1) { xl += (wy - wyn) >> 1; xr = xl + wyn; }
 					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-					Main.panel._yawlBox.allocate(boxChild, flags);
+					Main.panel._yawlPanel.allocate(boxChild, flags);
 				}
 				if (wcn) {
 					if (drl) { xr = w - wly; xl = xr - wcn; } else { xl = wly; xr = xl + wcn; }

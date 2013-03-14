@@ -12,7 +12,6 @@
 const Lang = imports.lang;
 
 const Clutter = imports.gi.Clutter;
-const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -52,6 +51,8 @@ const dbFinWindowThumbnail = new Lang.Class({
         this.hidden = false;
         this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
         this.actor.reactive = true;
+
+        this.hide();
         _D('<');
     },
 
@@ -98,13 +99,12 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 	hide: function() {
         _D('>' + this.__name__ + '.hide()');
-		this.hidden = true;
 		if (this.actor) {
 			this.actor.reactive = false;
 		}
 		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0,
 																natural_width: 0 },
-		                                                      	function () { if (this.actor) this.actor.hide(); },
+		                                                      	function () { if (this.actor) this.actor.hide(); this.hidden = true; },
 		                                                      	this);
         _D('<');
 	},

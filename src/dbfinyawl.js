@@ -18,10 +18,12 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const Convenience = Me.imports.convenience2;
 const dbFinMoveCenter = Me.imports.dbfinmovecenter;
 const dbFinPanelEnhancements = Me.imports.dbfinpanelenhancements;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinTracker = Me.imports.dbfintracker;
+const dbFinUtils = Me.imports.dbfinutils;
 const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -35,22 +37,33 @@ const dbFinYAWL = new Lang.Class({
     _init: function() {
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
+        this._settings = Convenience.getSettings();
 		this._moveCenter = new dbFinMoveCenter.dbFinMoveCenter();
         this._panelEnhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
-        this._yawlPanelApps = new dbFinYAWLPanel.dbFinYAWLPanel(Main.panel, 'panelYAWL', '_yawlBox',
-                                                                /*hidden = */false, /*autohideinoverview = */true);
-        this._yawlPanelWindows = new dbFinYAWLPanel.dbFinYAWLPanel(Main.layoutManager && Main.layoutManager.panelBox,
-                                                                   'panelYAWLWindows', '_yawlWindowsBox',
-                                                                   /*hidden = */false, /*autohideinoverview = */true);
+        this.yawlPanelApps = new dbFinYAWLPanel.dbFinYAWLPanel(Main.panel, 'panelYAWL', 'panelYAWLBox', '_yawlPanel',
+                                                               /*hidden = */false, /*autohideinoverview = */true);
+		dbFinUtils.settingsVariable(this, 'icons-animation-time', 490, { min: 0, max: 3000 }, function () {
+    		if (this.yawlPanelApps) this.yawlPanelApps.animationTime = this._iconsAnimationTime;
+        });
+		dbFinUtils.settingsVariable(this, 'icons-animation-effect', 1, { min: 0 }, function () {
+    		if (this.yawlPanelApps) this.yawlPanelApps.animationEffect = this._iconsAnimationEffect;
+        });
+        dbFinUtils.settingsVariable(this, 'icons-align', 0, { min: 0, max: 100 }, function () {
+            if (this.yawlPanelApps) this.yawlPanelApps.animateToState({ gravity: this._iconsAlign / 100. });
+        });
+
+        this.yawlPanelWindows = new dbFinYAWLPanel.dbFinYAWLPanel(Main.layoutManager && Main.layoutManager.panelBox,
+                                                                  'panelYAWLWindows', 'panelYAWLWindowsBox', '_yawlWindowsPanel',
+                                                                  /*hidden = */false, /*autohideinoverview = */true);
         // GNOMENEXT: ui/lookingGlass.js: class LookingGlass
-        if (this._yawlPanelWindows && Main.layoutManager && Main.layoutManager.panelBox) {
-            this._yawlPanelWindows.actor.lower_bottom();
+        if (this.yawlPanelWindows && this.yawlPanelWindows.container && Main.layoutManager && Main.layoutManager.panelBox) {
+            this.yawlPanelWindows.container.lower_bottom();
             this._signals.connectNoId({ emitter: Main.layoutManager.panelBox, signal: 'allocation-changed',
                                         callback: this._yawlPanelWindowsQueueResize, scope: this });
             this._signals.connectNoId({ emitter: Main.layoutManager.keyboardBox, signal: 'allocation-changed',
                                         callback: this._yawlPanelWindowsQueueResize, scope: this });
         }
-        this._tracker = new dbFinTracker.dbFinTracker(this._yawlPanelApps, this._yawlPanelWindows);
+        this._tracker = new dbFinTracker.dbFinTracker(this.yawlPanelApps, this.yawlPanelWindows);
         _D('<');
     },
 
@@ -64,13 +77,13 @@ const dbFinYAWL = new Lang.Class({
 			this._tracker.destroy();
 			this._tracker = null;
 		}
-		if (this._yawlPanelWindows) {
-			this._yawlPanelWindows.destroy();
-			this._yawlPanelWindows = null;
+		if (this.yawlPanelWindows) {
+			this.yawlPanelWindows.destroy();
+			this.yawlPanelWindows = null;
 		}
-        if (this._yawlPanelApps) {
-            this._yawlPanelApps.destroy();
-            this._yawlPanelApps = null;
+        if (this.yawlPanelApps) {
+            this.yawlPanelApps.destroy();
+            this.yawlPanelApps = null;
         }
         if (this._panelEnhancements) {
             this._panelEnhancements.destroy();
@@ -80,6 +93,7 @@ const dbFinYAWL = new Lang.Class({
 			this._moveCenter.destroy();
 			this._moveCenter = null;
 		}
+        this._settings = null;
         _D('<');
     },
 
@@ -91,15 +105,15 @@ const dbFinYAWL = new Lang.Class({
 
 	_yawlPanelWindowsResize: function() {
         _D('>' + this.__name__ + '._yawlPanelWindowsResize()');
-		if (this._yawlPanelWindows && this._yawlPanelWindows.actor) {
+		if (this.yawlPanelWindows && this.yawlPanelWindows.container) {
 			let (pmX = Main.layoutManager.primaryMonitor.x,
 				 pmY = Main.layoutManager.primaryMonitor.y,
 				 w = Main.layoutManager.primaryMonitor.width,
 				 h = 150) {
-				this._yawlPanelWindows.actor.x = 0;
-				this._yawlPanelWindows.actor.y = this._yawlPanelWindows.actor.get_parent().height;
-				this._yawlPanelWindows.actor.width = w;
-				this._yawlPanelWindows.actor.height = h;
+				this.yawlPanelWindows.container.x = 0;
+				this.yawlPanelWindows.container.y = this.yawlPanelWindows.container.get_parent().height;
+				this.yawlPanelWindows.container.width = w;
+				this.yawlPanelWindows.container.height = h;
 			}
 		}
         _D('<');
