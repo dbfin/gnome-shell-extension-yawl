@@ -145,23 +145,34 @@ const dbFinTracker = new Lang.Class({
 					if (!metaApp || metaApp.state == Shell.AppState.STOPPED) return;
 					let (	windowProperties = this.windows.get(metaWindow),
 							appProperties = this.apps.get(metaApp)) {
-						if (windowProperties === undefined || !windowProperties) { // new window
+						if (windowProperties === undefined || !windowProperties || !windowProperties.trackerWindow) { // new window
 							windowsIn.push(metaWindow);
 							windowProperties = {};
-							windowProperties.trackerWindow = new dbFinTrackerWindow.dbFinTrackerWindow(metaWindow, this, metaApp);
+							windowProperties.trackerWindow = new dbFinTrackerWindow.dbFinTrackerWindow(
+                                                                        metaWindow, this, metaApp);
+                            windowProperties.state = this.state;
+                            this.windows.set(metaWindow, windowProperties);
 							if (appProperties !== undefined && appProperties && appProperties.trackerApp) {
 								appProperties.trackerApp.addWindow(metaWindow);
 							}
 						}
+                        else {
+                            windowProperties.state = this.state;
+                            this.windows.set(metaWindow, windowProperties);
+                        }
 						if (appProperties === undefined || !appProperties || !appProperties.trackerApp) { // new app
 							appsIn.push(metaApp);
 							appProperties = {};
-							appProperties.trackerApp = new dbFinTrackerApp.dbFinTrackerApp(metaApp, this, metaWindow, true);
+							appProperties.trackerApp = new dbFinTrackerApp.dbFinTrackerApp(
+                                                                        metaApp, this, metaWindow,
+                                                                        this.yawlPanelApps, this.yawlPanelWindows, true);
+                            appProperties.state = this.state;
+                            this.apps.set(metaApp, appProperties);
 						}
-						windowProperties.state = this.state;
-						this.windows.set(metaWindow, windowProperties);
-						appProperties.state = this.state;
-						this.apps.set(metaApp, appProperties);
+                        else {
+                            appProperties.state = this.state;
+                            this.apps.set(metaApp, appProperties);
+                        }
 					} // let (windowProperties, appProperties)
 				} // let (metaApp)
 			})); // metaWorkspace.list_windows().forEach
@@ -220,7 +231,7 @@ const dbFinTracker = new Lang.Class({
     				windows.forEach(Lang.bind(this, function (metaWindow) { this._removeWindow(metaWindow); }));
                 }
 			}
-            else { // if (appProperties && (!appProperties.trackerApp || !appProperties.trackerApp.windows || !appProperties.trackerApp.windows.length))
+            else { // if (appProperties && (!appProperties.trackerApp || !appProperties.trackerApp.windows/* || !appProperties.trackerApp.windows.length*/))
                 if (appProperties.trackerApp) {
                     appProperties.trackerApp.destroy();
                     appProperties.trackerApp = null;
@@ -294,15 +305,10 @@ const dbFinTracker = new Lang.Class({
             _D('<');
             return;
         } // if (!this.yawlPanelApps || !this.yawlPanelWindows)
-        if (appsIn && appsIn.forEach) {
+/*        if (appsIn && appsIn.forEach) {
             appsIn.forEach(Lang.bind(this, function(metaApp) {
                 let (trackerApp = this.getTrackerApp(metaApp)) {
                     if (trackerApp) {
-                        if (this.yawlPanelApps) this.yawlPanelApps.add(trackerApp.appButton);
-                        if (this.yawlPanelWindows && trackerApp.yawlPanelWindowsGroup) {
-                            this.yawlPanelWindows.add(trackerApp.yawlPanelWindowsGroup);
-                        }
-                        trackerApp.appButton.show();
                     }
                 }
             }));
@@ -312,14 +318,13 @@ const dbFinTracker = new Lang.Class({
                 let (trackerWindow = this.getTrackerWindow(metaWindow)) {
                     if (trackerWindow) {
 						let (trackerApp = this.getTrackerApp(trackerWindow.metaApp)) {
-							if (trackerApp.yawlPanelWindowsGroup && trackerWindow.windowThumbnail) {
-								trackerApp.yawlPanelWindowsGroup.add(trackerWindow.windowThumbnail);
-							}
+                            if (trackerApp) {
+                            }
 						}
                     }
                 }
             }));
-		}
+		}*/
         _D('<');
     },
 

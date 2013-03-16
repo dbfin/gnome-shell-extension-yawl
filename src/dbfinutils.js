@@ -53,6 +53,8 @@
  *
  * opacity100to255(opacity)		converts opacity 0-100 to 0-255
  *
+ * stringColorOpacity100ToStringRGBA(color, opacity)    '#808080', 70 -> 'rgba(128, 128, 128, 0.7)'
+ *
  * setBox:box,x1,y1,x2,y2		sets x1, y1, x2, y2 of Clutter.ActorBox (or another class supporting these properties)
  * 								Parameters:
  *									box, x1, y1, x2, y2
@@ -71,6 +73,7 @@
 
 const Lang = imports.lang;
 
+const Gdk = imports.gi.Gdk;
 const Gio = imports.gi.Gio;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -245,6 +248,16 @@ function settingsVariable(s, k, i, p, c) {
  */
 function opacity100to255(opacity) {
 	return Math.round(opacity * 2.55);
+}
+
+/* stringColorOpacity100ToStringRGBA(color, opacity): '#808080', 70 -> 'rgba(128, 128, 128, 0.7)'
+ */
+function stringColorOpacity100ToStringRGBA(color, opacity) {
+    if (!color || opacity === undefined || isNaN(opacity = parseFloat(opacity))) return '';
+    let (rgba = new Gdk.RGBA()) {
+        rgba.parse(color);
+        return rgba.to_string().replace(/rgba?(\s*\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+).*?(\))/, 'rgba$1, ' + opacity / 100. + '$2');
+    } // let (rgba)
 }
 
 /* function setBox: sets x1, y1, x2, y2 of box

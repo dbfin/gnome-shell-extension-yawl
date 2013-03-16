@@ -121,6 +121,9 @@ const dbFinYAWLPanel = new Lang.Class({
                 }
             }
 		}
+        if (this._childrenObjects) {
+            this._childrenObjects.forEach(Lang.bind(this, function(childObject, signalId) { this.remove(childObject); }));
+        }
 		if (this.actor) {
 			if (this.container) {
                 this.container.remove_actor(this.actor);
@@ -133,9 +136,6 @@ const dbFinYAWLPanel = new Lang.Class({
 			this.container.destroy();
 			this.container = null;
 		}
-        if (this._childrenObjects) {
-            this._childrenObjects.forEach(Lang.bind(this, function(childObject, signalId) { this.remove(childObject); }));
-        }
         this.hidden = true;
         this._parent = null;
         this.emit('destroy');
@@ -143,34 +143,30 @@ const dbFinYAWLPanel = new Lang.Class({
 	},
 
     _getPreferredWidth: function(actor, forHeight, alloc) {
-        _D('>' + this.__name__ + '._getPreferredWidth()');
+        _D('@' + this.__name__ + '._getPreferredWidth()');
 		[ alloc.min_size, alloc.natural_size ] = this.actor.get_preferred_width(forHeight);
         _D('<');
     },
 
     _getPreferredHeight: function(actor, forWidth, alloc) {
-        _D('>' + this.__name__ + '._getPreferredHeight()');
+        _D('@' + this.__name__ + '._getPreferredHeight()');
 		[ alloc.min_size, alloc.natural_size ] = this.actor.get_preferred_height(forWidth);
         _D('<');
     },
 
     _allocate: function(actor, box, flags) {
-        _D('>' + this.__name__ + '._allocate()');
+        _D('@' + this.__name__ + '._allocate()');
         let (	w = box.x2 - box.x1,
-            	[ wm, wn ] = this.actor.get_preferred_width(-1)) {
-            if (wn < w) {
-                if (wn > 0) {
-                    let (   boxChild = new Clutter.ActorBox(),
-                            x = box.x1 + dbFinUtils.inRange(Math.floor(w * this._gravity - wn / 2), 0, w - wn)) {
-                        dbFinUtils.setBox(boxChild, x, box.y1, x + wn, box.y2);
-                        this.actor.allocate(boxChild, flags);
-                    } // let (boxChild)
-                }
-            }
-            else {
-                this.actor.allocate(box, flags);
-            }
-        } // let (w, [ wm, wn ])
+                h = box.y2 - box.y1,
+                x = box.x1,
+                y = box.y1,
+            	[ wm, wn ] = this.actor.get_preferred_width(-1),
+                [ hm, hn ] = this.actor.get_preferred_height(-1),
+                boxChild = new Clutter.ActorBox()) {
+            if (wn < w) x += dbFinUtils.inRange(Math.floor(w * this._gravity - wn / 2), 0, w - wn);
+            dbFinUtils.setBox(boxChild, x, y, Math.min(box.x2, x + wn), Math.min(box.y2, y + hn));
+            this.actor.allocate(boxChild, flags);
+        } // let (w, h, x, y, [ wm, wn ], [ hm, hn ], boxChild)
         _D('<');
     },
 

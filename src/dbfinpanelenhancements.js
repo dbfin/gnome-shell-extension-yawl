@@ -11,8 +11,6 @@
 
 const Lang = imports.lang;
 
-const Gdk = imports.gi.Gdk;
-
 const Main = imports.ui.main;
 const Panel = imports.ui.panel;
 
@@ -62,14 +60,10 @@ const dbFinPanelEnhancements = new Lang.Class({
 			return;
 		}
         let (style = null, stylecorner = null) {
-			let (rgba = new Gdk.RGBA(),
-				 opacity = this._panelOpacity / 100.) {
-				rgba.parse(this._panelColor);
-				let (color = rgba.to_string().replace(/rgba?(\s*\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+).*?(\))/, 'rgba$1, ' + opacity + '$2')) {
-					style = 'background-color: ' + color;
-					stylecorner = '-panel-corner-border-width: 0; -panel-corner-border-color: ' + color + '; -panel-corner-background-color: ' + color;
-				} // let (color)
-			} // let (rgba)
+            let (color = dbFinUtils.stringColorOpacity100ToStringRGBA(this._panelColor, this._panelOpacity)) {
+                style = 'background-color: ' + color;
+                stylecorner = '-panel-corner-border-width: 0; -panel-corner-border-color: ' + color + '; -panel-corner-background-color: ' + color;
+            }
     		Main.panel.actor.set_style(style);
     		Main.panel._leftCorner.actor.set_style(stylecorner);
     		Main.panel._rightCorner.actor.set_style(stylecorner);

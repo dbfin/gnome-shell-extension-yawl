@@ -12,7 +12,8 @@ images = \
 	mouse-clicks-double.gif \
 	mouse-clicks-single.gif \
 	empty_16.png \
-	window.png
+	thumbnail.png \
+	animation_thumbnail.png
 
 imagedir = $(extensiondir)/images
 dist_image_DATA = $(images)

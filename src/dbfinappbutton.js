@@ -78,7 +78,7 @@ const dbFinAppButton = new Lang.Class({
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
 		this.actor.add_actor(this._slicerIcon.actor);
-        if (Main.panel) this._slicerIcon.actor.natural_height = Main.panel.actor.get_height();
+        if (Main.panel && Main.panel.actor) this._slicerIcon.actor.min_height = Main.panel.actor.get_height();
 
 		this._icons = new dbFinArrayHash.dbFinArrayHash();
 

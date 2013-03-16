@@ -124,6 +124,52 @@
       <_description>Icons animation effect when hovered.</_description>
     </key>
 
+    <key name="windows-distance" type="s">
+      <default>'11'</default>
+      <_summary>Distance between window thumbnails (%).</_summary>
+      <_description>Distance between window thumbnails as % of their widths.</_description>
+    </key>
+    <key name="windows-theming" type="b">
+      <default>true</default>
+      <_summary>Whether to apply thumbnail theming.</_summary>
+      <_description>If true thumbnails a drawn using windows-padding etc.</_description>
+    </key>
+    <key name="windows-background-panel" type="b">
+      <default>true</default>
+      <_summary>Whether to paint thumbnail panel with main panel background.</_summary>
+      <_description>If true thumbnail panel background matches main panel background.</_description>
+    </key>
+    <key name="windows-background-color" type="s">
+      <default>'#000000'</default>
+      <_summary>Window thumbnail panel background color.</_summary>
+      <_description>Window thumbnail panel background color.</_description>
+    </key>
+    <key name="windows-background-opacity" type="s">
+      <default>'70'</default>
+      <_summary>Window thumbnail panel background opacity.</_summary>
+      <_description>Window thumbnail panel background background opacity.</_description>
+    </key>
+    <key name="windows-padding" type="s">
+      <default>'7'</default>
+      <_summary>Window thumbnail padding.</_summary>
+      <_description>Window thumbnail padding.</_description>
+    </key>
+    <key name="windows-border-color" type="s">
+      <default>'#d3d7cf'</default>
+      <_summary>Window thumbnail border color.</_summary>
+      <_description>Window thumbnail border color.</_description>
+    </key>
+    <key name="windows-border-width" type="s">
+      <default>'2'</default>
+      <_summary>Window thumbnail border width.</_summary>
+      <_description>Window thumbnail border width.</_description>
+    </key>
+    <key name="windows-border-radius" type="s">
+      <default>'7'</default>
+      <_summary>Window thumbnail border radius.</_summary>
+      <_description>Window thumbnail border radius.</_description>
+    </key>
+
     <key name="windows-animation-time" type="s">
       <default>'490'</default>
       <_summary>Windows animation time.</_summary>

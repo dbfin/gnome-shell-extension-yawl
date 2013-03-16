@@ -45,6 +45,9 @@ const dbFinWindowThumbnail = new Lang.Class({
 
         this._updateThumbnail();
 
+		dbFinUtils.settingsVariable(this, 'windows-distance', 11, { min: 0, max: 50 }, function () {
+    		if (this._slicerIcon) this._slicerIcon.setPaddingH((this._windowsDistance + 1) >> 1);
+        });
         dbFinUtils.settingsVariable(this, 'windows-animation-time', 490, { min: 0, max: 3000 }, function () {
     		if (this._slicerIcon) this._slicerIcon.animationTime = this._windowsAnimationTime;
         });
@@ -102,7 +105,8 @@ const dbFinWindowThumbnail = new Lang.Class({
 		}
 		this.hidden = false;
 		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: this._iconsOpacity ? dbFinUtils.opacity100to255(this._iconsOpacity) : 255,
-																natural_width: this._slicerIcon.getNaturalWidth() }, null, null, time);
+																natural_width: this._slicerIcon.getNaturalWidth(),
+                                                                natural_height: this._slicerIcon.getNaturalHeight()}, null, null, time);
         _D('<');
 	},
 
@@ -111,8 +115,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 		if (this.actor) {
 			this.actor.reactive = false;
 		}
-		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0,
-																natural_width: 0 },
+		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0, natural_width: 0, natural_height: 0 },
 		                                                      	function () { if (this.actor) this.actor.hide(); this.hidden = true; },
 		                                                      	this,
                                                                 time);

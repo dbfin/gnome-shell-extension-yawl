@@ -149,7 +149,7 @@ function buildPrefsWidget() {
                 builder.addSeparator();
                 builder.addCheckBox(_("Custom panel background"), 'panel-background');
                 builder.shift();
-                    builder.addColorButton(_("Panel color"), 'panel-color', _("Choose Panel Color"), 'panel-background', true);
+                    builder.addColorButton(_("Panel color"), 'panel-color', _("Choose panel color"), 'panel-background', true);
                     builder.addScale(_("Panel opacity"), 'panel-opacity', 0, 100, 1, 'panel-background');
                 builder.unshift();
 
@@ -164,7 +164,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
                 builder.addScale(_("Distance between icons (% of icon size)"), 'icons-distance', 0, 100, 1);
 
-            builder.addPage(_("Icons animation"), 'animation.png');
+            builder.addPage(_("Icon animation"), 'animation.png');
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'icons-animation-time', 0, 1000, 1, null, true);
                 builder.addComboBoxText(_("General animation effect"), 'icons-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
                 builder.addSeparator();
@@ -178,7 +178,20 @@ function buildPrefsWidget() {
                     builder.addComboBoxText(_("Icon hover animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
 				builder.unshift();
 
-			builder.addPage(_("Windows"), 'window.png');
+			builder.addPage(_("Thumbnails"), 'thumbnail.png');
+                builder.addScale(_("Distance between thumbnails (% of thumbnail size)"), 'windows-distance', 0, 50, 1);
+                builder.addCheckBox(_("Customize thumbnail panel"), 'windows-theming');
+                builder.shift();
+                    builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
+                    builder.addColorButton(_("Thumbnail panel background color"), 'windows-background-color', _("Choose thumbnail panel background color"), 'windows-theming', true);
+                    builder.addScale(_("Thumbnail panel background opacity"), 'windows-background-opacity', 0, 100, 1, 'windows-theming');
+                    builder.addScale(_("Thumbnail panel padding"), 'windows-padding', 0, 20, 1, 'windows-theming');
+                    builder.addColorButton(_("Thumbnail panel border color"), 'windows-border-color', _("Choose thumbnail panel border color"), 'windows-theming', true);
+                    builder.addScale(_("Thumbnail panel border width"), 'windows-border-width', 0, 3, 1, 'windows-theming');
+                    builder.addScale(_("Thumbnail panel border radius"), 'windows-border-radius', 0, 10, 1, 'windows-theming');
+                builder.unshift();
+
+			builder.addPage(_("Thumbnail animation"), 'animation_thumbnail.png');
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 1000, 1, null, true);
                 builder.addComboBoxText(_("General animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
 

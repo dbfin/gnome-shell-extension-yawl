@@ -64,7 +64,7 @@ const dbFinSlicerIcon = new Lang.Class({
 		if (icon !== undefined && this._icon != icon) {
 			this._icon = icon;
             this.actor.set_child(icon);
-			this.restoreNaturalWidth();
+			this.restoreNaturalSize();
 		}
         _D('<');
 	},
@@ -91,7 +91,7 @@ const dbFinSlicerIcon = new Lang.Class({
         _D('>' + this.__name__ + '.setPaddingH()');
 		if (padding !== undefined && this._paddingH != padding) {
 			this._paddingH = padding;
-			this.restoreNaturalWidth();
+			this.restoreNaturalSize();
 		}
         _D('<');
 	},
@@ -104,13 +104,22 @@ const dbFinSlicerIcon = new Lang.Class({
                 wn += 2 * Math.max(1, Math.round(wn * this._paddingH / 100.));
             }
 	        _D('<');
-            return wn;
+            return Math.max(wn, this.actor.min_width);
 		}
     },
 
-    restoreNaturalWidth: function() {
-        _D('>' + this.__name__ + '.restoreNaturalWidth()');
-		this.animateToState({ natural_width: this.getNaturalWidth() });
+    getNaturalHeight: function() {
+        _D('>' + this.__name__ + '.getNaturalHeight()');
+		let (hn = this._icon && this._icon.get_preferred_height ? this._icon.get_preferred_height(-1)[1] : 0) {
+            hn = hn || 0;
+	        _D('<');
+            return Math.max(hn, this.actor.min_height);
+		}
+    },
+
+    restoreNaturalSize: function() {
+        _D('>' + this.__name__ + '.restoreNaturalSize()');
+		this.animateToState({ natural_width: this.getNaturalWidth(), natural_height: this.getNaturalHeight() });
         _D('<');
 	},
 
