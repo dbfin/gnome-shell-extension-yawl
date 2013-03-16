@@ -240,7 +240,7 @@ const dbFinYAWLPanel = new Lang.Class({
 	set opacity(opacity) { this.container.opacity = opacity; },
 
     animateToState: function(state, callback, scope, time, transition) {
-        _D('>' + this.__name__ + '.hide()');
+        _D('>' + this.__name__ + '.animateToState()');
 		if (time === undefined || time === null) time = this.animationTime;
 		if (transition === undefined || transition === null) {
 			transition = this.animationEffect;

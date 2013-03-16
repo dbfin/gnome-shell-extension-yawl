@@ -59,6 +59,7 @@ const dbFinTrackerApp = new Lang.Class({
             this.yawlPanelWindows.add(this.yawlPanelWindowsGroup);
         }
 
+        dbFinUtils.settingsVariable(this, 'windows-show-delay', 333, { min: 0, max: 1000 });
         dbFinUtils.settingsVariable(this, 'windows-animation-time', 490, { min: 0, max: 3000 }, function () {
     		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = this._windowsAnimationTime;
         });
@@ -86,6 +87,7 @@ const dbFinTrackerApp = new Lang.Class({
 		}
 
         this._nextWindowsTimeout = null;
+        this._showThumbnailsTimeout = null;
 		this._resetNextWindows();
         _D('<');
     },
@@ -97,6 +99,7 @@ const dbFinTrackerApp = new Lang.Class({
 			this._signals = null;
 		}
         this._resetNextWindows();
+        this._cancelShowThumbnailsTimeout();
         if (this.appButton) {
             this.appButton.destroy();
             this.appButton = null;
@@ -165,31 +168,42 @@ const dbFinTrackerApp = new Lang.Class({
 
     _showWindowsGroup: function() {
         _D('>' + this.__name__ + '._showWindowsGroup()');
-		if (this.yawlPanelWindowsGroup) {
-			if (this.yawlPanelWindows && this.yawlPanelWindows && this.appButton && this.appButton.actor) {
+		this._cancelShowThumbnailsTimeout();
+		if (this.yawlPanelWindowsGroup && this.yawlPanelWindows) {
+			if (this.appButton && this.appButton.actor) {
 				let ([ x, y ] = this.appButton.actor.get_transformed_position()) {
 					x = Math.round(x + this.appButton.actor.get_width() / 2);
 					x = x / (Main.layoutManager && Main.layoutManager.primaryMonitor
                              && Main.layoutManager.primaryMonitor.width
-                             || this.yawlPanelWindows.container.get_width());
-					if (this.yawlPanelWindows.hidden) { // reopen the panel
-						this.yawlPanelWindows.gravity = x;
-					}
-					else { // smoothly move it to the right location
+                             || this.yawlPanelWindows.container && this.yawlPanelWindows.container.get_width() || 1000000);
+					if (this.yawlPanelWindows.hidden) { // reopen it at the right location (delayed if needed)
+                        this.yawlPanelWindows.gravity = x;
+                        if (this._windowsShowDelay) {
+                            this._showThumbnailsTimeout = Mainloop.timeout_add(	this._windowsShowDelay,
+                                                                               	Lang.bind(this, function() {
+																					this.yawlPanelWindowsGroup.show();
+																					this.yawlPanelWindows.show();
+																				}));
+                        }
+                        else {
+                            this.yawlPanelWindowsGroup.show();
+                            this.yawlPanelWindows.show();
+                        }
+					} // if (this.yawlPanelWindows.hidden)
+					else { // smoothly move it to the right location (no delay)
 						this.yawlPanelWindows.animateToState({ gravity: x });
-					}
-				}
-			}
-			this.yawlPanelWindowsGroup.show();
-        } // if (this.yawlPanelWindowsGroup)
-        if (this.yawlPanelWindows) {
-            this.yawlPanelWindows.show();
-        }
+                        this.yawlPanelWindowsGroup.show();
+                        this.yawlPanelWindows.show();
+					} // if (this.yawlPanelWindows.hidden) else
+				} // let ([ x, y ])
+			} // if (this.appButton && this.appButton.actor)
+        } // if (this.yawlPanelWindowsGroup && this.yawlPanelWindows)
         _D('<');
     },
 
     _hideWindowsGroup: function() {
         _D('>' + this.__name__ + '._hideWindowsGroup()');
+		this._cancelShowThumbnailsTimeout();
 		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.hide();
         if (this.yawlPanelWindows) {
             this.yawlPanelWindows.hide();
@@ -228,6 +242,15 @@ const dbFinTrackerApp = new Lang.Class({
         if (this._nextWindowsTimeout) {
             Mainloop.source_remove(this._nextWindowsTimeout);
             this._nextWindowsTimeout = null;
+        }
+        _D('<');
+    },
+
+    _cancelShowThumbnailsTimeout: function() {
+        _D('>' + this.__name__ + '._cancelShowThumbnailsTimeout()');
+        if (this._showThumbnailsTimeout) {
+            Mainloop.source_remove(this._showThumbnailsTimeout);
+            this._showThumbnailsTimeout = null;
         }
         _D('<');
     },

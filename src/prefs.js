@@ -192,6 +192,7 @@ function buildPrefsWidget() {
                 builder.unshift();
 
 			builder.addPage(_("Thumbnail animation"), 'animation_thumbnail.png');
+                builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 1000, 1, null, true);
                 builder.addComboBoxText(_("General animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
 
