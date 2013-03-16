@@ -135,7 +135,7 @@ function buildPrefsWidget() {
     _D('@'); // supress all debugging
     let (builder = new dbFinUtilsPrefs.dbFinSettingsWidgetBuilder(), widgets) {
 
-        builder.addNotebook(_("Interface"));
+        builder.addNotebook(_("Icons"));
             builder.addNotebook(_("Panel"), 'panel.png');
                 builder.addScale(_("YAWL-panel position"), 'yawl-panel-position', 0, 50, 1);
                 builder.addScale(_("YAWL-panel width"), 'yawl-panel-width', 1, 100, 1);
@@ -149,8 +149,8 @@ function buildPrefsWidget() {
                 builder.addSeparator();
                 builder.addCheckBox(_("Custom panel background"), 'panel-background');
                 builder.shift();
-                    builder.addColorButton(_("Panel color"), 'panel-color', _("Choose panel color"), 'panel-background', true);
-                    builder.addScale(_("Panel opacity"), 'panel-opacity', 0, 100, 1, 'panel-background');
+                    builder.addColorButton(_("Color"), 'panel-color', _("Choose panel background color"), 'panel-background', true);
+                    builder.addScale(_("Opacity"), 'panel-opacity', 0, 100, 1, 'panel-background');
                 builder.unshift();
 
             builder.addPage(_("Icons"), 'icon.png');
@@ -164,37 +164,42 @@ function buildPrefsWidget() {
                 builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
                 builder.addScale(_("Distance between icons (% of icon size)"), 'icons-distance', 0, 100, 1);
 
-            builder.addPage(_("Icon animation"), 'animation.png');
+            builder.addPage(_("Animation"), 'animation.png');
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'icons-animation-time', 0, 1000, 1, null, true);
-                builder.addComboBoxText(_("General animation effect"), 'icons-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
+                builder.addComboBoxText(_("Animation effect"), 'icons-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
                 builder.addSeparator();
-				builder.addCheckBox(_("Animate on hover"), 'icons-hover-animation');
+				builder.addCheckBox(_("Animate icons on mouse over"), 'icons-hover-animation');
 				builder.shift();
-					builder.addScale(_("Icon hover size (%)"), 'icons-hover-size', 100, 200, 1, 'icons-hover-animation');
-					builder.addScale(_("Icon hover opacity"), 'icons-hover-opacity', 50, 100, 1, 'icons-hover-animation');
-					builder.addCheckBox(_("Show icon full width on hover"), 'icons-hover-fit', 'icons-hover-animation');
+					builder.addScale(_("Change size (%)"), 'icons-hover-size', 100, 200, 1, 'icons-hover-animation');
+					builder.addScale(_("Change opacity"), 'icons-hover-opacity', 50, 100, 1, 'icons-hover-animation');
+					builder.addCheckBox(_("Show full width if partially hidden"), 'icons-hover-fit', 'icons-hover-animation');
 	                builder.addSeparator();
-	                builder.addScale(_("Icon hover animation time (% of animation time)"), 'icons-hover-animation-time', 0, 100, 1, 'icons-hover-animation');
-                    builder.addComboBoxText(_("Icon hover animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
+	                builder.addScale(_("Mouse over animation time (% of animation time)"), 'icons-hover-animation-time', 0, 100, 1, 'icons-hover-animation');
+                    builder.addComboBoxText(_("Mouse over animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
 				builder.unshift();
+
+            builder.closeNotebook();
+
+		builder.addPage(_("Thumbnails"));
+			builder.addNotebook(_("Panel"), 'panel_thumbnail.png');
+                builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming');
+                builder.shift();
+                    builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
+                    builder.addColorButton(_("Background color"), 'windows-background-color', _("Choose thumbnail panel background color"), 'windows-theming', true);
+                    builder.addScale(_("Background opacity"), 'windows-background-opacity', 0, 100, 1, 'windows-theming');
+                    builder.addScale(_("Padding"), 'windows-padding', 0, 20, 1, 'windows-theming');
+                    builder.addColorButton(_("Border color"), 'windows-border-color', _("Choose thumbnail panel border color"), 'windows-theming', true);
+                    builder.addScale(_("Border width"), 'windows-border-width', 0, 3, 1, 'windows-theming');
+                    builder.addScale(_("Border radius"), 'windows-border-radius', 0, 10, 1, 'windows-theming');
+                builder.unshift();
 
 			builder.addPage(_("Thumbnails"), 'thumbnail.png');
                 builder.addScale(_("Distance between thumbnails (% of thumbnail size)"), 'windows-distance', 0, 50, 1);
-                builder.addCheckBox(_("Customize thumbnail panel"), 'windows-theming');
-                builder.shift();
-                    builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
-                    builder.addColorButton(_("Thumbnail panel background color"), 'windows-background-color', _("Choose thumbnail panel background color"), 'windows-theming', true);
-                    builder.addScale(_("Thumbnail panel background opacity"), 'windows-background-opacity', 0, 100, 1, 'windows-theming');
-                    builder.addScale(_("Thumbnail panel padding"), 'windows-padding', 0, 20, 1, 'windows-theming');
-                    builder.addColorButton(_("Thumbnail panel border color"), 'windows-border-color', _("Choose thumbnail panel border color"), 'windows-theming', true);
-                    builder.addScale(_("Thumbnail panel border width"), 'windows-border-width', 0, 3, 1, 'windows-theming');
-                    builder.addScale(_("Thumbnail panel border radius"), 'windows-border-radius', 0, 10, 1, 'windows-theming');
-                builder.unshift();
 
-			builder.addPage(_("Thumbnail animation"), 'animation_thumbnail.png');
+			builder.addPage(_("Animation"), 'animation_thumbnail.png');
                 builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 1000, 1, null, true);
-                builder.addComboBoxText(_("General animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
+                builder.addComboBoxText(_("Animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
 
             builder.closeNotebook();
 
