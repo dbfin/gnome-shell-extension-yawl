@@ -41,20 +41,23 @@ const dbFinTrackerWindow = new Lang.Class({
 
 		this.title = '?';
 		this._updateTitle();
-        this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::title',
-                                    callback: this._titleChanged, scope: this });
-
-        this.windowThumbnail = new dbFinWindowThumbnail.dbFinWindowThumbnail(metaWindow, this);
-
-        this.focused = false;
-        this._updateFocused();
-        this._signals.connectNoId({ emitter: global.display.connect, signal: 'notify::focus-window',
-                                    callback: this._updateFocused, scope: this });
 
         this.minimized = false;
         this._updateMinimized();
-        this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::minimized',
-                                    callback: this._minimizedChanged, scope: this });
+        if (this.metaWindow) {
+            this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::title',
+                                        callback: this._titleChanged, scope: this });
+
+            this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::minimized',
+                                        callback: this._minimizedChanged, scope: this });
+        }
+
+        this.focused = false;
+        this._updateFocused();
+        this._signals.connectNoId({ emitter: global.display, signal: 'notify::focus-window',
+                                    callback: this._updateFocused, scope: this });
+
+        this.windowThumbnail = new dbFinWindowThumbnail.dbFinWindowThumbnail(metaWindow, this);
         _D('<');
     },
 

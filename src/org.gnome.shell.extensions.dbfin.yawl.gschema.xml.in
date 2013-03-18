@@ -50,7 +50,7 @@
     <key name="icons-size" type="s">
       <default>'48'</default>
       <_summary>Size of application icons.</_summary>
-      <_description>The size of application icons. It is better to be set to a value divisible by 8.</_description>
+      <_description>The size of application icons. The size is adjusted to be divisible by 8.</_description>
     </key>
     <key name="icons-faded" type="b">
       <default>true</default>
@@ -124,10 +124,10 @@
       <_description>Icons animation effect when hovered.</_description>
     </key>
 
-    <key name="windows-distance" type="s">
-      <default>'11'</default>
-      <_summary>Distance between window thumbnails (%).</_summary>
-      <_description>Distance between window thumbnails as % of their widths.</_description>
+    <key name="windows-panel-height" type="s">
+      <default>'160'</default>
+      <_summary>Window thumbnail panel maximum height.</_summary>
+      <_description>Window thumbnail panel maximum height.</_description>
     </key>
     <key name="windows-theming" type="b">
       <default>true</default>
@@ -170,6 +170,32 @@
       <_description>Window thumbnail border radius.</_description>
     </key>
 
+    <key name="windows-width" type="s">
+      <default>'248'</default>
+      <_summary>Width of window thumbnails.</_summary>
+      <_description>The width of window thumbnails.</_description>
+    </key>
+    <key name="windows-fit-height" type="b">
+      <default>true</default>
+      <_summary>Whether to show all thumbnails same height.</_summary>
+      <_description>If true then all thumbnails are same height.</_description>
+    </key>
+    <key name="windows-height" type="s">
+      <default>'160'</default>
+      <_summary>Height of window thumbnails.</_summary>
+      <_description>The height of window thumbnails.</_description>
+    </key>
+    <key name="windows-opacity" type="s">
+      <default>'84'</default>
+      <_summary>Default windows opacity.</_summary>
+      <_description>Windows opacity when not hovered (and when hovered if not otherwise set).</_description>
+    </key>
+    <key name="windows-distance" type="s">
+      <default>'11'</default>
+      <_summary>Distance between window thumbnails (%).</_summary>
+      <_description>Distance between window thumbnails as % of their widths.</_description>
+    </key>
+
     <key name="windows-show-delay" type="s">
       <default>'333'</default>
       <_summary>Window thumbnails showing delay (in ms).</_summary>
@@ -184,6 +210,26 @@
       <default>'1'</default>
       <_summary>Windows animation effect.</_summary>
       <_description>Windows animation effect.</_description>
+    </key>
+    <key name="windows-hover-opacity" type="s">
+      <default>'100'</default>
+      <_summary>Opacity of hovered window thumbnails.</_summary>
+      <_description>Defines the opacity of the hovered window thumbnail.</_description>
+    </key>
+    <key name="windows-hover-fit" type="b">
+      <default>true</default>
+      <_summary>Whether to show full window thumbnail when hovered.</_summary>
+      <_description>If true window thuumbnails are shown full width when hovered.</_description>
+    </key>
+    <key name="windows-hover-animation-time" type="s">
+      <default>'77'</default>
+      <_summary>Window thumbnails on hover animation time (%).</_summary>
+      <_description>Window thumbnails animation time when hovered as % of animation time.</_description>
+    </key>
+    <key name="windows-hover-animation-effect" type="s">
+      <default>'0'</default>
+      <_summary>Window thumbnails on hover animation effect.</_summary>
+      <_description>Window thumbnails animation effect when hovered.</_description>
     </key>
 
     <key name="mouse-app-left" type="s">

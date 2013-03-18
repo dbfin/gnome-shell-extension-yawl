@@ -64,6 +64,9 @@ const dbFinYAWL = new Lang.Class({
             this._signals.connectNoId({ emitter: Main.layoutManager.keyboardBox, signal: 'allocation-changed',
                                         callback: this._yawlPanelWindowsQueueResize, scope: this });
         }
+		dbFinUtils.settingsVariable(this, 'windows-panel-height', 160, { min: 40, max: 400 }, function () {
+            if (Main.layoutManager && Main.layoutManager.panelBox) Main.layoutManager.panelBox.queue_relayout();
+        });
 		dbFinUtils.settingsVariable(this, 'windows-theming', true, null, this._updatePanelWindowsStyle);
 		dbFinUtils.settingsVariable(this, 'windows-background-panel', true, null, this._updatePanelWindowsStyle);
 		dbFinUtils.settingsVariable(this, 'windows-background-color', '#000000', null, this._updatePanelWindowsStyle);
@@ -126,14 +129,13 @@ const dbFinYAWL = new Lang.Class({
 	_yawlPanelWindowsResize: function() {
         _D('>' + this.__name__ + '._yawlPanelWindowsResize()');
 		if (this.yawlPanelWindows && this.yawlPanelWindows.container) {
-			let (pmX = Main.layoutManager.primaryMonitor.x,
-				 pmY = Main.layoutManager.primaryMonitor.y,
-				 w = Main.layoutManager.primaryMonitor.width,
-				 h = 150) {
-				this.yawlPanelWindows.container.x = 0;
-				this.yawlPanelWindows.container.y = this.yawlPanelWindows.container.get_parent().height;
-				this.yawlPanelWindows.container.width = w;
-				this.yawlPanelWindows.container.height = h;
+            this.yawlPanelWindows.container.x = 0;
+            this.yawlPanelWindows.container.y = this.yawlPanelWindows.container.get_parent().height;
+            this.yawlPanelWindows.container.width = Main.layoutManager && Main.layoutManager.primaryMonitor
+                                                    && Main.layoutManager.primaryMonitor.width || 0;
+			let (h = this._windowsPanelHeight || 0) {
+				if (this._windowsTheming) h += (this._windowsPadding || 0) * 2 + (this._windowsBorderWidth || 0);
+	            this.yawlPanelWindows.container.height = h;
 			}
 		}
         _D('<');

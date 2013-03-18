@@ -170,33 +170,24 @@ const dbFinTrackerApp = new Lang.Class({
         _D('>' + this.__name__ + '._showWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
 		if (this.yawlPanelWindowsGroup && this.yawlPanelWindows) {
-			if (this.appButton && this.appButton.actor) {
-				let ([ x, y ] = this.appButton.actor.get_transformed_position()) {
-					x = Math.round(x + this.appButton.actor.get_width() / 2);
-					x = x / (Main.layoutManager && Main.layoutManager.primaryMonitor
-                             && Main.layoutManager.primaryMonitor.width
-                             || this.yawlPanelWindows.container && this.yawlPanelWindows.container.get_width() || 1000000);
-					if (this.yawlPanelWindows.hidden) { // reopen it at the right location (delayed if needed)
-                        this.yawlPanelWindows.gravity = x;
-                        if (this._windowsShowDelay) {
-                            this._showThumbnailsTimeout = Mainloop.timeout_add(	this._windowsShowDelay,
-                                                                               	Lang.bind(this, function() {
-																					this.yawlPanelWindowsGroup.show();
-																					this.yawlPanelWindows.show();
-																				}));
-                        }
-                        else {
-                            this.yawlPanelWindowsGroup.show();
-                            this.yawlPanelWindows.show();
-                        }
-					} // if (this.yawlPanelWindows.hidden)
-					else { // smoothly move it to the right location (no delay)
-						this.yawlPanelWindows.animateToState({ gravity: x });
-                        this.yawlPanelWindowsGroup.show();
-                        this.yawlPanelWindows.show();
-					} // if (this.yawlPanelWindows.hidden) else
-				} // let ([ x, y ])
-			} // if (this.appButton && this.appButton.actor)
+			let (	x = 0,
+			     	actor = this.appButton && this.appButton.actor) {
+				if (actor) {
+					x = Math.round(actor.get_transformed_position()[0] + actor.get_width() / 2)
+						/ (	Main.layoutManager && Main.layoutManager.primaryMonitor
+							&& Main.layoutManager.primaryMonitor.width
+							|| this.yawlPanelWindows.container && this.yawlPanelWindows.container.get_width() || 1000000 );
+					this._showThumbnailsTimeout = Mainloop.timeout_add(
+							Math.max(33, this.yawlPanelWindows.hidden && this._windowsShowDelay || 0),
+					        Lang.bind(this, function() {
+								this._cancelShowThumbnailsTimeout();
+								if (this.yawlPanelWindows.hidden) this.yawlPanelWindows.gravity = x;
+								else this.yawlPanelWindows.animateToState({ gravity: x });
+								this.yawlPanelWindowsGroup.show();
+								this.yawlPanelWindows.show();
+							}));
+				} // if (actor)
+			} // let (x, actor)
         } // if (this.yawlPanelWindowsGroup && this.yawlPanelWindows)
         _D('<');
     },
@@ -204,10 +195,13 @@ const dbFinTrackerApp = new Lang.Class({
     _hideWindowsGroup: function() {
         _D('>' + this.__name__ + '._hideWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
-		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.hide();
-        if (this.yawlPanelWindows) {
-            this.yawlPanelWindows.hide();
-        }
+		if (this.yawlPanelWindowsGroup && this.yawlPanelWindows) {
+			this._showThumbnailsTimeout = Mainloop.timeout_add(33, Lang.bind(this, function() {
+				this._cancelShowThumbnailsTimeout();
+	            this.yawlPanelWindows.hide();
+				this.yawlPanelWindowsGroup.hide();
+			}));
+		} // if (this.yawlPanelWindowsGroup && this.yawlPanelWindows)
         _D('<');
     },
 

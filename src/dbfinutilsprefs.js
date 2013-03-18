@@ -409,7 +409,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     settingsbind = new dbFinSettingsBindEntryColorButton()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowColorButtonEntry, rowColorButton);
-			return this.addRow(rowLabel, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ rowColorButton, 1 ] ], bindSensitive);
+			return this.addRow(rowLabel, [ [ rowColorButtonEntry, !showEntry ? 0 : 2 ], [ rowColorButton, 1 ] ], bindSensitive);
         } // let (rowLabel, rowColorButtonEntry, rowColorButton, settingsbind)
     },
 
@@ -422,7 +422,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     settingsbind = new dbFinSettingsBindEntryScale()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowScaleEntry, rowScale);
-			return this.addRow(rowLabel, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, !showEntry ? 2 : 1 ] ], bindSensitive);
+			return this.addRow(rowLabel, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, !showEntry ? 3 : 2 ] ], bindSensitive);
         } // let (rowLabel, rowScaleEntry, rowScale, settingsbind)
     },
 

@@ -182,6 +182,7 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Thumbnails"));
 			builder.addNotebook(_("Panel"), 'panel_thumbnail.png');
+                builder.addScale(_("Thumbnail panel maximum height"), 'windows-panel-height', 40, 400, 20, null, true);
                 builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming');
                 builder.shift();
                     builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
@@ -194,12 +195,27 @@ function buildPrefsWidget() {
                 builder.unshift();
 
 			builder.addPage(_("Thumbnails"), 'thumbnail.png');
+                builder.addScale(_("Thumbnail width"), 'windows-width', 50, 500, 25, null, true);
+                builder.addCheckBox(_("Same height thumbnails"), 'windows-fit-height');
+                builder.shift();
+                    builder.addScale(_("Thumbnail height"), 'windows-height', 40, 400, 20, 'windows-fit-height', true);
+                builder.unshift();
+				builder.addScale(_("Default thumbnail opacity"), 'windows-opacity', 50, 100, 1);
+                builder.addSeparator();
                 builder.addScale(_("Distance between thumbnails (% of thumbnail size)"), 'windows-distance', 0, 50, 1);
 
 			builder.addPage(_("Animation"), 'animation_thumbnail.png');
                 builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 1000, 1, null, true);
                 builder.addComboBoxText(_("Animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
+				builder.addLabel(_("Animate thumbnails on mouse over"));
+                builder.shift();
+					builder.addScale(_("Change opacity"), 'windows-hover-opacity', 50, 100, 1);
+					builder.addCheckBox(_("Show full width if partially hidden"), 'windows-hover-fit');
+	                builder.addSeparator();
+	                builder.addScale(_("Mouse over animation time (% of animation time)"), 'windows-hover-animation-time', 0, 100, 1);
+                    builder.addComboBoxText(_("Mouse over animation effect"), 'windows-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
+                builder.unshift();
 
             builder.closeNotebook();
 
@@ -226,21 +242,23 @@ function buildPrefsWidget() {
                     builder.getWidget()._threshold = threshold;
 					builder.addLabel(_("This will measure the SHORTEST time between two consecutive SINGLE clicks."));
 					builder.shift();
-						builder.addRow(new Gtk.Label({ label: _("Make a fast series of SINGLE clicks"), halign: Gtk.Align.START, hexpand: true }),
+						widgets = builder.addRow(new Gtk.Label({ label: _("Make a fast series of SINGLE clicks"), halign: Gtk.Align.START, hexpand: true }),
 									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
 											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
 										]);
+	                    if (widgets && widgets.length) { widgets[1].hexpand = true; widgets[1].xalign = 0.0; }
 	                    widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
 	                    if (widgets && widgets.length) threshold.scaleSingle = widgets[widgets.length - 1];
 					builder.unshift();
 					builder.addLabel(_("This will measure the LONGEST time between two clicks of one DOUBLE click."));
 					builder.shift();
-						builder.addRow(new Gtk.Label({ label: _("Make a series of DOUBLE clicks"), halign: Gtk.Align.START, hexpand: true }),
+						widgets = builder.addRow(new Gtk.Label({ label: _("Make a series of DOUBLE clicks"), halign: Gtk.Align.START, hexpand: true }),
 									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
 											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
 										]);
+	                    if (widgets && widgets.length) { widgets[1].hexpand = true; widgets[1].xalign = 0.0; }
 	                    widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
 	                    if (widgets && widgets.length) threshold.scaleDouble = widgets[widgets.length - 1];
 					builder.unshift();

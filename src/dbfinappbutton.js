@@ -106,7 +106,7 @@ const dbFinAppButton = new Lang.Class({
 		dbFinUtils.settingsVariable(this, 'icons-hover-size', 100, { min: 100, max: 200 });
 		dbFinUtils.settingsVariable(this, 'icons-hover-opacity', 100, { min: 50, max: 100 });
 		dbFinUtils.settingsVariable(this, 'icons-hover-fit', false);
-		dbFinUtils.settingsVariable(this, 'icons-hover-animation-time', 33, { min: 1, max: 100 });
+		dbFinUtils.settingsVariable(this, 'icons-hover-animation-time', 33, { min: 0, max: 100 });
 		dbFinUtils.settingsVariable(this, 'icons-hover-animation-effect', 0, { min: 0 });
 
 		this.hide(); // to set the width of this._slicerIcon to 0
