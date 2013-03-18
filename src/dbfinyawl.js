@@ -41,8 +41,13 @@ const dbFinYAWL = new Lang.Class({
 		this._moveCenter = new dbFinMoveCenter.dbFinMoveCenter();
         this._panelEnhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
 
-        this.yawlPanelApps = new dbFinYAWLPanel.dbFinYAWLPanel(Main.panel, 'panelYAWL', 'panelYAWLBox', '_yawlPanel',
-                                                               /*hidden = */false, /*autohideinoverview = */true);
+        this.yawlPanelApps = new dbFinYAWLPanel.dbFinYAWLPanel(Main.panel, 'panelYAWL', 'panelYAWLBox', '_yawlPanel');
+        if (this.yawlPanelApps) {
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
+										callback: function () { this.yawlPanelApps.hide(); }, scope: this.yawlPanelApps });
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
+										callback: function () { this.yawlPanelApps.show(); }, scope: this.yawlPanelApps });
+        }
 		dbFinUtils.settingsVariable(this, 'icons-animation-time', 490, { min: 0, max: 3000 }, function () {
     		if (this.yawlPanelApps) this.yawlPanelApps.animationTime = this._iconsAnimationTime;
         });
@@ -53,9 +58,9 @@ const dbFinYAWL = new Lang.Class({
             if (this.yawlPanelApps) this.yawlPanelApps.animateToState({ gravity: this._iconsAlign / 100. });
         });
 
-        this.yawlPanelWindows = new dbFinYAWLPanel.dbFinYAWLPanel(Main.layoutManager && Main.layoutManager.panelBox,
-                                                                  'panelYAWLWindows', 'panelYAWLWindowsBox', '_yawlWindowsPanel',
-                                                                  /*hidden = */true, /*autohideinoverview = */true);
+        this.yawlPanelWindows = new dbFinYAWLPanel.dbFinYAWLPanel(Main.layoutManager && Main.layoutManager.panelBox || null,
+                                                                  'panelYAWLWindows', 'panelYAWLWindowsBox',
+                                                                  '_yawlWindowsPanel', /*hidden = */true);
         // GNOMENEXT: ui/lookingGlass.js: class LookingGlass
         if (this.yawlPanelWindows && this.yawlPanelWindows.container && Main.layoutManager && Main.layoutManager.panelBox) {
             this.yawlPanelWindows.container.lower_bottom();

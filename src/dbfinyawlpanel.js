@@ -38,14 +38,13 @@ const dbFinYAWLPanel = new Lang.Class({
     // GNOMENEXT: ui/panel.js: class Panel
     // e.g. Main.panel, 'panelYAWL', 'panelYAWLBox', '_yawlPanel'
     _init: function(parent, panelname, boxname, parentproperty,
-                    hidden/* = false*/, autohideinoverview/* = false*/, hidechildren/* = false*/, gravity/* = 0.0*/) {
+                    hidden/* = false*/, hidechildren/* = false*/, gravity/* = 0.0*/) {
         _D('>' + this.__name__ + '._init()');
         this._parent = parent || null;
         this._panelName = panelname || '';
         this._boxName = boxname || '';
         this._parentProperty = parentproperty || '';
         hidden = hidden || false;
-		autohideinoverview = autohideinoverview || false;
         this._hideChildren = hidechildren || false;
         this._gravity = gravity && parseFloat(gravity) || 0.0;
         this.animationTime = Overview.ANIMATION_TIME * 1000;
@@ -73,7 +72,7 @@ const dbFinYAWLPanel = new Lang.Class({
         }
 
 		this.hidden = false;
-		if (hidden || (autohideinoverview && Main.overview && Main.overview.visible)) this.hide();
+		if (hidden) this.hide();
 
         if (this._parent) {
             if (this._parentProperty) {
@@ -86,13 +85,6 @@ const dbFinYAWLPanel = new Lang.Class({
                 this._parent.actor.add_actor(this.container);
             }
         }
-
-		if (autohideinoverview) {
-			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
-										callback: function () { this.hide(); }, scope: this });
-			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
-										callback: function () { this.show(); }, scope: this });
-		}
         _D('<');
     },
 

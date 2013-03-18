@@ -53,8 +53,8 @@ const dbFinTrackerApp = new Lang.Class({
 		}
 		this._autohideshow = autoHideShow || false;
 
-        this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel(null, null, null, null, /*hidden = */true,
-                                                        /*autohideinoverview = */false, /*hidechildren = */true);
+        this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel(null, null, null, null,
+                                                                       /*hidden = */true, /*hidechildren = */true);
         if (this.yawlPanelWindows && this.yawlPanelWindowsGroup) {
             this.yawlPanelWindows.add(this.yawlPanelWindowsGroup);
         }
