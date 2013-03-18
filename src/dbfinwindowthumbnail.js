@@ -140,7 +140,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 		if (this.actor) {
 			this.actor.reactive = false;
 		}
-		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0, natural_width: 0, natural_height: 0 },
+		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0, natural_width: 0, min_width: 0, natural_height: 0 },
 		                                                      	function () { if (this.actor) this.actor.hide(); this.hidden = true; },
 		                                                      	this,
                                                                 time);
