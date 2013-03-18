@@ -44,9 +44,9 @@ const dbFinYAWL = new Lang.Class({
         this.yawlPanelApps = new dbFinYAWLPanel.dbFinYAWLPanel(Main.panel, 'panelYAWL', 'panelYAWLBox', '_yawlPanel');
         if (this.yawlPanelApps) {
 			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
-										callback: function () { this.yawlPanelApps.hide(); }, scope: this.yawlPanelApps });
+										callback: function () { this.yawlPanelApps.hide(); }, scope: this });
 			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
-										callback: function () { this.yawlPanelApps.show(); }, scope: this.yawlPanelApps });
+										callback: function () { this.yawlPanelApps.show(); }, scope: this });
         }
 		dbFinUtils.settingsVariable(this, 'icons-animation-time', 490, { min: 0, max: 3000 }, function () {
     		if (this.yawlPanelApps) this.yawlPanelApps.animationTime = this._iconsAnimationTime;
