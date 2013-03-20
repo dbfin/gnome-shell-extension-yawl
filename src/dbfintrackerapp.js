@@ -53,10 +53,10 @@ const dbFinTrackerApp = new Lang.Class({
 		}
 		this._autohideshow = autoHideShow || false;
 
-        this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel(null, null, null, null,
-                                                                       /*hidden = */true, /*hidechildren = */true);
+        this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel({    hidden: true,
+                                                                            hidechildren: true });
         if (this.yawlPanelWindows && this.yawlPanelWindowsGroup) {
-            this.yawlPanelWindows.add(this.yawlPanelWindowsGroup);
+            this.yawlPanelWindows.addChild(this.yawlPanelWindowsGroup);
         }
 
         dbFinUtils.settingsVariable(this, 'windows-show-delay', 333, { min: 0, max: 1000 });
@@ -70,7 +70,7 @@ const dbFinTrackerApp = new Lang.Class({
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
 		if (this.appButton) {
             if (!metaWindow && this._autohideshow) this.appButton.hide();
-            if (this.yawlPanelApps) this.yawlPanelApps.add(this.appButton);
+            if (this.yawlPanelApps) this.yawlPanelApps.addChild(this.appButton);
             this._signals.connectNoId({ emitter: this.appButton, signal: 'enter-event',
                                         callback: this._showWindowsGroup, scope: this });
             this._signals.connectNoId({ emitter: this.appButton, signal: 'leave-event',
@@ -143,7 +143,7 @@ const dbFinTrackerApp = new Lang.Class({
             if (this._tracker && this._tracker.getTrackerWindow) {
                 let (trackerWindow = this._tracker.getTrackerWindow(metaWindow)) {
                     if (trackerWindow && trackerWindow.windowThumbnail && this.yawlPanelWindowsGroup) {
-                        this.yawlPanelWindowsGroup.add(trackerWindow.windowThumbnail);
+                        this.yawlPanelWindowsGroup.addChild(trackerWindow.windowThumbnail);
                     }
                 }
             }

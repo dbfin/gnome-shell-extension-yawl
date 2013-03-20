@@ -207,7 +207,7 @@ const dbFinMoveCenter = new Lang.Class({
 				// Who needs the corners?.. Well, maybe someone does.
 				// But we do not need to reallocate them
 			} // let (wly, wl, wy, wr, xl, xr)
-		} // let (w, h, wlm, wln, wcm, wcn, wrm, wrn, boxChild, drl)
+		} // let (w, h, wlm, wln, wym, wyn, wcm, wcn, wrm, wrn, boxChild, drl)
         _D('<');
     }
 });

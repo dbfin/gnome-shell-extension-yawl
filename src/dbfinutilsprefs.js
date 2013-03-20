@@ -265,10 +265,11 @@ const dbFinSettingsBindEntryComboBoxText = new Lang.Class({
 const dbFinSettingsWidgetBuilder = new Lang.Class({
     Name: 'dbFin.SettingsWidgetBuilder',
 
-    _init: function() {
+    _init: function(notebooksPagesCircle/* = false*/) {
         this._settings = Convenience.getSettings();
         this._notebooks = [];
         this._notebook = null;
+        this._notebooksPagesCircle = notebooksPagesCircle || false;
     },
 
     destroy: function() {
@@ -288,7 +289,10 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 	},
 
 	addNotebook: function(label/* = null*/, iconfile/* = null*/) {
-        let (notebook = new Gtk.Notebook({ vexpand: true, tab_pos: 2 - this._notebooks.length % 2 * 2/* (this._notebooks.length * 3 + 2) % 5*/ })) { // why not? ;)
+        let (notebook = new Gtk.Notebook({  vexpand:    true,
+                                            tab_pos:    this._notebooksPagesCircle
+                                                        ? (this._notebooks.length * 3 + 2) % 5 // why not? ;)
+                                                        : 2 - this._notebooks.length % 2 * 2 })) {
 			if (this._notebook && this._notebook.page)
 				this._notebook.page.attach(notebook,
 				                           this._notebook.shift, this._notebook.row,

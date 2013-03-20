@@ -199,7 +199,7 @@ const dbFinAppButton = new Lang.Class({
 			let (state = {}) {
 				if (this._iconsHoverOpacity) state.opacity = dbFinUtils.opacity100to255(this._iconsHoverOpacity);
 				if (this._iconsHoverSize) state.scale_x = state.scale_y = this._iconsHoverSize / 100.;
-				if (this._iconsHoverFit && this._iconsSize) state.min_width = this._iconsSize;
+				if (this._iconsHoverFit) state.min_width = this._slicerIcon.getNaturalWidth();
 				this._slicerIcon.animateToState(state, null, null,
                                                 this._iconsAnimationTime && this._iconsHoverAnimationTime
                                                         ? Math.floor(this._iconsAnimationTime * this._iconsHoverAnimationTime / 100)
