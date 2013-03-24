@@ -51,7 +51,7 @@
  * 									p				additional parameters for updating (like { min:, max: })
  * 									c				the callback function after updating
  *
- * opacity100to255(opacity)		converts opacity 0-100 to 0-255
+ * opacity100to255(opacity)		converts opacity 0-100 to 0-255, or returns undefined on fail
  *
  * stringColorOpacity100ToStringRGBA(color, opacity)    '#808080', 70 -> 'rgba(128, 128, 128, 0.7)'
  *
@@ -111,6 +111,7 @@ function now(justnumbers) {
 /* function inRange(value, min, max, d): returns value or min (if value < min) or max (if value > max) or d (if min > max)
  */
 function inRange(value, min, max, d) {
+    if (value === undefined || value === null) return d;
     if (min === undefined) min = null;
     if (max === undefined) max = null;
     if (min !== null && max !== null && min > max) return d;
@@ -247,6 +248,7 @@ function settingsVariable(s, k, i, p, c) {
 /* function opacity100to255(opacity)
  */
 function opacity100to255(opacity) {
+    if (isNaN(opacity = parseInt(opacity))) return undefined;
 	return Math.round(opacity * 2.55);
 }
 

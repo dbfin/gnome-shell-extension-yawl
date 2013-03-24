@@ -24,6 +24,8 @@
  *						sortK(compare:k1,k2->int)	    	sorts by keys using compare function
  *						sortV(compare:v1,v2->int)	    	sorts by values using compare function
  *						forEach(callback:k,v)		    	calls callback on each pair
+ * 						some(callback:k,v->boolean)			calls callback on each pair until it returns true
+ * 															returns true iff some callback returned true
  *						toArray()					    	returns array of pairs [[ki, vi]]
  *						toString()					    	returns string represenating the array of pairs
  *
@@ -180,6 +182,15 @@ const dbFinArrayHash = new Lang.Class({
     		for (let i = 0; i < l; ++i) callback(ks[i], vs[i]);
         }
         _D('<');
+	},
+
+	some: function(callback) { // this is a very delicate function: what if something changes this in callback?
+        _D('>' + this.__name__ + '.some()');
+        let (ks = this._keys.slice(), vs = this._values.slice(), l = this.length) {
+    		for (let i = 0; i < l; ++i) if (callback(ks[i], vs[i])) return true;
+        }
+        _D('<');
+		return false;
 	},
 
 	toArray: function() {

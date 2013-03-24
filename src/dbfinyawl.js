@@ -41,9 +41,8 @@ const dbFinYAWL = new Lang.Class({
 		this._moveCenter = new dbFinMoveCenter.dbFinMoveCenter();
         this._panelEnhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
 
-        this.yawlPanelApps = new dbFinYAWLPanel.dbFinYAWLPanel({    parent: Main.panel || null,
-                                                                    panelname: 'panelYAWL',
-                                                                    boxname: 'panelYAWLBox',
+        this.yawlPanelApps = new dbFinYAWLPanel.dbFinYAWLPanel({    panelname: 'panelYAWL',
+                                                                    parent: Main.panel || null,
                                                                     parentproperty: '_yawlPanel',
                                                                     hideinoverview: true });
 		dbFinUtils.settingsVariable(this, 'icons-animation-time', 490, { min: 0, max: 3000 }, function () {
@@ -56,9 +55,8 @@ const dbFinYAWL = new Lang.Class({
             if (this.yawlPanelApps) this.yawlPanelApps.animateToState({ gravity: this._iconsAlign / 100. });
         });
 
-        this.yawlPanelWindows = new dbFinYAWLPanel.dbFinYAWLPanel({ parent: Main.uiGroup || null,
-                                                                    panelname: 'panelYAWLWindows',
-                                                                    boxname: 'panelYAWLWindowsBox',
+        this.yawlPanelWindows = new dbFinYAWLPanel.dbFinYAWLPanel({ panelname: 'panelYAWLWindows',
+                                                                    parent: Main.uiGroup || null,
                                                                     parentproperty: '_yawlWindowsPanel',
                                                                     hidden: true,
                                                                     hideinoverview: true,
@@ -67,9 +65,24 @@ const dbFinYAWL = new Lang.Class({
                                                                             && Main.layoutManager.primaryMonitor.width
 	                                                                        ||  Main.panel && Main.panel.actor
                                                                                 && Main.panel.actor.get_width()
-                                                                            || 0,
-                                                                    y:  Main.panel && Main.panel.actor
-                                                                        && Main.panel.actor.get_height() || 0 });
+                                                                            || 0
+                                                                    });
+        if (this.yawlPanelWindows) {
+			this._signals.connectNoId({	emitter: this.yawlPanelWindows.actor, signal: 'enter-event',
+										callback:   function () {
+                                            if (this.yawlPanelWindows && this.yawlPanelWindows._lastWindowsGroupTrackerApp) {
+                                                this.yawlPanelWindows._lastWindowsGroupTrackerApp.showWindowsGroup();
+                                            }
+                                        }, scope: this });
+			this._signals.connectNoId({	emitter: this.yawlPanelWindows.actor, signal: 'leave-event',
+										callback:   function () {
+                                            if (this.yawlPanelWindows && this.yawlPanelWindows._childrenObjects) {
+                                                if (this.yawlPanelWindows && this.yawlPanelWindows._lastWindowsGroupTrackerApp) {
+                                                    this.yawlPanelWindows._lastWindowsGroupTrackerApp.hideWindowsGroup();
+                                                }
+                                            }
+                                        }, scope: this });
+        }
         dbFinUtils.settingsVariable(this, 'windows-panel-height', 160, { min: 40, max: 400 }, this._updatePanelWindowsStyle);
         dbFinUtils.settingsVariable(this, 'windows-theming', true, null, this._updatePanelWindowsStyle);
 		dbFinUtils.settingsVariable(this, 'windows-background-panel', true, null, this._updatePanelWindowsStyle);

@@ -49,7 +49,7 @@ const dbFinWindowThumbnail = new Lang.Class({
         dbFinUtils.settingsVariable(this, 'windows-fit-height', true, null, this._updateThumbnailSize);
         dbFinUtils.settingsVariable(this, 'windows-height', 160, { min: 40, max: 400 }, this._updateThumbnailSize);
         dbFinUtils.settingsVariable(this, 'windows-opacity', 84, { min: 50, max: 100 }, function () {
-            if (this._slicerIcon) this._slicerIcon.animateToState({ opacity: dbFinUtils.opacity100to255(this._windowsOpacity) });
+            if (this._slicerIcon) this._slicerIcon.setOpacity100(this._windowsOpacity);
         });
 		dbFinUtils.settingsVariable(this, 'windows-distance', 11, { min: 0, max: 50 }, function () {
     		if (this._slicerIcon) this._slicerIcon.setPaddingH((this._windowsDistance + 1) >> 1);
@@ -60,25 +60,35 @@ const dbFinWindowThumbnail = new Lang.Class({
 		dbFinUtils.settingsVariable(this, 'windows-animation-effect', 1, { min: 0 }, function () {
     		if (this._slicerIcon) this._slicerIcon.animationEffect = this._windowsAnimationEffect;
         });
-		dbFinUtils.settingsVariable(this, 'windows-hover-opacity', 100, { min: 50, max: 100 });
-		dbFinUtils.settingsVariable(this, 'windows-hover-fit', true);
-		dbFinUtils.settingsVariable(this, 'windows-hover-animation-time', 77, { min: 0, max: 100 });
-		dbFinUtils.settingsVariable(this, 'windows-hover-animation-effect', 0, { min: 0 });
+        if (this._slicerIcon) {
+            this._slicerIcon.hoverAnimation = true; // no settings option for this
+        }
+		dbFinUtils.settingsVariable(this, 'windows-hover-opacity', 100, { min: 50, max: 100 }, function () {
+            if (this._slicerIcon) this._slicerIcon.setHoverOpacity100(this._windowsHoverOpacity);
+        });
+		dbFinUtils.settingsVariable(this, 'windows-hover-fit', true, null, function () {
+            if (this._slicerIcon) this._slicerIcon.hoverFit = this._windowsHoverFit;
+        });
+		dbFinUtils.settingsVariable(this, 'windows-hover-animation-time', 77, { min: 0, max: 100 }, function () {
+            if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = this._windowsHoverAnimationTime;
+        });
+		dbFinUtils.settingsVariable(this, 'windows-hover-animation-effect', 0, { min: 0 }, function () {
+            if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = this._windowsHoverAnimationEffect;
+        });
 
 		// this.actor related stuff
-        this.actor = new St.Bin({ y_fill: true, x_fill: true, track_hover: true, child: this._slicerIcon.actor });
-		this.actor._delegate = this;
+        this.actor = new St.Bin({ y_fill: true, x_fill: true, child: this._slicerIcon.actor });
 
         this.hidden = false;
-        this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
-        this.actor.reactive = true;
+        this.hiding = false;
+
+        if (this.actor) {
+            this.actor._delegate = this;
+            this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
+            this.actor.reactive = true;
+        }
 
         this.hide();
-
-		this._signals.connectNoId({	emitter: this.actor, signal: 'enter-event',
-									callback: this._hoverEnter, scope: this });
-		this._signals.connectNoId({	emitter: this.actor, signal: 'leave-event',
-									callback: this._hoverLeave, scope: this });
         _D('<');
     },
 
@@ -126,24 +136,38 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('>' + this.__name__ + '.show()');
 		if (this.actor) {
 			this.actor.show();
+            this.actor.raise_top();
 			this.actor.reactive = true;
 		}
+        if (!this.hidden && !this.hiding) {
+            _D('<');
+            return;
+        }
 		this.hidden = false;
-		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: this._windowsOpacity ? dbFinUtils.opacity100to255(this._windowsOpacity) : 255,
-																natural_width: this._slicerIcon.getNaturalWidth(),
-                                                                natural_height: this._slicerIcon.getNaturalHeight()}, null, null, time);
+        this.hiding = false;
+		if (this._slicerIcon) {
+            this._slicerIcon.animateToState({ opacity: 255, natural_width: this._slicerIcon.getNaturalWidth() },
+                                            null, null, time);
+        }
         _D('<');
 	},
 
 	hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
-		if (this.actor) {
-			this.actor.reactive = false;
-		}
-		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0, natural_width: 0, min_width: 0, natural_height: 0 },
-		                                                      	function () { if (this.actor) this.actor.hide(); this.hidden = true; },
-		                                                      	this,
-                                                                time);
+		if (!this.hidden && this._slicerIcon) {
+            this.hiding = true;
+            this._slicerIcon.animateToState({ opacity: 0, natural_width: 0, min_width: 0 },
+                                            function () {
+                                                if (this.actor) {
+                                                    this.actor.reactive = false;
+                                                    this.actor.hide();
+                                                }
+                                                this.hidden = true;
+                                                this.hiding = false;
+                                            },
+                                            this,
+                                            time);
+        }
         _D('<');
 	},
 
@@ -175,40 +199,6 @@ const dbFinWindowThumbnail = new Lang.Class({
 			} // let (scale)
 		} // if (this._clone)
         _D('<');
-    },
-
-	_hoverEnter: function() {
-        _D('>' + this.__name__ + '._hoverEnter()');
-		if (this._slicerIcon) {
-			let (state = {}) {
-				if (this._windowsHoverOpacity) state.opacity = dbFinUtils.opacity100to255(this._windowsHoverOpacity);
-				if (this._windowsHoverFit) state.min_width = this._slicerIcon.getNaturalWidth();
-				this._slicerIcon.animateToState(state, null, null,
-                                                this._windowsAnimationTime && this._windowsHoverAnimationTime
-                                                        ? Math.floor(this._windowsAnimationTime * this._windowsHoverAnimationTime / 100)
-                                                        : 0,
-                                                this._windowsHoverAnimationEffect);
-			}
-		}
-        this.emit('enter-event');
-        _D('<');
-	},
-
-	_hoverLeave: function() {
-        _D('>' + this.__name__ + '._hoverLeave()');
-		if (this._slicerIcon) {
-			let (state = {}) {
-				if (this._windowsOpacity) state.opacity = dbFinUtils.opacity100to255(this._windowsOpacity);
-                state.min_width = 0;
-				this._slicerIcon.animateToState(state, null, null,
-                                                this._windowsAnimationTime && this._windowsHoverAnimationTime
-                                                        ? Math.floor(this._windowsAnimationTime * this._windowsHoverAnimationTime / 100)
-                                                        : 0,
-                                                this._windowsHoverAnimationEffect);
-			}
-		}
-        this.emit('leave-event');
-        _D('<');
-	}
+    }
 });
 Signals.addSignalMethods(dbFinWindowThumbnail.prototype);

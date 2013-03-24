@@ -54,9 +54,9 @@ const dbFinTrackerApp = new Lang.Class({
 		this._autohideshow = autoHideShow || false;
 
         this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel({    hidden: true,
-                                                                            hidechildren: true });
-        if (this.yawlPanelWindows && this.yawlPanelWindowsGroup) {
-            this.yawlPanelWindows.addChild(this.yawlPanelWindowsGroup);
+                                                                            showhidechildren: true });
+        if (this.yawlPanelWindowsGroup) {
+            if (this.yawlPanelWindows) this.yawlPanelWindows.addChild(this.yawlPanelWindowsGroup);
         }
 
         dbFinUtils.settingsVariable(this, 'windows-show-delay', 333, { min: 0, max: 1000 });
@@ -71,10 +71,10 @@ const dbFinTrackerApp = new Lang.Class({
 		if (this.appButton) {
             if (!metaWindow && this._autohideshow) this.appButton.hide();
             if (this.yawlPanelApps) this.yawlPanelApps.addChild(this.appButton);
-            this._signals.connectNoId({ emitter: this.appButton, signal: 'enter-event',
-                                        callback: this._showWindowsGroup, scope: this });
-            this._signals.connectNoId({ emitter: this.appButton, signal: 'leave-event',
-                                        callback: this._hideWindowsGroup, scope: this });
+            this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'enter-event',
+                                        callback: this.showWindowsGroup, scope: this });
+            this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
+                                        callback: this.hideWindowsGroup, scope: this });
         }
 
         this.addWindow(metaWindow);
@@ -166,40 +166,43 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-    _showWindowsGroup: function() {
-        _D('>' + this.__name__ + '._showWindowsGroup()');
+    showWindowsGroup: function() {
+        _D('>' + this.__name__ + '.showWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
 		if (this.yawlPanelWindowsGroup && this.yawlPanelWindows) {
 			let (	x = 0,
+                    y = 0,
 			     	actor = this.appButton && this.appButton.actor) {
 				if (actor) {
 					x = Math.round(actor.get_transformed_position()[0] + actor.get_width() / 2)
 						/ (	Main.layoutManager && Main.layoutManager.primaryMonitor
 							&& Main.layoutManager.primaryMonitor.width
 							|| this.yawlPanelWindows.container && this.yawlPanelWindows.container.get_width() || 1000000 );
+                    y = (Main.layoutManager && Main.layoutManager.panelBox &&
+                         Main.layoutManager.panelBox.get_y() + Main.layoutManager.panelBox.get_height() || 0);
+                    this.yawlPanelWindows.y = y;
 					this._showThumbnailsTimeout = Mainloop.timeout_add(
 							Math.max(33, this.yawlPanelWindows.hidden && this._windowsShowDelay || 0),
 					        Lang.bind(this, function() {
 								this._cancelShowThumbnailsTimeout();
 								if (this.yawlPanelWindows.hidden) this.yawlPanelWindows.gravity = x;
 								else this.yawlPanelWindows.animateToState({ gravity: x });
-								this.yawlPanelWindowsGroup.show();
-								this.yawlPanelWindows.show();
+								this.yawlPanelWindows.showChild(this.yawlPanelWindowsGroup, true);
+                                this.yawlPanelWindows._lastWindowsGroupTrackerApp = this;
 							}));
 				} // if (actor)
-			} // let (x, actor)
+			} // let (x, y, actor)
         } // if (this.yawlPanelWindowsGroup && this.yawlPanelWindows)
         _D('<');
     },
 
-    _hideWindowsGroup: function() {
-        _D('>' + this.__name__ + '._hideWindowsGroup()');
+    hideWindowsGroup: function() {
+        _D('>' + this.__name__ + '.hideWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
 		if (this.yawlPanelWindowsGroup && this.yawlPanelWindows) {
 			this._showThumbnailsTimeout = Mainloop.timeout_add(33, Lang.bind(this, function() {
 				this._cancelShowThumbnailsTimeout();
-	            this.yawlPanelWindows.hide();
-				this.yawlPanelWindowsGroup.hide();
+	            this.yawlPanelWindows.hideChild(this.yawlPanelWindowsGroup, true);
 			}));
 		} // if (this.yawlPanelWindowsGroup && this.yawlPanelWindows)
         _D('<');

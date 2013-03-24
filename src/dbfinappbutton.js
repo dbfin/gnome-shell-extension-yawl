@@ -47,23 +47,25 @@ const dbFinAppButton = new Lang.Class({
 		this.metaApp = metaApp;
         this._trackerApp = trackerApp;
 
-		// this.actor and this.container related stuff
-        this.actor._delegate = this;
-
         this.hidden = false;
-        this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
-        this.actor.reactive = true;
+        this.hiding = false;
+
+		// this.actor and this.container related stuff
+        if (this.container) {
+            this.container.track_hover = false;
+        }
+        if (this.actor) {
+            this.actor._delegate = this;
+            this.actor.track_hover = false;
+            this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
+            this.actor.reactive = true;
+        }
 
 		this._minHPadding = 0;
 		this._natHPadding = 0;
         this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
                                     callback: this._styleChanged, scope: this },
                                   /*after = */true);
-
-		this._signals.connectNoId({	emitter: this.actor, signal: 'enter-event',
-									callback: this._hoverEnter, scope: this });
-		this._signals.connectNoId({	emitter: this.actor, signal: 'leave-event',
-									callback: this._hoverLeave, scope: this });
 
         this._clicked = null;
 		dbFinUtils.settingsVariable(this, 'mouse-click-release', false, null, function () {
@@ -77,15 +79,17 @@ const dbFinAppButton = new Lang.Class({
 
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
-		this.actor.add_actor(this._slicerIcon.actor);
-        if (Main.panel && Main.panel.actor) this._slicerIcon.actor.min_height = Main.panel.actor.get_height();
+        if (this._slicerIcon && this._slicerIcon.actor) {
+            if (this.actor) this.actor.add_actor(this._slicerIcon.actor);
+            if (Main.panel && Main.panel.actor) this._slicerIcon.actor.min_height = Main.panel.actor.get_height();
+        }
 
 		this._icons = new dbFinArrayHash.dbFinArrayHash();
 
         dbFinUtils.settingsVariable(this, 'icons-size', 48, { min: 16, max: 128 }, this._updateIcon);
         dbFinUtils.settingsVariable(this, 'icons-faded', true, null, this._updateIcon);
         dbFinUtils.settingsVariable(this, 'icons-opacity', 84, { min: 50, max: 100 }, function () {
-            if (this._slicerIcon) this._slicerIcon.animateToState({ opacity: dbFinUtils.opacity100to255(this._iconsOpacity) });
+            if (this._slicerIcon) this._slicerIcon.setOpacity100(this._iconsOpacity);
         });
 		dbFinUtils.settingsVariable(this, 'icons-clip-top', 3, { min: 0, max: 11 }, function () {
             if (this._slicerIcon) this._slicerIcon.setClipTop(this._iconsClipTop);
@@ -102,12 +106,24 @@ const dbFinAppButton = new Lang.Class({
 		dbFinUtils.settingsVariable(this, 'icons-animation-effect', 1, { min: 0 }, function () {
     		if (this._slicerIcon) this._slicerIcon.animationEffect = this._iconsAnimationEffect;
         });
-		dbFinUtils.settingsVariable(this, 'icons-hover-animation', true);
-		dbFinUtils.settingsVariable(this, 'icons-hover-size', 100, { min: 100, max: 200 });
-		dbFinUtils.settingsVariable(this, 'icons-hover-opacity', 100, { min: 50, max: 100 });
-		dbFinUtils.settingsVariable(this, 'icons-hover-fit', false);
-		dbFinUtils.settingsVariable(this, 'icons-hover-animation-time', 33, { min: 0, max: 100 });
-		dbFinUtils.settingsVariable(this, 'icons-hover-animation-effect', 0, { min: 0 });
+		dbFinUtils.settingsVariable(this, 'icons-hover-animation', true, null, function () {
+            if (this._slicerIcon) this._slicerIcon.hoverAnimation = this._iconsHoverAnimation;
+        });
+		dbFinUtils.settingsVariable(this, 'icons-hover-size', 100, { min: 100, max: 200 }, function () {
+            if (this._slicerIcon) this._slicerIcon.hoverScale = this._iconsHoverSize / 100.;
+        });
+		dbFinUtils.settingsVariable(this, 'icons-hover-opacity', 100, { min: 50, max: 100 }, function () {
+            if (this._slicerIcon) this._slicerIcon.setHoverOpacity100(this._iconsHoverOpacity);
+        });
+		dbFinUtils.settingsVariable(this, 'icons-hover-fit', false, null, function () {
+            if (this._slicerIcon) this._slicerIcon.hoverFit = this._iconsHoverFit;
+        });
+		dbFinUtils.settingsVariable(this, 'icons-hover-animation-time', 33, { min: 0, max: 100 }, function () {
+            if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = this._iconsHoverAnimationTime;
+        });
+		dbFinUtils.settingsVariable(this, 'icons-hover-animation-effect', 0, { min: 0 }, function () {
+            if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = this._iconsHoverAnimationEffect;
+        });
 
 		this.hide(); // to set the width of this._slicerIcon to 0
 
@@ -166,6 +182,7 @@ const dbFinAppButton = new Lang.Class({
 		this.metaApp = null;
 		this._settings = null;
 		this.parent();
+        this.emit('destroy');
         _D('<');
 	},
 
@@ -173,61 +190,40 @@ const dbFinAppButton = new Lang.Class({
         _D('>' + this.__name__ + '.show()');
 		if (this.container) {
 			this.container.show();
+            this.container.raise_top();
 			this.container.reactive = true;
 		}
+        if (!this.hidden && !this.hiding) {
+            _D('<');
+            return;
+        }
 		this.hidden = false;
-		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: this._iconsOpacity ? dbFinUtils.opacity100to255(this._iconsOpacity) : 255,
-																natural_width: this._slicerIcon.getNaturalWidth() }, null, null, time);
+        this.hiding = false;
+		if (this._slicerIcon) {
+            this._slicerIcon.animateToState({ opacity: 255, natural_width: this._slicerIcon.getNaturalWidth() },
+                                            null, null, time);
+        }
         _D('<');
     },
 
     hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
-		if (this.container) {
-			this.container.reactive = false;
-		}
-		if (this._slicerIcon) this._slicerIcon.animateToState({	opacity: 0, natural_width: 0, min_width: 0 },
-		                                                      	function () { if (this.container) this.container.hide(); this.hidden = true; },
-		                                                      	this,
-                                                                time);
+		if (!this.hidden && this._slicerIcon) {
+            this.hiding = true;
+            this._slicerIcon.animateToState({ opacity: 0, natural_width: 0, min_width: 0 },
+                                            function () {
+                                                if (this.container) {
+                                                    this.container.reactive = false;
+                                                    this.container.hide();
+                                                }
+                                                this.hidden = true;
+                                                this.hiding = false;
+                                            },
+                                            this,
+                                            time);
+        }
         _D('<');
     },
-
-	_hoverEnter: function() {
-        _D('>' + this.__name__ + '._hoverEnter()');
-		if (this._iconsHoverAnimation && this._slicerIcon) {
-			let (state = {}) {
-				if (this._iconsHoverOpacity) state.opacity = dbFinUtils.opacity100to255(this._iconsHoverOpacity);
-				if (this._iconsHoverSize) state.scale_x = state.scale_y = this._iconsHoverSize / 100.;
-				if (this._iconsHoverFit) state.min_width = this._slicerIcon.getNaturalWidth();
-				this._slicerIcon.animateToState(state, null, null,
-                                                this._iconsAnimationTime && this._iconsHoverAnimationTime
-                                                        ? Math.floor(this._iconsAnimationTime * this._iconsHoverAnimationTime / 100)
-                                                        : 0,
-                                                this._iconsHoverAnimationEffect);
-			}
-		}
-        this.emit('enter-event');
-        _D('<');
-	},
-
-	_hoverLeave: function() {
-        _D('>' + this.__name__ + '._hoverLeave()');
-		if (this._slicerIcon) {
-			let (state = {}) {
-				if (this._iconsOpacity) state.opacity = dbFinUtils.opacity100to255(this._iconsOpacity);
-				state.scale_x = state.scale_y = 1.;
-                state.min_width = 0;
-				this._slicerIcon.animateToState(state, null, null,
-                                                this._iconsAnimationTime && this._iconsHoverAnimationTime
-                                                        ? Math.floor(this._iconsAnimationTime * this._iconsHoverAnimationTime / 100)
-                                                        : 0,
-                                                this._iconsHoverAnimationEffect);
-			}
-		}
-        this.emit('leave-event');
-        _D('<');
-	},
 
 	_updateIcon: function() {
         _D('>' + this.__name__ + '._updateIcon()');
@@ -258,7 +254,7 @@ const dbFinAppButton = new Lang.Class({
 
 	_updateAppState: function(appSys, app) {
         _D('>' + this.__name__ + '._updateAppState()');
-		if (app && this.metaApp == app && app.state == Shell.AppState.RUNNING) {
+		if (this.metaApp == app) {
 			this._updateMenu();
 		}
         _D('<');
@@ -328,7 +324,7 @@ const dbFinAppButton = new Lang.Class({
     },
 
 	_styleChanged: function() {
-        _D('>' + this.__name__ + '._styleChanged()');
+        _D('@' + this.__name__ + '._styleChanged()');
 		this._minHPadding = 0;
 		this._natHPadding = 0;
         _D('<');

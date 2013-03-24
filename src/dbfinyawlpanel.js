@@ -37,26 +37,26 @@ const dbFinYAWLPanel = new Lang.Class({
 
     // GNOMENEXT: ui/panel.js: class Panel
     // e.g. Main.panel, 'panelYAWL', 'panelYAWLBox', '_yawlPanel'
-    // params:  parent, panelname, boxname, parentproperty,
-    //          hidden, hidechildren, hideinoverview,
+    // params:  panelname, parent, parentproperty,
+    //          hidden, showhidechildren, hideinoverview,
     //          gravity, width, height, x, y
     _init: function(params) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
         this._parent = params.parent || null;
         this._panelName = params.panelname || '';
-        this._boxName = params.boxname || '';
         this._parentProperty = params.parentproperty || '';
-        this._hideChildren = params.hidechildren || false;
+        this._showHideChildren = params.showhidechildren || false;
         this._gravity = params.gravity && parseFloat(params.gravity) || 0.0;
         this.animationTime = Overview.ANIMATION_TIME * 1000;
         this.animationEffect = 'easeOutQuad';
         this._childrenObjects = new dbFinArrayHash.dbFinArrayHash();
         if (params.hideinoverview) {
+			if (Main.overview && Main.overview.visible) this._hideInOverview();
 			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
-										callback: function () { dbFinAnimation.animateToState(this.container, { opacity: 0 }, null, null, this.animationTime); }, scope: this });
+										callback: this._hideInOverview, scope: this });
 			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
-										callback: function () { dbFinAnimation.animateToState(this.container, { opacity: 255 }, null, null, this.animationTime); }, scope: this });
+										callback: this._showOutOfOverview, scope: this });
         }
 
 		this.container = this._panelName	? new Shell.GenericContainer({ name: this._panelName, reactive: true, visible: true })
@@ -74,34 +74,32 @@ const dbFinYAWLPanel = new Lang.Class({
                                         callback: this._allocate, scope: this });
         }
 
-		this.actor = this._boxName  ? new St.BoxLayout({ name: this._boxName, vertical: false, reactive: true, track_hover: true, visible: true })
-                                    : new St.BoxLayout({ vertical: false, reactive: true, track_hover: true, visible: true });
-
-		if (this.container && this.actor) {
-            this.container.add_actor(this.actor);
-            this.container._box = this.actor;
+		this.actor = new St.BoxLayout({ vertical: false, reactive: true, visible: true });
+		if (this.actor) {
+            this.actor._delegate = this;
+            if (this.container) {
+                this.container.add_actor(this.actor);
+                this.container._box = this.actor;
+            }
         }
 
 		this.hidden = false;
+        this.hiding = false;
 		if (params.hidden) this.hide();
 
         if (this._parent) {
-            if (this._parentProperty) {
-                this._parent[this._parentProperty] = this.container;
+            if (this._parent == Main.uiGroup) {
+                Main.layoutManager.addChrome(this.container);
             }
-            if (this._parent.add_actor) {
+            else if (this._parent.add_actor) {
                 this._parent.add_actor(this.container);
             }
             else if (this._parent.actor && this._parent.actor.add_actor) {
                 this._parent.actor.add_actor(this.container);
             }
-        }
-
-        if (this.actor) {
-            this._signals.connectNoId({ emitter: this.actor, signal: 'enter-event',
-                                        callback: function () { this.emit('enter-event'); }, scope: this });
-            this._signals.connectNoId({ emitter: this.actor, signal: 'leave-event',
-                                        callback: function () { this.emit('leave-event'); }, scope: this });
+            if (this._parentProperty) {
+                this._parent[this._parentProperty] = this.container;
+            }
         }
         _D('<');
     },
@@ -113,32 +111,33 @@ const dbFinYAWLPanel = new Lang.Class({
 			this._signals = null;
 		}
 		if (this.container) {
-            if (this._parent) {
-                if (this._parentProperty && this._parent[this._parentProperty] == this.container) {
-                    this._parent[this._parentProperty] = null;
+            let (parent = this.container.get_parent && this.container.get_parent() || this._parent) {
+                if (parent) {
+                    if (this._parentProperty && parent[this._parentProperty] == this.container) {
+                        parent[this._parentProperty] = null;
+                    }
                 }
-                if (this._parent.remove_actor) {
-                    this._parent.remove_actor(this.container);
+                if (parent == Main.uiGroup) {
+                    Main.layoutManager.removeChrome(this.container);
                 }
-                else if (this._parent.actor && this._parent.actor.remove_actor) {
-                    this._parent.actor.remove_actor(this.container);
-                }
-            }
-            // just in case parent was not set up initially or was changed
-            let (parent = this.container.get_parent && this.container.get_parent()) {
-                if (parent && parent.remove_actor) {
+                else if (parent.remove_actor) {
                     parent.remove_actor(this.container);
                 }
-            }
+                else if (parent.actor && parent.actor.remove_actor) { // this might be this._parent
+                    parent.actor.remove_actor(this.container);
+                }
+            } // let (parent)
 		}
         if (this._childrenObjects) {
-            this._childrenObjects.forEach(Lang.bind(this, function(childObject, signalId) { this.removeChild(childObject); }));
+            this._childrenObjects.forEach(Lang.bind(this, function(childObject, signals) { this.removeChild(childObject); }));
         }
 		if (this.actor) {
 			if (this.container) {
                 this.container.remove_actor(this.actor);
                 this.container._box = null;
             }
+            this.actor.reactive = false;
+            this.actor._delegate = null;
 			this.actor.destroy();
 			this.actor = null;
 		}
@@ -146,6 +145,7 @@ const dbFinYAWLPanel = new Lang.Class({
 			this.container.destroy();
 			this.container = null;
 		}
+		this._bindReactiveId = null;
         this.hidden = true;
         this._parent = null;
         this.emit('destroy');
@@ -192,7 +192,11 @@ const dbFinYAWLPanel = new Lang.Class({
             let (actor = childObject.container || childObject.actor || childObject) {
                 if (actor instanceof Clutter.Actor) this.actor.add_actor(actor);
             }
-            this._childrenObjects.set(childObject, childObject.connect('destroy', Lang.bind(this, this.removeChild)));
+            let (signals = new dbFinSignals.dbFinSignals()) {
+                signals.connectNoId({   emitter: childObject, signal: 'destroy',
+                                        callback: this.removeChild, scope: this });
+                this._childrenObjects.set(childObject, signals);
+            }
         }
         _D('<');
     },
@@ -200,15 +204,59 @@ const dbFinYAWLPanel = new Lang.Class({
     removeChild: function(childObject) {
         _D('>' + this.__name__ + '.removeChild()');
         if (childObject) {
-            let (signalId = this._childrenObjects.remove(childObject)) {
-                if (signalId !== undefined) {
+            let (signals = this._childrenObjects.remove(childObject)) {
+                if (signals !== undefined) {
+                    signals.destroy();
+                    signals = null;
                     let (actor = childObject.container || childObject.actor || childObject) {
                         if (actor.get_parent && actor.get_parent() == this.actor) this.actor.remove_actor(actor);
                     }
-                    childObject.disconnect(signalId);
                 }
             }
         }
+        _D('<');
+    },
+
+    showChild: function(childObject, showSelf, time) {
+        _D('>' + this.__name__ + '.showChild()');
+        if (childObject && childObject.show && this._childrenObjects && this._childrenObjects.get(childObject) !== undefined) {
+            if (showSelf) this.show();
+            if (!this._showHideChildren) childObject.show(time === undefined || time === null ? this.animationTime : time);
+        }
+        _D('<');
+    },
+
+    hideChild: function(childObject, hideSelf, time) {
+        _D('>' + this.__name__ + '.hideChild()');
+        if (childObject && childObject.hide && this._childrenObjects && this._childrenObjects.get(childObject) !== undefined) {
+            hideSelf = hideSelf && !this._childrenObjects.some(function (c, s) {
+                if (c && c != childObject && !c.hidden && !c.hiding) return true;
+            });
+            if (!this._showHideChildren || !hideSelf) childObject.hide(time === undefined || time === null ? this.animationTime : time);
+            if (hideSelf) this.hide();
+        }
+        _D('<');
+    },
+
+    showChildren: function(showSelf, time) {
+        _D('>' + this.__name__ + '.showChildren()');
+		if (showSelf) this.show();
+        if (this._childrenObjects) {
+            this._childrenObjects.forEach(function (childObject, signals) {
+                if (childObject && childObject.show) childObject.show(time === undefined || time === null ? this.animationTime : time);
+            });
+        }
+        _D('<');
+    },
+
+    hideChildren: function(hideSelf, time) {
+        _D('>' + this.__name__ + '.hideChildren()');
+        if (this._childrenObjects) {
+            this._childrenObjects.forEach(function (childObject, signals) {
+                if (childObject && childObject.hide) childObject.hide(time === undefined || time === null ? this.animationTime : time);
+            });
+        }
+        if (hideSelf) this.hide();
         _D('<');
     },
 
@@ -218,34 +266,57 @@ const dbFinYAWLPanel = new Lang.Class({
             _D('<');
             return;
         }
-        if (this.actor) {
-            this.actor.show();
-            this.actor.raise_top();
-            this.actor.reactive = true;
+        if (this.container) {
+            this.container.show();
+            this.container.raise_top();
+            this.container.reactive = true;
+        }
+        if (!this.hidden && !this.hiding) {
+            _D('<');
+            return;
         }
         this.hidden = false;
-        if (this._hideChildren && this._childrenObjects) {
-            this._childrenObjects.forEach(function (childObject, signalId) {
-                if (childObject.show) childObject.show(time === undefined || time === null ? this.animationTime : time);
-            });
-        }
+        this.hiding = false;
+        if (this._showHideChildren) this.showChildren(false, time);
 		this.animateToState({ opacity: 255 }, null, null, time);
         _D('<');
     },
 
     hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
-        if (this.actor) {
-            this.actor.reactive = false;
+        if (this.hidden) {
+            _D('<');
+            return;
         }
-        if (this._hideChildren && this._childrenObjects) {
-            this._childrenObjects.forEach(function (childObject, signalId) {
-                if (childObject.hide) childObject.hide(time === undefined || time === null ? this.animationTime : time);
-            });
-        }
-		this.animateToState({ opacity: 0 }, function() {
-			if (this.actor) this.actor.hide(); this.hidden = true;
-		}, this, time);
+        this.hiding = true;
+        if (this._showHideChildren) this.hideChildren(false, time);
+		this.animateToState({ opacity: 0 },
+                            function() {
+                                if (this.container) {
+                                    this.container.reactive = false;
+                                    this.container.hide();
+                                }
+                                this.hidden = true;
+                                this.hiding = false;
+                            }, this, time);
+        _D('<');
+    },
+
+    _showOutOfOverview: function () {
+        _D('>' + this.__name__ + '.showOutOfOverview()');
+        this.container.opacity = 0;
+        this.container.natural_height_set = false;
+        this.container.queue_relayout();
+        dbFinAnimation.animateToState(this.container, { opacity: 255 }, null, null, this.animationTime);
+        _D('<');
+    },
+
+    _hideInOverview: function () {
+        _D('>' + this.__name__ + '._hideInOverview()');
+        dbFinAnimation.animateToState(this.container, { opacity: 0 }, function () {
+            this.natural_height = 0;
+            this.queue_relayout();
+        }, this.container, this.animationTime);
         _D('<');
     },
 
@@ -258,6 +329,10 @@ const dbFinYAWLPanel = new Lang.Class({
     get max_height() { return this._maxHeight || 0; },
     set max_height(height) { this._maxHeight = height && parseInt(height) || 0;
                              if (this.container) this.container.queue_relayout(); },
+    get x() { return this.container && this.container.x; },
+    set x(x) { if (this.container && this.container.x !== x) { this.container.x = x; this.container.queue_relayout(); } },
+	get y() { return this.container && this.container.y; },
+    set y(y) { if (this.container && this.container.y !== y) { this.container.y = y; this.container.queue_relayout(); } },
 
     animateToState: function(state, callback, scope, time, transition) {
         _D('>' + this.__name__ + '.animateToState()');

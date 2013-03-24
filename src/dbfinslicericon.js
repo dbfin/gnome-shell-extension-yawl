@@ -13,12 +13,14 @@ const Lang = imports.lang;
 
 const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
+const St = imports.gi.St;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -32,15 +34,36 @@ const dbFinSlicerIcon = new Lang.Class({
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
 		this.actor = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }) });
-		this._icon = null; // icons are never destroyed when new are assigned
+        if (this.actor) {
+            this.actor._delegate = this;
+            this.actor.natural_width = 0;
+            this._signals.connectNoId({	emitter: this.actor, signal: 'notify::allocation',
+                                        callback: this._updateAllocation, scope: this });
+        }
+        this.wrapper = new St.Bin({ reactive: true, track_hover: true });
+        if (this.wrapper) {
+            this.wrapper._delegate = this;
+            if (this.actor) this.actor.set_child(this.wrapper);
+            this._signals.connectNoId({	emitter: this.wrapper, signal: 'enter-event',
+										callback: this._hoverEnter, scope: this });
+            this._signals.connectNoId({	emitter: this.wrapper, signal: 'leave-event',
+										callback: this._hoverLeave, scope: this });
+        }
+
+        this._icon = null; // icons are never destroyed when new are assigned
 		this._clipTop = 0; // px
 		this._clipBottom = 0; // px
 		this._paddingH = 0; // %
-		this.animationTime = 0;
+        this._opacity = 255;
+
+        this.animationTime = 0;
         this.animationEffect = 0;
-        this.actor.natural_width = 0;
-        this._signals.connectNoId({	emitter: this.actor, signal: 'notify::allocation',
-									callback: this._updateAllocation, scope: this });
+        this.hoverAnimation = false;
+        this._hoverOpacity = 255;
+        this.hoverScale = 1.;
+        this.hoverFit = false;
+		this.hoverAnimationTime = 100; // as percentage of this.animationTime
+        this.hoverAnimationEffect = 0;
         _D('<');
     },
 
@@ -52,18 +75,26 @@ const dbFinSlicerIcon = new Lang.Class({
         }
 		if (this.actor) {
 			this.actor.set_child(null);
+            let (parent = this.actor.get_parent && this.actor.get_parent()) {
+                if (parent && parent.remove_actor) parent.remove_actor(this.actor);
+            }
 			this.actor.destroy();
 			this.actor = null;
 		}
+        if (this.wrapper) {
+            this.wrapper.set_child(null);
+            this.wrapper.destroy();
+            this.wrapper = null;
+        }
 		this._icon = null;
         _D('<');
 	},
 
 	setIcon: function(icon) {
         _D('>' + this.__name__ + '.setIcon()');
-		if (icon !== undefined && this._icon != icon) {
+		if (icon !== undefined && this._icon != icon) { // icon can be null!
 			this._icon = icon;
-            this.actor.set_child(icon);
+            if (this.wrapper) this.wrapper.set_child(icon);
 			this.restoreNaturalSize();
 		}
         _D('<');
@@ -95,6 +126,44 @@ const dbFinSlicerIcon = new Lang.Class({
 		}
         _D('<');
 	},
+
+    setOpacity: function(opacity) {
+        _D('>' + this.__name__ + '.setOpacity()');
+        opacity = dbFinUtils.inRange(opacity, 0, 255, undefined);
+        if (opacity !== undefined && this._opacity != opacity) {
+            this._opacity = opacity;
+    		this.animateIconToState({ opacity: opacity });
+        }
+        _D('<');
+    },
+
+    setOpacity100: function(opacity) {
+        _D('>' + this.__name__ + '.setOpacity100()');
+        opacity = dbFinUtils.opacity100to255(dbFinUtils.inRange(opacity, 0, 100, undefined));
+        if (opacity !== undefined && this._opacity != opacity) {
+            this._opacity = opacity;
+    		this.animateIconToState({ opacity: opacity });
+        }
+        _D('<');
+    },
+
+    setHoverOpacity: function(opacity) {
+        _D('>' + this.__name__ + '.setHoverOpacity()');
+        opacity = dbFinUtils.inRange(opacity, 0, 255, undefined);
+        if (opacity !== undefined && this._hoverOpacity != opacity) {
+            this._hoverOpacity = opacity;
+        }
+        _D('<');
+    },
+
+    setHoverOpacity100: function(opacity) {
+        _D('>' + this.__name__ + '.setHoverOpacity100()');
+        opacity = dbFinUtils.opacity100to255(dbFinUtils.inRange(opacity, 0, 100, undefined));
+        if (opacity !== undefined && this._hoverOpacity != opacity) {
+            this._hoverOpacity = opacity;
+        }
+        _D('<');
+    },
 
     getNaturalWidth: function() {
         _D('>' + this.__name__ + '.getNaturalWidth()');
@@ -138,6 +207,32 @@ const dbFinSlicerIcon = new Lang.Class({
         _D('<');
 	},
 
+	_hoverEnter: function() {
+        _D('>' + this.__name__ + '._hoverEnter()');
+		if (this.hoverAnimation) {
+			let (state = {},
+                 time = Math.round(this.animationTime * this.hoverAnimationTime / 100)) {
+				if (this.hoverScale) state.scale_x = state.scale_y = this.hoverScale;
+				if (this.hoverFit) state.min_width = this.getNaturalWidth();
+				this.animateToState(state, null, null, time, this.hoverAnimationEffect);
+                this.animateIconToState({ opacity: this._hoverOpacity }, null, null, time, this.hoverAnimationEffect);
+			}
+		}
+        _D('<');
+	},
+
+	_hoverLeave: function() {
+        _D('>' + this.__name__ + '._hoverLeave()');
+        let (state = {},
+             time = Math.round(this.animationTime * this.hoverAnimationTime / 100)) {
+            state.scale_x = state.scale_y = 1.;
+            state.min_width = 0;
+            this.animateToState(state, null, null, time, this.hoverAnimationEffect);
+            this.animateIconToState({ opacity: this._opacity }, null, null, time, this.hoverAnimationEffect);
+        }
+        _D('<');
+	},
+
 	animateToState: function(state, callback, scope, time, transition) {
         _D('>' + this.__name__ + '.animateToState()');
 		if (time === undefined || time === null) time = this.animationTime;
@@ -145,6 +240,16 @@ const dbFinSlicerIcon = new Lang.Class({
 			transition = this.animationEffect;
 		}
 		dbFinAnimation.animateToState(this.actor, state, callback, scope, time, transition);
+        _D('<');
+	},
+
+	animateIconToState: function(state, callback, scope, time, transition) {
+        _D('>' + this.__name__ + '.animateIconToState()');
+		if (time === undefined || time === null) time = this.animationTime;
+		if (transition === undefined || transition === null) {
+			transition = this.animationEffect;
+		}
+		dbFinAnimation.animateToState(this.wrapper, state, callback, scope, time, transition);
         _D('<');
 	}
 });
