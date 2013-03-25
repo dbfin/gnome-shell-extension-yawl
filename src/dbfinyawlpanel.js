@@ -268,7 +268,6 @@ const dbFinYAWLPanel = new Lang.Class({
         }
         if (this.container) {
             this.container.show();
-            this.container.raise_top();
             this.container.reactive = true;
         }
         if (!this.hidden && !this.hiding) {

@@ -136,7 +136,6 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('>' + this.__name__ + '.show()');
 		if (this.actor) {
 			this.actor.show();
-            this.actor.raise_top();
 			this.actor.reactive = true;
 		}
         if (!this.hidden && !this.hiding) {

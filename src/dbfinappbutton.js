@@ -190,7 +190,6 @@ const dbFinAppButton = new Lang.Class({
         _D('>' + this.__name__ + '.show()');
 		if (this.container) {
 			this.container.show();
-            this.container.raise_top();
 			this.container.reactive = true;
 		}
         if (!this.hidden && !this.hiding) {
