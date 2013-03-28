@@ -34,14 +34,14 @@ const dbFinSlicerIcon = new Lang.Class({
     _init: function() {
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
-		this.actor = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }) });
+		this.actor = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }), visible: true });
         if (this.actor) {
             this.actor._delegate = this;
             this.actor.natural_width = 0;
             this._signals.connectNoId({	emitter: this.actor, signal: 'notify::allocation',
                                         callback: this._updateAllocation, scope: this });
         }
-        this.wrapper = new St.Bin({ reactive: true, track_hover: true });
+        this.wrapper = new St.Bin({ reactive: true, track_hover: true, visible: true });
         if (this.wrapper) {
             this.wrapper._delegate = this;
             if (this.actor) this.actor.set_child(this.wrapper);
@@ -50,6 +50,9 @@ const dbFinSlicerIcon = new Lang.Class({
             this._signals.connectNoId({	emitter: this.wrapper, signal: 'leave-event',
 										callback: this._hoverLeave, scope: this });
         }
+
+		this.hidden = false;
+		this.hiding = false;
 
         this._icon = null; // icons are never destroyed when new are assigned
 		this._clipTop = 0; // px
@@ -87,10 +90,50 @@ const dbFinSlicerIcon = new Lang.Class({
             this.wrapper.destroy();
             this.wrapper = null;
         }
+		this.hidden = true;
 		this._icon = null;
 		this.emit('destroy');
         _D('<');
 	},
+
+	show: function(time, callback, scope) {
+        _D('>' + this.__name__ + '.show()');
+		if (this.actor) {
+			this.actor.show();
+			this.actor.reactive = true;
+		}
+        if (!this.hidden && !this.hiding) {
+            _D('<');
+            return;
+        }
+		this.hidden = false;
+        this.hiding = false;
+        this.animateToState({ opacity: 255, natural_width: this.getNaturalWidth() }, callback, scope, time);
+        _D('<');
+	},
+
+    hide: function(time, callback, scope) {
+        _D('>' + this.__name__ + '.hide()');
+		if (!this.hidden && !this.hiding && this.actor) {
+            this.hiding = true;
+            this.animateToState({ opacity: 0, natural_width: 0, min_width: 0 },
+                                function () {
+                                    if (this.actor) {
+                                        this.actor.reactive = false;
+                                        this.actor.hide();
+                                    }
+                                    this.hidden = true;
+                                    this.hiding = false;
+                                    if (callback) {
+                                        if (scope) Lang.bind(scope, callback)();
+                                        else callback();
+                                    }
+                                },
+                                this,
+                                time);
+        }
+        _D('<');
+    },
 
 	setIcon: function(icon) {
         _D('>' + this.__name__ + '.setIcon()');
@@ -211,7 +254,7 @@ const dbFinSlicerIcon = new Lang.Class({
 
 	_hoverEnter: function() {
         _D('>' + this.__name__ + '._hoverEnter()');
-		if (this.hoverAnimation) {
+		if (this.hoverAnimation && !this.hidden && !this.hiding) {
 			let (state = {},
                  time = Math.round(this.animationTime * this.hoverAnimationTime / 100)) {
 				if (this.hoverScale) state.scale_x = state.scale_y = this.hoverScale;

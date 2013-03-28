@@ -118,10 +118,7 @@ const dbFinWindowThumbnail = new Lang.Class({
         }
 		this.hidden = false;
         this.hiding = false;
-		if (this._slicerIcon) {
-            this._slicerIcon.animateToState({ opacity: 255, natural_width: this._slicerIcon.getNaturalWidth() },
-                                            null, null, time);
-        }
+		if (this._slicerIcon) this._slicerIcon.show(time);
         _D('<');
 	},
 
@@ -129,17 +126,14 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('>' + this.__name__ + '.hide()');
 		if (!this.hidden && !this.hiding && this._slicerIcon) {
             this.hiding = true;
-            this._slicerIcon.animateToState({ opacity: 0, natural_width: 0, min_width: 0 },
-                                            function () {
-                                                if (this.actor) {
-                                                    this.actor.reactive = false;
-                                                    this.actor.hide();
-                                                }
-                                                this.hidden = true;
-                                                this.hiding = false;
-                                            },
-                                            this,
-                                            time);
+            this._slicerIcon.hide(time, function () {
+                                            if (this.actor) {
+                                                this.actor.reactive = false;
+                                                this.actor.hide();
+                                            }
+                                            this.hidden = true;
+                                            this.hiding = false;
+                                        }, this);
         }
         _D('<');
 	},
