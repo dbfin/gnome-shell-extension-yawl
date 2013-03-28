@@ -182,6 +182,7 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Thumbnails"));
 			builder.addNotebook(_("Panel"), 'panel_thumbnail.png');
+                builder.addCheckBox(_("Use arrow-style thumbnails app indicator"), 'windows-indicator-arrow');
                 builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming');
                 builder.shift();
                     builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');

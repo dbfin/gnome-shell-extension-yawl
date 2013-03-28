@@ -124,6 +124,11 @@
       <_description>Icons animation effect when hovered.</_description>
     </key>
 
+    <key name="windows-indicator-arrow" type="b">
+      <default>false</default>
+      <_summary>Whether to use arrow-style thumbnail application indicator.</_summary>
+      <_description>If true the indicator of the current thumbnails application is drawn as an arrow</_description>
+    </key>
     <key name="windows-theming" type="b">
       <default>true</default>
       <_summary>Whether to apply thumbnail theming.</_summary>

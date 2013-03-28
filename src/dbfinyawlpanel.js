@@ -9,6 +9,7 @@
  *
  */
 
+const Cairo = imports.cairo;
 const Lang = imports.lang;
 const Signals = imports.signals;
 
@@ -39,6 +40,7 @@ const dbFinYAWLPanel = new Lang.Class({
     // params:  panelname, parent, parentproperty,
     //          hidden, showhidechildren, hideinoverview,
     //          gravity, width, x, y
+    //          gravityindicator, gravityindicatorarrow
     _init: function(params) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
@@ -79,7 +81,17 @@ const dbFinYAWLPanel = new Lang.Class({
                 this.container.add_actor(this.actor);
                 this.container._box = this.actor;
             }
+            this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
+                                        callback: this.updatePanelAndRepaintIndicator, scope: this });
         }
+
+        this._gravityIndicator = params.gravityindicator && this.container && this.actor ? new St.DrawingArea() : null;
+        this._gravityIndicatorArrow = !!params.gravityindicatorarrow;
+		if (this._gravityIndicator) {
+            this._signals.connectNoId({	emitter: this._gravityIndicator, signal: 'repaint',
+                                        callback: this._drawGravityIndicator, scope: this });
+			this.container.add_actor(this._gravityIndicator);
+		}
 
 		this.hidden = false;
         this.hiding = false;
@@ -129,6 +141,11 @@ const dbFinYAWLPanel = new Lang.Class({
         if (this._childrenObjects) {
             this._childrenObjects.forEach(Lang.bind(this, function(childObject, signals) { this.removeChild(childObject); }));
         }
+		if (this._gravityIndicator) {
+			if (this.container) this.container.remove_actor(this._gravityIndicator);
+			this._gravityIndicator.destroy();
+			this._gravityIndicator = null;
+		}
 		if (this.actor) {
 			if (this.container) {
                 this.container.remove_actor(this.actor);
@@ -169,6 +186,10 @@ const dbFinYAWLPanel = new Lang.Class({
 
     _allocate: function(actor, box, flags) {
         _D('@' + this.__name__ + '._allocate()');
+		if (!this.actor) {
+			_D('<');
+			return;
+		}
         let (	w = box.x2 - box.x1,
                 h = box.y2 - box.y1,
                 x = box.x1,
@@ -177,11 +198,92 @@ const dbFinYAWLPanel = new Lang.Class({
                 [ hm, hn ] = this.actor.get_preferred_height(-1),
                 boxChild = new Clutter.ActorBox()) {
             if (wn < w) x += dbFinUtils.inRange(Math.floor(w * this._gravity - wn / 2), 0, w - wn);
-            dbFinUtils.setBox(boxChild, x, y, Math.min(box.x2, x + wn), Math.min(box.y2, y + hn));
-            this.actor.allocate(boxChild, flags);
+			let (x2 = Math.min(box.x2, x + wn),
+			     y2 = Math.min(box.y2, y + hn)) {
+				dbFinUtils.setBox(boxChild, x, y, x2, y2);
+				this.actor.allocate(boxChild, flags);
+				if (this._gravityIndicator) {
+					let (node = this.actor.get_theme_node()) {
+						if (node) {
+							let (gx = Math.floor(w * this._gravity),
+							     p = Math.max(0, Math.round(node.get_length('padding') * 3 / 5 + 1 / 5) - 1)) {
+                                let (wa = this._gravityIndicatorWidth || p * 7) {
+                                    dbFinUtils.setBox(boxChild,	Math.min(x2, Math.max(x, box.x1 + gx - wa / 2)),
+                                                                Math.min(y2, y + 1),
+                                                                Math.min(x2, box.x1 + gx + wa / 2),
+                                                                Math.min(y2, y + 1 + p));
+                                    this._gravityIndicator.allocate(boxChild, flags);
+                                } // let (w)
+							} // let (gx, p)
+						} // if (node)
+					} // let (node)
+				} // if (this._gravityIndicator)
+			} // let (x2, y2)
         } // let (w, h, x, y, [ wm, wn ], [ hm, hn ], boxChild)
         _D('<');
     },
+
+	_drawGravityIndicator: function(area) {
+        _D('@' + this.__name__ + '._drawGravityIndicator()');
+		if (!this.actor || !area) {
+			_D('<');
+			return;
+		}
+        let (node = this.actor.get_theme_node()) {
+			if (!node) {
+				_D('<');
+				return;
+			}
+			let ([ w, h ] = area.get_surface_size(),
+			     bc = node.get_border_color(1)) {
+				if (w >= 1 && h >= 1 && bc.alpha > 0) {
+					let (cr = area.get_context(),
+					     red = bc.red / 255,
+					     green = bc.green / 255,
+					     blue = bc.blue / 255,
+					     alpha = bc.alpha / 255,
+                         gradientStop = 0) {
+                        if (this._gravityIndicatorArrow) {
+                            let (x = 1 / 2,
+                                 y = 1 / 2,
+                                 x1 = w / 2 - h + 1,
+                                 x2 = w / 2 + h - 1,
+                                 x3 = w - 1 / 2) {
+                                cr.moveTo(x, y);
+                                if (x1 > x) { cr.lineTo(x1, y); gradientStop = x1 / w; }
+                                cr.lineTo(w / 2, h - 1 / 2);
+                                if (x2 < x3) cr.lineTo(x2, y);
+                                cr.lineTo(x3, y);
+                            } // let (x, y, x1, x2, x3)
+                            cr.setLineWidth(1);
+                        }
+                        else {
+                            let (bw = Math.min(node.get_border_width(1), w, h)) {
+                                cr.moveTo(bw / 2, bw / 2);
+                                cr.lineTo(w - bw / 2, bw / 2);
+                                cr.setLineWidth(bw);
+                                gradientStop = 1 / 2;
+                            } // let (bw)
+                        }
+                        if (gradientStop > 0) {
+                            let (gradient = new Cairo.LinearGradient(0, 0, w, h)) {
+                                gradient.addColorStopRGBA(0, red, green, blue, 0);
+                                gradient.addColorStopRGBA(gradientStop, red, green, blue, alpha);
+                                gradient.addColorStopRGBA(1 - gradientStop, red, green, blue, alpha);
+                                gradient.addColorStopRGBA(1, red, green, blue, 0);
+                                cr.setSource(gradient);
+                            }
+                        }
+                        else {
+                            Clutter.cairo_set_source_color(cr, bc);
+                        }
+                        cr.stroke();
+					} // let (cr, red, green, blue, alpha, gradientStop)
+				} // if (w >= 1 && h >= 1 && bc.alpha > 0)
+			} // let ([w, h], bc)
+		} // let (node)
+        _D('<');
+	},
 
     addChild: function(childObject) {
         _D('>' + this.__name__ + '.addChild()');
@@ -325,13 +427,24 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('<');
     },
 
+    updatePanelAndRepaintIndicator: function() {
+        _D('>' + this.__name__ + '.updatePanelAndRepaintIndicator()');
+		if (this._gravityIndicator) this._gravityIndicator.queue_repaint();
+		this.updatePanel();
+        _D('<');
+    },
+
     // animatable properties
     get gravity() { return this._gravity; },
-    set gravity(gravity) {  this._gravity = gravity && parseFloat(gravity) || 0.0; this.updatePanel(); },
-	get opacity() { return this.actor.opacity; },
-	set opacity(opacity) { this.actor.opacity = opacity; },
+    set gravity(gravity) { gravity = gravity && parseFloat(gravity) || 0.0; if (gravity !== this._gravity) { this._gravity = gravity; this.updatePanel(); } },
+    get gravityIndicatorWidth() { return this._gravityIndicatorWidth; },
+    set gravityIndicatorWidth(gravityIndicatorWidth) { gravityIndicatorWidth = gravityIndicatorWidth && parseInt(gravityIndicatorWidth) || 0; if (gravityIndicatorWidth !== this._gravityIndicatorWidth) { this._gravityIndicatorWidth = gravityIndicatorWidth; this.updatePanelAndRepaintIndicator(); } },
+    get gravityIndicatorArrow() { return this._gravityIndicatorArrow; },
+    set gravityIndicatorArrow(gravityIndicatorArrow) { gravityIndicatorArrow = !!gravityIndicatorArrow; if (gravityIndicatorArrow !== this._gravityIndicatorArrow) { this._gravityIndicatorArrow = gravityIndicatorArrow; this.updatePanelAndRepaintIndicator(); } },
+	get opacity() { return this.actor && this.actor.opacity || 0; },
+	set opacity(opacity) { if (this._gravityIndicator) this._gravityIndicator.opacity = opacity; if (this.actor) this.actor.opacity = opacity; },
     get max_height() { return this._maxHeight || 0; },
-    set max_height(height) { this._maxHeight = height && parseInt(height) || 0; this.updatePanel(); },
+    set max_height(height) { height = height && parseInt(height) || 0; if (height !== this._maxHeight) { this._maxHeight = height; this.updatePanel(); } },
     get x() { return this.container && this.container.x; },
     set x(x) { if (this.container && this.container.x !== x) { this.container.x = x; this.updatePanel(); } },
 	get y() { return this.container && this.container.y; },

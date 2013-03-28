@@ -88,6 +88,7 @@ const Settings = [
     [ 'icons-hover-animation-time', 33, { min: 0, max: 200 } ],
     [ 'icons-hover-animation-effect', 0, { min: 0, max: arrayAnimationTransitions.length - 1 } ],
 
+    [ 'windows-indicator-arrow', false, { } ],
     [ 'windows-theming', true, { } ],
     [ 'windows-background-panel', true, { } ],
     [ 'windows-background-color', '#000000', { } ],
