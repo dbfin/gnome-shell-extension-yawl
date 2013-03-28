@@ -21,13 +21,11 @@ const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.convenience2;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerIcon = Me.imports.dbfinslicericon;
-const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -42,7 +40,6 @@ const dbFinAppButton = new Lang.Class({
     _init: function(metaApp, trackerApp) {
         _D('>' + this.__name__ + '._init()');
 		this.parent(0.0, null, true);
-        this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
 		this.metaApp = metaApp;
         this._trackerApp = trackerApp;
@@ -68,14 +65,14 @@ const dbFinAppButton = new Lang.Class({
                                   /*after = */true);
 
         this._clicked = null;
-		dbFinUtils.settingsVariable(this, 'mouse-click-release', false, null, function () {
+		this._updatedMouseClickRelease = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
 				this._clicked = null;
 			}
 			this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*doubleClicks = */true,
-							/*scroll = */true, /*sendSingleClicksImmediately = */true, /*clickOnRelease = */this._mouseClickRelease);
-		});
+							/*scroll = */true, /*sendSingleClicksImmediately = */true, /*clickOnRelease = */global.yawl._mouseClickRelease);
+		};
 
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
@@ -86,46 +83,20 @@ const dbFinAppButton = new Lang.Class({
 
 		this._icons = new dbFinArrayHash.dbFinArrayHash();
 
-        dbFinUtils.settingsVariable(this, 'icons-size', 48, { min: 16, max: 128 }, this._updateIcon);
-        dbFinUtils.settingsVariable(this, 'icons-faded', true, null, this._updateIcon);
-        dbFinUtils.settingsVariable(this, 'icons-opacity', 84, { min: 50, max: 100 }, function () {
-            if (this._slicerIcon) this._slicerIcon.setOpacity100(this._iconsOpacity);
-        });
-		dbFinUtils.settingsVariable(this, 'icons-clip-top', 3, { min: 0, max: 11 }, function () {
-            if (this._slicerIcon) this._slicerIcon.setClipTop(this._iconsClipTop);
-        });
-		dbFinUtils.settingsVariable(this, 'icons-clip-bottom', 3, { min: 0, max: 11 }, function () {
-            if (this._slicerIcon) this._slicerIcon.setClipBottom(this._iconsClipBottom);
-        });
-		dbFinUtils.settingsVariable(this, 'icons-distance', 21, { min: 0, max: 100 }, function () {
-    		if (this._slicerIcon) this._slicerIcon.setPaddingH((this._iconsDistance + 1) >> 1);
-        });
-		dbFinUtils.settingsVariable(this, 'icons-animation-time', 490, { min: 0, max: 3000 }, function () {
-    		if (this._slicerIcon) this._slicerIcon.animationTime = this._iconsAnimationTime;
-        });
-		dbFinUtils.settingsVariable(this, 'icons-animation-effect', 1, { min: 0 }, function () {
-    		if (this._slicerIcon) this._slicerIcon.animationEffect = this._iconsAnimationEffect;
-        });
-		dbFinUtils.settingsVariable(this, 'icons-hover-animation', true, null, function () {
-            if (this._slicerIcon) this._slicerIcon.hoverAnimation = this._iconsHoverAnimation;
-        });
-		dbFinUtils.settingsVariable(this, 'icons-hover-size', 100, { min: 100, max: 200 }, function () {
-            if (this._slicerIcon) this._slicerIcon.hoverScale = this._iconsHoverSize / 100.;
-        });
-		dbFinUtils.settingsVariable(this, 'icons-hover-opacity', 100, { min: 50, max: 100 }, function () {
-            if (this._slicerIcon) this._slicerIcon.setHoverOpacity100(this._iconsHoverOpacity);
-        });
-		dbFinUtils.settingsVariable(this, 'icons-hover-fit', false, null, function () {
-            if (this._slicerIcon) this._slicerIcon.hoverFit = this._iconsHoverFit;
-        });
-		dbFinUtils.settingsVariable(this, 'icons-hover-animation-time', 33, { min: 0, max: 100 }, function () {
-            if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = this._iconsHoverAnimationTime;
-        });
-		dbFinUtils.settingsVariable(this, 'icons-hover-animation-effect', 0, { min: 0 }, function () {
-            if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = this._iconsHoverAnimationEffect;
-        });
-
-		this.hide(); // to set the width of this._slicerIcon to 0
+        this._updatedIconsSize =
+                this._updatedIconsFaded = this._updateIcon;
+        this._updatedIconsOpacity = function () { if (this._slicerIcon) this._slicerIcon.setOpacity100(global.yawl._iconsOpacity); };
+		this._updatedIconsClipTop = function () { if (this._slicerIcon) this._slicerIcon.setClipTop(global.yawl._iconsClipTop); };
+		this._updatedIconsClipBottom = function () { if (this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom); };
+		this._updatedIconsDistance = function () { if (this._slicerIcon) this._slicerIcon.setPaddingH((global.yawl._iconsDistance + 1) >> 1); };
+		this._updatedIconsAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.animationTime = global.yawl._iconsAnimationTime; };
+		this._updatedIconsAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.animationEffect = global.yawl._iconsAnimationEffect; };
+		this._updatedIconsHoverAnimation = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimation = global.yawl._iconsHoverAnimation; };
+		this._updatedIconsHoverSize = function () { if (this._slicerIcon) this._slicerIcon.hoverScale = global.yawl._iconsHoverSize / 100.; };
+		this._updatedIconsHoverOpacity = function () { if (this._slicerIcon) this._slicerIcon.setHoverOpacity100(global.yawl._iconsHoverOpacity); };
+		this._updatedIconsHoverFit = function () { if (this._slicerIcon) this._slicerIcon.hoverFit = global.yawl._iconsHoverFit; };
+		this._updatedIconsHoverAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = global.yawl._iconsHoverAnimationTime; };
+		this._updatedIconsHoverAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = global.yawl._iconsHoverAnimationEffect; };
 
         // this and this.metaApp related stuff
 		this._menuManager = Main.panel && Main.panel.menuManager || null;
@@ -138,6 +109,10 @@ const dbFinAppButton = new Lang.Class({
 		}
 		this._signals.connectNoId({ emitter: Shell.AppSystem.get_default(), signal: 'app-state-changed',
 									callback: this._updateAppState, scope: this });
+
+        global.yawl.watch(this);
+
+		this.hide(); // to set the width of this._slicerIcon to 0
 		_D('<');
     },
 
@@ -180,7 +155,6 @@ const dbFinAppButton = new Lang.Class({
 		this.hidden = true;
 		this._trackerApp = null;
 		this.metaApp = null;
-		this._settings = null;
 		this.parent();
         this.emit('destroy');
         _D('<');
@@ -207,7 +181,7 @@ const dbFinAppButton = new Lang.Class({
 
     hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
-		if (!this.hidden && this._slicerIcon) {
+		if (!this.hidden && !this.hiding && this._slicerIcon) {
             this.hiding = true;
             this._slicerIcon.animateToState({ opacity: 0, natural_width: 0, min_width: 0 },
                                             function () {
@@ -231,13 +205,13 @@ const dbFinAppButton = new Lang.Class({
 			_D('<');
 			return;
 		}
-        this._iconsSize = this._iconsSize ? Math.floor((this._iconsSize + 4) / 8) * 8 : 48; // sizes are 16, 24, ..., 128
+        global.yawl._iconsSize = global.yawl._iconsSize ? Math.floor((global.yawl._iconsSize + 4) / 8) * 8 : 48; // sizes are 16, 24, ..., 128
 		let (   icon = this._slicerIcon._icon,
-                iconnew = this._icons ? this._icons.get(this._iconsFaded ? -this._iconsSize : this._iconsSize) : null) {
-            if (iconnew === undefined || !iconnew) {
-                if (this._iconsFaded) iconnew = this.metaApp.get_faded_icon(this._iconsSize); // returns NULL sometimes
-                if (!this._iconsFaded || !iconnew) iconnew = this.metaApp.create_icon_texture(this._iconsSize);
-                if (iconnew) this._icons.set(this._iconsFaded ? -this._iconsSize : this._iconsSize, iconnew);
+                iconnew = this._icons ? this._icons.get(global.yawl._iconsFaded ? -global.yawl._iconsSize : global.yawl._iconsSize) : null) {
+            if (!iconnew) {
+                if (global.yawl._iconsFaded) iconnew = this.metaApp.get_faded_icon(global.yawl._iconsSize); // returns NULL sometimes
+                if (!iconnew) iconnew = this.metaApp.create_icon_texture(global.yawl._iconsSize);
+                if (iconnew) this._icons.set(global.yawl._iconsFaded ? -global.yawl._iconsSize : global.yawl._iconsSize, iconnew);
             }
             if (iconnew && iconnew != icon) this._slicerIcon.setIcon(iconnew);
 		} // let (icon, iconnew)
@@ -329,22 +303,21 @@ const dbFinAppButton = new Lang.Class({
         _D('<');
 	},
 
-	_buttonClicked: function(state, key) {
+	_buttonClicked: function(state, name) {
         _D('>' + this.__name__ + '._buttonClicked()');
         if (!this._trackerApp) {
             _D('this._trackerApp === null');
             _D('<');
             return;
         }
-        if (!key || key == '' || (!state.scroll && (!state.clicks || state.clicks < 1))) {
+        if (!name || name == '' || (!state.scroll && (!state.clicks || state.clicks < 1))) {
             _D('<');
             return;
         }
         if (!state.scroll && state.clicks > 2) {
             state.clicks = 2;
         }
-        let (functionIndex = dbFinUtils.settingsParseInt(   this._settings, 'mouse-app-' + key,
-                                                            0, dbFinConsts.arrayAppClickFunctions.length - 1, 0)) {
+        let (functionIndex =  global.yawl && global.yawl['_mouseApp' + name]) {
             if (functionIndex) { // functionIndex === 0 is default corresponding to no action
                 let (functionRow = dbFinConsts.arrayAppClickFunctions[functionIndex]) {
 					if (state.scroll) state.clicks = state.up ? 1 : 2;

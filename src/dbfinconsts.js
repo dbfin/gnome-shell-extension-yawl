@@ -59,3 +59,74 @@ const arrayAppMenuItems = [
     [   '',                         					null							],
     [   _("Quit"),                  					'quitApplication'				]
 ];
+
+const Settings = [
+    [ 'yawl-panel-position', 21, { min: 0, max: 50 } ],
+    [ 'yawl-panel-width', 100, { min: 1, max: 100 } ],
+    [ 'move-center', true, { } ],
+    [ 'hide-activities', true, { } ],
+    [ 'preserve-hot-corner', true, { } ],
+    [ 'hide-app-menu', false, { } ],
+    [ 'panel-background', false, { } ],
+    [ 'panel-color', '#000000', { } ],
+    [ 'panel-opacity', 100, { min: 0, max: 100 } ],
+
+    [ 'icons-size', 48, { min: 16, max: 128 } ],
+    [ 'icons-faded', true, { } ],
+    [ 'icons-opacity', 84, { min: 50, max: 100 } ],
+    [ 'icons-clip-top', 3, { min: 0, max: 7 } ],
+    [ 'icons-clip-bottom', 3, { min: 0, max: 7 } ],
+    [ 'icons-align', 0, { min: 0, max: 100 } ],
+    [ 'icons-distance', 21, { min: 0, max: 100 } ],
+
+    [ 'icons-animation-time', 490, { min: 0, max: 1000 } ],
+    [ 'icons-animation-effect', 1, { min: 0, max: arrayAnimationTransitions.length - 1 } ],
+    [ 'icons-hover-animation', true, { } ],
+    [ 'icons-hover-size', 100, { min: 100, max: 200 } ],
+    [ 'icons-hover-opacity', 100, { min: 50, max: 100 } ],
+    [ 'icons-hover-fit', false, { } ],
+    [ 'icons-hover-animation-time', 33, { min: 0, max: 200 } ],
+    [ 'icons-hover-animation-effect', 0, { min: 0, max: arrayAnimationTransitions.length - 1 } ],
+
+    [ 'windows-theming', true, { } ],
+    [ 'windows-background-panel', true, { } ],
+    [ 'windows-background-color', '#000000', { } ],
+    [ 'windows-background-opacity', 70, { min: 0, max: 100 } ],
+    [ 'windows-padding', 7, { min: 0, max: 20 } ],
+    [ 'windows-border-color', '#d3d7cf', { } ],
+    [ 'windows-border-width', 2, { min: 0, max: 3 } ],
+    [ 'windows-border-radius', 7, { min: 0, max: 10 } ],
+
+    [ 'windows-width', 248, { min: 50, max: 500 } ],
+    [ 'windows-fit-height', true, { } ],
+    [ 'windows-height', 160, { min: 40, max: 400 } ],
+    [ 'windows-panel-height', 160, { min: 40, max: 400 } ],
+    [ 'windows-opacity', 84, { min: 50, max: 100 } ],
+    [ 'windows-distance', 11, { min: 0, max: 50 } ],
+
+    [ 'windows-show-delay', 333, { min: 0, max: 1000 } ],
+    [ 'windows-animation-time', 490, { min: 0, max: 1000 } ],
+    [ 'windows-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 } ],
+    [ 'windows-hover-opacity', 100, { min: 50, max: 100 } ],
+    [ 'windows-hover-fit', true, { } ],
+    [ 'windows-hover-animation-time', 77, { min: 0, max: 200 } ],
+    [ 'windows-hover-animation-effect', 0, { min: 0, max: arrayAnimationTransitions.length - 1 } ],
+
+    [ 'mouse-app-left', 1, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+    [ 'mouse-app-left-ctrl', 8, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+    [ 'mouse-app-left-shift', 6, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+    [ 'mouse-app-left-ctrl-shift', 2, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+
+    [ 'mouse-app-middle', 9, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+    [ 'mouse-app-middle-ctrl', 3, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+    [ 'mouse-app-middle-shift', 7, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+    [ 'mouse-app-middle-ctrl-shift', 0, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+    [ 'mouse-app-scroll', 4, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+
+    [ 'mouse-app-right', 10, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+
+    [ 'mouse-click-release', false, { } ],
+    [ 'mouse-clicks-time-single', 400, { min: 250, max: 750 } ],
+    [ 'mouse-clicks-time-double', 250, { min: 100, max: 450 } ],
+    [ 'mouse-clicks-time-threshold', 300, { min: 150, max: 550 } ]
+];

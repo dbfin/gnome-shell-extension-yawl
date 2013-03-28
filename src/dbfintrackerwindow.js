@@ -10,6 +10,7 @@
  */
 
 const Lang = imports.lang;
+const Signals = imports.signals;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -78,6 +79,7 @@ const dbFinTrackerWindow = new Lang.Class({
         this.metaApp = null;
 		this._tracker = null;
         this.metaWindow = null;
+        this.emit('destroy');
         _D('<');
 	},
 
@@ -130,3 +132,4 @@ const dbFinTrackerWindow = new Lang.Class({
         _D('<');
 	}
 });
+Signals.addSignalMethods(dbFinTrackerWindow.prototype);

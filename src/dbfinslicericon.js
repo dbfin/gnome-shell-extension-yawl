@@ -10,6 +10,7 @@
  */
 
 const Lang = imports.lang;
+const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
@@ -87,6 +88,7 @@ const dbFinSlicerIcon = new Lang.Class({
             this.wrapper = null;
         }
 		this._icon = null;
+		this.emit('destroy');
         _D('<');
 	},
 
@@ -253,3 +255,4 @@ const dbFinSlicerIcon = new Lang.Class({
         _D('<');
 	}
 });
+Signals.addSignalMethods(dbFinSlicerIcon.prototype);

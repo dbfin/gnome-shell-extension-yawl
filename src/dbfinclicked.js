@@ -17,10 +17,8 @@ const Clutter = imports.gi.Clutter;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.convenience2;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinSignals = Me.imports.dbfinsignals;
-const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -30,18 +28,16 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinClicked = new Lang.Class({
 	Name: 'dbFin.Clicked',
 
-	/* callback(state, settingsKey):	state == { left:, right:, middle:, ctrl:, shift:, clicks:, scroll:, up: }
-	 *	 					            		where left, right, middle, ctrl, shift, scroll, up are either true or false
-	 * 												  clicks is the number of clicks
-	 *									settingsKey is a string of the form
-	 *											'left/right/middle[-ctrl][-shift]' or 'scroll'
+	/* callback(state, variable):       state == { left:, right:, middle:, ctrl:, shift:, clicks:, scroll:, up: }
+	 *	 					            where left, right, middle, ctrl, shift, scroll, up are either true or false
+	 * 									clicks is the number of clicks
+	 *									variable is a string of the form
+	 *									'Left/Right/Middle[Ctrl][Shift]' or 'Scroll'
 	 */
     _init: function(emitter, callback, scope, doubleClicks/* = false*/, scroll/* = false*/,
                     sendSingleClicksImmediately/* = false*/, clickOnRelease/* = false*/) {
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
-        this._settings = Convenience.getSettings();
-        this._settingsGlobal = dbFinUtils.settingsGetGlobalSettings('org.gnome.settings-daemon.peripherals.mouse');
 		this._emitter = emitter;
 		this._callback = callback;
 		this._scope = scope;
@@ -52,11 +48,6 @@ const dbFinClicked = new Lang.Class({
 		this._state = {};
 		this._stateTimeouts = new dbFinArrayHash.dbFinArrayHash();
         for (let stateNumber = 0; stateNumber < 16; ++stateNumber) this._stateTimeouts.set(stateNumber, null);
-
-		dbFinUtils.settingsVariable(this, 'mouse-clicks-time-threshold',
-		                            //use global settings as a fallback
-		                            dbFinUtils.settingsGetInteger(this._settingsGlobal, 'double-click', 333),
-		                            { min: 150, max: 550 });
 
 		this._signals.connectNoId({	emitter: this._emitter, signal: 'button-press-event',
 								  	callback: this._buttonPressEvent, scope: this });
@@ -78,9 +69,9 @@ const dbFinClicked = new Lang.Class({
             this._signals = null;
         }
 		if (this._stateTimeouts) {
-			this._stateTimeouts.forEach(Lang.bind(this, function (stateNumber, timeout) {
+			this._stateTimeouts.forEach(function (stateNumber, timeout) {
 				if (timeout) Mainloop.source_remove(timeout);
-            }));
+            });
 			this._stateTimeouts.destroy();
 			this._stateTimeouts = null;
 		}
@@ -88,8 +79,6 @@ const dbFinClicked = new Lang.Class({
 		this._callback = null;
 		this._scope = null;
 		this._state = {};
-        this._settingsGlobal = null;
-        this._settings = null;
         _D('<');
     },
 
@@ -184,6 +173,24 @@ const dbFinClicked = new Lang.Class({
 		} // let (key)
 	},
 
+	_getStateVariable: function(state) {
+        _D('>' + this.__name__ + '._getStateVariable()');
+		let (name = '') {
+			if (state.left || state.right || state.middle) {
+				if (state.left) name = 'Left';
+				else if (state.right) name = 'Right';
+				else name = 'Middle';
+				if (state.ctrl) name += 'Ctrl';
+				if (state.shift) name += 'Shift';
+			} // if (state.left || state.right || state.middle)
+			else if (state.scroll) {
+				name = 'Scroll';
+			} // if (state.left || state.right || state.middle) else if (state.scroll)
+			_D('<');
+			return name;
+		} // let (name)
+	},
+
     _buttonPressEvent: function(actor, event) {
         _D('>' + this.__name__ + '._buttonPressEvent()');
 		let (state = this._getState(event)) {
@@ -233,7 +240,7 @@ const dbFinClicked = new Lang.Class({
 							this._onTimeout(stateNumber, 1);
 						}
 						if (this._double) { // if double clicks
-							timeout = Mainloop.timeout_add(this._mouseClicksTimeThreshold, Lang.bind(this, function() {
+							timeout = Mainloop.timeout_add(global.yawl._mouseClicksTimeThreshold, Lang.bind(this, function() {
 								Lang.bind(this, this._onTimeout)(stateNumber, this._single ? 0 : 1);
 							}));
 							this._stateTimeouts.set(stateNumber, timeout);
@@ -284,12 +291,12 @@ const dbFinClicked = new Lang.Class({
 	_callBack: function(state) {
         _D('>' + this.__name__ + '._callBack()');
 		if (this._callback) {
-			let (key = this._getStateSettingsKey(state)) {
-				Mainloop.timeout_add(77, Lang.bind(this, function() {
-					if (this._scope) Lang.bind(this._scope, this._callback)(state, key);
-					else this._callback(state, key);
+			let (name = this._getStateVariable(state)) {
+				Mainloop.timeout_add(33, Lang.bind(this, function() {
+					if (this._scope) Lang.bind(this._scope, this._callback)(state, name);
+					else this._callback(state, name);
 				}));
-			} // let (key)
+			} // let (name)
 		}
         _D('<');
 	}

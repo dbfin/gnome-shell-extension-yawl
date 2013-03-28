@@ -18,10 +18,7 @@ const St = imports.gi.St;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.convenience2;
-const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerIcon = Me.imports.dbfinslicericon;
-const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -33,54 +30,34 @@ const dbFinWindowThumbnail = new Lang.Class({
 
     _init: function(metaWindow, trackerWindow) {
         _D('>' + this.__name__ + '._init()');
-        this._settings = Convenience.getSettings();
-        this._signals = new dbFinSignals.dbFinSignals();
         this.metaWindow = metaWindow;
         this._trackerWindow = trackerWindow;
 		this._clone = new Clutter.Clone({ reactive: true });
 		[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
 		this._updateClone();
 
+        this.hidden = false;
+        this.hiding = false;
+
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
         this._slicerIcon.setIcon(this._clone);
 
-        dbFinUtils.settingsVariable(this, 'windows-width', 248, { min: 50, max: 500 }, this._updateThumbnailSize);
-        dbFinUtils.settingsVariable(this, 'windows-fit-height', true, null, this._updateThumbnailSize);
-        dbFinUtils.settingsVariable(this, 'windows-height', 160, { min: 40, max: 400 }, this._updateThumbnailSize);
-        dbFinUtils.settingsVariable(this, 'windows-opacity', 84, { min: 50, max: 100 }, function () {
-            if (this._slicerIcon) this._slicerIcon.setOpacity100(this._windowsOpacity);
-        });
-		dbFinUtils.settingsVariable(this, 'windows-distance', 11, { min: 0, max: 50 }, function () {
-    		if (this._slicerIcon) this._slicerIcon.setPaddingH((this._windowsDistance + 1) >> 1);
-        });
-        dbFinUtils.settingsVariable(this, 'windows-animation-time', 490, { min: 0, max: 3000 }, function () {
-    		if (this._slicerIcon) this._slicerIcon.animationTime = this._windowsAnimationTime;
-        });
-		dbFinUtils.settingsVariable(this, 'windows-animation-effect', 1, { min: 0 }, function () {
-    		if (this._slicerIcon) this._slicerIcon.animationEffect = this._windowsAnimationEffect;
-        });
-        if (this._slicerIcon) {
-            this._slicerIcon.hoverAnimation = true; // no settings option for this
-        }
-		dbFinUtils.settingsVariable(this, 'windows-hover-opacity', 100, { min: 50, max: 100 }, function () {
-            if (this._slicerIcon) this._slicerIcon.setHoverOpacity100(this._windowsHoverOpacity);
-        });
-		dbFinUtils.settingsVariable(this, 'windows-hover-fit', true, null, function () {
-            if (this._slicerIcon) this._slicerIcon.hoverFit = this._windowsHoverFit;
-        });
-		dbFinUtils.settingsVariable(this, 'windows-hover-animation-time', 77, { min: 0, max: 100 }, function () {
-            if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = this._windowsHoverAnimationTime;
-        });
-		dbFinUtils.settingsVariable(this, 'windows-hover-animation-effect', 0, { min: 0 }, function () {
-            if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = this._windowsHoverAnimationEffect;
-        });
+        this._updatedWindowsWidth =
+		        this._updatedWindowsFitHeight =
+		        this._updatedWindowsHeight = this._updateThumbnailSize;
+        this._updatedWindowsOpacity = function () { if (this._slicerIcon) this._slicerIcon.setOpacity100(global.yawl._windowsOpacity); };
+		this._updatedWindowsDistance = function () { if (this._slicerIcon) this._slicerIcon.setPaddingH((global.yawl._windowsDistance + 1) >> 1); };
+        this._updatedWindowsAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.animationTime = global.yawl._windowsAnimationTime; };
+		this._updatedWindowsAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.animationEffect = global.yawl._windowsAnimationEffect; };
+        if (this._slicerIcon) { this._slicerIcon.hoverAnimation = true; } // no settings option for this
+		this._updatedWindowsHoverOpacity = function () { if (this._slicerIcon) this._slicerIcon.setHoverOpacity100(global.yawl._windowsHoverOpacity); };
+		this._updatedWindowsHoverFit = function () { if (this._slicerIcon) this._slicerIcon.hoverFit = global.yawl._windowsHoverFit; };
+		this._updatedWindowsHoverAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = global.yawl._windowsHoverAnimationTime; };
+		this._updatedWindowsHoverAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = global.yawl._windowsHoverAnimationEffect; };
 
 		// this.actor related stuff
-        this.actor = new St.Bin({ y_fill: true, x_fill: true, child: this._slicerIcon.actor });
-
-        this.hidden = false;
-        this.hiding = false;
+        this.actor = new St.Bin({ y_fill: true, x_fill: true, child: this._slicerIcon ? this._slicerIcon.actor : null });
 
         if (this.actor) {
             this.actor._delegate = this;
@@ -88,16 +65,14 @@ const dbFinWindowThumbnail = new Lang.Class({
             this.actor.reactive = true;
         }
 
+        global.yawl.watch(this);
+
         this.hide();
         _D('<');
     },
 
 	destroy: function() {
         _D('>' + this.__name__ + '.destroy()');
-        if (this._signals) {
-            this._signals.destroy();
-            this._signals = null;
-        }
 		if (this.actor) {
             this.actor.hide();
 			this.actor.reactive = false;
@@ -127,7 +102,6 @@ const dbFinWindowThumbnail = new Lang.Class({
 		this.hidden = true;
         this._trackerWindow = null;
         this.metaWindow = null;
-        this._settings = null;
         this.emit('destroy');
         _D('<');
 	},
@@ -153,7 +127,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 	hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
-		if (!this.hidden && this._slicerIcon) {
+		if (!this.hidden && !this.hiding && this._slicerIcon) {
             this.hiding = true;
             this._slicerIcon.animateToState({ opacity: 0, natural_width: 0, min_width: 0 },
                                             function () {
@@ -170,6 +144,14 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('<');
 	},
 
+	_update: function() {
+        _D('>' + this.__name__ + '._update()');
+		if (!this.hidden && !this.hiding) {
+			if (this._slicerIcon) this._slicerIcon.restoreNaturalSize();
+		}
+        _D('<');
+	},
+
     _updateClone: function() {
         _D('>' + this.__name__ + '._updateClone()');
 		if (this._clone) {
@@ -180,6 +162,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 						this._clone.set_source(null);
 						this._clone.set_source(texture);
 						[ this._cloneWidth, this._cloneHeight ] = texture.get_size();
+                        this._update();
                     } // if (texture && texture.get_size)
                 } // let (texture)
             } // let (compositor)
@@ -191,10 +174,11 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('>' + this.__name__ + '._updateThumbnailSize()');
 		if (this._clone && this._cloneWidth && this._cloneHeight) {
 			let (scale = 1.0) {
-                if (this._windowsFitHeight) scale = Math.min(scale, this._windowsHeight / this._cloneHeight);
-				else scale = Math.min(scale, this._windowsWidth / this._cloneWidth);
+                if (global.yawl._windowsFitHeight) scale = Math.min(scale, global.yawl._windowsHeight / this._cloneHeight);
+				else scale = Math.min(scale, global.yawl._windowsWidth / this._cloneWidth);
 				this._clone.set_width(Math.round(this._cloneWidth * scale));
 				this._clone.set_height(Math.round(this._cloneHeight * scale));
+                this._update();
 			} // let (scale)
 		} // if (this._clone)
         _D('<');

@@ -19,8 +19,8 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience2;
 const dbFinClickMeter = Me.imports.dbfinclickmeter;
 const dbFinConsts = Me.imports.dbfinconsts;
+const dbFinSettings = Me.imports.dbfinsettings;
 const dbFinSignals = Me.imports.dbfinsignals;
-const dbFinUtils = Me.imports.dbfinutils;
 const dbFinUtilsPrefs = Me.imports.dbfinutilsprefs;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -45,11 +45,11 @@ const dbFinClicksThreshold = new Lang.Class({
         this._scaleThreshold = null;
 
 		this._timeSingle = [];
-		let (time = dbFinUtils.settingsParseInt(this._settings, 'mouse-clicks-time-single', 250, 750, 400)) {
+		let (time = dbFinSettings.dbFinSettings.prototype.parseInt('mouse-clicks-time-single', 400, { min: 250, max: 750 }, this._settings)) {
 			for (let i = 0; i < 14; ++i) this._timeSingle[i] = time;
 		}
 		this._timeDouble = [];
-		let (time = dbFinUtils.settingsParseInt(this._settings, 'mouse-clicks-time-double', 100, 450, 250)) {
+		let (time = dbFinSettings.dbFinSettings.prototype.parseInt('mouse-clicks-time-double', 250, { min: 100, max: 450 }, this._settings)) {
 			for (let i = 0; i < 14; ++i) this._timeDouble[i] = time;
 		}
 
@@ -174,7 +174,7 @@ function buildPrefsWidget() {
 					builder.addScale(_("Change opacity"), 'icons-hover-opacity', 50, 100, 1, 'icons-hover-animation');
 					builder.addCheckBox(_("Show full width if partially hidden"), 'icons-hover-fit', 'icons-hover-animation');
 	                builder.addSeparator();
-	                builder.addScale(_("Mouse over animation time (% of animation time)"), 'icons-hover-animation-time', 0, 100, 1, 'icons-hover-animation');
+	                builder.addScale(_("Mouse over animation time (% of animation time)"), 'icons-hover-animation-time', 0, 200, 1, 'icons-hover-animation');
                     builder.addComboBoxText(_("Mouse over animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
 				builder.unshift();
 
@@ -182,7 +182,6 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Thumbnails"));
 			builder.addNotebook(_("Panel"), 'panel_thumbnail.png');
-                builder.addScale(_("Thumbnail panel maximum height"), 'windows-panel-height', 40, 400, 20, null, true);
                 builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming');
                 builder.shift();
                     builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
@@ -200,6 +199,8 @@ function buildPrefsWidget() {
                 builder.shift();
                     builder.addScale(_("Thumbnail height"), 'windows-height', 40, 400, 20, 'windows-fit-height', true);
                 builder.unshift();
+                builder.addScale(_("Thumbnail maximum visible height"), 'windows-panel-height', 40, 400, 20, null, true);
+                builder.addSeparator();
 				builder.addScale(_("Default thumbnail opacity"), 'windows-opacity', 50, 100, 1);
                 builder.addSeparator();
                 builder.addScale(_("Distance between thumbnails (% of thumbnail size)"), 'windows-distance', 0, 50, 1);
@@ -213,7 +214,7 @@ function buildPrefsWidget() {
 					builder.addScale(_("Change opacity"), 'windows-hover-opacity', 50, 100, 1);
 					builder.addCheckBox(_("Show full width if partially hidden"), 'windows-hover-fit');
 	                builder.addSeparator();
-	                builder.addScale(_("Mouse over animation time (% of animation time)"), 'windows-hover-animation-time', 0, 100, 1);
+	                builder.addScale(_("Mouse over animation time (% of animation time)"), 'windows-hover-animation-time', 0, 200, 1);
                     builder.addComboBoxText(_("Mouse over animation effect"), 'windows-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
                 builder.unshift();
 

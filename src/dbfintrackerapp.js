@@ -11,6 +11,7 @@
 
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
+const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
 const Meta = imports.gi.Meta;
@@ -21,10 +22,8 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.convenience2;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
-const dbFinUtils = Me.imports.dbfinutils;
 const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -37,15 +36,12 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinTrackerApp = new Lang.Class({
 	Name: 'dbFin.TrackerApp',
 
-    _init: function(metaApp, tracker, metaWindow, yawlPanelApps, yawlPanelWindows, autoHideShow/* = false*/) {
+    _init: function(metaApp, tracker, metaWindow, autoHideShow/* = false*/) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
-        this._settings = Convenience.getSettings();
 		this.metaApp = metaApp;
 		this._tracker = tracker;
         this.windows = []; // add metaWindow later
-        this.yawlPanelApps = yawlPanelApps || null;
-        this.yawlPanelWindows = yawlPanelWindows || null;
 
         this.appName = '?';
 		if (this.metaApp && this.metaApp.get_name) {
@@ -56,21 +52,16 @@ const dbFinTrackerApp = new Lang.Class({
         this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel({    hidden: true,
                                                                             showhidechildren: true });
         if (this.yawlPanelWindowsGroup) {
-            if (this.yawlPanelWindows) this.yawlPanelWindows.addChild(this.yawlPanelWindowsGroup);
+            if (global.yawl.panelWindows) global.yawl.panelWindows.addChild(this.yawlPanelWindowsGroup);
         }
 
-        dbFinUtils.settingsVariable(this, 'windows-show-delay', 333, { min: 0, max: 1000 });
-        dbFinUtils.settingsVariable(this, 'windows-animation-time', 490, { min: 0, max: 3000 }, function () {
-    		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = this._windowsAnimationTime;
-        });
-		dbFinUtils.settingsVariable(this, 'windows-animation-effect', 1, { min: 0 }, function () {
-    		if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = this._windowsAnimationEffect;
-        });
+        this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
+		this._updatedWindowsAnimationEffect = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = global.yawl._windowsAnimationEffect; };
 
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
 		if (this.appButton) {
             if (!metaWindow && this._autohideshow) this.appButton.hide();
-            if (this.yawlPanelApps) this.yawlPanelApps.addChild(this.appButton);
+            if (global.yawl.panelApps) global.yawl.panelApps.addChild(this.appButton);
             this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'enter-event',
                                         callback: this.showWindowsGroup, scope: this });
             this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
@@ -89,6 +80,8 @@ const dbFinTrackerApp = new Lang.Class({
         this._nextWindowsTimeout = null;
         this._showThumbnailsTimeout = null;
 		this._resetNextWindows();
+
+        global.yawl.watch(this);
         _D('<');
     },
 
@@ -113,7 +106,7 @@ const dbFinTrackerApp = new Lang.Class({
         this.windows = [];
 		this._tracker = null;
 		this.metaApp = null;
-        this._settings = null;
+        this.emit('destroy');
         _D('<');
 	},
 
@@ -169,7 +162,7 @@ const dbFinTrackerApp = new Lang.Class({
     showWindowsGroup: function() {
         _D('>' + this.__name__ + '.showWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
-		if (this.yawlPanelWindowsGroup && this.yawlPanelWindows) {
+		if (this.yawlPanelWindowsGroup && global.yawl.panelWindows) {
 			let (	x = 0,
                     y = 0,
 			     	actor = this.appButton && this.appButton.actor) {
@@ -177,34 +170,34 @@ const dbFinTrackerApp = new Lang.Class({
 					x = Math.round(actor.get_transformed_position()[0] + actor.get_width() / 2)
 						/ (	Main.layoutManager && Main.layoutManager.primaryMonitor
 							&& Main.layoutManager.primaryMonitor.width
-							|| this.yawlPanelWindows.container && this.yawlPanelWindows.container.get_width() || 1000000 );
+							|| global.yawl.panelWindows.container && global.yawl.panelWindows.container.get_width() || 1000000 );
                     y = (Main.layoutManager && Main.layoutManager.panelBox &&
                          Main.layoutManager.panelBox.get_y() + Main.layoutManager.panelBox.get_height() || 0);
-                    this.yawlPanelWindows.y = y;
+                    global.yawl.panelWindows.y = y;
 					this._showThumbnailsTimeout = Mainloop.timeout_add(
-							Math.max(33, this.yawlPanelWindows.hidden && this._windowsShowDelay || 0),
+							Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
 					        Lang.bind(this, function() {
 								this._cancelShowThumbnailsTimeout();
-								if (this.yawlPanelWindows.hidden) this.yawlPanelWindows.gravity = x;
-								else this.yawlPanelWindows.animateToState({ gravity: x });
-								this.yawlPanelWindows.showChild(this.yawlPanelWindowsGroup, true);
-                                this.yawlPanelWindows._lastWindowsGroupTrackerApp = this;
+								if (global.yawl.panelWindows.hidden) global.yawl.panelWindows.gravity = x;
+								else global.yawl.panelWindows.animateToState({ gravity: x });
+								global.yawl.panelWindows.showChild(this.yawlPanelWindowsGroup, true);
+                                global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;
 							}));
 				} // if (actor)
 			} // let (x, y, actor)
-        } // if (this.yawlPanelWindowsGroup && this.yawlPanelWindows)
+        } // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
         _D('<');
     },
 
     hideWindowsGroup: function() {
         _D('>' + this.__name__ + '.hideWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
-		if (this.yawlPanelWindowsGroup && this.yawlPanelWindows) {
+		if (this.yawlPanelWindowsGroup && global.yawl.panelWindows) {
 			this._showThumbnailsTimeout = Mainloop.timeout_add(33, Lang.bind(this, function() {
 				this._cancelShowThumbnailsTimeout();
-	            this.yawlPanelWindows.hideChild(this.yawlPanelWindowsGroup, true);
+	            global.yawl.panelWindows.hideChild(this.yawlPanelWindowsGroup, true);
 			}));
-		} // if (this.yawlPanelWindowsGroup && this.yawlPanelWindows)
+		} // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
         _D('<');
     },
 
@@ -448,3 +441,4 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     }
 });
+Signals.addSignalMethods(dbFinTrackerApp.prototype);

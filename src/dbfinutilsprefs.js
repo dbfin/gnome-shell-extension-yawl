@@ -58,8 +58,8 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const Convenience = Me.imports.convenience2;
+const dbFinSettings = Me.imports.dbfinsettings;
 const dbFinSignals = Me.imports.dbfinsignals;
-const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -104,7 +104,7 @@ const dbFinSettingsBindEntry = new Lang.Class({
 		this._gtkWidgetNotifySignal = '' + gtkWidgetNotifySignal;
 		this._callbackWidgetToEntry = callbackWidgetToEntry;
 		this._callbackEntryToWidget = callbackEntryToWidget;
-        let (text = dbFinUtils.settingsGetString(this._settings, this._settingsKey, null)) {
+        let (text = dbFinSettings.dbFinSettings.prototype.getString(this._settingsKey, null, {}, this._settings)) {
     		if (text === null) return;
             this._gtkEntry.set_text(text);
         }

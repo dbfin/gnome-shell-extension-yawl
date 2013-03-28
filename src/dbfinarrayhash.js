@@ -36,6 +36,8 @@ const Lang = imports.lang;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinUtils = Me.imports.dbfinutils;
+
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
@@ -196,7 +198,7 @@ const dbFinArrayHash = new Lang.Class({
 	toArray: function() {
         _D('>' + this.__name__ + '.toArray()');
         _D('<');
-		return zip(this._keys, this._values, this.length);
+		return dbFinUtils.zip(this._keys, this._values, this.length);
 	},
 
 	toString: function() {

@@ -10,6 +10,7 @@
  */
 
 const Lang = imports.lang;
+const Signals = imports.signals;
 
 const Main = imports.ui.main;
 const Panel = imports.ui.panel;
@@ -17,8 +18,6 @@ const Panel = imports.ui.panel;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.convenience2;
-const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -31,36 +30,31 @@ const dbFinPanelEnhancements = new Lang.Class({
 
     _init: function() {
         _D('>' + this.__name__ + '._init()');
-        this._settings = Convenience.getSettings();
-		this._signals = new dbFinSignals.dbFinSignals();
-        dbFinUtils.settingsVariable(this, 'panel-color', '#000000', null, this._updatePanelStyle);
-        dbFinUtils.settingsVariable(this, 'panel-opacity', 100, { min: 0, max: 100 }, this._updatePanelStyle);
-        dbFinUtils.settingsVariable(this, 'panel-background', false, null, function () {
-            if (this._panelBackground) this._updatePanelStyle();
+        this._updatedPanelColor =
+        		this._updatedPanelOpacity = this._updatePanelStyle;
+        this._updatedPanelBackground = function () {
+            if (global.yawl._panelBackground) this._updatePanelStyle();
             else this._restorePanelStyle();
-        });
+        };
+		global.yawl.watch(this);
         _D('<');
     },
 
 	destroy: function() {
         _D('>' + this.__name__ + '.destroy()');
-        if (this._signals) {
-            this._signals.destroy();
-            this._signals = null;
-        }
         this._restorePanelStyle();
-        this._settings = null;
+        this.emit('destroy');
         _D('<');
 	},
 
 	_updatePanelStyle: function() {
         _D('>' + this.__name__ + '._updatePanelStyle()');
-		if (!this._panelBackground) {
+		if (!global.yawl._panelBackground) {
 			_D('<');
 			return;
 		}
         let (style = null, stylecorner = null) {
-            let (color = dbFinUtils.stringColorOpacity100ToStringRGBA(this._panelColor, this._panelOpacity)) {
+            let (color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._panelColor, global.yawl._panelOpacity)) {
                 style = 'background-color: ' + color;
                 stylecorner = '-panel-corner-border-width: 0; -panel-corner-border-color: ' + color + '; -panel-corner-background-color: ' + color;
             }
@@ -79,3 +73,4 @@ const dbFinPanelEnhancements = new Lang.Class({
         _D('<');
 	}
 });
+Signals.addSignalMethods(dbFinPanelEnhancements.prototype);

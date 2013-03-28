@@ -36,10 +36,9 @@ const dbFinYAWLPanel = new Lang.Class({
 	Name: 'dbFin.YAWLPanel',
 
     // GNOMENEXT: ui/panel.js: class Panel
-    // e.g. Main.panel, 'panelYAWL', 'panelYAWLBox', '_yawlPanel'
     // params:  panelname, parent, parentproperty,
     //          hidden, showhidechildren, hideinoverview,
-    //          gravity, width, height, x, y
+    //          gravity, width, x, y
     _init: function(params) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
@@ -63,7 +62,6 @@ const dbFinYAWLPanel = new Lang.Class({
         									: new Shell.GenericContainer({ reactive: true, visible: true });
         if (this.container) {
             if (params.width) this.container.min_width = this.container.natural_width = params.width;
-            if (params.height) this.container.min_height = this.container.natural_height = params.height;
 			if (params.x) this.container.x = params.x;
 			if (params.y) this.container.y = params.y;
             this._signals.connectNoId({ emitter: this.container, signal: 'get-preferred-width',
@@ -116,15 +114,15 @@ const dbFinYAWLPanel = new Lang.Class({
                     if (this._parentProperty && parent[this._parentProperty] == this.container) {
                         parent[this._parentProperty] = null;
                     }
-                }
-                if (parent == Main.uiGroup) {
-                    Main.layoutManager.removeChrome(this.container);
-                }
-                else if (parent.remove_actor) {
-                    parent.remove_actor(this.container);
-                }
-                else if (parent.actor && parent.actor.remove_actor) { // this might be this._parent
-                    parent.actor.remove_actor(this.container);
+                    if (parent == Main.uiGroup) {
+                        Main.layoutManager.removeChrome(this.container);
+                    }
+                    else if (parent.remove_actor) {
+                        parent.remove_actor(this.container);
+                    }
+                    else if (parent.actor && parent.actor.remove_actor) { // this might be this._parent
+                        parent.actor.remove_actor(this.container);
+                    }
                 }
             } // let (parent)
 		}
@@ -145,7 +143,6 @@ const dbFinYAWLPanel = new Lang.Class({
 			this.container.destroy();
 			this.container = null;
 		}
-		this._bindReactiveId = null;
         this.hidden = true;
         this._parent = null;
         this.emit('destroy');
@@ -197,6 +194,10 @@ const dbFinYAWLPanel = new Lang.Class({
                                         callback: this.removeChild, scope: this });
                 this._childrenObjects.set(childObject, signals);
             }
+			if (!this.hidden && !this.hiding && this._showHideChildren
+			    && (childObject.hidden || childObject.hiding)) {
+				this.showChild(childObject, false);
+			}
         }
         _D('<');
     },
@@ -221,7 +222,7 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('>' + this.__name__ + '.showChild()');
         if (childObject && childObject.show && this._childrenObjects && this._childrenObjects.get(childObject) !== undefined) {
             if (showSelf) this.show();
-            if (!this._showHideChildren) childObject.show(time === undefined || time === null ? this.animationTime : time);
+            if (!this._showHideChildren || !showSelf) childObject.show(time === undefined || time === null ? this.animationTime : time);
         }
         _D('<');
     },
@@ -242,9 +243,9 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('>' + this.__name__ + '.showChildren()');
 		if (showSelf) this.show();
         if (this._childrenObjects) {
-            this._childrenObjects.forEach(function (childObject, signals) {
+            this._childrenObjects.forEach(Lang.bind(this, function (childObject, signals) {
                 if (childObject && childObject.show) childObject.show(time === undefined || time === null ? this.animationTime : time);
-            });
+            }));
         }
         _D('<');
     },
@@ -252,9 +253,9 @@ const dbFinYAWLPanel = new Lang.Class({
     hideChildren: function(hideSelf, time) {
         _D('>' + this.__name__ + '.hideChildren()');
         if (this._childrenObjects) {
-            this._childrenObjects.forEach(function (childObject, signals) {
+            this._childrenObjects.forEach(Lang.bind(this, function (childObject, signals) {
                 if (childObject && childObject.hide) childObject.hide(time === undefined || time === null ? this.animationTime : time);
-            });
+            }));
         }
         if (hideSelf) this.hide();
         _D('<');
@@ -283,7 +284,7 @@ const dbFinYAWLPanel = new Lang.Class({
 
     hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
-        if (this.hidden) {
+        if (this.hidden || this.hiding) {
             _D('<');
             return;
         }
@@ -305,7 +306,6 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('>' + this.__name__ + '.showOutOfOverview()');
         this.container.opacity = 0;
         this.container.natural_height_set = false;
-        this.container.queue_relayout();
         dbFinAnimation.animateToState(this.container, { opacity: 255 }, null, null, this.animationTime);
         _D('<');
     },
@@ -314,24 +314,28 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('>' + this.__name__ + '._hideInOverview()');
         dbFinAnimation.animateToState(this.container, { opacity: 0 }, function () {
             this.natural_height = 0;
-            this.queue_relayout();
         }, this.container, this.animationTime);
+        _D('<');
+    },
+
+    updatePanel: function() {
+        _D('>' + this.__name__ + '.updatePanel()');
+        if (this.actor) this.actor.queue_relayout();
+        else if (this.container) this.container.queue_relayout();
         _D('<');
     },
 
     // animatable properties
     get gravity() { return this._gravity; },
-    set gravity(gravity) {  this._gravity = gravity && parseFloat(gravity) || 0.0;
-                            if (this.container) this.container.queue_relayout(); },
+    set gravity(gravity) {  this._gravity = gravity && parseFloat(gravity) || 0.0; this.updatePanel(); },
 	get opacity() { return this.actor.opacity; },
 	set opacity(opacity) { this.actor.opacity = opacity; },
     get max_height() { return this._maxHeight || 0; },
-    set max_height(height) { this._maxHeight = height && parseInt(height) || 0;
-                             if (this.container) this.container.queue_relayout(); },
+    set max_height(height) { this._maxHeight = height && parseInt(height) || 0; this.updatePanel(); },
     get x() { return this.container && this.container.x; },
-    set x(x) { if (this.container && this.container.x !== x) { this.container.x = x; this.container.queue_relayout(); } },
+    set x(x) { if (this.container && this.container.x !== x) { this.container.x = x; this.updatePanel(); } },
 	get y() { return this.container && this.container.y; },
-    set y(y) { if (this.container && this.container.y !== y) { this.container.y = y; this.container.queue_relayout(); } },
+    set y(y) { if (this.container && this.container.y !== y) { this.container.y = y; this.updatePanel(); } },
 
     animateToState: function(state, callback, scope, time, transition) {
         _D('>' + this.__name__ + '.animateToState()');

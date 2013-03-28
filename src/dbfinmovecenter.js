@@ -10,6 +10,7 @@
  */
 
 const Lang = imports.lang;
+const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
 
@@ -19,7 +20,6 @@ const Panel = imports.ui.panel;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.convenience2;
 const dbFinPanelButtonToggle = Me.imports.dbfinpanelbuttontoggle;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinUtils = Me.imports.dbfinutils;
@@ -63,6 +63,7 @@ const dbFinHotCorner = new Lang.Class({
 			this._button.destroy();
 			this._button = null;
 		}
+        this.emit('destroy');
         _D('<');
 	},
 
@@ -91,30 +92,32 @@ const dbFinHotCorner = new Lang.Class({
 		_D('<');
 	}
 });
+Signals.addSignalMethods(dbFinHotCorner.prototype);
 
 const dbFinMoveCenter = new Lang.Class({
     Name: 'dbFin.MoveCenter',
 
     _init: function() {
         _D('>' + this.__name__ + '._init()');
-        this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
 		this._panelbuttonstoggle = new dbFinPanelButtonToggle.dbFinPanelButtonToggle();
 		this._hotcorner = null;
 		this._signals.connectNoId({ emitter: Main.panel.actor, signal: 'allocate',
 									callback: this._allocate, scope: this });
 
-        dbFinUtils.settingsVariable(this, 'yawl-panel-position', 21, { min: 0, max: 50 }, this._updatePanel );
-        dbFinUtils.settingsVariable(this, 'yawl-panel-width', 100, { min: 1, max: 100 }, this._updatePanel );
-        dbFinUtils.settingsVariable(this, 'move-center', false, null, this._updatePanel );
-        dbFinUtils.settingsVariable(this, 'hide-activities', false); // callback: _updatedHideActivities
-        dbFinUtils.settingsVariable(this, 'preserve-hot-corner', false, null, this._updatedHideActivities);
-        dbFinUtils.settingsVariable(this, 'hide-app-menu', false, null, function () {
-            if (this._hideAppMenu) this._panelbuttonstoggle.hide('appMenu', 'left');
+        this._updatedYawlPanelPosition =
+                this._updatedYawlPanelWidth =
+                this._updatedMoveCenter = this._updatePanel;
+        this._updatedHideActivities =
+                this._updatedPreserveHotCorner = this._updateActivities;
+        this._updatedHideAppMenu = function () {
+            if (global.yawl._hideAppMenu) this._panelbuttonstoggle.hide('appMenu', 'left');
             else this._panelbuttonstoggle.restore('appMenu');
-        });
+        };
 
 		this._updatePanel();
+
+        global.yawl.watch(this);
         _D('<');
     },
 
@@ -133,26 +136,28 @@ const dbFinMoveCenter = new Lang.Class({
             this._panelbuttonstoggle.destroy(); // this should restore Activities button
             this._panelbuttonstoggle = null;
         }
-        this._settings = null;
+        this.emit('destroy');
         _D('<');
     },
 
 	_updatePanel: function() {
         _D('>' + this.__name__ + '._updatePanel()');
-		if (Main.panel) Main.panel.actor.queue_relayout();
+		if (global.yawl && global.yawl.panelApps && global.yawl.panelApps.actor) {
+			global.yawl.panelApps.actor.queue_relayout();
+		}
         _D('<');
 	},
 
-    _updatedHideActivities: function() {
-        _D('>' + this.__name__ + '._updatedHideActivities()');
-		if (this._hideActivities && this._preserveHotCorner) {
+    _updateActivities: function() {
+        _D('>' + this.__name__ + '._updateActivities()');
+		if (global.yawl._hideActivities && global.yawl._preserveHotCorner) {
 			if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
 		}
 		else if (this._hotcorner) {
 			this._hotcorner.destroy();
 			this._hotcorner = null;
 		}
-		if (this._hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
+		if (global.yawl._hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
 		else this._panelbuttonstoggle.restore('activities');
         _D('<');
     },
@@ -170,7 +175,7 @@ const dbFinMoveCenter = new Lang.Class({
                 drl = (Main.panel.actor.get_text_direction() == Clutter.TextDirection.RTL)) {
 			if (!wym && Main.panel._yawlPanel) wym = Main.panel._yawlPanel._box.get_n_children();
 			let (wly, wl, wy, wr, xl, xr) {
-				if (this._moveCenter) {
+				if (global.yawl._moveCenter) {
 					// let left box + YAWL panel occupy all the space on the left, but no less than (w - wcn) / 2
 					// let right box occupy as much as it needs on the right, but no more than (w - wcn) / 2
 					wly = Math.max(w - wcn - wrn, Math.ceil((w - wcn) / 2));
@@ -180,8 +185,8 @@ const dbFinMoveCenter = new Lang.Class({
 					wly = Math.ceil((w - wcn) / 2);
 					wr = Math.floor((w - wcn) / 2);
 				}
-				wl = Math.max(wlm, Math.min(Math.floor(w * this._yawlPanelPosition / 100), wly - wym));
-				wy = Math.max(wym, Math.min(wly - wl, Math.floor(w * this._yawlPanelWidth / 100)));
+				wl = Math.max(wlm, Math.min(Math.floor(w * global.yawl._yawlPanelPosition / 100), wly - wym));
+				wy = Math.max(wym, Math.min(wly - wl, Math.floor(w * global.yawl._yawlPanelWidth / 100)));
 				wly = Math.max(wly, wl + wy);
 				[ xl, xr ] = drl ? [ w, w ] : [ 0, 0 ];
 				if (wl) {
@@ -211,3 +216,4 @@ const dbFinMoveCenter = new Lang.Class({
         _D('<');
     }
 });
+Signals.addSignalMethods(dbFinMoveCenter.prototype);

@@ -11,6 +11,7 @@
 
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
+const Signals = imports.signals;
 
 const Shell = imports.gi.Shell;
 
@@ -32,11 +33,9 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinTracker = new Lang.Class({
 	Name: 'dbFin.Tracker',
 
-    _init: function(yawlPanelApps, yawlPanelWindows) {
+    _init: function() {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
-        this.yawlPanelApps = yawlPanelApps || null;
-        this.yawlPanelWindows = yawlPanelWindows || null;
         this._tracker = Shell.WindowTracker.get_default();
 		this.apps = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, { state:, trackerApp: } ] ]
 		this.windows = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaWindow, { state:, trackerWindow: } ] ]
@@ -76,8 +75,7 @@ const dbFinTracker = new Lang.Class({
 			this.windows = null;
 		}
         this._tracker = null;
-        this.yawlPanelWindows = null;
-        this.yawlPanelApps = null;
+        this.emit('destroy');
         _D('<');
 	},
 
@@ -163,9 +161,7 @@ const dbFinTracker = new Lang.Class({
 						if (appProperties === undefined || !appProperties || !appProperties.trackerApp) { // new app
 							appsIn.push(metaApp);
 							appProperties = {};
-							appProperties.trackerApp = new dbFinTrackerApp.dbFinTrackerApp(
-                                                                        metaApp, this, metaWindow,
-                                                                        this.yawlPanelApps, this.yawlPanelWindows, true);
+							appProperties.trackerApp = new dbFinTrackerApp.dbFinTrackerApp(metaApp, this, metaWindow, true);
                             appProperties.state = this.state;
                             this.apps.set(metaApp, appProperties);
 						}
@@ -281,7 +277,7 @@ const dbFinTracker = new Lang.Class({
 
     _updatePanels: function(appsIn, appsOut, windowsIn, windowsOut) {
         _D('>' + this.__name__ + '._updatePanels()');
-        if (!this.yawlPanelApps || !this.yawlPanelWindows) {
+        if (!global.yawl.panelApps || !global.yawl.panelWindows) {
             log('');
             log('State:      ' + this.state);
             log('State info: ' + this.stateInfo);
@@ -304,7 +300,7 @@ const dbFinTracker = new Lang.Class({
             })); // this.apps.forEach
             _D('<');
             return;
-        } // if (!this.yawlPanelApps || !this.yawlPanelWindows)
+        } // if (!global.yawl.panelApps || !global.yawl.panelWindows)
 /*        if (appsIn && appsIn.forEach) {
             appsIn.forEach(Lang.bind(this, function(metaApp) {
                 let (trackerApp = this.getTrackerApp(metaApp)) {
@@ -353,3 +349,4 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	}
 });
+Signals.addSignalMethods(dbFinTracker.prototype);

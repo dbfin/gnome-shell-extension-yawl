@@ -14,43 +14,6 @@
  *
  * inRange(value, min, max, d)  returns value or min (if value < min) or max (if value > max) or d (if min > max)
  *
- * settingsParseInt(s, k, min, max, d)  returns a number parsed from settings key:string
- *                              Parameters:
- *                                  s               the settings
- *                                  k               the key
- *                                  min, max        minimum and maximum values allowed
- *                                  d               default value (if cannot read or parse the value)
- *
- * settingsGetBoolean(s, k, d)	returns a boolean value from settings key:boolean
- * 								Parameters:
- * 									s				the settings
- * 									k				the key
- * 									d				default value (if cannot read the value)
- *
- * settingsGetString(s, k, d)	returns a string value from settings key:string
- * 								Parameters:
- * 									s				the settings
- * 									k				the key
- * 									d				default value (if cannot read the value)
- *
- * settingsGetInteger(s, k, d)	returns an integer value from settings key:integer
- * 								Parameters:
- * 									s				the settings
- * 									k				the key
- * 									d				default value (if cannot read the value)
- *
- * settingsGetGlobalSettings(schemaName)    returns Gio.Settings object corresponding to schemaName or null
- *
- * settingsVariable(s, k, i, p, c)  given s._settings key k=='settings-key' creates s._settingsKey=i
- *                                  and binds it (using s._signals) to the settings key k,
- *                                  automatically updates it (using additional properties p if needed),
- *                                  and calls callback c after that
- * 									s				scope (the variable's object)
- * 									k				the settings key
- * 									i				the variable's initial value
- * 									p				additional parameters for updating (like { min:, max: })
- * 									c				the callback function after updating
- *
  * opacity100to255(opacity)		converts opacity 0-100 to 0-255, or returns undefined on fail
  *
  * stringColorOpacity100ToStringRGBA(color, opacity)    '#808080', 70 -> 'rgba(128, 128, 128, 0.7)'
@@ -71,18 +34,7 @@
  *
  */
 
-const Lang = imports.lang;
-
 const Gdk = imports.gi.Gdk;
-const Gio = imports.gi.Gio;
-
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-
-const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
-const _ = Gettext.gettext;
-
-const _D = Me.imports.dbfindebug._D;
 
 /* function now: returns current date/time
  * Parameters:
@@ -118,131 +70,6 @@ function inRange(value, min, max, d) {
     if (min !== null && value < min) return min;
     if (max !== null && value > max) return max;
     return value;
-}
-
-/* function settingsParseInt(s, k, min, max, d): returns a number parsed from settings key:string
- * Parameters:
- *     s               the settings
- *     k               the key
- *     min, max        minimum and maximum values allowed
- *     d               default value (if cannot read or parse the value)
- */
-function settingsParseInt(s, k, min, max, d) {
-    if (!s || !s.list_keys || !s.get_string || !k || k == '') return d;
-	if (s.list_keys().indexOf(k) == -1) return d;
-    let (value = parseInt(s.get_string(k))) {
-        if (isNaN(value)) return d;
-        return inRange(value, min, max, d);
-    } // let (value)
-}
-
-/* function settingsGetBoolean(s, k, d): returns a boolean value from settings key:boolean
- * Parameters:
- * 		s				the settings
- * 		k				the key
- * 		d				default value (if cannot read the value)
- */
-function settingsGetBoolean(s, k, d) {
-    if (!s || !s.list_keys || !s.get_boolean || !k || k == '') return d;
-	if (s.list_keys().indexOf(k) == -1) return d;
-	return s.get_boolean(k);
-}
-
-/* function settingsGetString(s, k, d): returns a string value from settings key:string
- * Parameters:
- * 		s				the settings
- * 		k				the key
- * 		d				default value (if cannot read the value)
- */
-function settingsGetString(s, k, d) {
-    if (!s || !s.list_keys || !s.get_string || !k || k == '') return d;
-	if (s.list_keys().indexOf(k) == -1) return d;
-	return s.get_string(k);
-}
-
-/* function settingsGetInteger(s, k, d): returns an integer value from settings key:integer
- * Parameters:
- * 		s				the settings
- * 		k				the key
- * 		d				default value (if cannot read the value)
- */
-function settingsGetInteger(s, k, d) {
-    if (!s || !s.list_keys || !s.get_int || !k || k == '') return d;
-	if (s.list_keys().indexOf(k) == -1) return d;
-	return s.get_int(k);
-}
-
-/* settingsGetGlobalSettings(schemaName): returns Gio.Settings object corresponding to schemaName or null
- */
-function settingsGetGlobalSettings(schemaName) {
-    if (!schemaName || (schemaName = '' + schemaName) == '') return null;
-    let (schemaSource = Gio.SettingsSchemaSource.get_default()) {
-        let (schemaObject = schemaSource && schemaSource.lookup(schemaName, true)) {
-            return schemaObject ? new Gio.Settings({ settings_schema: schemaObject }) : null;
-        }
-    }
-}
-
-/* settingsVariable(s, k, i, p, c)  given s._settings key k=='settings-key' creates s._settingsKey=i
- *                                  and binds it (using s._signals) to the settings key k,
- *                                  automatically updates it (using additional properties p if needed),
- *                                  and calls callback c after that
- * 									s				scope (the variable's object)
- * 									k				the settings key
- * 									i				the variable's initial value
- * 									p				additional parameters for updating (like { min:, max: })
- * 									c				the callback function after updating
- */
-function settingsVariable(s, k, i, p, c) {
-    if (!s || !s._settings || !s._settings.connect || !s._settings.list_keys
-        || !s._signals || !s._signals.connectNoId
-        || i === undefined || i === null
-        || !k || (k = '' + k) == '' || s._settings.list_keys().indexOf(k) == -1) return;
-	p = p || {};
-	if (c === undefined) c = null;
-	let (n = '_' + k.replace(/[ \t]/g, '').replace(/\-[^-]+/g, function (m) { return m[1].toUpperCase() + m.substring(2); })) {
-		let (cn = '_updated' + n[1].toUpperCase() + n.substring(2),
-		     un = '_update' + n[1].toUpperCase() + n.substring(2)) {
-			if (s[n] !== undefined || s[un] !== undefined) return;
-			s[n] = i;
-			if (c && !s[cn]) s[cn] = c;
-            if (typeof i === 'number') {
-				s[un] = function (s, k, p, n, cn) {
-							return function () {
-								_D('>' + s.__name__ + '.' + un + '()');
-								s[n] = settingsParseInt(s._settings, k, p.min, p.max, s[n]);
-								if (s[cn]) Lang.bind(s, s[cn])();
-								_D('<');
-							};
-						} (s, k, p, n, cn);
-            }
-            else if (typeof i === 'boolean') {
-                s[un] = function (s, k, n, cn) {
-                            return function () {
-								_D('>' + s.__name__ + '.' + un + '()');
-                                s[n] = settingsGetBoolean(s._settings, k, s[n]);
-                                if (s[cn]) Lang.bind(s, s[cn])();
-								_D('<');
-                            }
-                        } (s, k, n, cn);
-            }
-            else if (typeof i === 'string') {
-				s[un] = function (s, k, n, c) {
-							return function () {
-								_D('>' + s.__name__ + '.' + un + '()');
-                                s[n] = settingsGetString(s._settings, k, s[n]);
-                                if (s[cn]) Lang.bind(s, s[cn])();
-								_D('<');
-							}
-						} (s, k, n, c);
-            }
-			if (s[un]) {
-				s[un]();
-                s._signals.connectNoId({	emitter: s._settings, signal: 'changed::' + k,
-                                            callback: s[un], scope: s });
-			}
-		} // let (cn)
-	} // let (n)
 }
 
 /* function opacity100to255(opacity)

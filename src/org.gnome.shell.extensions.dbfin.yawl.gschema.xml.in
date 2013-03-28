@@ -124,11 +124,6 @@
       <_description>Icons animation effect when hovered.</_description>
     </key>
 
-    <key name="windows-panel-height" type="s">
-      <default>'160'</default>
-      <_summary>Window thumbnail panel maximum height.</_summary>
-      <_description>Window thumbnail panel maximum height.</_description>
-    </key>
     <key name="windows-theming" type="b">
       <default>true</default>
       <_summary>Whether to apply thumbnail theming.</_summary>
@@ -185,6 +180,11 @@
       <_summary>Height of window thumbnails.</_summary>
       <_description>The height of window thumbnails.</_description>
     </key>
+    <key name="windows-panel-height" type="s">
+      <default>'160'</default>
+      <_summary>Window thumbnail maximum visible height.</_summary>
+      <_description>Window thumbnail maximum visible height.</_description>
+    </key>
     <key name="windows-opacity" type="s">
       <default>'84'</default>
       <_summary>Default windows opacity.</_summary>
@@ -207,7 +207,7 @@
       <_description>Windows animation time in ms. If 0 then no animation is used.</_description>
     </key>
     <key name="windows-animation-effect" type="s">
-      <default>'1'</default>
+      <default>'3'</default>
       <_summary>Windows animation effect.</_summary>
       <_description>Windows animation effect.</_description>
     </key>
@@ -227,7 +227,7 @@
       <_description>Window thumbnails animation time when hovered as % of animation time.</_description>
     </key>
     <key name="windows-hover-animation-effect" type="s">
-      <default>'0'</default>
+      <default>'3'</default>
       <_summary>Window thumbnails on hover animation effect.</_summary>
       <_description>Window thumbnails animation effect when hovered.</_description>
     </key>
