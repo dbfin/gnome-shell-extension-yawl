@@ -202,12 +202,12 @@
     </key>
 
     <key name="windows-show-delay" type="s">
-      <default>'333'</default>
+      <default>'400'</default>
       <_summary>Window thumbnails showing delay (in ms).</_summary>
       <_description>Window thumbnails showing delay time in ms.</_description>
     </key>
     <key name="windows-animation-time" type="s">
-      <default>'490'</default>
+      <default>'400'</default>
       <_summary>Windows animation time.</_summary>
       <_description>Windows animation time in ms. If 0 then no animation is used.</_description>
     </key>

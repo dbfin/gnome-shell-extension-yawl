@@ -48,12 +48,8 @@ const dbFinAppButton = new Lang.Class({
         this.hiding = false;
 
 		// this.actor and this.container related stuff
-        if (this.container) {
-            this.container.track_hover = false;
-        }
         if (this.actor) {
             this.actor._delegate = this;
-            this.actor.track_hover = false;
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
             this.actor.reactive = true;
         }

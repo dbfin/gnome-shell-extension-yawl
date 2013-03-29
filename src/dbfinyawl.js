@@ -64,17 +64,9 @@ const dbFinYAWL = new Lang.Class({
                                                                         gravityindicator: true });
         if (global.yawl.panelWindows) {
 			this._signals.connectNoId({	emitter: global.yawl.panelWindows.actor, signal: 'enter-event',
-										callback:   function () {
-                                            if (global.yawl.panelWindows && global.yawl.panelWindows._lastWindowsGroupTrackerApp) {
-                                                global.yawl.panelWindows._lastWindowsGroupTrackerApp.showWindowsGroup();
-                                            }
-                                        }, scope: this });
+										callback: this._hoverEnter, scope: this });
 			this._signals.connectNoId({	emitter: global.yawl.panelWindows.actor, signal: 'leave-event',
-										callback:   function () {
-											if (global.yawl.panelWindows && global.yawl.panelWindows._lastWindowsGroupTrackerApp) {
-												global.yawl.panelWindows._lastWindowsGroupTrackerApp.hideWindowsGroup();
-											}
-                                        }, scope: this });
+										callback: this._hoverLeave, scope: this });
         }
 
 		this._updatedIconsAnimationTime = function () { if (global.yawl.panelApps) global.yawl.panelApps.animationTime = global.yawl._iconsAnimationTime; };
@@ -138,6 +130,22 @@ const dbFinYAWL = new Lang.Class({
             global.yawl = null;
         }
         this.emit('destroy');
+        _D('<');
+    },
+
+    _hoverEnter: function () {
+        _D('>' + this.__name__ + '._hoverEnter()');
+        if (global.yawl.panelWindows && global.yawl.panelWindows._lastWindowsGroupTrackerApp) {
+            global.yawl.panelWindows._lastWindowsGroupTrackerApp.showWindowsGroup();
+        }
+        _D('<');
+    },
+
+    _hoverLeave: function () {
+        _D('>' + this.__name__ + '._hoverLeave()');
+        if (global.yawl.panelWindows && global.yawl.panelWindows._lastWindowsGroupTrackerApp) {
+            global.yawl.panelWindows._lastWindowsGroupTrackerApp.hideWindowsGroup();
+        }
         _D('<');
     },
 

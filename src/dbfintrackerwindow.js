@@ -103,7 +103,7 @@ const dbFinTrackerWindow = new Lang.Class({
 	},
 
 	_updateFocused: function() {
-        _D('>' + this.__name__ + '._updateFocused()');
+        _D('@' + this.__name__ + '._updateFocused()');
         let (focusedWindow = global.display.focus_window) {
             this.focused = this.metaWindow && focusedWindow
                                 && (focusedWindow == this.metaWindow

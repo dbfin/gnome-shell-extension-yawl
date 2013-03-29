@@ -110,10 +110,7 @@ const dbFinMoveCenter = new Lang.Class({
                 this._updatedMoveCenter = this._updatePanel;
         this._updatedHideActivities =
                 this._updatedPreserveHotCorner = this._updateActivities;
-        this._updatedHideAppMenu = function () {
-            if (global.yawl._hideAppMenu) this._panelbuttonstoggle.hide('appMenu', 'left');
-            else this._panelbuttonstoggle.restore('appMenu');
-        };
+        // this._updatedHideAppMenu: below
 
 		this._updatePanel();
 
@@ -159,6 +156,13 @@ const dbFinMoveCenter = new Lang.Class({
 		}
 		if (global.yawl._hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
 		else this._panelbuttonstoggle.restore('activities');
+        _D('<');
+    },
+
+    _updatedHideAppMenu: function () {
+        _D('>' + this.__name__ + '._updatedHideAppMenu()');
+        if (global.yawl._hideAppMenu) this._panelbuttonstoggle.hide('appMenu', 'left');
+        else this._panelbuttonstoggle.restore('appMenu');
         _D('<');
     },
 

@@ -57,7 +57,8 @@ const dbFinWindowThumbnail = new Lang.Class({
 		this._updatedWindowsHoverAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = global.yawl._windowsHoverAnimationEffect; };
 
 		// this.actor related stuff
-        this.actor = new St.Bin({ y_fill: true, x_fill: true, child: this._slicerIcon ? this._slicerIcon.actor : null });
+        this.actor = new St.Bin({ y_fill: true, x_fill: true, track_hover: true,
+                                  child: this._slicerIcon ? this._slicerIcon.actor : null });
 
         if (this.actor) {
             this.actor._delegate = this;

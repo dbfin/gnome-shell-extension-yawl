@@ -105,8 +105,8 @@ const Settings = [
     [ 'windows-opacity', 84, { min: 50, max: 100 } ],
     [ 'windows-distance', 11, { min: 0, max: 50 } ],
 
-    [ 'windows-show-delay', 333, { min: 0, max: 1000 } ],
-    [ 'windows-animation-time', 490, { min: 0, max: 1000 } ],
+    [ 'windows-show-delay', 400, { min: 0, max: 1000 } ],
+    [ 'windows-animation-time', 400, { min: 0, max: 1000 } ],
     [ 'windows-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 } ],
     [ 'windows-hover-opacity', 100, { min: 50, max: 100 } ],
     [ 'windows-hover-fit', true, { } ],

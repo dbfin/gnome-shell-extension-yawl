@@ -61,11 +61,27 @@ const dbFinTrackerApp = new Lang.Class({
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
 		if (this.appButton) {
             if (!metaWindow && this._autohideshow) this.appButton.hide();
-            if (global.yawl.panelApps) global.yawl.panelApps.addChild(this.appButton);
-            this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'enter-event',
-                                        callback: this.showWindowsGroup, scope: this });
-            this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
-                                        callback: this.hideWindowsGroup, scope: this });
+            if (global.yawl.panelApps) {
+                global.yawl.panelApps.addChild(this.appButton);
+                if (global.yawl.panelApps.container) {
+                    this._signals.connectNoId({	emitter: global.yawl.panelApps.container, signal: 'notify::allocation',
+                                                callback: this._appButtonAllocationChanged, scope: this });
+                }
+                if (global.yawl.panelApps.actor) {
+                    this._signals.connectNoId({	emitter: global.yawl.panelApps.actor, signal: 'notify::allocation',
+                                                callback: this._appButtonAllocationChanged, scope: this });
+                }
+            }
+			if (this.appButton.container) {
+				this._signals.connectNoId({	emitter: this.appButton.container, signal: 'notify::allocation',
+											callback: this._appButtonAllocationChanged, scope: this });
+			}
+			if (this.appButton.actor) {
+				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'enter-event',
+											callback: this.showWindowsGroup, scope: this });
+				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
+											callback: this.hideWindowsGroup, scope: this });
+			}
         }
 
         this.addWindow(metaWindow);
@@ -159,32 +175,51 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
+	_appButtonAllocationChanged: function() {
+        _D('>' + this.__name__ + '._appButtonAllocationChanged()');
+		if (this.yawlPanelWindowsGroup && !this.yawlPanelWindowsGroup.hidden && !this.yawlPanelWindowsGroup.hiding) {
+			this.positionWindowsGroup();
+		}
+        _D('<');
+	},
+
+	positionWindowsGroup: function() {
+        _D('>' + this.__name__ + '.positionWindowsGroup()');
+		if (global.yawl.panelWindows) {
+			global.yawl.panelWindows.y = Main.layoutManager && Main.layoutManager.panelBox
+					&& Main.layoutManager.panelBox.get_y() + Main.layoutManager.panelBox.get_height() || 0;
+			if (this.yawlPanelWindowsGroup) {
+				let (container = this.appButton && this.appButton.container) {
+					if (container) {
+						let (w = Main.layoutManager && Main.layoutManager.primaryMonitor
+								 && Main.layoutManager.primaryMonitor.width
+								 || global.yawl.panelWindows.container && global.yawl.panelWindows.container.get_width()
+								 || 0) {
+							let (g = w && Math.round(container.get_transformed_position()[0] + container.get_width() / 2) / w || 0) {
+								if (global.yawl.panelWindows.hidden) global.yawl.panelWindows.gravity = g;
+								else global.yawl.panelWindows.animateToState({ gravity: g });
+							} // let (g)
+						} // let (w, y)
+					} // if (container)
+				} // let (container)
+			} // if (this.yawlPanelWindowsGroup)
+		} // if (global.yawl.panelWindows)
+        _D('<');
+	},
+
     showWindowsGroup: function() {
         _D('>' + this.__name__ + '.showWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
 		if (this.yawlPanelWindowsGroup && global.yawl.panelWindows) {
-			let (	x = 0,
-                    y = 0,
-			     	actor = this.appButton && this.appButton.actor) {
-				if (actor) {
-					x = Math.round(actor.get_transformed_position()[0] + actor.get_width() / 2)
-						/ (	Main.layoutManager && Main.layoutManager.primaryMonitor
-							&& Main.layoutManager.primaryMonitor.width
-							|| global.yawl.panelWindows.container && global.yawl.panelWindows.container.get_width() || 1000000 );
-                    y = (Main.layoutManager && Main.layoutManager.panelBox &&
-                         Main.layoutManager.panelBox.get_y() + Main.layoutManager.panelBox.get_height() || 0);
-                    global.yawl.panelWindows.y = y;
-					this._showThumbnailsTimeout = Mainloop.timeout_add(
-							Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
-					        Lang.bind(this, function() {
-								this._cancelShowThumbnailsTimeout();
-								if (global.yawl.panelWindows.hidden) global.yawl.panelWindows.gravity = x;
-								else global.yawl.panelWindows.animateToState({ gravity: x });
-								global.yawl.panelWindows.showChild(this.yawlPanelWindowsGroup, true);
-                                global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;
-							}));
-				} // if (actor)
-			} // let (x, y, actor)
+			this._showThumbnailsTimeout = Mainloop.timeout_add(
+                    Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
+                    Lang.bind(this, function() {
+                        this._cancelShowThumbnailsTimeout();
+                        this.positionWindowsGroup(); // position it before showing if it is hidden
+                        global.yawl.panelWindows.showChild(this.yawlPanelWindowsGroup, true);
+                        global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;
+                    })
+            );
         } // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
         _D('<');
     },
@@ -193,10 +228,13 @@ const dbFinTrackerApp = new Lang.Class({
         _D('>' + this.__name__ + '.hideWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
 		if (this.yawlPanelWindowsGroup && global.yawl.panelWindows) {
-			this._showThumbnailsTimeout = Mainloop.timeout_add(33, Lang.bind(this, function() {
-				this._cancelShowThumbnailsTimeout();
-	            global.yawl.panelWindows.hideChild(this.yawlPanelWindowsGroup, true);
-			}));
+			this._showThumbnailsTimeout = Mainloop.timeout_add(
+			        77,
+			        Lang.bind(this, function() {
+						this._cancelShowThumbnailsTimeout();
+						global.yawl.panelWindows.hideChild(this.yawlPanelWindowsGroup, true);
+					})
+			);
 		} // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
         _D('<');
     },

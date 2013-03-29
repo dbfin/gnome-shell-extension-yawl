@@ -116,7 +116,7 @@ const dbFinSlicerIcon = new Lang.Class({
         _D('>' + this.__name__ + '.hide()');
 		if (!this.hidden && !this.hiding && this.actor) {
             this.hiding = true;
-            this.animateToState({ opacity: 0, natural_width: 0, min_width: 0 },
+            this.animateToState({ opacity: 0, natural_width: 0 },
                                 function () {
                                     if (this.actor) {
                                         this.actor.reactive = false;
