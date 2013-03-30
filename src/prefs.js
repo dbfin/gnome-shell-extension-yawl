@@ -203,6 +203,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Thumbnail maximum visible height"), 'windows-thumbnails-height-visible', 40, 400, 20, null, true);
                 builder.addSeparator();
 				builder.addScale(_("Default thumbnail opacity"), 'windows-thumbnails-opacity', 50, 100, 1);
+				builder.addScale(_("Minimized thumbnail opacity"), 'windows-thumbnails-minimized-opacity', 10, 100, 1);
                 builder.addSeparator();
                 builder.addScale(_("Distance between thumbnails (% of thumbnail size)"), 'windows-thumbnails-distance', 0, 50, 1);
                 builder.addScale(_("Thumbnail top padding (px)"), 'windows-thumbnails-padding-top', 0, 20, 1);
@@ -211,6 +212,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 1000, 1, null, true);
                 builder.addComboBoxText(_("Animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
+                builder.addSeparator();
 				builder.addLabel(_("Animate thumbnails on mouse over"));
                 builder.shift();
 					builder.addScale(_("Change opacity"), 'windows-hover-opacity', 50, 100, 1);

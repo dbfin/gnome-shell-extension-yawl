@@ -43,22 +43,22 @@ const dbFinTrackerWindow = new Lang.Class({
 		this.title = '?';
 		this._updateTitle();
 
+        this.windowThumbnail = new dbFinWindowThumbnail.dbFinWindowThumbnail(metaWindow, this);
+
         this.minimized = false;
         this._updateMinimized();
-        if (this.metaWindow) {
-            this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::title',
-                                        callback: this._titleChanged, scope: this });
-
-            this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::minimized',
-                                        callback: this._minimizedChanged, scope: this });
-        }
+        this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::minimized',
+                                    callback: this._minimizedChanged, scope: this });
 
         this.focused = false;
         this._updateFocused();
         this._signals.connectNoId({ emitter: global.display, signal: 'notify::focus-window',
                                     callback: this._updateFocused, scope: this });
 
-        this.windowThumbnail = new dbFinWindowThumbnail.dbFinWindowThumbnail(metaWindow, this);
+        if (this.metaWindow) {
+            this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::title',
+                                        callback: this._titleChanged, scope: this });
+        }
         _D('<');
     },
 
@@ -117,6 +117,7 @@ const dbFinTrackerWindow = new Lang.Class({
         this.minimized = this.metaWindow
                 && (this.metaWindow.showing_on_its_workspace && !this.metaWindow.showing_on_its_workspace()
                     || this.metaWindow.minimized);
+        if (this.windowThumbnail) this.windowThumbnail.minimized = this.minimized;
         _D('<');
 	},
 

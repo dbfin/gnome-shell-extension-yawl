@@ -192,8 +192,13 @@
     </key>
     <key name="windows-thumbnails-opacity" type="s">
       <default>'84'</default>
-      <_summary>Default windows opacity.</_summary>
-      <_description>Windows opacity when not hovered (and when hovered if not otherwise set).</_description>
+      <_summary>Default window thumbnails opacity.</_summary>
+      <_description>Window thumbnails opacity when not hovered.</_description>
+    </key>
+    <key name="windows-thumbnails-minimized-opacity" type="s">
+      <default>'33'</default>
+      <_summary>Default minimized window thumbnails opacity.</_summary>
+      <_description>Minimized window thumbnails opacity when not hovered.</_description>
     </key>
     <key name="windows-thumbnails-distance" type="s">
       <default>'11'</default>

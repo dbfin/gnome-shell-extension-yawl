@@ -38,6 +38,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 
         this.hidden = false;
         this.hiding = false;
+        this._minimized = false;
 
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
@@ -46,7 +47,8 @@ const dbFinWindowThumbnail = new Lang.Class({
         this._updatedWindowsThumbnailsWidth =
 		        this._updatedWindowsThumbnailsFitHeight =
 		        this._updatedWindowsThumbnailsHeight = this._updateThumbnailSize;
-        this._updatedWindowsThumbnailsOpacity = function () { if (this._slicerIcon) this._slicerIcon.setOpacity100(global.yawl._windowsThumbnailsOpacity); };
+        this._updatedWindowsThumbnailsOpacity = function () { if (!this.minimized && this._slicerIcon) this._slicerIcon.setOpacity100(global.yawl._windowsThumbnailsOpacity); };
+        this._updatedWindowsThumbnailsMinimizedOpacity = function () { if (this.minimized && this._slicerIcon) this._slicerIcon.setOpacity100(global.yawl._windowsThumbnailsMinimizedOpacity); };
 		this._updatedWindowsThumbnailsDistance = function () { if (this._slicerIcon) this._slicerIcon.setPaddingH((global.yawl._windowsThumbnailsDistance + 1) >> 1); };
 		this._updatedWindowsThumbnailsPaddingTop = function () { if (this._slicerIcon) this._slicerIcon.setPaddingTop(global.yawl._windowsThumbnailsPaddingTop); };
         this._updatedWindowsAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.animationTime = global.yawl._windowsAnimationTime; };
@@ -178,6 +180,17 @@ const dbFinWindowThumbnail = new Lang.Class({
 			} // let (scale)
 		} // if (this._clone)
         _D('<');
+    },
+
+    get minimized() { return this._minimized; },
+    set minimized(minimized) {
+        if (this._minimized != minimized) {
+            this._minimized = minimized;
+            if (this._slicerIcon) {
+                if (minimized) this._slicerIcon.setOpacity100(global.yawl._windowsThumbnailsMinimizedOpacity);
+                else this._slicerIcon.setOpacity100(global.yawl._windowsThumbnailsOpacity);
+            }
+        }
     }
 });
 Signals.addSignalMethods(dbFinWindowThumbnail.prototype);

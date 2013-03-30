@@ -103,6 +103,7 @@ const Settings = [
     [ 'windows-thumbnails-height', 160, { min: 40, max: 400 } ],
     [ 'windows-thumbnails-height-visible', 160, { min: 40, max: 400 } ],
     [ 'windows-thumbnails-opacity', 84, { min: 50, max: 100 } ],
+    [ 'windows-thumbnails-minimized-opacity', 33, { min: 10, max: 100 } ],
     [ 'windows-thumbnails-distance', 11, { min: 0, max: 50 } ],
     [ 'windows-thumbnails-padding-top', 7, { min: 0, max: 20 } ],
 
