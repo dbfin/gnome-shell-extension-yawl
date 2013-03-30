@@ -257,6 +257,11 @@
       <_summary>App ctrl-shift-left click/double click function.</_summary>
       <_description>App ctrl-shift-left click/double click function.</_description>
     </key>
+    <key name="mouse-long-click" type="b">
+      <default>true</default>
+      <_summary>Whether to emulate right-click with long left-click.</_summary>
+      <_description>If true long mouse left button click emulates mouse right button click.</_description>
+    </key>
 
     <key name="mouse-app-middle" type="s">
       <default>'9'</default>

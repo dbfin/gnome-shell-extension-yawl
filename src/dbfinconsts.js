@@ -117,6 +117,7 @@ const Settings = [
     [ 'mouse-app-left-ctrl', 8, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
     [ 'mouse-app-left-shift', 6, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
     [ 'mouse-app-left-ctrl-shift', 2, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+    [ 'mouse-long-click', true, {} ],
 
     [ 'mouse-app-middle', 9, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
     [ 'mouse-app-middle-ctrl', 3, { min: 0, max: arrayAppClickFunctions.length - 1 } ],

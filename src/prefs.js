@@ -228,6 +228,11 @@ function buildPrefsWidget() {
                     builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-left-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
                     builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-left-shift', dbFinConsts.arrayAppClickFunctions, 0);
                     builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-left-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
+	                builder.addSeparator();
+					builder.addLabel(_("The following option will work only if 'Mouse events on button release' is enabled on the Fine-tuning page"));
+                    builder.shift();
+    	                builder.addCheckBox(_("Long left button click emulates right button click (useful for touch screens)"), 'mouse-long-click', 'mouse-click-release');
+                    builder.unshift();
 
                 builder.addPage(_("Middle button"), 'mouse-middle.png');
                     builder.addComboBoxText(_("Click : Double click"), 'mouse-app-middle', dbFinConsts.arrayAppClickFunctions, 0);
@@ -253,7 +258,7 @@ function buildPrefsWidget() {
 	                    widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
 	                    if (widgets && widgets.length) threshold.scaleSingle = widgets[widgets.length - 1];
 					builder.unshift();
-					builder.addLabel(_("This will measure the LONGEST time between two clicks of one DOUBLE click."));
+					builder.addLabel(_("This will measure the LONGEST time between the two clicks of one DOUBLE click."));
 					builder.shift();
 						widgets = builder.addRow(new Gtk.Label({ label: _("Make a series of DOUBLE clicks"), halign: Gtk.Align.START, hexpand: true }),
 									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],

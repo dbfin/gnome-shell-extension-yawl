@@ -169,12 +169,16 @@ const dbFinMoveCenter = new Lang.Class({
 	// GNOMENEXT: modified from ui/panel.js: class Panel
     _allocate: function (actor, box, flags) {
         _D('@' + this.__name__ + '._allocate()');
+        if (!Main.panel) {
+            _D('<');
+            return;
+        }
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
-                [wlm, wln] = Main.panel._leftBox.get_preferred_width(-1), // minimum and natural widths
-		     	[wym, wyn] = Main.panel._yawlPanel ? Main.panel._yawlPanel.get_preferred_width(-1) : [ 0, 0 ],
-                [wcm, wcn] = Main.panel._centerBox.get_preferred_width(-1),
-                [wrm, wrn] = Main.panel._rightBox.get_preferred_width(-1),
+                [wlm, wln] = Main.panel._leftBox && Main.panel._leftBox.get_stage() ? Main.panel._leftBox.get_preferred_width(-1) : [ 0, 0 ], // minimum and natural widths
+		     	[wym, wyn] = Main.panel._yawlPanel && Main.panel._yawlPanel.get_stage() ? Main.panel._yawlPanel.get_preferred_width(-1) : [ 0, 0 ],
+                [wcm, wcn] = Main.panel._centerBox && Main.panel._centerBox.get_stage() ? Main.panel._centerBox.get_preferred_width(-1) : [ 0, 0 ],
+                [wrm, wrn] = Main.panel._rightBox && Main.panel._rightBox.get_stage() ? Main.panel._rightBox.get_preferred_width(-1) : [ 0, 0 ],
                 boxChild = new Clutter.ActorBox(),
                 drl = (Main.panel.actor.get_text_direction() == Clutter.TextDirection.RTL)) {
 			if (!wym && Main.panel._yawlPanel) wym = Main.panel._yawlPanel._box.get_n_children();

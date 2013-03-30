@@ -224,7 +224,7 @@ const dbFinSlicerIcon = new Lang.Class({
 
     getNaturalWidth: function() {
         _D('>' + this.__name__ + '.getNaturalWidth()');
-		let (wn = this.wrapper && this.wrapper.get_preferred_width ? this.wrapper.get_preferred_width(-1)[1] : 0) {
+		let (wn = this.wrapper && this.wrapper.get_stage() ? this.wrapper.get_preferred_width(-1)[1] : 0) {
             wn = wn || 0;
             if (wn > 0 && this._paddingH && this._paddingH > 0) {
                 wn += 2 * Math.max(1, Math.round(wn * this._paddingH / 100.));
@@ -236,7 +236,7 @@ const dbFinSlicerIcon = new Lang.Class({
 
     getNaturalHeight: function() {
         _D('>' + this.__name__ + '.getNaturalHeight()');
-		let (hn = this.wrapper && this.wrapper.get_preferred_height ? this.wrapper.get_preferred_height(-1)[1] : 0) {
+		let (hn = this.wrapper && this.wrapper.get_stage() ? this.wrapper.get_preferred_height(-1)[1] : 0) {
             hn = hn || 0;
 	        _D('<');
             return Math.max(hn, this.actor.min_height);

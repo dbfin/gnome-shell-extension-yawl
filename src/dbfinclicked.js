@@ -35,7 +35,7 @@ const dbFinClicked = new Lang.Class({
 	 *									'Left/Right/Middle[Ctrl][Shift]' or 'Scroll'
 	 */
     _init: function(emitter, callback, scope, doubleClicks/* = false*/, scroll/* = false*/,
-                    sendSingleClicksImmediately/* = false*/, clickOnRelease/* = false*/) {
+                    sendSingleClicksImmediately/* = false*/, clickOnRelease/* = false*/, longClick/* = false*/) {
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
 		this._emitter = emitter;
@@ -45,9 +45,11 @@ const dbFinClicked = new Lang.Class({
 		this._double = !!doubleClicks;
 		this._single = !!sendSingleClicksImmediately;
 		this._release = !!clickOnRelease;
+        this._longClick = this._release && !!longClick;
 		this._state = {};
 		this._stateTimeouts = new dbFinArrayHash.dbFinArrayHash();
         for (let stateNumber = 0; stateNumber < 16; ++stateNumber) this._stateTimeouts.set(stateNumber, null);
+		this._timeoutLongClick = null;
 
 		this._signals.connectNoId({	emitter: this._emitter, signal: 'button-press-event',
 								  	callback: this._buttonPressEvent, scope: this });
@@ -68,6 +70,10 @@ const dbFinClicked = new Lang.Class({
             this._signals.destroy();
             this._signals = null;
         }
+		if (this._timeoutLongClick) {
+			Mainloop.source_remove(this._timeoutLongClick);
+			this._timeoutLongClick = null;
+		}
 		if (this._stateTimeouts) {
 			this._stateTimeouts.forEach(function (stateNumber, timeout) {
 				if (timeout) Mainloop.source_remove(timeout);
@@ -195,6 +201,10 @@ const dbFinClicked = new Lang.Class({
         _D('>' + this.__name__ + '._buttonPressEvent()');
 		let (state = this._getState(event)) {
             if (state.left || state.right || state.middle) {
+				if (this._timeoutLongClick) {
+					Mainloop.source_remove(this._timeoutLongClick);
+					this._timeoutLongClick = null;
+				}
 				if (!this._release) {
 					this._registerClick(state);
 				}
@@ -204,6 +214,26 @@ const dbFinClicked = new Lang.Class({
 					this._state.left = state.left;
 					this._state.right = state.right;
 					this._state.middle = state.middle;
+					if (state.left && this._longClick) {
+						this._timeoutLongClick = Mainloop.timeout_add(
+								Math.max(1000, global.yawl._mouseClicksTimeThreshold * 2),
+						        Lang.bind(this, function () {
+									let (timeout = this._timeoutLongClick,
+										 state = {},
+									     [ x, y, m ] = global.get_pointer()) {
+										this._timeoutLongClick = null;
+										if (!timeout) return; // something already cancelled timeout?
+										Mainloop.source_remove(timeout);
+										this._state = {};
+										state.right = true;
+										state.ctrl = !!(m & Clutter.ModifierType.CONTROL_MASK);
+										state.shift = !!(m & Clutter.ModifierType.SHIFT_MASK);
+										// do we need to indicate somehow that it is a long click?
+										this._registerClick(state);
+									}
+								})
+						);
+					} // if (state.left && this._longClick)
 				} // if (!this._release) else
 			} // if (state.left || state.right || state.middle)
 		} // let (state)
@@ -213,6 +243,10 @@ const dbFinClicked = new Lang.Class({
     _buttonReleaseEvent: function(actor, event) {
         _D('>' + this.__name__ + '._buttonReleaseEvent()');
 		let (state = this._getState(event)) {
+            if (state.left && this._timeoutLongClick) {
+				Mainloop.source_remove(this._timeoutLongClick);
+				this._timeoutLongClick = null;
+			}
 			if (	this._state && state.left == this._state.left
 			    	&& state.right == this._state.right && state.middle == this._state.middle) {
 				this._registerClick(state);

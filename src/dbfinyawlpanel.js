@@ -74,6 +74,10 @@ const dbFinYAWLPanel = new Lang.Class({
                                         callback: this._allocate, scope: this });
         }
 
+		this._actorBorderWidth = 0;
+		this._actorBorderColor = null;
+		this._actorPadding = 0;
+
 		this.actor = new St.BoxLayout({ vertical: false, reactive: true, visible: true });
 		if (this.actor) {
             this.actor._delegate = this;
@@ -82,7 +86,7 @@ const dbFinYAWLPanel = new Lang.Class({
                 this.container._box = this.actor;
             }
             this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
-                                        callback: this.updatePanelAndRepaintIndicator, scope: this });
+                                        callback: this._styleChanged, scope: this });
         }
 
         this._gravityIndicator = params.gravityindicator && this.container && this.actor ? new St.DrawingArea() : null;
@@ -168,13 +172,15 @@ const dbFinYAWLPanel = new Lang.Class({
 
     _getPreferredWidth: function(actor, forHeight, alloc) {
         _D('@' + this.__name__ + '._getPreferredWidth()');
-		[ alloc.min_size, alloc.natural_size ] = this.actor.get_preferred_width(forHeight);
+		[ alloc.min_size, alloc.natural_size ] = this.actor && this.actor.get_stage()
+                                                        ? this.actor.get_preferred_width(forHeight)
+                                                        : [ 0, 0 ];
         _D('<');
     },
 
     _getPreferredHeight: function(actor, forWidth, alloc) {
         _D('@' + this.__name__ + '._getPreferredHeight()');
-        let ([ hm, hn ] = this.actor.get_preferred_height(forWidth)) {
+        let ([ hm, hn ] = this.actor && this.actor.get_stage() ? this.actor.get_preferred_height(forWidth) : [ 0, 0 ]) {
             if (this._maxHeight && this._maxHeight > 0) {
                 if (hm > this._maxHeight) hm = this._maxHeight;
                 if (hn > this._maxHeight) hn = this._maxHeight;
@@ -186,7 +192,7 @@ const dbFinYAWLPanel = new Lang.Class({
 
     _allocate: function(actor, box, flags) {
         _D('@' + this.__name__ + '._allocate()');
-		if (!this.actor) {
+		if (!this.actor || !this.actor.get_stage()) {
 			_D('<');
 			return;
 		}
@@ -203,20 +209,16 @@ const dbFinYAWLPanel = new Lang.Class({
 				dbFinUtils.setBox(boxChild, x, y, x2, y2);
 				this.actor.allocate(boxChild, flags);
 				if (this._gravityIndicator) {
-					let (node = this.actor.get_theme_node()) {
-						if (node) {
-							let (gx = Math.floor(w * this._gravity),
-							     p = Math.max(0, Math.round(node.get_length('padding') * 3 / 5 + 1 / 5) - 1)) {
-                                let (wa = this._gravityIndicatorWidth || p * 7) {
-                                    dbFinUtils.setBox(boxChild,	Math.min(x2, Math.max(x, box.x1 + gx - wa / 2)),
-                                                                Math.min(y2, y + 1),
-                                                                Math.min(x2, box.x1 + gx + wa / 2),
-                                                                Math.min(y2, y + 1 + p));
-                                    this._gravityIndicator.allocate(boxChild, flags);
-                                } // let (w)
-							} // let (gx, p)
-						} // if (node)
-					} // let (node)
+					let (gx = Math.floor(w * this._gravity),
+						 p = Math.max(0, Math.round(this._actorPadding * 3 / 5 + 1 / 5) - 1)) {
+						let (wa = this._gravityIndicatorWidth || p * 7) {
+							dbFinUtils.setBox(boxChild,	Math.min(x2, Math.max(x, box.x1 + gx - wa / 2)),
+														Math.min(y2, y + 1),
+														Math.min(x2, box.x1 + gx + wa / 2),
+														Math.min(y2, y + 1 + p));
+							this._gravityIndicator.allocate(boxChild, flags);
+						} // let (w)
+					} // let (gx, p)
 				} // if (this._gravityIndicator)
 			} // let (x2, y2)
         } // let (w, h, x, y, [ wm, wn ], [ hm, hn ], boxChild)
@@ -229,59 +231,53 @@ const dbFinYAWLPanel = new Lang.Class({
 			_D('<');
 			return;
 		}
-        let (node = this.actor.get_theme_node()) {
-			if (!node) {
-				_D('<');
-				return;
-			}
-			let ([ w, h ] = area.get_surface_size(),
-			     bc = node.get_border_color(1)) {
-				if (w >= 1 && h >= 1 && bc.alpha > 0) {
-					let (cr = area.get_context(),
-					     red = bc.red / 255,
-					     green = bc.green / 255,
-					     blue = bc.blue / 255,
-					     alpha = bc.alpha / 255,
-                         gradientStop = 0) {
-                        if (this._gravityIndicatorArrow) {
-                            let (x = 1 / 2,
-                                 y = 1 / 2,
-                                 x1 = w / 2 - h + 1,
-                                 x2 = w / 2 + h - 1,
-                                 x3 = w - 1 / 2) {
-                                cr.moveTo(x, y);
-                                if (x1 > x) { cr.lineTo(x1, y); gradientStop = x1 / w; }
-                                cr.lineTo(w / 2, h - 1 / 2);
-                                if (x2 < x3) cr.lineTo(x2, y);
-                                cr.lineTo(x3, y);
-                            } // let (x, y, x1, x2, x3)
-                            cr.setLineWidth(1);
-                        }
-                        else {
-                            let (bw = Math.min(node.get_border_width(1), w, h)) {
-                                cr.moveTo(bw / 2, bw / 2);
-                                cr.lineTo(w - bw / 2, bw / 2);
-                                cr.setLineWidth(bw);
-                                gradientStop = 1 / 2;
-                            } // let (bw)
-                        }
-                        if (gradientStop > 0) {
-                            let (gradient = new Cairo.LinearGradient(0, 0, w, h)) {
-                                gradient.addColorStopRGBA(0, red, green, blue, 0);
-                                gradient.addColorStopRGBA(gradientStop, red, green, blue, alpha);
-                                gradient.addColorStopRGBA(1 - gradientStop, red, green, blue, alpha);
-                                gradient.addColorStopRGBA(1, red, green, blue, 0);
-                                cr.setSource(gradient);
-                            }
-                        }
-                        else {
-                            Clutter.cairo_set_source_color(cr, bc);
-                        }
-                        cr.stroke();
-					} // let (cr, red, green, blue, alpha, gradientStop)
-				} // if (w >= 1 && h >= 1 && bc.alpha > 0)
-			} // let ([w, h], bc)
-		} // let (node)
+		let ([ w, h ] = area.get_surface_size(),
+			 bc = this._actorBorderColor) {
+			if (w >= 1 && h >= 1 && bc && bc.alpha > 0) {
+				let (cr = area.get_context(),
+					 red = bc.red / 255,
+					 green = bc.green / 255,
+					 blue = bc.blue / 255,
+					 alpha = bc.alpha / 255,
+					 gradientStop = 0) {
+					if (this._gravityIndicatorArrow) {
+						let (x = 1 / 2,
+							 y = 1 / 2,
+							 x1 = w / 2 - h + 1,
+							 x2 = w / 2 + h - 1,
+							 x3 = w - 1 / 2) {
+							cr.moveTo(x, y);
+							if (x1 > x) { cr.lineTo(x1, y); gradientStop = x1 / w; }
+							cr.lineTo(w / 2, h - 1 / 2);
+							if (x2 < x3) cr.lineTo(x2, y);
+							cr.lineTo(x3, y);
+						} // let (x, y, x1, x2, x3)
+						cr.setLineWidth(1);
+					}
+					else {
+						let (bw = Math.min(this._actorBorderWidth, w, h)) {
+							cr.moveTo(bw / 2, bw / 2);
+							cr.lineTo(w - bw / 2, bw / 2);
+							cr.setLineWidth(bw);
+							gradientStop = 1 / 2;
+						} // let (bw)
+					}
+					if (gradientStop > 0) {
+						let (gradient = new Cairo.LinearGradient(0, 0, w, h)) {
+							gradient.addColorStopRGBA(0, red, green, blue, 0);
+							gradient.addColorStopRGBA(gradientStop, red, green, blue, alpha);
+							gradient.addColorStopRGBA(1 - gradientStop, red, green, blue, alpha);
+							gradient.addColorStopRGBA(1, red, green, blue, 0);
+							cr.setSource(gradient);
+						}
+					}
+					else {
+						Clutter.cairo_set_source_color(cr, bc);
+					}
+					cr.stroke();
+				} // let (cr, red, green, blue, alpha, gradientStop)
+			} // if (w >= 1 && h >= 1 && bc && bc.alpha > 0)
+		} // let ([w, h], bc)
         _D('<');
 	},
 
@@ -429,10 +425,23 @@ const dbFinYAWLPanel = new Lang.Class({
 
     updatePanelAndRepaintIndicator: function() {
         _D('>' + this.__name__ + '.updatePanelAndRepaintIndicator()');
-		if (this._gravityIndicator) this._gravityIndicator.queue_repaint();
+		if (this._gravityIndicator && this._gravityIndicator.get_stage()) this._gravityIndicator.queue_repaint();
 		this.updatePanel();
         _D('<');
     },
+
+	_styleChanged: function() {
+        _D('>' + this.__name__ + '._styleChanged()');
+		if (this.actor && this.actor.get_stage()) {
+			let (node = this.actor.get_theme_node()) {
+				this._actorBorderWidth = node.get_border_width(1);
+				this._actorBorderColor = node.get_border_color(1);
+				this._actorPadding = node.get_length('padding');
+			}
+		}
+		this.updatePanelAndRepaintIndicator();
+        _D('<');
+	},
 
     // animatable properties
     get gravity() { return this._gravity; },

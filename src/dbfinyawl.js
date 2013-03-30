@@ -156,7 +156,7 @@ const dbFinYAWL = new Lang.Class({
                 if (global.yawl._windowsTheming) {
                     let (color = '') {
                         if (global.yawl._windowsBackgroundPanel) {
-                            let (node = Main.panel && Main.panel.actor && Main.panel.actor.get_theme_node
+                            let (node = Main.panel && Main.panel.actor && Main.panel.actor.get_stage()
                                         && Main.panel.actor.get_theme_node()) {
                                 if (node) {
                                     color = node.get_background_color();
