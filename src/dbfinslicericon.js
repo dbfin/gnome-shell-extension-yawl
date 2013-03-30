@@ -58,7 +58,8 @@ const dbFinSlicerIcon = new Lang.Class({
 		this._clipTop = 0; // px
 		this._clipBottom = 0; // px
 		this._paddingH = 0; // %
-        this._paddingV = 0; // px
+        this._paddingTop = 0; // px
+        this._paddingBottom = 0; // px
         this._opacity = 255;
 
         this.animationTime = 0;
@@ -173,12 +174,23 @@ const dbFinSlicerIcon = new Lang.Class({
         _D('<');
 	},
 
-	setPaddingV: function(padding) {
-        _D('>' + this.__name__ + '.setPaddingV()');
-		if (padding !== undefined && this._paddingV != padding) {
-			this._paddingV = padding;
-			if (this.wrapper) this.wrapper.set_style('padding-top: ' + this._paddingV + 'px;'
-			                                         + ' padding-bottom: ' + this._paddingV + 'px;');
+	setPaddingTop: function(padding) {
+        _D('>' + this.__name__ + '.setPaddingTop()');
+		if (padding !== undefined && this._paddingTop != padding) {
+			this._paddingTop = padding;
+			if (this.wrapper) this.wrapper.set_style('padding-top: ' + this._paddingTop + 'px;'
+			                                         + ' padding-bottom: ' + this._paddingBottom + 'px;');
+			this.restoreNaturalSize();
+		}
+        _D('<');
+	},
+
+	setPaddingBottom: function(padding) {
+        _D('>' + this.__name__ + '.setPaddingBottom()');
+		if (padding !== undefined && this._paddingBottom != padding) {
+			this._paddingBottom = padding;
+			if (this.wrapper) this.wrapper.set_style('padding-top: ' + this._paddingTop + 'px;'
+			                                         + ' padding-bottom: ' + this._paddingBottom + 'px;');
 			this.restoreNaturalSize();
 		}
         _D('<');

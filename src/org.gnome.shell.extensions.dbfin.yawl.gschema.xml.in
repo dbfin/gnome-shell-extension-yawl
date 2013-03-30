@@ -170,35 +170,40 @@
       <_description>Window thumbnail border radius.</_description>
     </key>
 
-    <key name="windows-width" type="s">
+    <key name="windows-thumbnails-width" type="s">
       <default>'248'</default>
       <_summary>Width of window thumbnails.</_summary>
       <_description>The width of window thumbnails.</_description>
     </key>
-    <key name="windows-fit-height" type="b">
+    <key name="windows-thumbnails-fit-height" type="b">
       <default>true</default>
       <_summary>Whether to show all thumbnails same height.</_summary>
       <_description>If true then all thumbnails are same height.</_description>
     </key>
-    <key name="windows-height" type="s">
+    <key name="windows-thumbnails-height" type="s">
       <default>'160'</default>
       <_summary>Height of window thumbnails.</_summary>
       <_description>The height of window thumbnails.</_description>
     </key>
-    <key name="windows-panel-height" type="s">
+    <key name="windows-thumbnails-height-visible" type="s">
       <default>'160'</default>
       <_summary>Window thumbnail maximum visible height.</_summary>
       <_description>Window thumbnail maximum visible height.</_description>
     </key>
-    <key name="windows-opacity" type="s">
+    <key name="windows-thumbnails-opacity" type="s">
       <default>'84'</default>
       <_summary>Default windows opacity.</_summary>
       <_description>Windows opacity when not hovered (and when hovered if not otherwise set).</_description>
     </key>
-    <key name="windows-distance" type="s">
+    <key name="windows-thumbnails-distance" type="s">
       <default>'11'</default>
       <_summary>Distance between window thumbnails (%).</_summary>
       <_description>Distance between window thumbnails as % of their widths.</_description>
+    </key>
+    <key name="windows-thumbnails-padding-top" type="s">
+      <default>'7'</default>
+      <_summary>Thumbnail top padding (px).</_summary>
+      <_description>Thumbnail top padding in pixels.</_description>
     </key>
 
     <key name="windows-show-delay" type="s">

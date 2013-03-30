@@ -195,16 +195,17 @@ function buildPrefsWidget() {
                 builder.unshift();
 
 			builder.addPage(_("Thumbnails"), 'thumbnail.png');
-                builder.addScale(_("Thumbnail width"), 'windows-width', 50, 500, 25, null, true);
-                builder.addCheckBox(_("Same height thumbnails"), 'windows-fit-height');
+                builder.addScale(_("Thumbnail width"), 'windows-thumbnails-width', 50, 500, 25, null, true);
+                builder.addCheckBox(_("Same height thumbnails"), 'windows-thumbnails-fit-height');
                 builder.shift();
-                    builder.addScale(_("Thumbnail height"), 'windows-height', 40, 400, 20, 'windows-fit-height', true);
+                    builder.addScale(_("Thumbnail height"), 'windows-thumbnails-height', 40, 400, 20, 'windows-thumbnails-fit-height', true);
                 builder.unshift();
-                builder.addScale(_("Thumbnail maximum visible height"), 'windows-panel-height', 40, 400, 20, null, true);
+                builder.addScale(_("Thumbnail maximum visible height"), 'windows-thumbnails-height-visible', 40, 400, 20, null, true);
                 builder.addSeparator();
-				builder.addScale(_("Default thumbnail opacity"), 'windows-opacity', 50, 100, 1);
+				builder.addScale(_("Default thumbnail opacity"), 'windows-thumbnails-opacity', 50, 100, 1);
                 builder.addSeparator();
-                builder.addScale(_("Distance between thumbnails (% of thumbnail size)"), 'windows-distance', 0, 50, 1);
+                builder.addScale(_("Distance between thumbnails (% of thumbnail size)"), 'windows-thumbnails-distance', 0, 50, 1);
+                builder.addScale(_("Thumbnail top padding (px)"), 'windows-thumbnails-padding-top', 0, 20, 1);
 
 			builder.addPage(_("Animation"), 'animation_thumbnail.png');
                 builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);

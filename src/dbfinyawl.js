@@ -152,7 +152,8 @@ const dbFinYAWL = new Lang.Class({
 	_updatePanelWindowsStyle: function() {
         _D('>' + this.__name__ + '._updatePanelWindowsStyle()');
         if (global.yawl.panelWindows && global.yawl.panelWindows.actor) {
-            let (style = null, height = global.yawl._windowsPanelHeight) {
+            let (style = null,
+                 height = global.yawl._windowsThumbnailsHeightVisible + global.yawl._windowsThumbnailsPaddingTop) {
                 if (global.yawl._windowsTheming) {
                     let (color = '') {
                         if (global.yawl._windowsBackgroundPanel) {

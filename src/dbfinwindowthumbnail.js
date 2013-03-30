@@ -43,11 +43,12 @@ const dbFinWindowThumbnail = new Lang.Class({
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
         this._slicerIcon.setIcon(this._clone);
 
-        this._updatedWindowsWidth =
-		        this._updatedWindowsFitHeight =
-		        this._updatedWindowsHeight = this._updateThumbnailSize;
-        this._updatedWindowsOpacity = function () { if (this._slicerIcon) this._slicerIcon.setOpacity100(global.yawl._windowsOpacity); };
-		this._updatedWindowsDistance = function () { if (this._slicerIcon) this._slicerIcon.setPaddingH((global.yawl._windowsDistance + 1) >> 1); };
+        this._updatedWindowsThumbnailsWidth =
+		        this._updatedWindowsThumbnailsFitHeight =
+		        this._updatedWindowsThumbnailsHeight = this._updateThumbnailSize;
+        this._updatedWindowsThumbnailsOpacity = function () { if (this._slicerIcon) this._slicerIcon.setOpacity100(global.yawl._windowsThumbnailsOpacity); };
+		this._updatedWindowsThumbnailsDistance = function () { if (this._slicerIcon) this._slicerIcon.setPaddingH((global.yawl._windowsThumbnailsDistance + 1) >> 1); };
+		this._updatedWindowsThumbnailsPaddingTop = function () { if (this._slicerIcon) this._slicerIcon.setPaddingTop(global.yawl._windowsThumbnailsPaddingTop); };
         this._updatedWindowsAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.animationEffect = global.yawl._windowsAnimationEffect; };
         if (this._slicerIcon) { this._slicerIcon.hoverAnimation = true; } // no settings option for this
@@ -169,8 +170,8 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('>' + this.__name__ + '._updateThumbnailSize()');
 		if (this._clone && this._cloneWidth && this._cloneHeight) {
 			let (scale = 1.0) {
-                if (global.yawl._windowsFitHeight) scale = Math.min(scale, global.yawl._windowsHeight / this._cloneHeight);
-				else scale = Math.min(scale, global.yawl._windowsWidth / this._cloneWidth);
+                if (global.yawl._windowsThumbnailsFitHeight) scale = Math.min(scale, global.yawl._windowsThumbnailsHeight / this._cloneHeight);
+				else scale = Math.min(scale, global.yawl._windowsThumbnailsWidth / this._cloneWidth);
 				this._clone.set_width(Math.round(this._cloneWidth * scale));
 				this._clone.set_height(Math.round(this._cloneHeight * scale));
                 this._update();
