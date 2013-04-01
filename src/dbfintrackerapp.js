@@ -210,6 +210,10 @@ const dbFinTrackerApp = new Lang.Class({
     showWindowsGroup: function() {
         _D('>' + this.__name__ + '.showWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
+        if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen) {
+            _D('<');
+            return;
+        }
 		if (this.yawlPanelWindowsGroup && global.yawl.panelWindows) {
 			this._showThumbnailsTimeout = Mainloop.timeout_add(
                     Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
@@ -470,7 +474,10 @@ const dbFinTrackerApp = new Lang.Class({
 
     openMenu: function() {
         _D('>' + this.__name__ + '.openMenu()');
-        if (this.appButton) this.appButton.menuToggle();
+        if (this.appButton) {
+            this.hideWindowsGroup();
+            this.appButton.menuToggle();
+        }
         _D('<');
     },
 
