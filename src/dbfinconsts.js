@@ -54,6 +54,13 @@ const arrayAppClickFunctions = [
     [   _("Open menu : none"),                       	'openMenu',                     ''                              ]
 ];
 
+const arrayWindowClickFunctions = [
+    [   _("No action"),	                            	''                              ],
+    [   _("Show and focus"),                           	'showWindow'                    ],
+    [   _("Minimize"),	                            	'minimizeWindow'                ],
+    [   _("Maximize"),	                            	'maximizeWindowToggle'          ]
+];
+
 const arrayAppMenuItems = [
     [   _("New window"),            					'openNewWindowThisWorkspace'	],
     [   '',                         					null							],
@@ -103,7 +110,7 @@ const Settings = [
     [ 'windows-thumbnails-height', 160, { min: 40, max: 400 } ],
     [ 'windows-thumbnails-height-visible', 160, { min: 40, max: 400 } ],
     [ 'windows-thumbnails-opacity', 84, { min: 50, max: 100 } ],
-    [ 'windows-thumbnails-minimized-opacity', 33, { min: 10, max: 100 } ],
+    [ 'windows-thumbnails-minimized-opacity', 40, { min: 10, max: 100 } ],
     [ 'windows-thumbnails-distance', 11, { min: 0, max: 50 } ],
     [ 'windows-thumbnails-padding-top', 7, { min: 0, max: 20 } ],
 
@@ -128,6 +135,11 @@ const Settings = [
     [ 'mouse-app-scroll', 4, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
 
     [ 'mouse-app-right', 10, { min: 0, max: arrayAppClickFunctions.length - 1 } ],
+
+    [ 'mouse-window-left', 1, { min: 0, max: arrayWindowClickFunctions.length - 1 } ],
+    [ 'mouse-window-left-shift', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 } ],
+    [ 'mouse-window-middle', 3, { min: 0, max: arrayWindowClickFunctions.length - 1 } ],
+    [ 'mouse-window-right', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 } ],
 
     [ 'mouse-click-release', false, { } ],
     [ 'mouse-clicks-time-single', 400, { min: 250, max: 750 } ],

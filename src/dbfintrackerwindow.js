@@ -12,6 +12,10 @@
 const Lang = imports.lang;
 const Signals = imports.signals;
 
+const Meta = imports.gi.Meta;
+
+const Main = imports.ui.main;
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
@@ -131,6 +135,32 @@ const dbFinTrackerWindow = new Lang.Class({
             }
         }
         _D('<');
-	}
+	},
+
+    showWindow: function() {
+        _D('>' + this.__name__ + '.showWindow()');
+        if (this.metaWindow && !this.focused) Main.activateWindow(this.metaWindow);
+        _D('<');
+    },
+
+    minimizeWindow: function() {
+        _D('>' + this.__name__ + '.minimizeWindow()');
+        if (this.metaWindow) this.metaWindow.minimize();
+        _D('<');
+    },
+
+    maximizeWindowToggle: function() {
+        _D('>' + this.__name__ + '.maximizeWindowToggle()');
+        if (this.metaWindow) {
+            if ((this.metaWindow.get_maximized() & (Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL))
+                                                == (Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL)) {
+                this.metaWindow.unmaximize(Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL);
+            }
+            else {
+                this.metaWindow.maximize(Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL);
+            }
+        }
+        _D('<');
+    }
 });
 Signals.addSignalMethods(dbFinTrackerWindow.prototype);

@@ -400,7 +400,8 @@ const dbFinTrackerApp = new Lang.Class({
     _maximizeToggle: function(window) {
         _D('>' + this.__name__ + '._maximizeToggle()');
         if (window) {
-            if (window.get_maximized() == (Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL)) {
+            if ((window.get_maximized() & (Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL))
+                                        == (Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL)) {
                 window.unmaximize(Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL);
             }
             else {

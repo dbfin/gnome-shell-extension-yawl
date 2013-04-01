@@ -18,6 +18,8 @@ const St = imports.gi.St;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinClicked = Me.imports.dbfinclicked;
+const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinSlicerIcon = Me.imports.dbfinslicericon;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -68,6 +70,18 @@ const dbFinWindowThumbnail = new Lang.Class({
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
             this.actor.reactive = true;
         }
+
+        this._clicked = null;
+		this._updatedMouseClickRelease =
+                this._updatedMouseLongClick = function () {
+			if (this._clicked) {
+				this._clicked.destroy();
+				this._clicked = null;
+			}
+			this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*doubleClicks = */false,
+							/*scroll = */false, /*sendSingleClicksImmediately = */true,
+                            /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
+		};
 
         global.yawl.watch(this);
 
@@ -181,6 +195,31 @@ const dbFinWindowThumbnail = new Lang.Class({
 		} // if (this._clone)
         _D('<');
     },
+
+	_buttonClicked: function(state, name) {
+        _D('>' + this.__name__ + '._buttonClicked()');
+        if (!this._trackerWindow) {
+            _D('this._trackerWindow === null');
+            _D('<');
+            return;
+        }
+        if (!name || !state.clicks || state.clicks < 1) {
+            _D('<');
+            return;
+        }
+        let (functionIndex = global.yawl && global.yawl['_mouseWindow' + name]) {
+            if (functionIndex) { // functionIndex === 0 is default corresponding to no action
+                let (functionRow = dbFinConsts.arrayWindowClickFunctions[functionIndex]) {
+					let (functionName = functionRow[1]) {
+						if (functionName && this._trackerWindow[functionName]) {
+							Lang.bind(this._trackerWindow, this._trackerWindow[functionName])();
+						}
+					} // let (functionName)
+                } // let (functionRow)
+            } // if (functionIndex)
+        } // let (functionIndex)
+        _D('<');
+	},
 
     get minimized() { return this._minimized; },
     set minimized(minimized) {

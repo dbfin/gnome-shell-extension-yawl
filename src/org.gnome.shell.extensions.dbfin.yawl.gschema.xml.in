@@ -196,7 +196,7 @@
       <_description>Window thumbnails opacity when not hovered.</_description>
     </key>
     <key name="windows-thumbnails-minimized-opacity" type="s">
-      <default>'33'</default>
+      <default>'40'</default>
       <_summary>Default minimized window thumbnails opacity.</_summary>
       <_description>Minimized window thumbnails opacity when not hovered.</_description>
     </key>
@@ -303,6 +303,27 @@
       <default>'10'</default>
       <_summary>App right click/double click function.</_summary>
       <_description>App right click/double click function.</_description>
+    </key>
+
+    <key name="mouse-window-left" type="s">
+      <default>'1'</default>
+      <_summary>Window left click function.</_summary>
+      <_description>Window left click function.</_description>
+    </key>
+    <key name="mouse-window-left-shift" type="s">
+      <default>'2'</default>
+      <_summary>Window shift-left click function.</_summary>
+      <_description>Window shift-left click function.</_description>
+    </key>
+    <key name="mouse-window-middle" type="s">
+      <default>'3'</default>
+      <_summary>Window middle click function.</_summary>
+      <_description>Window middle click function.</_description>
+    </key>
+    <key name="mouse-window-right" type="s">
+      <default>'2'</default>
+      <_summary>Window right click function.</_summary>
+      <_description>Window right click function.</_description>
     </key>
 
     <key name="mouse-click-release" type="b">
