@@ -72,7 +72,8 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedIconsAnimationTime = function () { if (global.yawl.panelApps) global.yawl.panelApps.animationTime = global.yawl._iconsAnimationTime; };
 		this._updatedIconsAnimationEffect = function () { if (global.yawl.panelApps) global.yawl.panelApps.animationEffect = global.yawl._iconsAnimationEffect; };
         this._updatedIconsAlign = function () { if (global.yawl.panelApps) global.yawl.panelApps.animateToState({ gravity: global.yawl._iconsAlign / 100. }); };
-		this._updatedWindowsPanelHeight =
+		this._updatedWindowsThumbnailsHeightVisible =
+                this._updatedWindowsThumbnailsPaddingTop =
                 this._updatedWindowsIndicatorArrow =
 				this._updatedIconsSize =
                 this._updatedWindowsTheming =
@@ -175,10 +176,15 @@ const dbFinYAWL = new Lang.Class({
                     style += '; border: ' + global.yawl._windowsBorderWidth + 'px solid ' + global.yawl._windowsBorderColor;
 					style += '; border-top-width: 0';
 					style += '; border-radius: 0 0 ' + global.yawl._windowsBorderRadius + 'px ' + global.yawl._windowsBorderRadius + 'px';
-                    height += (global.yawl._windowsPadding || 0) * 2 + (global.yawl._windowsBorderWidth || 0);
                 } // if (global.yawl._windowsTheming)
                 let (styleCurrent = global.yawl.panelWindows.actor.get_style()) {
                     if (style !== styleCurrent) global.yawl.panelWindows.actor.set_style(style);
+                }
+                if (global.yawl.panelWindows.actor.get_stage()) {
+                    let (node = global.yawl.panelWindows.actor.get_theme_node()) {
+                        height += node.get_padding(0) + node.get_padding(2)
+                                + node.get_border_width(0) + node.get_border_width(2);
+                    }
                 }
                 global.yawl.panelWindows.max_height = height;
             } // let (style, height)
