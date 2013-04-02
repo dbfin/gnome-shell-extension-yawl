@@ -63,7 +63,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 		// this.actor related stuff
         this.actor = new St.Bin({ y_fill: true, x_fill: true, track_hover: true,
-                                  child: this._slicerIcon ? this._slicerIcon.actor : null });
+                                  child: this._slicerIcon ? this._slicerIcon.container : null });
 
         if (this.actor) {
             this.actor._delegate = this;
@@ -100,9 +100,9 @@ const dbFinWindowThumbnail = new Lang.Class({
 					if (box && box.remove_actor) box.remove_actor(this.actor);
 				}
             }
+            this.actor.set_child(null);
 		}
         if (this._slicerIcon) {
-			if (this.actor) this.actor.remove_actor(this._slicerIcon.actor);
             this._slicerIcon.setIcon(null);
 			this._slicerIcon.destroy();
 			this._slicerIcon = null;

@@ -74,9 +74,9 @@ const dbFinAppButton = new Lang.Class({
 
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
-        if (this._slicerIcon && this._slicerIcon.actor) {
-            if (this.actor) this.actor.add_actor(this._slicerIcon.actor);
-            if (Main.panel && Main.panel.actor) this._slicerIcon.actor.min_height = Main.panel.actor.get_height();
+        if (this._slicerIcon && this._slicerIcon.container) {
+            if (this.actor) this.actor.add_actor(this._slicerIcon.container);
+            if (Main.panel && Main.panel.actor) this._slicerIcon.container.min_height = Main.panel.actor.get_height();
         }
 
 		this._icons = new dbFinArrayHash.dbFinArrayHash();
@@ -132,7 +132,7 @@ const dbFinAppButton = new Lang.Class({
             this.actor._delegate = null;
 		}
         if (this._slicerIcon) {
-			if (this.actor) this.actor.remove_actor(this._slicerIcon.actor);
+			if (this.actor) this.actor.remove_actor(this._slicerIcon.container);
 			this._slicerIcon.destroy();
 			this._slicerIcon = null;
 		}
@@ -198,7 +198,7 @@ const dbFinAppButton = new Lang.Class({
 			return;
 		}
         global.yawl._iconsSize = global.yawl._iconsSize ? Math.floor((global.yawl._iconsSize + 4) / 8) * 8 : 48; // sizes are 16, 24, ..., 128
-		let (   icon = this._slicerIcon._icon,
+		let (   icon = this._slicerIcon.getIcon(),
                 iconnew = this._icons ? this._icons.get(global.yawl._iconsFaded ? -global.yawl._iconsSize : global.yawl._iconsSize) : null) {
             if (!iconnew) {
                 if (global.yawl._iconsFaded) iconnew = this.metaApp.get_faded_icon(global.yawl._iconsSize); // returns NULL sometimes
@@ -212,7 +212,6 @@ const dbFinAppButton = new Lang.Class({
 
 	_update: function() {
         _D('>' + this.__name__ + '._update()');
-//		if (this._slicerIcon) this._slicerIcon.actor.queue_relayout();
 		this._updateMenu();
         _D('<');
 	},

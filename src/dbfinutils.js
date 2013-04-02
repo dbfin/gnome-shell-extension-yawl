@@ -63,7 +63,7 @@ function now(justnumbers) {
 /* function inRange(value, min, max, d): returns value or min (if value < min) or max (if value > max) or d (if min > max)
  */
 function inRange(value, min, max, d) {
-    if (value === undefined || value === null) return d;
+    if (value === undefined || value === null || isNaN(value)) return d;
     if (min === undefined) min = null;
     if (max === undefined) max = null;
     if (min !== null && max !== null && min > max) return d;
