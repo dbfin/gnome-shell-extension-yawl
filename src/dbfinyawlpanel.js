@@ -40,7 +40,7 @@ const dbFinYAWLPanel = new Lang.Class({
     // params:  panelname, parent, parentproperty,
     //          hidden, showhidechildren, hideinoverview,
     //          gravity, width, x, y
-    //          gravityindicator, gravityindicatorarrow
+    //          gravityindicator, gravityindicatorarrow, gravityindicatorwidth, gravityindicatorheight
     _init: function(params) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
@@ -91,6 +91,8 @@ const dbFinYAWLPanel = new Lang.Class({
 
         this._gravityIndicator = params.gravityindicator && this.container && this.actor ? new St.DrawingArea() : null;
         this._gravityIndicatorArrow = !!params.gravityindicatorarrow;
+        this._gravityIndicatorWidth = params.gravityindicatorwidth || 0;
+        this._gravityIndicatorHeight = params.gravityindicatorheight || 0;
 		if (this._gravityIndicator) {
             this._signals.connectNoId({	emitter: this._gravityIndicator, signal: 'repaint',
                                         callback: this._drawGravityIndicator, scope: this });
@@ -115,6 +117,8 @@ const dbFinYAWLPanel = new Lang.Class({
                 this._parent[this._parentProperty] = this.container;
             }
         }
+
+		this._styleChanged(); // just in case
         _D('<');
     },
 
@@ -203,24 +207,23 @@ const dbFinYAWLPanel = new Lang.Class({
             	[ wm, wn ] = this.actor.get_preferred_width(-1),
                 [ hm, hn ] = this.actor.get_preferred_height(-1),
                 boxChild = new Clutter.ActorBox()) {
-            if (wn < w) x += dbFinUtils.inRange(Math.floor(w * this._gravity - wn / 2), 0, w - wn);
-			let (x2 = Math.min(box.x2, x + wn),
-			     y2 = Math.min(box.y2, y + hn)) {
-				dbFinUtils.setBox(boxChild, x, y, x2, y2);
-				this.actor.allocate(boxChild, flags);
-				if (this._gravityIndicator) {
-					let (gx = Math.floor(w * this._gravity),
-						 p = Math.max(0, Math.round(this._actorPadding * 3 / 5 + 1 / 5) - 1)) {
-						let (wa = this._gravityIndicatorWidth || p * 7) {
-							dbFinUtils.setBox(boxChild,	Math.min(x2, Math.max(x, box.x1 + gx - wa / 2)),
-														Math.min(y2, y + 1),
-														Math.min(x2, box.x1 + gx + wa / 2),
-														Math.min(y2, y + 1 + p));
-							this._gravityIndicator.allocate(boxChild, flags);
-						} // let (w)
-					} // let (gx, p)
-				} // if (this._gravityIndicator)
-			} // let (x2, y2)
+			let (gx = Math.floor(box.x1 + w * this._gravity)) {
+                if (wn < w) x = dbFinUtils.inRange(gx - (wn >> 1), box.x1, box.x2 - wn);
+                else wn = w;
+                let (x2 = x + wn,
+                     y2 = Math.min(box.y2, y + hn)) {
+                    dbFinUtils.setBox(boxChild, x, y, x2, y2);
+                    this.actor.allocate(boxChild, flags);
+                    if (this._gravityIndicator) {
+                        let (ih = Math.max(0, Math.min(this._actorPadding - 2, this._gravityIndicatorHeight)),
+                             ix = gx - (this._gravityIndicatorWidth >> 1)) {
+                            dbFinUtils.setBox(boxChild, Math.max(x, ix), y + 1,
+                                                        Math.min(x2, ix + this._gravityIndicatorWidth), y + 1 + ih);
+                            this._gravityIndicator.allocate(boxChild, flags);
+                        }
+                    } // if (this._gravityIndicator)
+                } // let (x2, y2)
+			} // let (gx)
         } // let (w, h, x, y, [ wm, wn ], [ hm, hn ], boxChild)
         _D('<');
     },
@@ -255,7 +258,7 @@ const dbFinYAWLPanel = new Lang.Class({
 						cr.setLineWidth(1);
 					}
 					else {
-						let (bw = Math.min(this._actorBorderWidth, w, h)) {
+						let (bw = Math.min(w, h)) {
 							cr.moveTo(bw / 2, bw / 2);
 							cr.lineTo(w - bw / 2, bw / 2);
 							cr.setLineWidth(bw);
@@ -416,17 +419,13 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('<');
     },
 
-    updatePanel: function() {
+    updatePanel: function(repaintIndicator) {
         _D('>' + this.__name__ + '.updatePanel()');
+		if (repaintIndicator && this._gravityIndicator && this._gravityIndicator.get_stage()) {
+            this._gravityIndicator.queue_repaint();
+        }
         if (this.actor) this.actor.queue_relayout();
         else if (this.container) this.container.queue_relayout();
-        _D('<');
-    },
-
-    updatePanelAndRepaintIndicator: function() {
-        _D('>' + this.__name__ + '.updatePanelAndRepaintIndicator()');
-		if (this._gravityIndicator && this._gravityIndicator.get_stage()) this._gravityIndicator.queue_repaint();
-		this.updatePanel();
         _D('<');
     },
 
@@ -439,17 +438,19 @@ const dbFinYAWLPanel = new Lang.Class({
 				this._actorPadding = node.get_length('padding');
 			}
 		}
-		this.updatePanelAndRepaintIndicator();
+		this.updatePanel(true);
         _D('<');
 	},
 
     // animatable properties
     get gravity() { return this._gravity; },
-    set gravity(gravity) { gravity = gravity && parseFloat(gravity) || 0.0; if (gravity !== this._gravity) { this._gravity = gravity; this.updatePanel(); } },
-    get gravityIndicatorWidth() { return this._gravityIndicatorWidth; },
-    set gravityIndicatorWidth(gravityIndicatorWidth) { gravityIndicatorWidth = gravityIndicatorWidth && parseInt(gravityIndicatorWidth) || 0; if (gravityIndicatorWidth !== this._gravityIndicatorWidth) { this._gravityIndicatorWidth = gravityIndicatorWidth; this.updatePanelAndRepaintIndicator(); } },
+    set gravity(gravity) { gravity = dbFinUtils.inRange(parseFloat(gravity), 0.0, 1.0, 0.0); if (gravity !== this._gravity) { this._gravity = gravity; this.updatePanel(); } },
     get gravityIndicatorArrow() { return this._gravityIndicatorArrow; },
-    set gravityIndicatorArrow(gravityIndicatorArrow) { gravityIndicatorArrow = !!gravityIndicatorArrow; if (gravityIndicatorArrow !== this._gravityIndicatorArrow) { this._gravityIndicatorArrow = gravityIndicatorArrow; this.updatePanelAndRepaintIndicator(); } },
+    set gravityIndicatorArrow(gravityIndicatorArrow) { gravityIndicatorArrow = !!gravityIndicatorArrow; if (gravityIndicatorArrow !== this._gravityIndicatorArrow) { this._gravityIndicatorArrow = gravityIndicatorArrow; this.updatePanel(true); } },
+    get gravityIndicatorWidth() { return this._gravityIndicatorWidth; },
+    set gravityIndicatorWidth(gravityIndicatorWidth) { gravityIndicatorWidth = gravityIndicatorWidth && parseInt(gravityIndicatorWidth) || 0; if (gravityIndicatorWidth !== this._gravityIndicatorWidth) { this._gravityIndicatorWidth = gravityIndicatorWidth; this.updatePanel(true); } },
+    get gravityIndicatorHeight() { return this._gravityIndicatorHeight; },
+    set gravityIndicatorHeight(gravityIndicatorHeight) { gravityIndicatorHeight = gravityIndicatorHeight && parseInt(gravityIndicatorHeight) || 0; if (gravityIndicatorHeight !== this._gravityIndicatorHeight) { this._gravityIndicatorHeight = gravityIndicatorHeight; this.updatePanel(true); } },
 	get opacity() { return this.actor && this.actor.opacity || 0; },
 	set opacity(opacity) { if (this._gravityIndicator) this._gravityIndicator.opacity = opacity; if (this.actor) this.actor.opacity = opacity; },
     get max_height() { return this._maxHeight || 0; },

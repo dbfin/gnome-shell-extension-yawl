@@ -184,6 +184,8 @@ const dbFinYAWL = new Lang.Class({
             } // let (style, height)
             global.yawl.panelWindows.gravityIndicatorArrow = global.yawl._windowsIndicatorArrow;
 			global.yawl.panelWindows.gravityIndicatorWidth = global.yawl._iconsSize;
+            global.yawl.panelWindows.gravityIndicatorHeight = global.yawl._windowsIndicatorArrow
+                                                            ? 8 : global.yawl._windowsBorderWidth || 1;
         } // if (global.yawl.panelWindows && global.yawl.panelWindows.actor)
         _D('<');
 	}
