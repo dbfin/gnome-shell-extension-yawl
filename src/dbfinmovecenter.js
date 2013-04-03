@@ -139,8 +139,8 @@ const dbFinMoveCenter = new Lang.Class({
 
 	_updatePanel: function() {
         _D('>' + this.__name__ + '._updatePanel()');
-		if (global.yawl && global.yawl.panelApps && global.yawl.panelApps.actor) {
-			global.yawl.panelApps.actor.queue_relayout();
+		if (global.yawl && global.yawl.panelApps) {
+			global.yawl.panelApps.updatePanel(false);
 		}
         _D('<');
 	},

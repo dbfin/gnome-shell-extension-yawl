@@ -39,16 +39,16 @@ const dbFinYAWLPanel = new Lang.Class({
     // GNOMENEXT: ui/panel.js: class Panel
     // params:  panelname, parent, parentproperty,
     //          hidden, showhidechildren, hideinoverview,
-    //          gravity, width, x, y
-    //          gravityindicator, gravityindicatorarrow, gravityindicatorwidth, gravityindicatorheight
+    //          gravity, width, maxheight, x, y
+    //          gravityindicator, gravityindicatorcolor, gravityindicatorarrow, gravityindicatorwidth, gravityindicatorheight
     _init: function(params) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
-        this._parent = params.parent || null;
         this._panelName = params.panelname || '';
+        this._parent = params.parent || null;
         this._parentProperty = params.parentproperty || '';
         this._showHideChildren = params.showhidechildren || false;
-        this._gravity = params.gravity && parseFloat(params.gravity) || 0.0;
+        this._gravity = dbFinUtils.inRange(parseFloat(params.gravity), 0.0, 1.0, 0.0);
         this.animationTime = Overview.ANIMATION_TIME * 1000;
         this.animationEffect = 'easeOutQuad';
         this._childrenObjects = new dbFinArrayHash.dbFinArrayHash();
@@ -64,6 +64,7 @@ const dbFinYAWLPanel = new Lang.Class({
         									: new Shell.GenericContainer({ reactive: true, visible: true });
         if (this.container) {
             if (params.width) this.container.min_width = this.container.natural_width = params.width;
+            this._maxHeight = params.maxheight || 0;
 			if (params.x) this.container.x = params.x;
 			if (params.y) this.container.y = params.y;
             this._signals.connectNoId({ emitter: this.container, signal: 'get-preferred-width',
@@ -74,22 +75,26 @@ const dbFinYAWLPanel = new Lang.Class({
                                         callback: this._allocate, scope: this });
         }
 
-		this._actorBorderWidth = 0;
-		this._actorBorderColor = null;
-		this._actorPadding = 0;
-
-		this.actor = new St.BoxLayout({ vertical: false, reactive: true, visible: true });
+		this.actor = new St.BoxLayout({ vertical: true, reactive: true, visible: true });
 		if (this.actor) {
             this.actor._delegate = this;
-            if (this.container) {
-                this.container.add_actor(this.actor);
-                this.container._box = this.actor;
-            }
+            if (this.container) this.container.add_actor(this.actor);
             this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
                                         callback: this._styleChanged, scope: this });
         }
 
-        this._gravityIndicator = params.gravityindicator && this.container && this.actor ? new St.DrawingArea() : null;
+		this.box = new St.BoxLayout({ vertical: false, reactive: true, visible: true });
+		if (this.box) {
+            this.box._delegate = this;
+            if (this.actor) {
+                this.actor.add_actor(this.box);
+                if (this.container) this.container._box = this.box;
+            }
+        }
+
+        this._gravityIndicator = params.gravityindicator && this.container && this.actor
+                                        ? new St.DrawingArea({ name: 'Indicator' }) : null;
+        this._gravityIndicatorColor = 0;
         this._gravityIndicatorArrow = !!params.gravityindicatorarrow;
         this._gravityIndicatorWidth = params.gravityindicatorwidth || 0;
         this._gravityIndicatorHeight = params.gravityindicatorheight || 0;
@@ -154,10 +159,17 @@ const dbFinYAWLPanel = new Lang.Class({
 			this._gravityIndicator.destroy();
 			this._gravityIndicator = null;
 		}
+		if (this.box) {
+			if (this.container) this.container._box = null;
+			if (this.actor) this.actor.remove_actor(this.box);
+			this.box.reactive = false;
+			this.box._delegate = null;
+			this.box.destroy();
+			this.box = null;
+		}
 		if (this.actor) {
 			if (this.container) {
                 this.container.remove_actor(this.actor);
-                this.container._box = null;
             }
             this.actor.reactive = false;
             this.actor._delegate = null;
@@ -215,12 +227,13 @@ const dbFinYAWLPanel = new Lang.Class({
                     dbFinUtils.setBox(boxChild, x, y, x2, y2);
                     this.actor.allocate(boxChild, flags);
                     if (this._gravityIndicator) {
-                        let (ih = Math.max(0, Math.min(this._actorPadding - 2, this._gravityIndicatorHeight)),
-                             ix = gx - (this._gravityIndicatorWidth >> 1)) {
-                            dbFinUtils.setBox(boxChild, Math.max(x, ix), y + 1,
-                                                        Math.min(x2, ix + this._gravityIndicatorWidth), y + 1 + ih);
+                        let (ix = gx - (this._gravityIndicatorWidth >> 1)) {
+                            dbFinUtils.setBox(boxChild, Math.max(x, ix),
+                                              			y + 1,
+                                                        Math.min(x2, ix + this._gravityIndicatorWidth),
+                                              			Math.min(y2 - 1, y + 1 + this._gravityIndicatorHeight));
                             this._gravityIndicator.allocate(boxChild, flags);
-                        }
+                        } // let (ix)
                     } // if (this._gravityIndicator)
                 } // let (x2, y2)
 			} // let (gx)
@@ -230,13 +243,13 @@ const dbFinYAWLPanel = new Lang.Class({
 
 	_drawGravityIndicator: function(area) {
         _D('@' + this.__name__ + '._drawGravityIndicator()');
-		if (!this.actor || !area) {
+		if (!area || !area.get_stage()) {
 			_D('<');
 			return;
 		}
 		let ([ w, h ] = area.get_surface_size(),
-			 bc = this._actorBorderColor) {
-			if (w >= 1 && h >= 1 && bc && bc.alpha > 0) {
+			 bc = this._gravityIndicatorColor) {
+			if (w >= 1 && h >= 1 && bc && bc.alpha) {
 				let (cr = area.get_context(),
 					 red = bc.red / 255,
 					 green = bc.green / 255,
@@ -288,7 +301,7 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('>' + this.__name__ + '.addChild()');
         if (childObject && this._childrenObjects.get(childObject) === undefined) {
             let (actor = childObject.container || childObject.actor || childObject) {
-                if (actor instanceof Clutter.Actor) this.actor.add_actor(actor);
+                if (actor instanceof Clutter.Actor) this.box.add_actor(actor);
             }
             let (signals = new dbFinSignals.dbFinSignals()) {
                 signals.connectNoId({   emitter: childObject, signal: 'destroy',
@@ -311,7 +324,7 @@ const dbFinYAWLPanel = new Lang.Class({
                     signals.destroy();
                     signals = null;
                     let (actor = childObject.container || childObject.actor || childObject) {
-                        if (actor.get_parent && actor.get_parent() == this.actor) this.actor.remove_actor(actor);
+                        if (actor.get_parent && actor.get_parent() == this.box) this.box.remove_actor(actor);
                     }
                 }
             }
@@ -424,41 +437,92 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (repaintIndicator && this._gravityIndicator && this._gravityIndicator.get_stage()) {
             this._gravityIndicator.queue_repaint();
         }
-        if (this.actor) this.actor.queue_relayout();
+		if (this.box) this.box.queue_relayout();
+        else if (this.actor) this.actor.queue_relayout();
         else if (this.container) this.container.queue_relayout();
         _D('<');
     },
 
 	_styleChanged: function() {
         _D('>' + this.__name__ + '._styleChanged()');
-		if (this.actor && this.actor.get_stage()) {
-			let (node = this.actor.get_theme_node()) {
-				this._actorBorderWidth = node.get_border_width(1);
-				this._actorBorderColor = node.get_border_color(1);
-				this._actorPadding = node.get_length('padding');
-			}
-		}
 		this.updatePanel(true);
         _D('<');
 	},
 
     // animatable properties
     get gravity() { return this._gravity; },
-    set gravity(gravity) { gravity = dbFinUtils.inRange(parseFloat(gravity), 0.0, 1.0, 0.0); if (gravity !== this._gravity) { this._gravity = gravity; this.updatePanel(); } },
+    set gravity(gravity) {
+        gravity = dbFinUtils.inRange(parseFloat(gravity), 0.0, 1.0, 0.0);
+        if (gravity !== this._gravity) {
+            this._gravity = gravity;
+            this.updatePanel();
+        }
+    },
+    get gravityIndicatorColor() { return this._gravityIndicatorColor; },
+    set gravityIndicatorColor(gravityIndicatorColor) {
+        if (gravityIndicatorColor   && gravityIndicatorColor.red !== undefined
+                                    && gravityIndicatorColor.green !== undefined
+                                    && gravityIndicatorColor.blue !== undefined
+                                    && gravityIndicatorColor.alpha !== undefined
+            &&  (gravityIndicatorColor.red !== this._gravityIndicatorColor.red
+                    || gravityIndicatorColor.green !== this._gravityIndicatorColor.green
+                    || gravityIndicatorColor.blue !== this._gravityIndicatorColor.blue
+                    || gravityIndicatorColor.alpha !== this._gravityIndicatorColor.alpha)) {
+            this._gravityIndicatorColor = gravityIndicatorColor;
+            this.updatePanel(true);
+        }
+    },
     get gravityIndicatorArrow() { return this._gravityIndicatorArrow; },
-    set gravityIndicatorArrow(gravityIndicatorArrow) { gravityIndicatorArrow = !!gravityIndicatorArrow; if (gravityIndicatorArrow !== this._gravityIndicatorArrow) { this._gravityIndicatorArrow = gravityIndicatorArrow; this.updatePanel(true); } },
+    set gravityIndicatorArrow(gravityIndicatorArrow) {
+        gravityIndicatorArrow = !!gravityIndicatorArrow;
+        if (gravityIndicatorArrow !== this._gravityIndicatorArrow) {
+            this._gravityIndicatorArrow = gravityIndicatorArrow;
+            this.updatePanel(true);
+        }
+    },
     get gravityIndicatorWidth() { return this._gravityIndicatorWidth; },
-    set gravityIndicatorWidth(gravityIndicatorWidth) { gravityIndicatorWidth = gravityIndicatorWidth && parseInt(gravityIndicatorWidth) || 0; if (gravityIndicatorWidth !== this._gravityIndicatorWidth) { this._gravityIndicatorWidth = gravityIndicatorWidth; this.updatePanel(true); } },
+    set gravityIndicatorWidth(gravityIndicatorWidth) {
+        gravityIndicatorWidth = dbFinUtils.inRange(parseInt(gravityIndicatorWidth), 0, null, 0);
+        if (gravityIndicatorWidth !== this._gravityIndicatorWidth) {
+            this._gravityIndicatorWidth = gravityIndicatorWidth;
+            this.updatePanel(true);
+        }
+    },
     get gravityIndicatorHeight() { return this._gravityIndicatorHeight; },
-    set gravityIndicatorHeight(gravityIndicatorHeight) { gravityIndicatorHeight = gravityIndicatorHeight && parseInt(gravityIndicatorHeight) || 0; if (gravityIndicatorHeight !== this._gravityIndicatorHeight) { this._gravityIndicatorHeight = gravityIndicatorHeight; this.updatePanel(true); } },
+    set gravityIndicatorHeight(gravityIndicatorHeight) {
+        gravityIndicatorHeight = dbFinUtils.inRange(parseInt(gravityIndicatorHeight), 0, null, 0);
+        if (gravityIndicatorHeight !== this._gravityIndicatorHeight) {
+            this._gravityIndicatorHeight = gravityIndicatorHeight;
+            this.updatePanel(true);
+        }
+    },
 	get opacity() { return this.actor && this.actor.opacity || 0; },
-	set opacity(opacity) { if (this._gravityIndicator) this._gravityIndicator.opacity = opacity; if (this.actor) this.actor.opacity = opacity; },
-    get max_height() { return this._maxHeight || 0; },
-    set max_height(height) { height = height && parseInt(height) || 0; if (height !== this._maxHeight) { this._maxHeight = height; this.updatePanel(); } },
+	set opacity(opacity) {
+        if (this._gravityIndicator) this._gravityIndicator.opacity = opacity;
+        if (this.actor) this.actor.opacity = opacity;
+    },
+    get maxHeight() { return this._maxHeight || 0; },
+    set maxHeight(maxHeight) {
+        maxHeight = dbFinUtils.inRange(parseInt(maxHeight), 0, null, 0);
+        if (maxHeight !== this._maxHeight) {
+            this._maxHeight = maxHeight;
+            this.updatePanel();
+        }
+    },
     get x() { return this.container && this.container.x; },
-    set x(x) { if (this.container && this.container.x !== x) { this.container.x = x; this.updatePanel(); } },
+    set x(x) {
+        if (this.container && this.container.x !== x) {
+            this.container.x = x;
+            this.updatePanel();
+        }
+    },
 	get y() { return this.container && this.container.y; },
-    set y(y) { if (this.container && this.container.y !== y) { this.container.y = y; this.updatePanel(); } },
+    set y(y) {
+        if (this.container && this.container.y !== y) {
+            this.container.y = y;
+            this.updatePanel();
+        }
+    },
 
     animateToState: function(state, callback, scope, time, transition) {
         _D('>' + this.__name__ + '.animateToState()');

@@ -67,6 +67,8 @@ const dbFinYAWL = new Lang.Class({
 										callback: this._hoverEnter, scope: this });
 			this._signals.connectNoId({	emitter: global.yawl.panelWindows.actor, signal: 'leave-event',
 										callback: this._hoverLeave, scope: this });
+			this._signals.connectNoId({	emitter: global.yawl.panelWindows.actor, signal: 'style-changed',
+										callback: this._panelWindowsStyleChanged, scope: this });
         }
 
 		this._updatedIconsAnimationTime = function () { if (global.yawl.panelApps) global.yawl.panelApps.animationTime = global.yawl._iconsAnimationTime; };
@@ -75,8 +77,8 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedWindowsThumbnailsHeightVisible =
                 this._updatedWindowsThumbnailsPaddingTop =
                 this._updatedWindowsIndicatorArrow =
-				this._updatedIconsSize =
-                this._updatedWindowsTheming =
+				this._updatedIconsSize = this._panelWindowsStyleChanged;
+        this._updatedWindowsTheming =
                 this._updatedWindowsBackgroundPanel =
                 this._updatedWindowsBackgroundColor =
                 this._updatedWindowsBackgroundOpacity =
@@ -150,11 +152,30 @@ const dbFinYAWL = new Lang.Class({
         _D('<');
     },
 
+    _panelWindowsStyleChanged: function() {
+        _D('@' + this.__name__ + '._panelWindowsStyleChanged()');
+        if (global.yawl.panelWindows && global.yawl.panelWindows.actor && global.yawl.panelWindows.actor.get_stage()) {
+            let (node = global.yawl.panelWindows.actor.get_theme_node()) {
+                global.yawl.panelWindows.maxHeight = global.yawl._windowsThumbnailsHeightVisible
+                        + global.yawl._windowsThumbnailsPaddingTop
+                        + node.get_padding(0) + node.get_padding(2)
+                        + node.get_border_width(0) + node.get_border_width(2);
+                global.yawl.panelWindows.gravityIndicatorColor = node.get_border_color(1);
+                global.yawl.panelWindows.gravityIndicatorArrow = global.yawl._windowsIndicatorArrow;
+                global.yawl.panelWindows.gravityIndicatorWidth = global.yawl._iconsSize;
+                global.yawl.panelWindows.gravityIndicatorHeight = dbFinUtils.inRange(
+                    global.yawl._windowsIndicatorArrow ? 8 : node.get_border_width(1) || 1,
+                    0, node.get_length('padding') - 2, 0
+                );
+            }
+        } // if (global.yawl.panelWindows && global.yawl.panelWindows.actor && global.yawl.panelWindows.actor.get_stage())
+        _D('<');
+    },
+
 	_updatePanelWindowsStyle: function() {
         _D('>' + this.__name__ + '._updatePanelWindowsStyle()');
-        if (global.yawl.panelWindows && global.yawl.panelWindows.actor) {
-            let (style = null,
-                 height = global.yawl._windowsThumbnailsHeightVisible + global.yawl._windowsThumbnailsPaddingTop) {
+        if (global.yawl.panelWindows && global.yawl.panelWindows.actor && global.yawl.panelWindows.actor.get_stage()) {
+            let (style = null) {
                 if (global.yawl._windowsTheming) {
                     let (color = '') {
                         if (global.yawl._windowsBackgroundPanel) {
@@ -169,7 +190,7 @@ const dbFinYAWL = new Lang.Class({
                         if (color == '') {
                             color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._windowsBackgroundColor,
                                                                                  global.yawl._windowsBackgroundOpacity);
-                        }
+                        } // if (color == '')
                         style = 'background-color: ' + color;
                     } // let (color)
                     style += '; padding: ' + global.yawl._windowsPadding + 'px';
@@ -180,19 +201,8 @@ const dbFinYAWL = new Lang.Class({
                 let (styleCurrent = global.yawl.panelWindows.actor.get_style()) {
                     if (style !== styleCurrent) global.yawl.panelWindows.actor.set_style(style);
                 }
-                if (global.yawl.panelWindows.actor.get_stage()) {
-                    let (node = global.yawl.panelWindows.actor.get_theme_node()) {
-                        height += node.get_padding(0) + node.get_padding(2)
-                                + node.get_border_width(0) + node.get_border_width(2);
-                    }
-                }
-                global.yawl.panelWindows.max_height = height;
-            } // let (style, height)
-            global.yawl.panelWindows.gravityIndicatorArrow = global.yawl._windowsIndicatorArrow;
-			global.yawl.panelWindows.gravityIndicatorWidth = global.yawl._iconsSize;
-            global.yawl.panelWindows.gravityIndicatorHeight = global.yawl._windowsIndicatorArrow
-                                                            ? 8 : global.yawl._windowsBorderWidth || 1;
-        } // if (global.yawl.panelWindows && global.yawl.panelWindows.actor)
+            } // let (style)
+        } // if (global.yawl.panelWindows && global.yawl.panelWindows.actor && global.yawl.panelWindows.actor.get_stage())
         _D('<');
 	}
 });
