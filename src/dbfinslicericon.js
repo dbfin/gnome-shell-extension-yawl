@@ -29,10 +29,12 @@ const dbFinSlicerIcon = new Lang.Class({
 	Name: 'dbFin.SlicerIcon',
     Extends: dbFinSlicerActor.dbFinSlicerActor,
 
-    _init: function(params) {
+    _init: function(paramsBin, params) {
         _D('>' + this.__name__ + '._init()');
-        params = Params.parse(params, { reactive: true, track_hover: true, visible: true }, true);
-        this.parent(new St.Bin(params));
+        paramsBin = paramsBin || {};
+        params = params || {};
+        paramsBin = Params.parse(paramsBin, { reactive: true, track_hover: true, visible: true }, true);
+        this.parent(new St.Bin(paramsBin), params);
         this._icon = null; // icons are never destroyed when new are assigned
         _D('<');
     },

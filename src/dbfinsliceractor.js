@@ -30,9 +30,14 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinSlicerActor = new Lang.Class({
 	Name: 'dbFin.SlicerActor',
 
-    _init: function(actor) { // actor must be destroyed by the descendant class
+    // params:
+    //     animateheight: animate height to zero and back in hide() and show()
+    _init: function(actor, params) { // actor must be destroyed by the descendant class
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
+
+        params = params || {};
+        this._animateHeight = !!params.animateheight;
 
 		this.container = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }), visible: true });
         if (this.container) {
@@ -93,7 +98,7 @@ const dbFinSlicerActor = new Lang.Class({
         _D('<');
 	},
 
-	show: function(time, callback, scope) {
+	show: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.show()');
 		if (this.container) {
 			this.container.show();
@@ -105,29 +110,36 @@ const dbFinSlicerActor = new Lang.Class({
         }
 		this.hidden = false;
         this.hiding = false;
-        this.animateToState({ opacity: 255, natural_width: this.getNaturalWidth() }, callback, scope, time);
+        let (state = { opacity: 255, natural_width: this.getNaturalWidth() }) {
+            if (this._animateHeight) state.natural_height = this.getNaturalHeight();
+            this.animateToState(state, callback, scope, time, transition);
+        }
         _D('<');
 	},
 
-    hide: function(time, callback, scope) {
+    hide: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.hide()');
 		if (!this.hidden && !this.hiding && this.container) {
             this.hiding = true;
-            this.animateToState({ opacity: 0, natural_width: 0 },
-                                function () {
-                                    if (this.container) {
-                                        this.container.reactive = false;
-                                        this.container.hide();
-                                    }
-                                    this.hidden = true;
-                                    this.hiding = false;
-                                    if (callback) {
-                                        if (scope) Lang.bind(scope, callback)();
-                                        else callback();
-                                    }
-                                },
-                                this,
-                                time);
+            let (state = { opacity: 0, natural_width: 0 }) {
+                if (this._animateHeight) state.natural_height = 0;
+                this.animateToState(state,
+                                    function () {
+                                        if (this.container) {
+                                            this.container.reactive = false;
+                                            this.container.hide();
+                                        }
+                                        this.hidden = true;
+                                        this.hiding = false;
+                                        if (callback) {
+                                            if (scope) Lang.bind(scope, callback)();
+                                            else callback();
+                                        }
+                                    },
+                                    this,
+                                    time,
+                                    transition);
+            }
         }
         _D('<');
     },
