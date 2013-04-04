@@ -95,7 +95,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		    new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' })
         ] : null;
 		if (this.labels) {
-			this._labelsBox = new St.BoxLayout({ vertical: false, x_align: Clutter.ActorAlign.CENTER, visible: true });
+			this._labelsBox = new Shell.Stack({ x_align: Clutter.ActorAlign.CENTER, visible: true });
 			if (this.actor && this._labelsBox) {
 				this.actor.add_actor(this._labelsBox);
 				if (this.labels[0] && this.labels[0].container) this._labelsBox.add_actor(this.labels[0].container);
@@ -564,17 +564,12 @@ const dbFinYAWLPanel = new Lang.Class({
         if ((labelText || labelText === '') && this.labels && this.labels[0] && this.labels[1]) {
 			labelText = '' + labelText;
 			if (this.labels[this._labelIndex].getText() !== labelText) {
-				this.labels[this._labelIndex].hide(this.animationTime, null, null, 'linear');
+				this.labels[this._labelIndex].hide(this.animationTime * 2, null, null, 'easeInExpo');
+				this.labels[this._labelIndex].setOpacity(0, this.animationTime * 2, null, null, 'easeOutCubic');
 				this._labelIndex = 1 - this._labelIndex;
 				this.labels[this._labelIndex].setText(labelText);
-				let ([ x, y, m ] = global.get_pointer()) {
-					if (this._labelTextX !== undefined) {
-						if (this._labelTextX < x) this.labels[this._labelIndex].container.raise_top();
-						else this.labels[this._labelIndex].container.lower_bottom();
-					}
-					this._labelTextX = x;
-				}
-				this.labels[this._labelIndex].show(this.animationTime, null, null, 'linear');
+				this.labels[this._labelIndex].show(this.animationTime * 2, null, null, 'easeOutExpo');
+				this.labels[this._labelIndex].setOpacity(255, this.animationTime * 2, null, null, 'easeInCubic');
 			}
         }
     },

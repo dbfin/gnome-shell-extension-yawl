@@ -193,22 +193,22 @@ const dbFinSlicerActor = new Lang.Class({
         _D('<');
 	},
 
-    setOpacity: function(opacity) {
+    setOpacity: function(opacity, time, callback, scope, transition) {
         _D('>' + this.__name__ + '.setOpacity()');
         opacity = dbFinUtils.inRange(opacity, 0, 255, undefined);
         if (opacity !== undefined && this._opacity != opacity) {
             this._opacity = opacity;
-    		this.animateActorToState({ opacity: opacity });
+    		this.animateActorToState({ opacity: opacity }, callback, scope, time, transition);
         }
         _D('<');
     },
 
-    setOpacity100: function(opacity) {
+    setOpacity100: function(opacity, time, callback, scope, transition) {
         _D('>' + this.__name__ + '.setOpacity100()');
         opacity = dbFinUtils.opacity100to255(dbFinUtils.inRange(opacity, 0, 100, undefined));
         if (opacity !== undefined && this._opacity != opacity) {
             this._opacity = opacity;
-    		this.animateActorToState({ opacity: opacity });
+    		this.animateActorToState({ opacity: opacity }, callback, scope, time, transition);
         }
         _D('<');
     },
