@@ -81,7 +81,7 @@ const dbFinYAWLPanel = new Lang.Class({
                                         callback: this._styleChanged, scope: this });
         }
 
-		this.box = new St.BoxLayout({ vertical: false, reactive: true, visible: true });
+		this.box = new St.BoxLayout({ vertical: false, x_align: Clutter.ActorAlign.CENTER, reactive: true, visible: true });
 		if (this.box) {
             this.box._delegate = this;
             if (this.actor) {
