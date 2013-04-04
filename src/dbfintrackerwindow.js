@@ -57,11 +57,21 @@ const dbFinTrackerWindow = new Lang.Class({
         this.focused = false;
         this._updateFocused();
         this._signals.connectNoId({ emitter: global.display, signal: 'notify::focus-window',
-                                    callback: this._updateFocused, scope: this });
+                                    callback: this._focusedChanged, scope: this });
 
         if (this.metaWindow) {
             this._signals.connectNoId({ emitter: this.metaWindow, signal: 'notify::title',
                                         callback: this._titleChanged, scope: this });
+        }
+
+        this.hovered = false;
+		if (this.windowThumbnail) {
+			if (this.windowThumbnail.actor) {
+				this._signals.connectNoId({ emitter: this.windowThumbnail.actor, signal: 'enter-event',
+											callback: this._enterEvent, scope: this });
+				this._signals.connectNoId({ emitter: this.windowThumbnail.actor, signal: 'leave-event',
+											callback: this._leaveEvent , scope: this });
+			}
         }
         _D('<');
     },
@@ -100,14 +110,14 @@ const dbFinTrackerWindow = new Lang.Class({
         let (title = this.title) {
 			this._updateTitle();
 			if (this._tracker && title !== this.title) {
-                this._tracker.update(null, '"' + this.appName + ':' + title + '" changed title to "' + this.title + '".');
+                this._tracker.windowEvent(this, 'title', { titleWas: title });
             }
         }
         _D('<');
 	},
 
 	_updateFocused: function() {
-        _D('@' + this.__name__ + '._updateFocused()');
+        _D('>' + this.__name__ + '._updateFocused()');
         let (focusedWindow = global.display.focus_window) {
             this.focused = this.metaWindow && focusedWindow
                                 && (focusedWindow == this.metaWindow
@@ -115,6 +125,17 @@ const dbFinTrackerWindow = new Lang.Class({
         }
         _D('<');
 	},
+
+    _focusedChanged: function() {
+        _D('@' + this.__name__ + '._focusedChanged()');
+        let (focused = this.focused) {
+            this._updateFocused();
+            if (this._tracker && focused !== this.focused) {
+                this._tracker.windowEvent(this, 'focused');
+            }
+        }
+        _D('>');
+    },
 
 	_updateMinimized: function() {
         _D('>' + this.__name__ + '._updateMinimized()');
@@ -130,12 +151,25 @@ const dbFinTrackerWindow = new Lang.Class({
         let (minimized = this.minimized) {
 			this._updateMinimized();
 			if (this._tracker && minimized !== this.minimized) {
-                this._tracker.update(null, '"' + this.appName + ':' + this.title + '" was '
-                                     + (this.minimized ? '' : 'un') + 'minimized.');
+                this._tracker.windowEvent(this, 'minimized');
             }
         }
         _D('<');
 	},
+
+    _enterEvent: function(text) {
+        _D('>' + this.__name__ + '._enterEvent()');
+        this.hovered = true;
+		if (this._tracker) this._tracker.windowEvent(this, 'enter');
+        _D('<');
+    },
+
+    _leaveEvent: function(text) {
+        _D('>' + this.__name__ + '._leaveEvent()');
+        this.hovered = false;
+		if (this._tracker) this._tracker.windowEvent(this, 'leave');
+        _D('<');
+    },
 
     showWindow: function() {
         _D('>' + this.__name__ + '.showWindow()');

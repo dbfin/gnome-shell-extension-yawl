@@ -347,6 +347,20 @@ const dbFinTracker = new Lang.Class({
 			            + (metaWorkspace && metaWorkspace.index ? metaWorkspace.index() + 1 : '?') + '.');
 		}
         _D('<');
-	}
+	},
+
+    windowEvent: function (trackerWindow, event, params) {
+        _D('>' + this.__name__ + '.windowEvent()');
+        if (!trackerWindow || !event) {
+            _D('<');
+            return;
+        }
+        if (event === 'enter' || event === 'leave' || event === 'title'
+	            || event === 'minimized') {
+        }
+		else if (event === 'focused') {
+        }
+        _D('<');
+    }
 });
 Signals.addSignalMethods(dbFinTracker.prototype);

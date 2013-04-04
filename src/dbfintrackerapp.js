@@ -85,9 +85,9 @@ const dbFinTrackerApp = new Lang.Class({
 			}
 			if (this.appButton.actor) {
 				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'enter-event',
-											callback: this.showWindowsGroup, scope: this });
+											callback: this._enterEvent, scope: this });
 				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
-											callback: this.hideWindowsGroup, scope: this });
+											callback: this._leaveEvent, scope: this });
 			}
         }
 
@@ -149,6 +149,18 @@ const dbFinTrackerApp = new Lang.Class({
             //this._resetNextWindows(); // commented out: gets called when a window of the same application is changed
 		} // let (focused)
         _D('<');
+	},
+
+	_enterEvent: function() {
+		_D('>' + this.__name__ + '._enterEvent()');
+		this.showWindowsGroup();
+		_D('<');
+	},
+
+	_leaveEvent: function() {
+		_D('>' + this.__name__ + '._leaveEvent()');
+		this.hideWindowsGroup();
+		_D('<');
 	},
 
     addWindow: function(metaWindow) {
