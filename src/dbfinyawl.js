@@ -59,6 +59,7 @@ const dbFinYAWL = new Lang.Class({
                                                                                 && Main.layoutManager.primaryMonitor
                                                                                 && Main.layoutManager.primaryMonitor.width
                                                                                 ||  Main.panel && Main.panel.actor
+                                                                                    && Main.panel.actor.get_stage()
                                                                                     && Main.panel.actor.get_width()
                                                                                 || 0,
                                                                         gravityindicator: true });

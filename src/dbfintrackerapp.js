@@ -187,13 +187,15 @@ const dbFinTrackerApp = new Lang.Class({
         _D('>' + this.__name__ + '.positionWindowsGroup()');
 		if (global.yawl.panelWindows) {
 			global.yawl.panelWindows.y = Main.layoutManager && Main.layoutManager.panelBox
+                    && Main.layoutManager.panelBox.get_stage()
 					&& Main.layoutManager.panelBox.get_y() + Main.layoutManager.panelBox.get_height() || 0;
 			if (this.yawlPanelWindowsGroup) {
 				let (container = this.appButton && this.appButton.container) {
-					if (container) {
+					if (container && container.get_stage()) {
 						let (w = Main.layoutManager && Main.layoutManager.primaryMonitor
-								 && Main.layoutManager.primaryMonitor.width
-								 || global.yawl.panelWindows.container && global.yawl.panelWindows.container.get_width()
+								         && Main.layoutManager.primaryMonitor.width
+								 || global.yawl.panelWindows.container && global.yawl.panelWindows.container.get_stage()
+                                         && global.yawl.panelWindows.container.get_width()
 								 || 0) {
 							let (g = w && Math.round(container.get_transformed_position()[0] + container.get_width() / 2) / w || 0) {
 								if (global.yawl.panelWindows.hidden) global.yawl.panelWindows.gravity = g;

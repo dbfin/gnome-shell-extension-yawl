@@ -49,8 +49,6 @@ const dbFinYAWLPanel = new Lang.Class({
         this._parentProperty = params.parentproperty || '';
         this._showHideChildren = params.showhidechildren || false;
         this._gravity = dbFinUtils.inRange(parseFloat(params.gravity), 0.0, 1.0, 0.0);
-        this.animationTime = Overview.ANIMATION_TIME * 1000;
-        this.animationEffect = 'easeOutQuad';
         this._childrenObjects = new dbFinArrayHash.dbFinArrayHash();
         if (params.hideinoverview) {
 			if (Main.overview && Main.overview.visible) this._hideInOverview();
@@ -104,9 +102,12 @@ const dbFinYAWLPanel = new Lang.Class({
 			this.container.add_actor(this._gravityIndicator);
 		}
 
+        this.animationTime = Overview.ANIMATION_TIME * 1000;
+        this.animationEffect = 'easeOutQuad';
+
 		this.hidden = false;
         this.hiding = false;
-		if (params.hidden) this.hide();
+		if (params.hidden) this.hide(0);
 
         if (this._parent) {
             if (this._parent == Main.uiGroup) {
@@ -345,7 +346,7 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('>' + this.__name__ + '.hideChild()');
         if (childObject && childObject.hide && this._childrenObjects && this._childrenObjects.get(childObject) !== undefined) {
             hideSelf = hideSelf && !this._childrenObjects.some(function (c, s) {
-                if (c && c != childObject && !c.hidden && !c.hiding) return true;
+                return !!c && c != childObject && !c.hidden && !c.hiding;
             });
             if (!this._showHideChildren || !hideSelf) childObject.hide(time === undefined || time === null ? this.animationTime : time);
             if (hideSelf) this.hide();
@@ -418,17 +419,21 @@ const dbFinYAWLPanel = new Lang.Class({
 
     _showOutOfOverview: function () {
         _D('>' + this.__name__ + '.showOutOfOverview()');
-        this.container.opacity = 0;
-        this.container.natural_height_set = false;
-        dbFinAnimation.animateToState(this.container, { opacity: 255 }, null, null, this.animationTime);
+        if (this.container) {
+            this.container.opacity = 0;
+            this.container.natural_height_set = false;
+            dbFinAnimation.animateToState(this.container, { opacity: 255 }, null, null, this.animationTime);
+        }
         _D('<');
     },
 
     _hideInOverview: function () {
         _D('>' + this.__name__ + '._hideInOverview()');
-        dbFinAnimation.animateToState(this.container, { opacity: 0 }, function () {
-            this.natural_height = 0;
-        }, this.container, this.animationTime);
+        if (this.container) {
+            dbFinAnimation.animateToState(this.container, { opacity: 0 }, function () {
+                this.natural_height = 0;
+            }, this.container, this.animationTime);
+        }
         _D('<');
     },
 

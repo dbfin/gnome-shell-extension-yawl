@@ -37,7 +37,6 @@ const dbFinSlicerActor = new Lang.Class({
 		this.container = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }), visible: true });
         if (this.container) {
             this.container._delegate = this;
-            this.container.natural_width = 0;
             this._signals.connectNoId({	emitter: this.container, signal: 'notify::allocation',
                                         callback: this._updateAllocation, scope: this });
         }

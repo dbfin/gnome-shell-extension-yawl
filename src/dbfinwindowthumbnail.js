@@ -85,7 +85,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 
         global.yawl.watch(this);
 
-        this.hide();
+        this.hide(0);
         _D('<');
     },
 
