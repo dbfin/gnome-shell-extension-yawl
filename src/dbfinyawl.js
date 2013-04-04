@@ -75,10 +75,8 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedIconsAnimationTime = function () { if (global.yawl.panelApps) global.yawl.panelApps.animationTime = global.yawl._iconsAnimationTime; };
 		this._updatedIconsAnimationEffect = function () { if (global.yawl.panelApps) global.yawl.panelApps.animationEffect = global.yawl._iconsAnimationEffect; };
         this._updatedIconsAlign = function () { if (global.yawl.panelApps) global.yawl.panelApps.animateToState({ gravity: global.yawl._iconsAlign / 100. }); };
-		this._updatedWindowsThumbnailsHeightVisible =
-                this._updatedWindowsThumbnailsPaddingTop =
-                this._updatedWindowsIndicatorArrow =
-				this._updatedIconsSize = this._panelWindowsStyleChanged;
+		this._updatedIconsSize = function () { if (global.yawl.panelWindows) global.yawl.panelWindows.gravityIndicatorWidth = global.yawl._iconsSize; };
+		this._updatedWindowsIndicatorArrow = this._panelWindowsStyleChanged;
         this._updatedWindowsTheming =
                 this._updatedWindowsBackgroundPanel =
                 this._updatedWindowsBackgroundColor =
@@ -157,13 +155,8 @@ const dbFinYAWL = new Lang.Class({
         _D('@' + this.__name__ + '._panelWindowsStyleChanged()');
         if (global.yawl.panelWindows && global.yawl.panelWindows.actor && global.yawl.panelWindows.actor.get_stage()) {
             let (node = global.yawl.panelWindows.actor.get_theme_node()) {
-                global.yawl.panelWindows.maxHeight = global.yawl._windowsThumbnailsHeightVisible
-                        + global.yawl._windowsThumbnailsPaddingTop
-                        + node.get_padding(0) + node.get_padding(2)
-                        + node.get_border_width(0) + node.get_border_width(2);
                 global.yawl.panelWindows.gravityIndicatorColor = node.get_border_color(1);
                 global.yawl.panelWindows.gravityIndicatorArrow = global.yawl._windowsIndicatorArrow;
-                global.yawl.panelWindows.gravityIndicatorWidth = global.yawl._iconsSize;
                 global.yawl.panelWindows.gravityIndicatorHeight = dbFinUtils.inRange(
                     global.yawl._windowsIndicatorArrow ? 8 : node.get_border_width(1) || 1,
                     0, node.get_length('padding') - 2, 0

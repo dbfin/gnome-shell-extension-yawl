@@ -39,7 +39,7 @@ const dbFinYAWLPanel = new Lang.Class({
     // GNOMENEXT: ui/panel.js: class Panel
     // params:  panelname, parent, parentproperty,
     //          hidden, showhidechildren, hideinoverview,
-    //          gravity, width, maxheight, x, y
+    //          gravity, width, maxchildheight, x, y
     //          gravityindicator, gravityindicatorcolor, gravityindicatorarrow, gravityindicatorwidth, gravityindicatorheight
     _init: function(params) {
         _D('>' + this.__name__ + '._init()');
@@ -62,7 +62,7 @@ const dbFinYAWLPanel = new Lang.Class({
         									: new Shell.GenericContainer({ reactive: true, visible: true });
         if (this.container) {
             if (params.width) this.container.min_width = this.container.natural_width = params.width;
-            this._maxHeight = params.maxheight || 0;
+            this._maxChildHeight = params.maxchildheight || 0;
 			if (params.x) this.container.x = params.x;
 			if (params.y) this.container.y = params.y;
             this._signals.connectNoId({ emitter: this.container, signal: 'get-preferred-width',
@@ -197,10 +197,11 @@ const dbFinYAWLPanel = new Lang.Class({
 
     _getPreferredHeight: function(actor, forWidth, alloc) {
         _D('@' + this.__name__ + '._getPreferredHeight()');
-        let ([ hm, hn ] = this.actor && this.actor.get_stage() ? this.actor.get_preferred_height(forWidth) : [ 0, 0 ]) {
-            if (this._maxHeight && this._maxHeight > 0) {
-                if (hm > this._maxHeight) hm = this._maxHeight;
-                if (hn > this._maxHeight) hn = this._maxHeight;
+        let ([ hm, hn ] = this.actor && this.actor.get_stage() ? this.actor.get_preferred_height(forWidth) : [ 0, 0 ],
+             [ hbm, hbn ] = this.box && this.box.get_stage() ? this.box.get_preferred_height(forWidth) : [ 0, 0 ]) {
+            if (this._maxChildHeight && this._maxChildHeight > 0) {
+                if (hbm > this._maxChildHeight) hm -= hbm - this._maxChildHeight;
+                if (hbn > this._maxChildHeight) hn -= hbn - this._maxChildHeight;
             }
             [ alloc.min_size, alloc.natural_size ] = [ hm, hn ];
         }
@@ -506,11 +507,11 @@ const dbFinYAWLPanel = new Lang.Class({
         if (this._gravityIndicator) this._gravityIndicator.opacity = opacity;
         if (this.actor) this.actor.opacity = opacity;
     },
-    get maxHeight() { return this._maxHeight || 0; },
-    set maxHeight(maxHeight) {
-        maxHeight = dbFinUtils.inRange(parseInt(maxHeight), 0, null, 0);
-        if (maxHeight !== this._maxHeight) {
-            this._maxHeight = maxHeight;
+    get maxChildHeight() { return this._maxChildHeight || 0; },
+    set maxChildHeight(maxChildHeight) {
+        maxChildHeight = dbFinUtils.inRange(parseInt(maxChildHeight), 0, null, 0);
+        if (maxChildHeight !== this._maxChildHeight) {
+            this._maxChildHeight = maxChildHeight;
             this.updatePanel();
         }
     },

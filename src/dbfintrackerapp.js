@@ -53,6 +53,13 @@ const dbFinTrackerApp = new Lang.Class({
                                                                             showhidechildren: true });
         if (this.yawlPanelWindowsGroup) {
             if (global.yawl.panelWindows) global.yawl.panelWindows.addChild(this.yawlPanelWindowsGroup);
+            this._updatedWindowsThumbnailsHeightVisible =
+                    this._updatedWindowsThumbnailsPaddingTop = function () {
+                if (this.yawlPanelWindowsGroup) {
+                    this.yawlPanelWindowsGroup.maxChildHeight = global.yawl._windowsThumbnailsHeightVisible
+                            + global.yawl._windowsThumbnailsPaddingTop;
+                }
+            };
         }
 
         this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
