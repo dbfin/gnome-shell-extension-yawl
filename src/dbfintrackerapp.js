@@ -50,7 +50,9 @@ const dbFinTrackerApp = new Lang.Class({
 		this._autohideshow = autoHideShow || false;
 
         this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel({    hidden: true,
-                                                                            showhidechildren: true });
+                                                                            showhidechildren: true,
+                                                                            title: this.appName,
+                                                                            label: '' });
         if (this.yawlPanelWindowsGroup) {
             if (global.yawl.panelWindows) global.yawl.panelWindows.addChild(this.yawlPanelWindowsGroup);
             this._updatedWindowsThumbnailsHeightVisible =
@@ -153,6 +155,7 @@ const dbFinTrackerApp = new Lang.Class({
 
 	_enterEvent: function() {
 		_D('>' + this.__name__ + '._enterEvent()');
+		this.setLabel('');
 		this.showWindowsGroup();
 		_D('<');
 	},
@@ -162,6 +165,12 @@ const dbFinTrackerApp = new Lang.Class({
 		this.hideWindowsGroup();
 		_D('<');
 	},
+
+    setLabel: function(text) {
+        _D('>' + this.__name__ + '.setLabel()');
+        if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.labelText = text;
+        _D('<');
+    },
 
     addWindow: function(metaWindow) {
         _D('>' + this.__name__ + '.addWindow()');

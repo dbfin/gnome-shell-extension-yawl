@@ -349,6 +349,20 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	},
 
+	updateTrackerAppLabel: function (trackerWindow) {
+        _D('>' + this.__name__ + '.updateTrackerAppLabel()');
+		if (trackerWindow && trackerWindow.metaApp && trackerWindow.hovered) {
+            let (trackerApp = this.getTrackerApp(trackerWindow.metaApp)) {
+                if (trackerApp) {
+					trackerApp.setLabel(trackerWindow.minimized
+                                        ? '[ ' + trackerWindow.title + ' ]'
+                                        : trackerWindow.title);
+				} // if (trackerApp)
+            } // let (trackerApp)
+		} // if (trackerWindow && trackerWindow.metaApp && trackerWindow.hovered)
+        _D('<');
+	},
+
     windowEvent: function (trackerWindow, event, params) {
         _D('>' + this.__name__ + '.windowEvent()');
         if (!trackerWindow || !event) {
@@ -357,6 +371,7 @@ const dbFinTracker = new Lang.Class({
         }
         if (event === 'enter' || event === 'leave' || event === 'title'
 	            || event === 'minimized') {
+			this.updateTrackerAppLabel(trackerWindow);
         }
 		else if (event === 'focused') {
         }

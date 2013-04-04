@@ -26,6 +26,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinSlicerLabel = Me.imports.dbfinslicerlabel;
 const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -41,6 +42,7 @@ const dbFinYAWLPanel = new Lang.Class({
     //          hidden, showhidechildren, hideinoverview,
     //          gravity, width, maxchildheight, x, y
     //          gravityindicator, gravityindicatorcolor, gravityindicatorarrow, gravityindicatorwidth, gravityindicatorheight
+	//			title, label
     _init: function(params) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
@@ -80,6 +82,28 @@ const dbFinYAWLPanel = new Lang.Class({
             this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
                                         callback: this._styleChanged, scope: this });
         }
+
+		this.labelTitle = params.title || params.title === ''
+				? new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' + params.title })
+				: null;
+		if (this.labelTitle) {
+			if (this.actor && this.labelTitle.container) this.actor.add_actor(this.labelTitle.container);
+		}
+		// we create two labels for smooth transitions
+		this.labels = params.label || params.label === '' ? [
+		    new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' + params.label }),
+		    new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' })
+        ] : null;
+		if (this.labels) {
+			this._labelsBox = new St.BoxLayout({ vertical: false, x_align: Clutter.ActorAlign.CENTER, visible: true });
+			if (this.actor && this._labelsBox) {
+				this.actor.add_actor(this._labelsBox);
+				if (this.labels[0] && this.labels[0].container) this._labelsBox.add_actor(this.labels[0].container);
+				if (this.labels[1] && this.labels[1].container) this._labelsBox.add_actor(this.labels[1].container);
+			}
+			this._labelIndex = 0;
+			if (this.labels[1]) this.labels[1].hide(0);
+		}
 
 		this.box = new St.BoxLayout({ vertical: false, x_align: Clutter.ActorAlign.CENTER, reactive: true, visible: true });
 		if (this.box) {
@@ -167,6 +191,27 @@ const dbFinYAWLPanel = new Lang.Class({
 			this.box._delegate = null;
 			this.box.destroy();
 			this.box = null;
+		}
+		if (this.labels) {
+			for (let i = 0; i < this.labels.length; ++i) {
+				if (this.labels[i]) {
+					if (this.labels[i].container && this.labels[i].container.get_parent()) {
+						this.labels[i].container.get_parent().remove_actor(this.labels[i].container);
+					}
+					this.labels[i].destroy();
+					this.labels[i] = null;
+				}
+			}
+		}
+		if (this.labelTitle) {
+			if (this.labelTitle.container && this.actor) this.actor.remove_actor(this.labelTitle.container);
+			this.labelTitle.destroy();
+			this.labelTitle = null;
+		}
+		if (this._labelsBox) {
+			if (this.actor) this.actor.remove_actor(this._labelsBox);
+			this._labelsBox.destroy();
+			this._labelsBox = null;
 		}
 		if (this.actor) {
 			if (this.container) {
@@ -393,7 +438,13 @@ const dbFinYAWLPanel = new Lang.Class({
         }
         this.hidden = false;
         this.hiding = false;
-        if (this._showHideChildren) this.showChildren(false, time);
+        if (this._showHideChildren) {
+			this.showChildren(false, time);
+			if (this.labelTitle) this.labelTitle.show(time === undefined || time === null ? this.animationTime : time);
+			if (this.labels && this.labels[this._labelIndex]) {
+				this.labels[this._labelIndex].show(time === undefined || time === null ? this.animationTime : time);
+			}
+		}
 		this.animateToState({ opacity: 255 }, null, null, time);
         _D('<');
     },
@@ -405,7 +456,13 @@ const dbFinYAWLPanel = new Lang.Class({
             return;
         }
         this.hiding = true;
-        if (this._showHideChildren) this.hideChildren(false, time);
+        if (this._showHideChildren) {
+			this.hideChildren(false, time);
+			if (this.labelTitle) this.labelTitle.hide(time === undefined || time === null ? this.animationTime : time);
+			if (this.labels && this.labels[this._labelIndex]) {
+				this.labels[this._labelIndex].hide(time === undefined || time === null ? this.animationTime : time);
+			}
+		}
 		this.animateToState({ opacity: 0 },
                             function() {
                                 if (this.container) {
@@ -500,6 +557,25 @@ const dbFinYAWLPanel = new Lang.Class({
         if (gravityIndicatorHeight !== this._gravityIndicatorHeight) {
             this._gravityIndicatorHeight = gravityIndicatorHeight;
             this.updatePanel(true);
+        }
+    },
+    get labelText() { return this.labels && this.labels[this._labelIndex] && this.labels[this._labelIndex].getText(); },
+    set labelText(labelText) {
+        if ((labelText || labelText === '') && this.labels && this.labels[0] && this.labels[1]) {
+			labelText = '' + labelText;
+			if (this.labels[this._labelIndex].getText() !== labelText) {
+				this.labels[this._labelIndex].hide(this.animationTime, null, null, 'linear');
+				this._labelIndex = 1 - this._labelIndex;
+				this.labels[this._labelIndex].setText(labelText);
+				let ([ x, y, m ] = global.get_pointer()) {
+					if (this._labelTextX !== undefined) {
+						if (this._labelTextX < x) this.labels[this._labelIndex].container.raise_top();
+						else this.labels[this._labelIndex].container.lower_bottom();
+					}
+					this._labelTextX = x;
+				}
+				this.labels[this._labelIndex].show(this.animationTime, null, null, 'linear');
+			}
         }
     },
 	get opacity() { return this.actor && this.actor.opacity || 0; },
