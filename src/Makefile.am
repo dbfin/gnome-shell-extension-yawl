@@ -3,6 +3,7 @@ include ../include.mk
 dist_extension_DATA = \
 	convenience2.js \
 	dbfinanimation.js \
+	dbfinanimationequations.js \
 	dbfinappbutton.js \
 	dbfinarrayhash.js \
 	dbfinclicked.js \

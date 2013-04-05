@@ -16,28 +16,25 @@ const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
 const arrayAnimationTransitions = [
-    [   'Linear',   									'linear'						],
-    [	'Quad: slower at the end', 						'easeOutQuad'					],
-    [	'Quad: slower at the beginning',  				'easeInQuad'					],
-    [	'Quad: effect on both sides',   				'easeInOutQuad'					],
-    [	'Cubic: slower at the end',   					'easeOutCubic'   				],
-    [	'Cubic: slower at the beginning',				'easeInCubic'   				],
-    [	'Cubic: effect on both sides',      			'easeInOutCubic'   				],
-    [	'Expo: slower at the end',						'easeOutExpo'					],
-    [	'Expo: slower at the beginning',   				'easeInExpo'					],
-    [	'Expo: effect on both sides',      				'easeInOutExpo'					],
-    [	'Circ: slower at the end',						'easeOutCirc'					],
-    [	'Circ: slower at the beginning',   				'easeInCirc'					],
-    [	'Circ: effect on both sides',      				'easeInOutCirc'					],
-    [	'Bounce: effect at the end',  					'easeOutBounce'  				],
-    [	'Bounce: effect at the beginning',     			'easeInBounce'  				],
-    [	'Bounce: effect on both sides',     			'easeInOutBounce'  				]//,
-//    [	'Back: effect at the end',						'easeOutBack'					],
-//    [	'Back: effect at the beginning',   				'easeInBack'					],
-//    [	'Back: effect on both sides',      				'easeInOutBack'					],
-//    [	'Elastic: slower at the end', 					'easeOutElastic' 				],
-//    [	'Elastic: slower at the beginning',    			'easeInElastic' 				],
-//    [	'Elastic: effect on both sides',    			'easeInOutElastic' 				]
+    [   'Linear',										'linear'						],
+    [	'Slow at the end',								'easeOutQuad'					],
+    [	'Slow at the beginning',						'easeInQuad'					],
+    [	'Slow on both sides',							'easeInOutQuad'					],
+    [	'Slow in the middle',							'easeOutInQuad'					],
+    [	'Slower at the end',							'easeOutCubic'   				],
+    [	'Slower at the beginning',						'easeInCubic'   				],
+    [	'Slower on both sides',							'easeInOutCubic'   				],
+    [	'Slower in the middle',							'easeOutInCubic'   				],
+    [	'Slowest at the end',							'easeOutQuart'   				],
+    [	'Slowest at the beginning',						'easeInQuart'   				],
+    [	'Slowest on both sides',						'easeInOutQuart'   				],
+    [	'Slowest in the middle',						'easeOutInQuart'   				],
+    [	'Bounce at the end',							'easeOutBounce'  				],
+    [	'Bounce at the beginning',						'easeInBounce'  				],
+    [	'Bounce on both sides',							'easeInOutBounce'  				],
+    [	'Bounce in the middle',							'easeOutInBounce'  				],
+    [	'Back\'n\'force in the middle',					'easeOutInBack'					],
+    [	'Elastic in the middle',						'easeOutInElastic' 				]
 ];
 
 const arrayAppClickFunctions = [

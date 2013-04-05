@@ -28,7 +28,7 @@ const _ = Gettext.gettext;
  *              callback    the callback to call at the end of animation
  *              scope       the scope for callback
  *              time        animation time
- *              transition  can be an index in the array dbFinConsts.arrayAnimationTransitions or a string
+ *              transition  can be an index in the array dbFinConsts.arrayAnimationTransitions or a string, or a function
  */
 function animateToState(actor, state, callback, scope, time, transition) {
     if (!actor || !state) return;
