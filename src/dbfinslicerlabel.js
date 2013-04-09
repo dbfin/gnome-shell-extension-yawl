@@ -52,7 +52,7 @@ const dbFinSlicerLabel = new Lang.Class({
     getText: function() {
         _D('>' + this.__name__ + '.getText()');
         _D('<');
-        return this.actor && this.actor.get_text() || null;
+        return this.actor && this.actor.get_text();
     },
 
     setText: function(text) {
