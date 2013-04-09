@@ -130,10 +130,6 @@ const dbFinWindowThumbnail = new Lang.Class({
 			this.actor.show();
 			this.actor.reactive = true;
 		}
-        if (!this.hidden && !this.hiding) {
-            _D('<');
-            return;
-        }
 		this.hidden = false;
         this.hiding = false;
 		if (this._slicerIcon) this._slicerIcon.show(time);
@@ -142,7 +138,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 	hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
-		if (!this.hidden && !this.hiding && this._slicerIcon) {
+		if (this._slicerIcon) {
             this.hiding = true;
             this._slicerIcon.hide(time, function () {
                                             if (this.actor) {

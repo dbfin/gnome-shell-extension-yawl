@@ -104,10 +104,6 @@ const dbFinSlicerActor = new Lang.Class({
 			this.container.show();
 			this.container.reactive = true;
 		}
-        if (!this.hidden && !this.hiding) {
-            _D('<');
-            return;
-        }
 		this.hidden = false;
         this.hiding = false;
         let (state = { opacity: 255, natural_width: this.getNaturalWidth() }) {
@@ -119,28 +115,23 @@ const dbFinSlicerActor = new Lang.Class({
 
     hide: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.hide()');
-		if (!this.hidden && !this.hiding && this.container) {
-            this.hiding = true;
-            let (state = { opacity: 0, natural_width: 0 }) {
-                if (this._animateHeight) state.natural_height = 0;
-                this.animateToState(state,
-                                    function () {
-                                        if (this.container) {
-                                            this.container.reactive = false;
-                                            this.container.hide();
-                                        }
-                                        this.hidden = true;
-                                        this.hiding = false;
-                                        if (callback) {
-                                            if (scope) Lang.bind(scope, callback)();
-                                            else callback();
-                                        }
-                                    },
-                                    this,
-                                    time,
-                                    transition);
-            }
-        }
+		this.hiding = true;
+		let (state = { opacity: 0, natural_width: 0 }) {
+			if (this._animateHeight) state.natural_height = 0;
+			this.animateToState(state,
+								function () {
+									if (this.container) {
+										this.container.reactive = false;
+										this.container.hide();
+									}
+									this.hidden = true;
+									this.hiding = false;
+									if (callback) (scope ? Lang.bind(scope, callback) : callback)();
+								},
+								this,
+								time,
+								transition);
+		}
         _D('<');
     },
 
@@ -195,21 +186,15 @@ const dbFinSlicerActor = new Lang.Class({
 
     setOpacity: function(opacity, time, callback, scope, transition) {
         _D('>' + this.__name__ + '.setOpacity()');
-        opacity = dbFinUtils.inRange(opacity, 0, 255, undefined);
-        if (opacity !== undefined && this._opacity != opacity) {
-            this._opacity = opacity;
-    		this.animateActorToState({ opacity: opacity }, callback, scope, time, transition);
-        }
+		this._opacity = dbFinUtils.inRange(opacity, 0, 255, 255);
+		this.animateActorToState({ opacity: this._opacity }, callback, scope, time, transition);
         _D('<');
     },
 
     setOpacity100: function(opacity, time, callback, scope, transition) {
         _D('>' + this.__name__ + '.setOpacity100()');
-        opacity = dbFinUtils.opacity100to255(dbFinUtils.inRange(opacity, 0, 100, undefined));
-        if (opacity !== undefined && this._opacity != opacity) {
-            this._opacity = opacity;
-    		this.animateActorToState({ opacity: opacity }, callback, scope, time, transition);
-        }
+		this._opacity = dbFinUtils.opacity100to255(dbFinUtils.inRange(opacity, 0, 100, 100));
+		this.animateActorToState({ opacity: this._opacity }, callback, scope, time, transition);
         _D('<');
     },
 

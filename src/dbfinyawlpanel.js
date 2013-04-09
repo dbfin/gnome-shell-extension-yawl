@@ -432,10 +432,6 @@ const dbFinYAWLPanel = new Lang.Class({
             this.container.show();
             this.container.reactive = true;
         }
-        if (!this.hidden && !this.hiding) {
-            _D('<');
-            return;
-        }
         this.hidden = false;
         this.hiding = false;
         if (this._showHideChildren) {
@@ -451,10 +447,6 @@ const dbFinYAWLPanel = new Lang.Class({
 
     hide: function(time) {
         _D('>' + this.__name__ + '.hide()');
-        if (this.hidden || this.hiding) {
-            _D('<');
-            return;
-        }
         this.hiding = true;
         if (this._showHideChildren) {
 			this.hideChildren(false, time);
@@ -507,7 +499,7 @@ const dbFinYAWLPanel = new Lang.Class({
     },
 
 	_styleChanged: function() {
-        _D('>' + this.__name__ + '._styleChanged()');
+        _D('@' + this.__name__ + '._styleChanged()');
 		this.updatePanel(true);
         _D('<');
 	},
