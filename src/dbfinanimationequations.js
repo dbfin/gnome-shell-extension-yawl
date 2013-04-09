@@ -28,9 +28,9 @@ const dbFinUtils = Me.imports.dbfinutils;
 
 /* delay:	animate the given animation transition after delay
  */
-function delay(transition, delay/* = 0.5*/) {
+function delay(transition, delay/* = 0.0*/) {
 	if (!transition) return (function () {});
-    delay = dbFinUtils.inRange(parseFloat(delay), 0.0, 1.0, 0.5);
+    delay = dbFinUtils.inRange(parseFloat(delay), 0.0, 1.0, 0.0);
 	if (!isNaN(parseInt(transition))) {
         transition = dbFinConsts.arrayAnimationTransitions[
             dbFinUtils.inRange(parseInt(transition),
