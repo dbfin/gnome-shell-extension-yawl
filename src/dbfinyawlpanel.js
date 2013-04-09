@@ -89,20 +89,19 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (this.labelTitle) {
 			if (this.actor && this.labelTitle.container) this.actor.add_actor(this.labelTitle.container);
 		}
-		// we create two labels for smooth transitions
-		this.labels = params.label || params.label === '' ? [
-		    new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' + params.label }),
-		    new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' })
-        ] : null;
-		if (this.labels) {
-			this._labelsBox = new Shell.Stack({ x_align: Clutter.ActorAlign.CENTER, visible: true });
-			if (this.actor && this._labelsBox) {
-				this.actor.add_actor(this._labelsBox);
-				if (this.labels[0] && this.labels[0].container) this._labelsBox.add_actor(this.labels[0].container);
-				if (this.labels[1] && this.labels[1].container) this._labelsBox.add_actor(this.labels[1].container);
+		this.label = params.label || params.label === ''
+			? new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' + params.label })
+			: null;
+		if (this.label) {
+			this._labelText = '' + params.label;
+			if (this.actor) {
+				if (this.label.container) this.actor.add_actor(this.label.container);
+				this._signals.connectNoId({	emitter: this.actor, signal: 'notify::allocation',
+											callback: this._actorAllocationChanged, scope: this });
 			}
-			this._labelIndex = 0;
-			if (this.labels[1]) this.labels[1].hide(0);
+			this.label.hide(0);
+			this._updateLabelWidth(0);
+			this.label.show();
 		}
 
 		this.box = new St.BoxLayout({ vertical: false, x_align: Clutter.ActorAlign.CENTER, reactive: true, visible: true });
@@ -192,26 +191,15 @@ const dbFinYAWLPanel = new Lang.Class({
 			this.box.destroy();
 			this.box = null;
 		}
-		if (this.labels) {
-			for (let i = 0; i < this.labels.length; ++i) {
-				if (this.labels[i]) {
-					if (this.labels[i].container && this.labels[i].container.get_parent()) {
-						this.labels[i].container.get_parent().remove_actor(this.labels[i].container);
-					}
-					this.labels[i].destroy();
-					this.labels[i] = null;
-				}
-			}
+		if (this.label) {
+			if (this.label.container && this.actor) this.actor.remove_actor(this.label.container);
+			this.label.destroy();
+			this.label = null;
 		}
 		if (this.labelTitle) {
 			if (this.labelTitle.container && this.actor) this.actor.remove_actor(this.labelTitle.container);
 			this.labelTitle.destroy();
 			this.labelTitle = null;
-		}
-		if (this._labelsBox) {
-			if (this.actor) this.actor.remove_actor(this._labelsBox);
-			this._labelsBox.destroy();
-			this._labelsBox = null;
 		}
 		if (this.actor) {
 			if (this.container) {
@@ -422,7 +410,32 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('<');
     },
 
-    show: function(time) {
+	updateLabel: function() {
+		_D('>' + this.__name__ + '.updateLabel()');
+		if (!this.label) {
+			_D('<');
+			return;
+		}
+		let (t = this.animationTime >> 1) {
+			if (this.label.getText() === this._labelText) {
+				this.label.setOpacity(255, this.hidden || this.label.hidden || this._labelText === '' ? 0 : t,
+									  null, null, 'easeInOutQuad');
+			} // if (this.label.getText() === this._labelText)
+			else {
+				this.label.setOpacity(0, this.hidden || this.label.hidden || this.label.getText() === '' ? 0 : t, function () {
+					if (this.label) {
+						this.label.setText(this._labelText);
+						this._updateLabelWidth(0);
+						this.label.setOpacity(255, this.hidden || this.label.hidden || this._labelText === '' ? 0 : t,
+											  null, null, 'easeInOutQuad');
+					} // if (this.label)
+				}, this, 'easeInOutQuad'); // this.label.setOpacity(0)
+			} // if (this.label.getText() === this._labelText) else
+		} // let (t)
+		_D('<');
+	},
+
+    show: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.show()');
         if (Main.screenShield.locked) {
             _D('<');
@@ -437,23 +450,19 @@ const dbFinYAWLPanel = new Lang.Class({
         if (this._showHideChildren) {
 			this.showChildren(false, time);
 			if (this.labelTitle) this.labelTitle.show(time === undefined || time === null ? this.animationTime : time);
-			if (this.labels && this.labels[this._labelIndex]) {
-				this.labels[this._labelIndex].show(time === undefined || time === null ? this.animationTime : time);
-			}
+			if (this.label) this.label.show(time === undefined || time === null ? this.animationTime : time);
 		}
-		this.animateToState({ opacity: 255 }, null, null, time);
+		this.animateToState({ opacity: 255 }, callback, scope, time, transition);
         _D('<');
     },
 
-    hide: function(time) {
+    hide: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.hide()');
         this.hiding = true;
         if (this._showHideChildren) {
 			this.hideChildren(false, time);
 			if (this.labelTitle) this.labelTitle.hide(time === undefined || time === null ? this.animationTime : time);
-			if (this.labels && this.labels[this._labelIndex]) {
-				this.labels[this._labelIndex].hide(time === undefined || time === null ? this.animationTime : time);
-			}
+			if (this.label) this.label.hide(time === undefined || time === null ? this.animationTime : time);
 		}
 		this.animateToState({ opacity: 0 },
                             function() {
@@ -463,7 +472,8 @@ const dbFinYAWLPanel = new Lang.Class({
                                 }
                                 this.hidden = true;
                                 this.hiding = false;
-                            }, this, time);
+								if (callback) (scope ? Lang.bind(scope, callback) : callback)();
+                            }, this, time, transition);
         _D('<');
     },
 
@@ -498,10 +508,30 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('<');
     },
 
+	_updateLabelWidth: function(time) {
+		_D('>' + this.__name__ + '._updateLabelWidth()');
+		if (this.label && this.label.actor && this.label.actor.clutter_text && this.label.actor.clutter_text.get_stage()) {
+			dbFinAnimation.animateToState(
+			    this.label.actor,
+				{ natural_width: this.actor ? Math.min(this.label.actor.clutter_text.get_preferred_width(-1)[1],
+					                          this.actor.width) || 1
+											: this.label.actor.clutter_text.get_preferred_width(-1)[1] || 1 },
+				null, null, time === undefined || time === null ? this.animationTime : time, 'linear'
+			);
+		}
+		_D('<');
+	},
+
 	_styleChanged: function() {
         _D('@' + this.__name__ + '._styleChanged()');
 		this.updatePanel(true);
         _D('<');
+	},
+
+	_actorAllocationChanged: function() {
+		_D('@' + this.__name__ + '._actorAllocationChanged()');
+		this._updateLabelWidth();
+		_D('<');
 	},
 
     // animatable properties
@@ -551,18 +581,11 @@ const dbFinYAWLPanel = new Lang.Class({
             this.updatePanel(true);
         }
     },
-    get labelText() { return this.labels && this.labels[this._labelIndex] && this.labels[this._labelIndex].getText(); },
+    get labelText() { return this._labelText; },
     set labelText(labelText) {
-        if ((labelText || labelText === '') && this.labels && this.labels[0] && this.labels[1]) {
-			labelText = '' + labelText;
-			if (this.labels[this._labelIndex].getText() !== labelText) {
-				this.labels[this._labelIndex].hide(this.animationTime * 2, null, null, 'easeInExpo');
-				this.labels[this._labelIndex].setOpacity(0, this.animationTime * 2, null, null, 'easeOutCubic');
-				this._labelIndex = 1 - this._labelIndex;
-				this.labels[this._labelIndex].setText(labelText);
-				this.labels[this._labelIndex].show(this.animationTime * 2, null, null, 'easeOutExpo');
-				this.labels[this._labelIndex].setOpacity(255, this.animationTime * 2, null, null, 'easeInCubic');
-			}
+        if ((labelText || labelText === '') && (labelText = '' + labelText) !== this._labelText) {
+			this._labelText = labelText;
+			this.updateLabel();
         }
     },
 	get opacity() { return this.actor && this.actor.opacity || 0; },
