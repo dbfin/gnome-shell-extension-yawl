@@ -225,10 +225,10 @@ const dbFinTrackerApp = new Lang.Class({
 								 || global.yawl.panelWindows.container && global.yawl.panelWindows.container.get_stage()
                                          && global.yawl.panelWindows.container.get_width()
 								 || 0) {
-							let (g = w && Math.round(container.get_transformed_position()[0] + container.get_width() / 2) / w || 0) {
-								if (global.yawl.panelWindows.hidden) global.yawl.panelWindows.gravity = g;
-								else global.yawl.panelWindows.animateToState({ gravity: g });
-							} // let (g)
+							global.yawl.panelWindows.animateToState({
+									gravity: w && Math.round(container.get_transformed_position()[0]
+											 + container.get_width() / 2) / w
+							}, null, null, global.yawl.panelWindows.hidden ? 0 : null);
 						} // let (w, y)
 					} // if (container)
 				} // let (container)
