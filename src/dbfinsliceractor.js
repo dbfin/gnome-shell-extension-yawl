@@ -237,9 +237,12 @@ const dbFinSlicerActor = new Lang.Class({
 		}
     },
 
-    restoreNaturalSize: function() {
+    restoreNaturalSize: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.restoreNaturalSize()');
-		this.animateToState({ natural_width: this.getNaturalWidth(), natural_height: this.getNaturalHeight() });
+		let (state = { natural_width: this.getNaturalWidth() }) {
+			if (this._animateHeight) state.natural_height = this.getNaturalHeight();
+			this.animateToState(state, callback, scope, time, transition);
+		}
         _D('<');
 	},
 
