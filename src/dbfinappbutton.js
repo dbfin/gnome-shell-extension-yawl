@@ -313,6 +313,7 @@ const dbFinAppButton = new Lang.Class({
                     if (functionRow.length && functionRow.length > state.clicks) {
                         let (functionName = functionRow[state.clicks]) {
                             if (functionName != '' && this._trackerApp[functionName]) {
+								this._trackerApp.hideWindowsGroup();
                                 Lang.bind(this._trackerApp, this._trackerApp[functionName])();
                             }
                         } // let (functionName)
