@@ -149,7 +149,7 @@ function buildPrefsWidget() {
                 builder.addSeparator();
                 builder.addCheckBox(_("Custom panel background"), 'panel-background');
                 builder.shift();
-                    builder.addColorButtonOpacity(_("Opacity and color"), 'panel-color', 'panel-opacity', _("Choose panel background color"), 'panel-background');
+                    builder.addScaleColorButton(_("Opacity and color"), 'panel-opacity', 'panel-color', 0, 100, 1, _("Choose panel background color"), 'panel-background');
                 builder.unshift();
 
             builder.addPage(_("Icons"), 'icon.png');
@@ -186,11 +186,10 @@ function buildPrefsWidget() {
                 builder.shift();
                     builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
 					builder.shift();
-						builder.addColorButtonOpacity(_("Background opacity and color"), 'windows-background-color', 'windows-background-opacity', _("Choose thumbnail panel background color"), [ 'windows-theming', '!windows-background-panel' ]);
+						builder.addScaleColorButton(_("Background opacity and color"), 'windows-background-opacity', 'windows-background-color', 0, 100, 1, _("Choose thumbnail panel background color"), [ 'windows-theming', '!windows-background-panel' ]);
 					builder.unshift();
                     builder.addScale(_("Padding"), 'windows-padding', 0, 20, 1, 'windows-theming');
-                    builder.addColorButton(_("Border color"), 'windows-border-color', _("Choose thumbnail panel border color"), 'windows-theming', true);
-                    builder.addScale(_("Border width"), 'windows-border-width', 0, 3, 1, 'windows-theming');
+                    builder.addScaleColorButton(_("Border width and color"), 'windows-border-width', 'windows-border-color', 0, 3, 1, _("Choose thumbnail panel border color"), 'windows-theming');
                     builder.addScale(_("Border radius"), 'windows-border-radius', 0, 10, 1, 'windows-theming');
                 builder.unshift();
 
