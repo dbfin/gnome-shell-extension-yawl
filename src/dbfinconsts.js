@@ -97,6 +97,8 @@ const Settings = [
     [ 'windows-background-panel', true, { } ],
     [ 'windows-background-color', '#000000', { } ],
     [ 'windows-background-opacity', 70, { min: 0, max: 100 } ],
+    [ 'windows-text-color', 'white', { } ],
+    [ 'windows-text-size', 9, { min: 6, max: 36 } ],
     [ 'windows-padding', 7, { min: 0, max: 20 } ],
     [ 'windows-border-color', '#d3d7cf', { } ],
     [ 'windows-border-width', 2, { min: 0, max: 3 } ],

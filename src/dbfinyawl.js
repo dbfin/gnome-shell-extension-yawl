@@ -81,6 +81,8 @@ const dbFinYAWL = new Lang.Class({
                 this._updatedWindowsBackgroundPanel =
                 this._updatedWindowsBackgroundColor =
                 this._updatedWindowsBackgroundOpacity =
+				this._updatedWindowsTextColor =
+				this._updatedWindowsTextSize =
                 this._updatedWindowsPadding =
                 this._updatedWindowsBorderColor =
                 this._updatedWindowsBorderWidth =
@@ -187,6 +189,8 @@ const dbFinYAWL = new Lang.Class({
                         } // if (color == '')
                         style = 'background-color: ' + color;
                     } // let (color)
+					style += '; color: ' + global.yawl._windowsTextColor;
+					style += '; font-size: ' + global.yawl._windowsTextSize + 'pt';
                     style += '; padding: ' + global.yawl._windowsPadding + 'px';
                     style += '; border: ' + global.yawl._windowsBorderWidth + 'px solid ' + global.yawl._windowsBorderColor;
 					style += '; border-top-width: 0';

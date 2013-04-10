@@ -188,6 +188,7 @@ function buildPrefsWidget() {
 					builder.shift();
 						builder.addScaleColorButton(_("Background opacity and color"), 'windows-background-opacity', 'windows-background-color', 0, 100, 1, _("Choose thumbnail panel background color"), [ 'windows-theming', '!windows-background-panel' ]);
 					builder.unshift();
+					builder.addScaleColorButton(_("Text size and color"), 'windows-text-size', 'windows-text-color', 6, 36, 1, _("Choose thumbnail panel text color"), 'windows-theming');
                     builder.addScale(_("Padding"), 'windows-padding', 0, 20, 1, 'windows-theming');
                     builder.addScaleColorButton(_("Border width and color"), 'windows-border-width', 'windows-border-color', 0, 3, 1, _("Choose thumbnail panel border color"), 'windows-theming');
                     builder.addScale(_("Border radius"), 'windows-border-radius', 0, 10, 1, 'windows-theming');

@@ -149,6 +149,16 @@
       <_summary>Window thumbnail panel background opacity.</_summary>
       <_description>Window thumbnail panel background background opacity.</_description>
     </key>
+    <key name="windows-text-color" type="s">
+      <default>'white'</default>
+      <_summary>Window thumbnail panel text color.</_summary>
+      <_description>Window thumbnail panel text color.</_description>
+    </key>
+    <key name="windows-text-size" type="s">
+      <default>'9'</default>
+      <_summary>Window thumbnail panel text size (pt).</_summary>
+      <_description>Window thumbnail panel text size in pt.</_description>
+    </key>
     <key name="windows-padding" type="s">
       <default>'7'</default>
       <_summary>Window thumbnail padding.</_summary>
