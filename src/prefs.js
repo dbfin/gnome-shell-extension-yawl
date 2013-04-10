@@ -186,8 +186,8 @@ function buildPrefsWidget() {
                 builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming');
                 builder.shift();
                     builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
-                    builder.addColorButton(_("Background color"), 'windows-background-color', _("Choose thumbnail panel background color"), 'windows-theming', true);
-                    builder.addScale(_("Background opacity"), 'windows-background-opacity', 0, 100, 1, 'windows-theming');
+                    builder.addColorButton(_("Background color"), 'windows-background-color', _("Choose thumbnail panel background color"), [ 'windows-theming', '!windows-background-panel' ], true);
+                    builder.addScale(_("Background opacity"), 'windows-background-opacity', 0, 100, 1, [ 'windows-theming', '!windows-background-panel' ]);
                     builder.addScale(_("Padding"), 'windows-padding', 0, 20, 1, 'windows-theming');
                     builder.addColorButton(_("Border color"), 'windows-border-color', _("Choose thumbnail panel border color"), 'windows-theming', true);
                     builder.addScale(_("Border width"), 'windows-border-width', 0, 3, 1, 'windows-theming');
