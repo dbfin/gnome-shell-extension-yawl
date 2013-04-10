@@ -431,12 +431,30 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		if (!this._notebook) return [];
 		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, hexpand: true }),
              rowColorButtonEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, hexpand: true, width_chars: 9 }),
-             rowColorButton = new Gtk.ColorButton({ halign: Gtk.Align.END, use_alpha: false, title: titleColorChooser }),
+             rowColorButton = new Gtk.ColorButton({ halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, use_alpha: false, title: titleColorChooser }),
 		     settingsbind = new dbFinSettingsBindEntryColorButton()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowColorButtonEntry, rowColorButton);
 			return this.addRow(rowLabel, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : 1 ], [ rowColorButton, 1 ] ], bindSensitive);
         } // let (rowLabel, rowColorButtonEntry, rowColorButton, settingsbind)
+    },
+
+    addColorButtonOpacity: function(label, settingsKeyColor, settingsKeyOpacity, titleColorChooser, bindSensitive/* = null*/, showEntry/* = false*/) {
+		if (!this._notebook) return [];
+		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, hexpand: true }),
+             rowColorButtonEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, hexpand: true, width_chars: 9 }),
+             rowColorButton = new Gtk.ColorButton({ halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, use_alpha: false, title: titleColorChooser }),
+             rowScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, hexpand: true, width_chars: 5 }),
+             rowScale = new Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 1,
+                                                 { halign: Gtk.Align.FILL, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+		     settingsbindColor = new dbFinSettingsBindEntryColorButton(),
+		     settingsbindOpacity = new dbFinSettingsBindEntryScale()) {
+			this._notebook.widget._settingsbinds.push(settingsbindColor);
+			this._notebook.widget._settingsbinds.push(settingsbindOpacity);
+			settingsbindColor.bind(settingsKeyColor, rowColorButtonEntry, rowColorButton);
+			settingsbindOpacity.bind(settingsKeyOpacity, rowScaleEntry, rowScale);
+			return this.addRow(rowLabel, [ [ rowScaleEntry, 0 ], [ rowScale, !showEntry ? 2 : 1 ], [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ rowColorButton, 1 ] ], bindSensitive);
+        } // let (rowLabel, rowColorButtonEntry, rowColorButton, rowScaleEntry, rowScale, settingsbindColor, settingsbindOpacity)
     },
 
     addScale: function(label, settingsKey, min, max, step, bindSensitive/* = null*/, showEntry/* = false*/) {
