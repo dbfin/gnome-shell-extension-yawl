@@ -143,5 +143,9 @@ const Settings = [
     [ 'mouse-click-release', false, { } ],
     [ 'mouse-clicks-time-single', 400, { min: 250, max: 750 } ],
     [ 'mouse-clicks-time-double', 250, { min: 100, max: 450 } ],
-    [ 'mouse-clicks-time-threshold', 300, { min: 150, max: 550 } ]
+    [ 'mouse-clicks-time-threshold', 300, { min: 150, max: 550 } ],
+
+    [ 'debug', false, { } ],
+    [ 'debug-force', false, { } ],
+    [ 'debug-width', 50, { min: 10, max: 70 } ]
 ];

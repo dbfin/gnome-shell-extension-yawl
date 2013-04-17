@@ -8,3 +8,60 @@
  * CSS Styles.
  *
  */
+
+/* dbFinDebugView */
+#dbFinDebugView {
+	background-color: rgba(0, 0, 0, 0.777);
+	color: white;
+	padding: 11px 0 11px 14px;
+	border: 1px solid #ccc;
+	border-right-width: 0;
+	border-radius: 7px 0 0 7px;
+	font-size: 12px;
+	font-family: monospace;
+}
+
+#dbFinDebugViewToolbar {
+    border: 0px solid #ccc;
+    border-bottom-width: 1px;
+    padding: 0 14px 7px 0;
+}
+
+#dbFinDebugViewButtonPin {
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    border-radius: 3px;
+    padding: 3px;
+}
+
+#dbFinDebugViewButtonPin:hover {
+    border-color: #ccc;
+}
+
+#dbFinDebugViewButton {
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    border-radius: 3px;
+    padding: 3px 11px;
+}
+
+#dbFinDebugViewButton:hover {
+    border-color: #ccc;
+}
+
+#dbFinDebugViewScrollView {
+    padding-top: 11px;
+}
+
+#dbFinDebugViewBox {
+    padding-left: 21px;
+    border: 0px solid #ccc;
+    border-left-width: 1px;
+}
+
+#dbFinDebugViewBox2 {
+    padding: 3px 7px;
+    border-radius: 3px 0 0 3px;
+    background-gradient-start: rgba(255, 255, 255, 0.111);
+    background-gradient-end: rgba(0, 0, 0, 0.0);
+    background-gradient-direction: horizontal;
+}
+

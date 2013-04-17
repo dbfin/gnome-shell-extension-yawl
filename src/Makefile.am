@@ -10,6 +10,7 @@ dist_extension_DATA = \
 	dbfinclickmeter.js \
 	dbfinconsts.js \
 	dbfindebug.js \
+	dbfindebugview.js \
 	dbfinmovecenter.js \
 	dbfinpanelbuttontoggle.js \
 	dbfinpanelenhancements.js \

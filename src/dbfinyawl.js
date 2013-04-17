@@ -19,6 +19,7 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinDebugView = Me.imports.dbfindebugview;
 const dbFinMoveCenter = Me.imports.dbfinmovecenter;
 const dbFinPanelEnhancements = Me.imports.dbfinpanelenhancements;
 const dbFinSettings = Me.imports.dbfinsettings;
@@ -98,6 +99,21 @@ const dbFinYAWL = new Lang.Class({
         this._panelEnhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
 
         this._tracker = new dbFinTracker.dbFinTracker();
+
+		this._updatedDebug = function () {
+			if (global.yawl._debug) {
+				if (!global._yawlDebugView) {
+					global._yawlDebugView = new dbFinDebugView.dbFinDebugView();
+				}
+			}
+			else {
+				if (global._yawlDebugView) {
+					global._yawlDebugView.destroy();
+					global._yawlDebugView = null;
+				}
+			}
+		};
+		this._updatedDebugWidth = function () { if (global._yawlDebugView) global._yawlDebugView.updatePosition(); };
 
         global.yawl.watch(this);
         _D('<');

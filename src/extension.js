@@ -13,6 +13,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const Convenience = Me.imports.convenience2;
+const dbFinDebugView = Me.imports.dbfindebugview;
 const dbFinYAWL = Me.imports.dbfinyawl;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -29,12 +30,19 @@ function init() {
 }
 
 function enable() {
+	if (!global._yawlDebugView) {
+		global._yawlDebugView = new dbFinDebugView.dbFinDebugView();
+	}
     _D('>Enabling YAWL extension...');
     dbfinyawl = new dbFinYAWL.dbFinYAWL();
     _D('<YAWL extension enabled.\n>YAWL is up and running...');
 }
 
 function disable() {
+	if (global._yawlDebugView) {
+		global._yawlDebugView.destroy();
+		global._yawlDebugView = null;
+	}
     _D('<\n>Disabling YAWL extension...');
     if (dbfinyawl) {
         dbfinyawl.destroy();

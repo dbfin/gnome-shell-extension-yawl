@@ -280,6 +280,13 @@ function buildPrefsWidget() {
 
                 builder.closeNotebook();
 
+			builder.addPage(_("Debug"));
+				builder.addCheckBox(_("Debugging"), 'debug');
+				builder.shift();
+					builder.addCheckBox(_("Force all messages"), 'debug-force', 'debug');
+					builder.addScale(_("Debug window width (% of the monitor width)"), 'debug-width', 10, 70, 1, 'debug');
+				builder.unshift();
+
             builder.closeNotebook();
 
         return builder.getWidget();

@@ -5,7 +5,8 @@
  * You should have received a copy of the License along with this program.
  *
  * dbfindebug.js
- * Debugging: Logging to file (or standard system log).
+ * Debugging: Logging to global._yawlDebugView.log(level, message)
+ * 					  and to the standard system log.
  *
  * Use			const _D = Me.imports.dbfindebug._D;	to initialize debugging
  *				_D(msg)									to report a message
@@ -19,34 +20,26 @@
  * 				'<'							report exiting from a function, this will decrease the level
  * 				'!'							report in system log (regardless of current level and whether in a silent function)
  *
+ * If global.yawl._debugForce == true then everything is reported even in silent functions.
+ *
  * Messages of level 0 are also reported to the standard system log.
  *
  */
 
 const Lang = imports.lang;
 
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
-
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-
-const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
-var dbfinyawldebug = null;
+const dbFinDebug = new Lang.Class({
+    Name: 'dbFin.Debug',
 
-const dbFinYAWLDebug = new Lang.Class({
-    Name: 'dbFin.YAWL.Debug',
-
-    _init: function(debugfilename) {
-        this._prefix = '';
+    _init: function() {
+		this._level = 0;
         this._stoplevel = 0;
-		this._lastlength = 0;
-		this._lastlengthlog = 0;
-		this.logfilename = debugfilename;
     },
 
     destroy: function() {
@@ -55,93 +48,53 @@ const dbFinYAWLDebug = new Lang.Class({
     log: function(msg) {
         msg = '' + msg;
 		if (!msg.length) return;
-		let (msgs = []) {
+		let (msgs = [],
+		     force = global.yawl && global.yawl._debugForce) {
 			msg.split('\n').forEach(Lang.bind(this, function (s) {
 				if (!s.length) return;
 				let (shift = 0) {
 					if (s[0] == '>') {
 						shift = +1;
 						if (this._stoplevel) this._stoplevel++;
-						s = '\u250d' + s.substring(1);
+						s = s.substring(1);
 					}
 					else if (s[0] == '@') {
 						shift = +1;
 						this._stoplevel++;
-						s = '\u250d' + s.substring(1);
+						s = s.substring(1);
 					}
 					else if (s[0] == '<') {
 						shift = -1;
-						if (this._prefix.length) this._prefix = this._prefix.substring(4);
-						s = '\u2514' + dbFinUtils.stringRepeat('\u2500', 7) + s.substring(1);
+						if (this._level) this._level--;
+						s = s.substring(1);
 					}
 					else if (s[0] == '!') {
 						s = s.substring(1);
-						if (s.length) log(s);
+						if (this._level && s.length) log(s);
 					}
-					if (!this._stoplevel && s.length) {
-						if (!this._prefix.length) {
-							let (slog = s) {
-								if (shift == -1 && slog.length < this._lastlengthlog)
-									slog += dbFinUtils.stringRepeat('\u2500', this._lastlengthlog - slog.length);
-								log(slog);
-								this._lastlengthlog = slog.length;
-							}
-						}
-						s = this._prefix + s;
-						if (shift == -1 && s.length < this._lastlength) {
-							s += dbFinUtils.stringRepeat('\u2500', this._lastlength - s.length);
-						}
-						msgs.push(s);
-						this._lastlength = s.length;
+					if (s.length && (!this._level && (log(s), true) || !this._stoplevel || force) && global._yawlDebugView) {
+						msgs.push([ this._level, s ]);
 					}
 					if (shift == -1) {
 						if (this._stoplevel) this._stoplevel--;
 					}
 					else if (shift == +1) {
-						this._prefix = '\u2502   ' + this._prefix;
+						this._level++;
 					}
 				} // let (shift)
 			})); // msg.split('\n').forEach
-			if (!msgs.length) return;
-			let (gfLog = null, gfosLog = null, gbosLog = null) {
-				if (	   !(gfLog = Gio.file_new_for_path(this.logfilename))
-						|| !(gfosLog = gfLog.append_to(/* flags = */Gio.FileCreateFlags.NONE,
-													   /* cancellable = */null))
-						|| !(gbosLog = Gio.DataOutputStream.new(/* base_stream = */gfosLog))) {
-					log('Cannot append to file ' + this.logfilename + '.');
-				}
-				msgs.forEach(function (s) {
-					if (	   !gbosLog
-							|| !gbosLog.put_string(/* str = */s + '\n',
-												   /* cancellable = */null)) {
-						log(s);
-					}
-				}); // msgs.forEach
-				if (gbosLog) {
-					gbosLog.close(null);
-				}
-			} // let gfLog, gfosLog, gbosLog
-		} // let (msgs)
+			if (!msgs.length || !global._yawlDebugView || typeof global._yawlDebugView.log !== 'function') return;
+			msgs.forEach(function ([ l, s ]) { Lang.bind(global._yawlDebugView, global._yawlDebugView.log)(l, s); });
+		} // let (msgs, force)
     } // log: function
 });
 
-function ensuredbFinYAWLDebug() {
-    if (!dbfinyawldebug) {
-		let subdir = '/logs';
-        if (GLib.mkdir_with_parents(/* filename = */Me.path + subdir,
-				                	/* mode = */parseInt('755', 8)) != 0) {
-			subdir = '';
-		}
-		dbfinyawldebug = new dbFinYAWLDebug(Me.path + subdir + '/debug_' + dbFinUtils.now(true) + '.log');
-		if (!dbfinyawldebug) {
-			log('Cannot create dbFinYAWLDebug object.');
-			return false;
-		}
-    } // if (!dbfinyawldebug)
-	return true;
+function ensuredbFinDebug() {
+    if (!global._yawlDebug) global._yawlDebug = new dbFinDebug();
+	return !!global._yawlDebug;
 }
 
 function _D(msg) {
     if (!msg || (msg = '' + msg) == '') return;
-	ensuredbFinYAWLDebug() ? dbfinyawldebug.log(msg) : log(msg);
+	ensuredbFinDebug() ? global._yawlDebug.log(msg) : log(msg);
 }
