@@ -207,10 +207,8 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('>' + this.__name__ + '._updateThumbnailSize()');
 		if (this._clone && this._cloneWidth && this._cloneHeight) {
 			let (scale = 1.0) {
-                if (global.yawl._windowsThumbnailsFitHeight) {
-					scale = Math.min(scale, global.yawl._windowsThumbnailsHeight / this._cloneHeight);
-				}
-				else {
+				scale = Math.min(scale, global.yawl._windowsThumbnailsHeight / this._cloneHeight);
+                if (!global.yawl._windowsThumbnailsFitHeight) {
 					scale = Math.min(scale, global.yawl._windowsThumbnailsWidth / this._cloneWidth);
 				}
 				this._clone.set_width(Math.round(this._cloneWidth * scale));

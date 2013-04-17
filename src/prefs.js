@@ -195,11 +195,9 @@ function buildPrefsWidget() {
                 builder.unshift();
 
 			builder.addPage(_("Thumbnails"), 'thumbnail.png');
-                builder.addScale(_("Thumbnail width"), 'windows-thumbnails-width', 50, 500, 25, null, true);
                 builder.addCheckBox(_("Same height thumbnails"), 'windows-thumbnails-fit-height');
-                builder.shift();
-                    builder.addScale(_("Thumbnail height"), 'windows-thumbnails-height', 40, 400, 20, 'windows-thumbnails-fit-height', true);
-                builder.unshift();
+                builder.addScale(_("Thumbnail maximum width"), 'windows-thumbnails-width', 50, 500, 25, '!windows-thumbnails-fit-height', true);
+				builder.addScale(_("Thumbnail maximum height"), 'windows-thumbnails-height', 40, 400, 20, null, true);
                 builder.addScale(_("Thumbnail maximum visible height"), 'windows-thumbnails-height-visible', 40, 400, 20, null, true);
                 builder.addSeparator();
 				builder.addScale(_("Default thumbnail opacity"), 'windows-thumbnails-opacity', 50, 100, 1);

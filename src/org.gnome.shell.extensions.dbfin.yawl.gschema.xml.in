@@ -180,15 +180,15 @@
       <_description>Window thumbnail border radius.</_description>
     </key>
 
-    <key name="windows-thumbnails-width" type="s">
-      <default>'248'</default>
-      <_summary>Width of window thumbnails.</_summary>
-      <_description>The width of window thumbnails.</_description>
-    </key>
     <key name="windows-thumbnails-fit-height" type="b">
       <default>true</default>
       <_summary>Whether to show all thumbnails same height.</_summary>
       <_description>If true then all thumbnails are same height.</_description>
+    </key>
+    <key name="windows-thumbnails-width" type="s">
+      <default>'248'</default>
+      <_summary>Width of window thumbnails.</_summary>
+      <_description>The width of window thumbnails.</_description>
     </key>
     <key name="windows-thumbnails-height" type="s">
       <default>'160'</default>
