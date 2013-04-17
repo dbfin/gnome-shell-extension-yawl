@@ -92,7 +92,7 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedWindowsAnimationEffect = function () { if (global.yawl.panelWindows) global.yawl.panelWindows.animationEffect = global.yawl._windowsAnimationEffect; };
 		if (Main.panel && Main.panel.actor) {
 			this._signals.connectNoId({	emitter: Main.panel.actor, signal: 'style-changed',
-										callback: this._updatePanelWindowsStyle, scope: this });
+										callback: this._mainPanelStyleChanged, scope: this });
 		}
 
 		this._moveCenter = new dbFinMoveCenter.dbFinMoveCenter();
@@ -168,6 +168,12 @@ const dbFinYAWL = new Lang.Class({
         }
         _D('<');
     },
+
+	_mainPanelStyleChanged: function() {
+        _D('@' + this.__name__ + '._mainPanelStyleChanged()');
+		this._updatePanelWindowsStyle();
+        _D('<');
+	},
 
     _panelWindowsStyleChanged: function() {
         _D('@' + this.__name__ + '._panelWindowsStyleChanged()');
