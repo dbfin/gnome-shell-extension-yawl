@@ -189,7 +189,7 @@ const dbFinArrayHash = new Lang.Class({
 	some: function(callback) { // this is a very delicate function: what if something changes this in callback?
         _D('>' + this.__name__ + '.some()');
         let (ks = this._keys.slice(), vs = this._values.slice(), l = this.length) {
-    		for (let i = 0; i < l; ++i) if (callback(ks[i], vs[i])) return true;
+    		for (let i = 0; i < l; ++i) if (callback(ks[i], vs[i])) { _D('<'); return true; }
         }
         _D('<');
 		return false;

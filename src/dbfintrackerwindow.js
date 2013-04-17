@@ -134,7 +134,7 @@ const dbFinTrackerWindow = new Lang.Class({
                 this._tracker.windowEvent(this, 'focused');
             }
         }
-        _D('>');
+        _D('<');
     },
 
 	_updateMinimized: function() {
