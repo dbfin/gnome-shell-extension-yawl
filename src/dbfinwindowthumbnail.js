@@ -20,6 +20,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinConsts = Me.imports.dbfinconsts;
+const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerIcon = Me.imports.dbfinslicericon;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -32,9 +33,11 @@ const dbFinWindowThumbnail = new Lang.Class({
 
     _init: function(metaWindow, trackerWindow) {
         _D('>' + this.__name__ + '._init()');
+		this._signals = new dbFinSignals.dbFinSignals();
         this.metaWindow = metaWindow;
         this._trackerWindow = trackerWindow;
 		this._clone = new Clutter.Clone({ reactive: true });
+		this._compositor = null;
 		[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
 		this._updateClone();
 
@@ -44,7 +47,9 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
-        this._slicerIcon.setIcon(this._clone);
+        if (this._slicerIcon) {
+			this._slicerIcon.setIcon(this._clone);
+		}
 
         this._updatedWindowsThumbnailsWidth =
 		        this._updatedWindowsThumbnailsFitHeight =
@@ -91,6 +96,10 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 	destroy: function() {
         _D('>' + this.__name__ + '.destroy()');
+		if (this._signals) {
+			this._signals.destroy();
+			this._signals = null;
+		}
 		if (this._clicked) {
 			this._clicked.destroy();
 			this._clicked = null;
@@ -113,6 +122,7 @@ const dbFinWindowThumbnail = new Lang.Class({
         if (this._clone) {
             this._clone.destroy();
             this._clone = null;
+			this._compositor = null;
 			[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
         }
 		this._bindReactiveId = null;
@@ -162,32 +172,52 @@ const dbFinWindowThumbnail = new Lang.Class({
     _updateClone: function() {
         _D('>' + this.__name__ + '._updateClone()');
 		if (this._clone) {
-            let (compositor =   this.metaWindow && this.metaWindow.get_compositor_private
-                                && this.metaWindow.get_compositor_private()) {
-                let (texture = compositor && compositor.get_texture && compositor.get_texture()) {
-                    if (texture && texture.get_size) {
-						this._clone.set_source(null);
-						this._clone.set_source(texture);
-						[ this._cloneWidth, this._cloneHeight ] = texture.get_size();
-                        this._update();
-                    } // if (texture && texture.get_size)
-                } // let (texture)
-            } // let (compositor)
+			if (this._signals) this._signals.disconnectId('clone-resize');
+			this._clone.set_source(null);
+			[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
+			this._compositor =	this.metaWindow
+								&& this.metaWindow.get_compositor_private
+                                && this.metaWindow.get_compositor_private();
+			if (this._compositor) {
+				if (this._signals) {
+					this._signals.connectId('clone-resize', {	emitter: this._compositor, signal: 'size-changed',
+																callback: this._updateCloneTexture, scope: this });
+				}
+				this._updateCloneTexture();
+			} // if (this._compositor)
 		} // if (this._clone)
         _D('<');
     },
+
+	_updateCloneTexture: function() {
+		_D('>' + this.__name__ + '._updateCloneTexture()');
+		let (texture = this._compositor && this._compositor.get_texture && this._compositor.get_texture()) {
+			if (texture && texture.get_size) {
+				this._clone.set_source(null);
+				[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
+				this._clone.set_source(texture);
+				[ this._cloneWidth, this._cloneHeight ] = texture.get_size();
+				this._updateThumbnailSize();
+			} // if (texture && texture.get_size)
+		} // let (texture)
+		_D('<');
+	},
 
     _updateThumbnailSize: function() {
         _D('>' + this.__name__ + '._updateThumbnailSize()');
 		if (this._clone && this._cloneWidth && this._cloneHeight) {
 			let (scale = 1.0) {
-                if (global.yawl._windowsThumbnailsFitHeight) scale = Math.min(scale, global.yawl._windowsThumbnailsHeight / this._cloneHeight);
-				else scale = Math.min(scale, global.yawl._windowsThumbnailsWidth / this._cloneWidth);
+                if (global.yawl._windowsThumbnailsFitHeight) {
+					scale = Math.min(scale, global.yawl._windowsThumbnailsHeight / this._cloneHeight);
+				}
+				else {
+					scale = Math.min(scale, global.yawl._windowsThumbnailsWidth / this._cloneWidth);
+				}
 				this._clone.set_width(Math.round(this._cloneWidth * scale));
 				this._clone.set_height(Math.round(this._cloneHeight * scale));
                 this._update();
 			} // let (scale)
-		} // if (this._clone)
+		} // if (this._clone && this._cloneWidth && this._cloneHeight)
         _D('<');
     },
 
