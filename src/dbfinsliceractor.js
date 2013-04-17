@@ -85,9 +85,6 @@ const dbFinSlicerActor = new Lang.Class({
         }
 		if (this.container) {
 			this.container.set_child(null);
-            let (parent = this.container.get_parent && this.container.get_parent()) {
-                if (parent && parent.remove_actor) parent.remove_actor(this.container);
-            }
 			this.container.destroy();
 			this.container = null;
 		}

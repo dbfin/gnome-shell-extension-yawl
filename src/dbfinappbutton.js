@@ -138,13 +138,6 @@ const dbFinAppButton = new Lang.Class({
 			this._slicerIcon.destroy();
 			this._slicerIcon = null;
 		}
-		if (this.container) {
-			if (this.container.get_parent) {
-				let (box = this.container.get_parent()) {
-					if (box && box.remove_actor) box.remove_actor(this.container);
-				}
-			}
-		}
 		if (this._icons) {
 			this._icons.forEach(Lang.bind(this, function(size, icon) { this._icons.set(size, null); icon.destroy(); }));
 			this._icons.destroy();

@@ -91,15 +91,14 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 	destroy: function() {
         _D('>' + this.__name__ + '.destroy()');
+		if (this._clicked) {
+			this._clicked.destroy();
+			this._clicked = null;
+		}
 		if (this.actor) {
             this.actor.hide();
 			this.actor.reactive = false;
             this.actor._delegate = null;
-            if (this.actor.get_parent()) {
-				let (box = this.actor.get_parent()) {
-					if (box && box.remove_actor) box.remove_actor(this.actor);
-				}
-            }
             this.actor.set_child(null);
 		}
         if (this._slicerIcon) {
