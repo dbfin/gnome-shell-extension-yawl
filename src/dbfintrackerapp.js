@@ -67,6 +67,8 @@ const dbFinTrackerApp = new Lang.Class({
         this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = global.yawl._windowsAnimationEffect; };
 
+		this.hovered = false;
+
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
 		if (this.appButton) {
             if (!metaWindow && this._autohideshow) this.appButton.hide();
@@ -127,6 +129,7 @@ const dbFinTrackerApp = new Lang.Class({
             this.yawlPanelWindowsGroup = null;
         }
 		this.focused = false;
+		this.hovered = false;
 		this.appName = '?';
         this.windows = [];
 		this._tracker = null;
@@ -155,6 +158,7 @@ const dbFinTrackerApp = new Lang.Class({
 
 	_enterEvent: function() {
 		_D('>' + this.__name__ + '._enterEvent()');
+		this.hovered = true;
 		this.setLabel('');
 		this.showWindowsGroup();
 		_D('<');
@@ -162,6 +166,7 @@ const dbFinTrackerApp = new Lang.Class({
 
 	_leaveEvent: function() {
 		_D('>' + this.__name__ + '._leaveEvent()');
+		this.hovered = false;
 		this.hideWindowsGroup();
 		_D('<');
 	},

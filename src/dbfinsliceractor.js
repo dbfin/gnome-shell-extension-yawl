@@ -39,6 +39,8 @@ const dbFinSlicerActor = new Lang.Class({
         params = params || {};
         this._animateHeight = !!params.animateheight;
 
+		this.hovered = false;
+
 		this.container = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }), visible: true });
         if (this.container) {
             this.container._delegate = this;
@@ -89,6 +91,7 @@ const dbFinSlicerActor = new Lang.Class({
 			this.container = null;
 		}
 		this.actor = null;
+		this.hovered = false;
 		this.hidden = true;
         this.hiding = false;
 		this.emit('destroy');
@@ -260,6 +263,7 @@ const dbFinSlicerActor = new Lang.Class({
 
 	_hoverEnter: function() {
         _D('>' + this.__name__ + '._hoverEnter()');
+		this.hovered = true;
 		if (this.hoverAnimation && !this.hidden && !this.hiding) {
 			let (state = {},
                  time = Math.round(this.animationTime * this.hoverAnimationTime / 100)) {
@@ -274,6 +278,7 @@ const dbFinSlicerActor = new Lang.Class({
 
 	_hoverLeave: function() {
         _D('>' + this.__name__ + '._hoverLeave()');
+		this.hovered = false;
         let (state = {},
              time = Math.round(this.animationTime * this.hoverAnimationTime / 100)) {
             state.scale_x = state.scale_y = 1.;

@@ -99,6 +99,7 @@ const dbFinDebugView = new Lang.Class({
 			this.container.destroy();
 			this.container = null;
 		}
+		this.hovered = false;
 		_D('<');
 	},
 

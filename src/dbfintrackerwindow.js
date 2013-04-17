@@ -88,6 +88,7 @@ const dbFinTrackerWindow = new Lang.Class({
         }
         this.minimized = false;
         this.focused = false;
+		this.hovered = false;
 		this.title = '?';
 		this.appName = '?';
         this.metaApp = null;
