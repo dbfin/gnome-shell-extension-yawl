@@ -350,18 +350,18 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 
 	// gtkOthers = [ [ gtkWidget, width ] ]
 	// bindSensitive = either 'key' or '!key' or array of 'key''s or '!key''s
-	addRow: function(gtkLabel/* = null*/, gtkOthers/* = []*/, bindSensitive/* = null*/) {
+	addRow: function(gtkWidget/* = null*/, gtkOthers/* = []*/, bindSensitive/* = null*/) {
 		if (!this._notebook || !this._notebook.page) return [];
 		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || [],
 		     x = this._notebook.shift,
 		     widgets = []) {
 			gtkOthers = gtkOthers || [];
-			if (gtkLabel) {
+			if (gtkWidget) {
 				let (w = this._notebook.width - x) {
 					for (let i = 0; i < gtkOthers.length; ++i) w -= gtkOthers[i][1];
-					gtkOthers.unshift([ gtkLabel, w ]);
+					gtkOthers.unshift([ gtkWidget, w ]);
 				} // let (w)
-			} // if (gtkLabel)
+			} // if (gtkWidget)
 			for (let i = 0; i < gtkOthers.length; ++i) {
 				if (gtkOthers[i][0]) {
 					widgets.push(gtkOthers[i][0]);
@@ -400,7 +400,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 
     addSeparator: function() {
 		if (!this._notebook) return [];
-		return this.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), this._notebook.width - this._notebook.shift ] ]);
+		return this.addRow(new Gtk.Separator({ hexpand: true }));
     },
 
     addLabel: function(label, bindSensitive/* = null*/) {
