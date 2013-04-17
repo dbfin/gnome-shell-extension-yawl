@@ -44,6 +44,8 @@ const dbFinTracker = new Lang.Class({
 		this.update(null, 'Tracker: initial update.');
 		this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
 									callback: this._switchWorkspace, scope: this });
+		this._signals.connectNoId({ emitter: Shell.AppSystem.get_default(), signal: 'app-state-changed',
+									callback: this._updateAppState, scope: this });
         _D('<');
     },
 
@@ -268,7 +270,7 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	update: function(metaWorkspace/* = null*/, stateInfo/* = 'update() call with no additional info.'*/) {
-        _D('@' + this.__name__ + '.update()');
+        _D('>' + this.__name__ + '.update()');
 		metaWorkspace = metaWorkspace || null;
         if (!stateInfo || stateInfo == '') stateInfo = 'update() call with no additional info.';
 		Mainloop.idle_add(Lang.bind(this, this._refresh, metaWorkspace, stateInfo));
@@ -327,6 +329,17 @@ const dbFinTracker = new Lang.Class({
 	_switchWorkspace: function (manager, wsiOld, wsiNew) {
         _D('>' + this.__name__ + '._switchWorkspace()');
 		this.update(global.screen.get_workspace_by_index(wsiNew), 'Workspace switched from ' + (wsiOld + 1) + ' to ' + (wsiNew + 1) + '.');
+        _D('<');
+	},
+
+	_updateAppState: function(appSys, app) {
+        _D('>' + this.__name__ + '._updateAppState()');
+		let (trackerApp = this.getTrackerApp(app)) {
+			if (trackerApp) {
+				if (trackerApp.appButton) trackerApp.appButton._updateMenu();
+			}
+			this.update(null, 'App ' + (trackerApp ? trackerApp.appName : 'unknown') + ': app state changed.');
+		}
         _D('<');
 	},
 

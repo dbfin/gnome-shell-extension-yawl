@@ -107,8 +107,6 @@ const dbFinAppButton = new Lang.Class({
 			this._signals.connectNoId({	emitter: this.metaApp, signal: 'notify::action-group',
 										callback: this._update, scope: this });
 		}
-		this._signals.connectNoId({ emitter: Shell.AppSystem.get_default(), signal: 'app-state-changed',
-									callback: this._updateAppState, scope: this });
 
         global.yawl.watch(this);
 
@@ -204,14 +202,6 @@ const dbFinAppButton = new Lang.Class({
 	_update: function() {
         _D('>' + this.__name__ + '._update()');
 		this._updateMenu();
-        _D('<');
-	},
-
-	_updateAppState: function(appSys, app) {
-        _D('>' + this.__name__ + '._updateAppState()');
-		if (this.metaApp == app) {
-			this._updateMenu();
-		}
         _D('<');
 	},
 
