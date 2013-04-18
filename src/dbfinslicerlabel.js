@@ -29,12 +29,13 @@ const dbFinSlicerLabel = new Lang.Class({
 	Name: 'dbFin.SlicerLabel',
     Extends: dbFinSlicerActor.dbFinSlicerActor,
 
-    _init: function(paramsLabel, params) {
+    _init: function(paramsLabel, paramsContainer, params) {
         _D('>' + this.__name__ + '._init()');
         paramsLabel = paramsLabel || {};
+		paramsContainer = paramsContainer || {};
         params = params || {};
         paramsLabel = Params.parse(paramsLabel, { visible: true }, true);
-        this.parent(new St.Label(paramsLabel), params);
+        this.parent(new St.Label(paramsLabel), paramsContainer, params);
         _D('<');
     },
 

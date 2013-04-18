@@ -45,7 +45,7 @@ const dbFinWindowThumbnail = new Lang.Class({
         this.hiding = false;
         this._minimized = false;
 
-		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
+		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon(null, { y_align: St.Align.START });
         if (this._slicerIcon) {
 			this._slicerIcon.setIcon(this._clone);
 		}

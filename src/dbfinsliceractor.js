@@ -15,6 +15,8 @@ const Signals = imports.signals;
 const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
 
+const Params = imports.misc.params;
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
@@ -33,16 +35,19 @@ const dbFinSlicerActor = new Lang.Class({
 
     // params:
     //     animateheight: animate height to zero and back in hide() and show()
-    _init: function(actor, params) { // actor must be destroyed by the descendant class
+    _init: function(actor, paramsContainer, params) { // actor must be destroyed by the descendant class
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
 
+		paramsContainer = paramsContainer || {};
         params = params || {};
         this._animateHeight = !!params.animateheight;
 
 		this.hovered = false;
 
-		this.container = new Shell.Slicer({ y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }), visible: true });
+        paramsContainer = Params.parse(paramsContainer,
+			   { y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }), visible: true }, true);
+		this.container = new Shell.Slicer(paramsContainer);
         if (this.container) {
             this.container._delegate = this;
             this._signals.connectNoId({	emitter: this.container, signal: 'notify::allocation',
