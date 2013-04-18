@@ -35,6 +35,7 @@ const dbFinDebugView = new Lang.Class({
         this._signals = new dbFinSignals.dbFinSignals();
 		this.hovered = false;
 		this.pinned = false;
+		this.paused = false;
 
 		this.container = new St.BoxLayout({ name: 'dbFinDebugView', vertical: true, reactive: true, visible: true });
 		if (this.container) {
@@ -46,13 +47,20 @@ const dbFinDebugView = new Lang.Class({
 		if (this.toolbar) {
 			if (this.container) this.container.add_actor(this.toolbar);
 
-			this.buttonPin = new St.Label({ name: 'dbFinDebugViewButtonPin', text: '( )', reactive: true, track_hover: true, visible: true });
+			this.buttonPin = new St.Label({ name: 'dbFinDebugViewButtonPin', style_class: 'dbfin-debugview-toolbar-button',
+											text: '[ ]', reactive: true, track_hover: true, visible: true });
 			if (this.buttonPin) this.toolbar.add_actor(this.buttonPin);
 
-			this.buttonClear = new St.Label({ name: 'dbFinDebugViewButton', text: 'Clear', reactive: true, track_hover: true, visible: true });
+			this.buttonPause = new St.Label({ name: 'dbFinDebugViewButtonPause', style_class: 'dbfin-debugview-toolbar-button',
+											  text: '[\u25fe]', reactive: true, track_hover: true, visible: true });
+			if (this.buttonPause) this.toolbar.add_actor(this.buttonPause);
+
+			this.buttonClear = new St.Label({ name: 'dbFinDebugViewButtonClear', style_class: 'dbfin-debugview-toolbar-button',
+											  text: 'Clear', reactive: true, track_hover: true, visible: true });
 			if (this.buttonClear) this.toolbar.add_actor(this.buttonClear);
 
-			this.buttonReload = new St.Label({ name: 'dbFinDebugViewButton', text: 'Reload', reactive: true, track_hover: true, visible: true });
+			this.buttonReload = new St.Label({ name: 'dbFinDebugViewButtonReload', style_class: 'dbfin-debugview-toolbar-button',
+											   text: 'Reload', reactive: true, track_hover: true, visible: true });
 			if (this.buttonReload) this.toolbar.add_actor(this.buttonReload);
 		}
 
@@ -78,6 +86,8 @@ const dbFinDebugView = new Lang.Class({
 									callback: function () { this.hovered = false; this.updatePosition(); }, scope: this });
 		this._signals.connectNoId({	emitter: this.buttonPin, signal: 'button-press-event',
 									callback: this._buttonPinButtonPressEvent, scope: this });
+		this._signals.connectNoId({	emitter: this.buttonPause, signal: 'button-press-event',
+									callback: this._buttonPauseButtonPressEvent, scope: this });
 		this._signals.connectNoId({	emitter: this.buttonClear, signal: 'button-press-event',
 									callback: this._buttonClearButtonPressEvent, scope: this });
 		this._signals.connectNoId({	emitter: this.buttonReload, signal: 'button-press-event',
@@ -99,6 +109,13 @@ const dbFinDebugView = new Lang.Class({
 			this.container.destroy();
 			this.container = null;
 		}
+		this.toolbar = null;
+		this.buttonPin = null;
+		this.buttonPause = null;
+		this.buttonClear = null;
+		this.buttonReload = null;
+		this.scrollView = null;
+		this.actor = null;
 		this.hovered = false;
 		_D('<');
 	},
@@ -186,8 +203,21 @@ const dbFinDebugView = new Lang.Class({
 				this.pinned = !this.pinned;
 				this.updatePosition();
 				if (this.buttonPin) {
-					if (this.pinned) this.buttonPin.set_text('(\u00b7)');
-					else this.buttonPin.set_text('( )');
+					if (this.pinned) this.buttonPin.set_text('[\u00b7]');
+					else this.buttonPin.set_text('[ ]');
+				}
+			}
+		}
+	},
+
+	_buttonPauseButtonPressEvent: function(label, event) {
+		if (!event) return;
+		let (button = event.get_button()) {
+			if (button == 1) {
+				this.paused = !this.paused;
+				if (this.buttonPause) {
+					if (this.paused) this.buttonPause.set_text('[\u25b8]');
+					else this.buttonPause.set_text('[\u25fe]');
 				}
 			}
 		}
@@ -209,7 +239,7 @@ const dbFinDebugView = new Lang.Class({
 
 	log: function(level, text) {
 		_D('@');
-		if (!this.level0) {
+		if (this.paused || !this.level0) {
 			_D('<');
 			return;
 		}

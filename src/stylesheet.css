@@ -44,24 +44,18 @@
     padding: 0 14px 7px 0;
 }
 
-#dbFinDebugViewButtonPin {
-    border: 1px solid rgba(0, 0, 0, 0.0);
-    border-radius: 3px;
-    padding: 3px;
-}
-
-#dbFinDebugViewButtonPin:hover {
-    border-color: #ccc;
-}
-
-#dbFinDebugViewButton {
+.dbfin-debugview-toolbar-button {
     border: 1px solid rgba(0, 0, 0, 0.0);
     border-radius: 3px;
     padding: 3px 11px;
 }
 
-#dbFinDebugViewButton:hover {
+.dbfin-debugview-toolbar-button:hover {
     border-color: #ccc;
+}
+
+#dbFinDebugViewButtonPin, #dbFinDebugViewButtonPause {
+    padding: 3px;
 }
 
 #dbFinDebugViewScrollView {
