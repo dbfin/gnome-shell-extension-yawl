@@ -45,18 +45,18 @@ const dbFinWindowThumbnail = new Lang.Class({
         this.hiding = false;
         this._minimized = false;
 
-		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon(null, { y_align: St.Align.START });
-        if (this._slicerIcon) {
-			this._slicerIcon.setIcon(this._clone);
-		}
-
-        this.actor = new St.Bin({ style_class: 'yawl-thumbnail', y_fill: true, x_fill: true, track_hover: true,
-                                  child: this._slicerIcon ? this._slicerIcon.container : null });
+        this.actor = new St.Bin({ style_class: 'yawl-thumbnail', y_align: St.Align.START, track_hover: true });
         if (this.actor) {
             this.actor._delegate = this;
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
             this.actor.reactive = true;
         }
+
+		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon(null, { y_align: St.Align.START });
+        if (this._slicerIcon) {
+			if (this.actor) this.actor.add_actor(this._slicerIcon.container);
+			this._slicerIcon.setIcon(this._clone);
+		}
 
         this._updatedWindowsThumbnailsWidth =
 		        this._updatedWindowsThumbnailsFitHeight =
@@ -105,7 +105,6 @@ const dbFinWindowThumbnail = new Lang.Class({
             this.actor.hide();
 			this.actor.reactive = false;
             this.actor._delegate = null;
-            this.actor.set_child(null);
 		}
         if (this._slicerIcon) {
             this._slicerIcon.setIcon(null);
