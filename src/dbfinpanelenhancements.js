@@ -18,6 +18,7 @@ const Panel = imports.ui.panel;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinStyle = Me.imports.dbfinstyle;
 const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -30,6 +31,15 @@ const dbFinPanelEnhancements = new Lang.Class({
 
     _init: function() {
         _D('>' + this.__name__ + '._init()');
+		if (Main.panel) {
+			this._style = new dbFinStyle.dbFinStyle(Main.panel.actor);
+		}
+		if (Main.panel._leftCorner) {
+			this._styleLeftCorner = new dbFinStyle.dbFinStyle(Main.panel._leftCorner.actor);
+		}
+		if (Main.panel._rightCorner) {
+			this._styleRightCorner = new dbFinStyle.dbFinStyle(Main.panel._rightCorner.actor);
+		}
         this._updatedPanelColor =
         		this._updatedPanelOpacity = this._updatePanelStyle;
         this._updatedPanelBackground = function () {
@@ -43,33 +53,55 @@ const dbFinPanelEnhancements = new Lang.Class({
 	destroy: function() {
         _D('>' + this.__name__ + '.destroy()');
         this._restorePanelStyle();
+		if (this._style) {
+			this._style.destroy();
+			this._style = null;
+		}
+		if (this._styleLeftCorner) {
+			this._styleLeftCorner.destroy();
+			this._styleLeftCorner = null;
+		}
+		if (this._styleRightCorner) {
+			this._styleRightCorner.destroy();
+			this._styleRightCorner = null;
+		}
         this.emit('destroy');
         _D('<');
 	},
 
 	_updatePanelStyle: function() {
         _D('>' + this.__name__ + '._updatePanelStyle()');
-		if (!global.yawl._panelBackground) {
+		if (!global.yawl || !global.yawl._panelBackground) {
 			_D('<');
 			return;
 		}
-        let (style = null, stylecorner = null) {
+        let (style = {},
+			 styleCorner = {}) {
             let (color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._panelColor, global.yawl._panelOpacity)) {
-                style = 'background-color: ' + color;
-                stylecorner = '-panel-corner-border-width: 0; -panel-corner-border-color: ' + color + '; -panel-corner-background-color: ' + color;
+                style['background-color'] = color;
+                styleCorner['-panel-corner-border-width'] = '0';
+                styleCorner['-panel-corner-border-color'] = color;
+                styleCorner['-panel-corner-background-color'] = color;
             }
-    		Main.panel.actor.set_style(style);
-    		Main.panel._leftCorner.actor.set_style(stylecorner);
-    		Main.panel._rightCorner.actor.set_style(stylecorner);
-		} // let (style, stylecorner)
+			if (this._style) this._style.set(style);
+			if (this._styleLeftCorner) this._styleLeftCorner.set(styleCorner);
+			if (this._styleRightCorner) this._styleRightCorner.set(styleCorner);
+		} // let (style, styleCorner)
         _D('<');
 	},
 
 	_restorePanelStyle: function() {
         _D('>' + this.__name__ + '._restorePanelStyle()');
-		Main.panel.actor.set_style(null);
-        Main.panel._leftCorner.actor.set_style(null);
-        Main.panel._rightCorner.actor.set_style(null);
+        let (style = {},
+			 styleCorner = {}) {
+			style['background-color'] = '';
+			styleCorner['-panel-corner-border-width'] = '';
+			styleCorner['-panel-corner-border-color'] = '';
+			styleCorner['-panel-corner-background-color'] = '';
+			if (this._style) this._style.set(style);
+			if (this._styleLeftCorner) this._styleLeftCorner.set(styleCorner);
+			if (this._styleRightCorner) this._styleRightCorner.set(styleCorner);
+		} // let (style, styleCorner)
         _D('<');
 	}
 });

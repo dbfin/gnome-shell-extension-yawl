@@ -20,6 +20,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinStyle = Me.imports.dbfinstyle;
 const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -61,6 +62,8 @@ const dbFinSlicerActor = new Lang.Class({
 		this.hidden = false;
 		this.hiding = false;
 
+		this._style = new dbFinStyle.dbFinStyle(this.actor);
+
 		this._clipTop = 0; // px
 		this._clipBottom = 0; // px
 		this._paddingH = 0; // %
@@ -85,6 +88,10 @@ const dbFinSlicerActor = new Lang.Class({
             this._signals.destroy();
             this._signals = null;
         }
+		if (this._style) {
+			this._style.destroy();
+			this._style = null;
+		}
 		if (this.container) {
 			this.container.set_child(null);
 			this.container.destroy();
@@ -166,9 +173,10 @@ const dbFinSlicerActor = new Lang.Class({
         _D('>' + this.__name__ + '.setPaddingTop()');
 		if (padding !== undefined && this._paddingTop != padding) {
 			this._paddingTop = padding;
-			if (this.actor) this.actor.set_style('padding-top: ' + this._paddingTop + 'px;'
-		                                         + ' padding-bottom: ' + this._paddingBottom + 'px;');
-			this.restoreNaturalSize();
+			if (this._style) {
+				this._style.set({ 'padding-top': this._paddingTop + 'px' });
+				this.restoreNaturalSize();
+			}
 		}
         _D('<');
 	},
@@ -177,9 +185,10 @@ const dbFinSlicerActor = new Lang.Class({
         _D('>' + this.__name__ + '.setPaddingBottom()');
 		if (padding !== undefined && this._paddingBottom != padding) {
 			this._paddingBottom = padding;
-			if (this.actor) this.actor.set_style('padding-top: ' + this._paddingTop + 'px;'
-		                                         + ' padding-bottom: ' + this._paddingBottom + 'px;');
-			this.restoreNaturalSize();
+			if (this._style) {
+				this._style.set({ 'padding-bottom': this._paddingBottom + 'px' });
+				this.restoreNaturalSize();
+			}
 		}
         _D('<');
 	},

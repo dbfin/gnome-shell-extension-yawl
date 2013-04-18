@@ -24,6 +24,7 @@ const dbFinMoveCenter = Me.imports.dbfinmovecenter;
 const dbFinPanelEnhancements = Me.imports.dbfinpanelenhancements;
 const dbFinSettings = Me.imports.dbfinsettings;
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinStyle = Me.imports.dbfinstyle;
 const dbFinTracker = Me.imports.dbfintracker;
 const dbFinUtils = Me.imports.dbfinutils;
 const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
@@ -65,6 +66,7 @@ const dbFinYAWL = new Lang.Class({
                                                                                 || 0,
                                                                         gravityindicator: true });
         if (global.yawl.panelWindows) {
+			this._style = new dbFinStyle.dbFinStyle(global.yawl.panelWindows.actor);
 			this._signals.connectNoId({	emitter: global.yawl.panelWindows.actor, signal: 'enter-event',
 										callback: this._hoverEnter, scope: this });
 			this._signals.connectNoId({	emitter: global.yawl.panelWindows.actor, signal: 'leave-event',
@@ -125,6 +127,10 @@ const dbFinYAWL = new Lang.Class({
             this._signals.destroy();
             this._signals = null;
         }
+		if (this._style) {
+			this._style.destroy();
+			this._style = null;
+		}
 		if (this._tracker) {
 			this._tracker.destroy();
 			this._tracker = null;
@@ -192,37 +198,47 @@ const dbFinYAWL = new Lang.Class({
 
 	_updatePanelWindowsStyle: function() {
         _D('>' + this.__name__ + '._updatePanelWindowsStyle()');
-        if (global.yawl.panelWindows && global.yawl.panelWindows.actor && global.yawl.panelWindows.actor.get_stage()) {
-            let (style = null) {
-                if (global.yawl._windowsTheming) {
-                    let (color = '') {
-                        if (global.yawl._windowsBackgroundPanel) {
-                            let (node = Main.panel && Main.panel.actor && Main.panel.actor.get_stage()
-                                        && Main.panel.actor.get_theme_node()) {
-                                if (node) {
-                                    color = node.get_background_color();
-                                    color = 'rgba(' + color.red + ', ' + color.green + ', ' + color.blue + ', ' + color.alpha / 255. + ')';
-                                }
-                            }
-                        } // if (global.yawl._windowsBackgroundPanel)
-                        if (color == '') {
-                            color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._windowsBackgroundColor,
-                                                                                 global.yawl._windowsBackgroundOpacity);
-                        } // if (color == '')
-                        style = 'background-color: ' + color;
-                    } // let (color)
-					style += '; color: ' + global.yawl._windowsTextColor;
-					style += '; font-size: ' + global.yawl._windowsTextSize + 'pt';
-                    style += '; padding: ' + global.yawl._windowsPadding + 'px';
-                    style += '; border: ' + global.yawl._windowsBorderWidth + 'px solid ' + global.yawl._windowsBorderColor;
-					style += '; border-top-width: 0';
-					style += '; border-radius: 0 0 ' + global.yawl._windowsBorderRadius + 'px ' + global.yawl._windowsBorderRadius + 'px';
-                } // if (global.yawl._windowsTheming)
-                let (styleCurrent = global.yawl.panelWindows.actor.get_style()) {
-                    if (style !== styleCurrent) global.yawl.panelWindows.actor.set_style(style);
-                }
-            } // let (style)
-        } // if (global.yawl.panelWindows && global.yawl.panelWindows.actor && global.yawl.panelWindows.actor.get_stage())
+		if (!this._style || !global.yawl.panelWindows || !global.yawl.panelWindows.actor
+		    || !global.yawl.panelWindows.actor.get_stage()) {
+			_D('<');
+			return;
+		}
+		let (style = {}) {
+			if (global.yawl._windowsTheming) {
+				let (color = '') {
+					if (global.yawl._windowsBackgroundPanel) {
+						let (node = Main.panel && Main.panel.actor && Main.panel.actor.get_stage()
+									&& Main.panel.actor.get_theme_node()) {
+							if (node) {
+								color = node.get_background_color();
+								color = 'rgba(' + color.red + ', ' + color.green + ', ' + color.blue + ', ' + color.alpha / 255. + ')';
+							}
+						}
+					} // if (global.yawl._windowsBackgroundPanel)
+					if (color == '') {
+						color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._windowsBackgroundColor,
+																			 global.yawl._windowsBackgroundOpacity);
+					} // if (color == '')
+					style['background-color'] = color;
+				} // let (color)
+				style['color'] = global.yawl._windowsTextColor;
+				style['font-size'] = global.yawl._windowsTextSize + 'pt';
+				style['padding'] = global.yawl._windowsPadding + 'px';
+				style['border'] = global.yawl._windowsBorderWidth + 'px solid ' + global.yawl._windowsBorderColor;
+				style['border-top-width'] = '0';
+				style['border-radius'] = '0 0 ' + global.yawl._windowsBorderRadius + 'px ' + global.yawl._windowsBorderRadius + 'px';
+			} // if (global.yawl._windowsTheming)
+			else {
+				style['background-color'] = '';
+				style['color'] = '';
+				style['font-size'] = '';
+				style['padding'] = '';
+				style['border'] = '';
+				style['border-top-width'] = '';
+				style['border-radius'] = '';
+			} // if (global.yawl._windowsTheming) else
+			this._style.set(style);
+		} // let (style)
         _D('<');
 	}
 });

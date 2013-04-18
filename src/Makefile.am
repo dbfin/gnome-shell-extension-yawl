@@ -19,6 +19,7 @@ dist_extension_DATA = \
 	dbfinsliceractor.js \
 	dbfinslicericon.js \
 	dbfinslicerlabel.js \
+	dbfinstyle.js \
 	dbfintracker.js \
 	dbfintrackerapp.js \
 	dbfintrackerwindow.js \

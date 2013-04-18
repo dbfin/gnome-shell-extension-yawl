@@ -17,6 +17,7 @@
  *						get(k)						    	returns value or undefined
  *						set(k, v)					    	sets/adds value by key
  *						setArray([[k, v]])			    	sets/adds keys and values taken from array of pairs
+ *						setObject({k: v})			    	sets/adds keys and values taken from an object
  *						setMap([k], map:k->v)   	    	sets/adds values using mapping function
  *						remove(k)					    	removes a pair by key and returns its value or undefined
  *						removeAll()					    	removes all pairs
@@ -110,6 +111,12 @@ const dbFinArrayHash = new Lang.Class({
 	setArray: function(kvs) {
         _D('>' + this.__name__ + '.setArray()');
 		kvs.forEach(Lang.bind(this, function (kv) { this.set(kv[0], kv[1]); }));
+        _D('<');
+	},
+
+	setObject: function(kvs) {
+        _D('>' + this.__name__ + '.setObject()');
+		for (let k in kvs) if (kvs.hasOwnProperty(k)) this.set(k, kvs[k]);
         _D('<');
 	},
 
