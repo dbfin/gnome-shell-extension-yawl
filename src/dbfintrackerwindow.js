@@ -140,9 +140,10 @@ const dbFinTrackerWindow = new Lang.Class({
 
 	_updateMinimized: function() {
         _D('>' + this.__name__ + '._updateMinimized()');
-        this.minimized = this.metaWindow
-                && (this.metaWindow.showing_on_its_workspace && !this.metaWindow.showing_on_its_workspace()
-                    || this.metaWindow.minimized);
+        this.minimized =	this.metaWindow
+							&& (this.metaWindow.minimized
+								||	this.metaWindow.showing_on_its_workspace
+									&& !this.metaWindow.showing_on_its_workspace());
         if (this.windowThumbnail) this.windowThumbnail.minimized = this.minimized;
         _D('<');
 	},

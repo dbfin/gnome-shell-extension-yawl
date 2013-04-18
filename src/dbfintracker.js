@@ -15,6 +15,8 @@ const Signals = imports.signals;
 
 const Shell = imports.gi.Shell;
 
+const Main = imports.ui.main;
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
@@ -46,6 +48,9 @@ const dbFinTracker = new Lang.Class({
 									callback: this._switchWorkspace, scope: this });
 		this._signals.connectNoId({ emitter: Shell.AppSystem.get_default(), signal: 'app-state-changed',
 									callback: this._updateAppState, scope: this });
+		// it seems to work just fine without this but just in case:
+		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
+									callback: function () { this.update(null, 'Overview hiding.'); }, scope: this });
         _D('<');
     },
 
