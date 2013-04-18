@@ -123,6 +123,8 @@ const dbFinTrackerWindow = new Lang.Class({
             this.focused = this.metaWindow && focusedWindow
                                 && (focusedWindow == this.metaWindow
                                     || focusedWindow.get_transient_for() == this.metaWindow);
+			if (this.focused) this.windowThumbnail.actor.add_style_pseudo_class('active');
+			else this.windowThumbnail.actor.remove_style_pseudo_class('active');
         }
         _D('<');
 	},

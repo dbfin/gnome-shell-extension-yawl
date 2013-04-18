@@ -45,11 +45,18 @@ const dbFinWindowThumbnail = new Lang.Class({
         this.hiding = false;
         this._minimized = false;
 
-		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
         if (this._slicerIcon) {
 			this._slicerIcon.setIcon(this._clone);
 		}
+
+        this.actor = new St.Bin({ style_class: 'yawl-thumbnail', y_fill: true, x_fill: true, track_hover: true,
+                                  child: this._slicerIcon ? this._slicerIcon.container : null });
+        if (this.actor) {
+            this.actor._delegate = this;
+            this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
+            this.actor.reactive = true;
+        }
 
         this._updatedWindowsThumbnailsWidth =
 		        this._updatedWindowsThumbnailsFitHeight =
@@ -65,16 +72,6 @@ const dbFinWindowThumbnail = new Lang.Class({
 		this._updatedWindowsHoverFit = function () { if (this._slicerIcon) this._slicerIcon.hoverFit = global.yawl._windowsHoverFit; };
 		this._updatedWindowsHoverAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = global.yawl._windowsHoverAnimationTime; };
 		this._updatedWindowsHoverAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = global.yawl._windowsHoverAnimationEffect; };
-
-		// this.actor related stuff
-        this.actor = new St.Bin({ y_fill: true, x_fill: true, track_hover: true,
-                                  child: this._slicerIcon ? this._slicerIcon.container : null });
-
-        if (this.actor) {
-            this.actor._delegate = this;
-            this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
-            this.actor.reactive = true;
-        }
 
         this._clicked = null;
 		this._updatedMouseClickRelease =
