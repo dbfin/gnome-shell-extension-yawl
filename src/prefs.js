@@ -185,9 +185,7 @@ function buildPrefsWidget() {
                 builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming');
                 builder.shift();
                     builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
-					builder.shift();
-						builder.addScaleColorButton(_("Background opacity and color"), 'windows-background-opacity', 'windows-background-color', 0, 100, 1, _("Choose thumbnail panel background color"), [ 'windows-theming', '!windows-background-panel' ]);
-					builder.unshift();
+					builder.addScaleColorButton(_("Background opacity and color"), 'windows-background-opacity', 'windows-background-color', 0, 100, 1, _("Choose thumbnail panel background color"), [ 'windows-theming', '!windows-background-panel' ]);
 					builder.addScaleColorButton(_("Text size and color"), 'windows-text-size', 'windows-text-color', 6, 36, 1, _("Choose thumbnail panel text color"), 'windows-theming');
                     builder.addScale(_("Padding"), 'windows-padding', 0, 20, 1, 'windows-theming');
                     builder.addScaleColorButton(_("Border width and color"), 'windows-border-width', 'windows-border-color', 0, 3, 1, _("Choose thumbnail panel border color"), 'windows-theming');
@@ -253,7 +251,7 @@ function buildPrefsWidget() {
 						widgets = builder.addRow(new Gtk.Label({ label: _("Make a fast series of SINGLE clicks"), halign: Gtk.Align.START, hexpand: true }),
 									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
 											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
-											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
+											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 2 ]
 										]);
 	                    if (widgets && widgets.length) { widgets[1].hexpand = true; widgets[1].xalign = 0.0; }
 	                    widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
@@ -264,7 +262,7 @@ function buildPrefsWidget() {
 						widgets = builder.addRow(new Gtk.Label({ label: _("Make a series of DOUBLE clicks"), halign: Gtk.Align.START, hexpand: true }),
 									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
 											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
-											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
+											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 2 ]
 										]);
 	                    if (widgets && widgets.length) { widgets[1].hexpand = true; widgets[1].xalign = 0.0; }
 	                    widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
@@ -279,7 +277,7 @@ function buildPrefsWidget() {
                 builder.closeNotebook();
 
 			builder.addPage(_("Debug"), 'debug.png');
-				builder.addCheckBox(_("Debugging"), 'debug');
+				builder.addCheckBox(_("Debugging: autohiding panel on the right side of the rightmost monitor"), 'debug');
 				builder.shift();
 					builder.addCheckBox(_("Force all messages"), 'debug-force', 'debug');
 					builder.addScale(_("Debug window width (% of the monitor width)"), 'debug-width', 10, 70, 1, 'debug');

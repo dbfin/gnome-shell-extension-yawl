@@ -306,7 +306,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			notebook.show();
         }
 		this._notebooks.push(this._notebook);
-		this._notebook.width = 8 - Math.floor(this._notebooks.length / 2); // new this._notebooks length
+		this._notebook.width = 10 - Math.floor(this._notebooks.length / 2); // new this._notebooks length
 		this._notebook.page = null;
 		this._notebook.row = 0;
 		this._notebook.shift = 0;
@@ -326,7 +326,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 									halign:				Gtk.Align.FILL,
 									margin:				7,
 									row_spacing:		7,
-									column_spacing:		3,
+									column_spacing:		7,
 									column_homogeneous:	true }),
              pageLabel = new Gtk.Label({ label: label }),
              pageLabelBox = (this._notebooks.length & 1 ? new Gtk.HBox() : new Gtk.VBox())) {
@@ -435,7 +435,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     settingsbind = new dbFinSettingsBindEntryColorButton()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowColorButtonEntry, rowColorButton);
-			return this.addRow(rowLabel, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : 1 ], [ rowColorButton, 1 ] ], bindSensitive);
+			return this.addRow(rowLabel, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : 2 ], [ rowColorButton, 1 ] ], bindSensitive);
         } // let (rowLabel, rowColorButtonEntry, rowColorButton, settingsbind)
     },
 
@@ -448,7 +448,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     settingsbind = new dbFinSettingsBindEntryScale()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowScaleEntry, rowScale);
-			return this.addRow(rowLabel, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, !showEntry ? 3 : 2 ] ], bindSensitive);
+			return this.addRow(rowLabel, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, !showEntry ? 4 : 3 ] ], bindSensitive);
         } // let (rowLabel, rowScaleEntry, rowScale, settingsbind)
     },
 
@@ -466,7 +466,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			this._notebook.widget._settingsbinds.push(settingsbindColor);
 			settingsbindScale.bind(settingsKeyScale, rowScaleEntry, rowScale);
 			settingsbindColor.bind(settingsKeyColor, rowColorButtonEntry, rowColorButton);
-			return this.addRow(rowLabel, [ [ rowScaleEntry, !showEntryScale ? 0 : 1 ], [ rowScale, !showEntryScale && !showEntryColor ? 2 : 1 ], [ rowColorButtonEntry, !showEntryColor ? 0 : 1 ], [ rowColorButton, 1 ] ], bindSensitive);
+			return this.addRow(rowLabel, [ [ rowScaleEntry, !showEntryScale ? 0 : 1 ], [ rowScale, 3 - (!showEntryScale ? 0 : 1) - (!showEntryColor ? 0 : 1) ], [ rowColorButtonEntry, !showEntryColor ? 0 : 1 ], [ rowColorButton, 1 ] ], bindSensitive);
         } // let (rowLabel, rowScaleEntry, rowScale, rowColorButtonEntry, rowColorButton, settingsbindScale, settingsbindColor)
     },
 
@@ -494,7 +494,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
             }
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowComboBoxTextEntry, rowComboBoxText);
-			return this.addRow(rowLabel, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, 3 ] ], bindSensitive);
+			return this.addRow(rowLabel, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, !showEntry ? 4 : 3 ] ], bindSensitive);
         } // let (rowLabel, rowComboBoxTextEntry, rowComboBoxText, settingsbind)
     }
 });
