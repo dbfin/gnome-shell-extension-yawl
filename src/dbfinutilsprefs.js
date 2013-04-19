@@ -352,6 +352,9 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 	// bindSensitive = either 'key' or '!key' or array of 'key''s or '!key''s
 	addRow: function(gtkWidget/* = null*/, gtkOthers/* = []*/, bindSensitive/* = null*/) {
 		if (!this._notebook || !this._notebook.page) return [];
+		if (gtkWidget && !(gtkWidget instanceof Gtk.Widget)) {
+			gtkWidget = new Gtk.Label({ label: '' + gtkWidget, halign: Gtk.Align.START, hexpand: true });
+		}
 		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || [],
 		     x = this._notebook.shift,
 		     widgets = []) {

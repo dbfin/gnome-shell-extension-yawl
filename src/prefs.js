@@ -248,7 +248,7 @@ function buildPrefsWidget() {
                     builder.getWidget()._threshold = threshold;
 					builder.addLabel(_("This will measure the SHORTEST time between two consecutive SINGLE clicks."));
 					builder.shift();
-						widgets = builder.addRow(new Gtk.Label({ label: _("Make a fast series of SINGLE clicks"), halign: Gtk.Align.START, hexpand: true }),
+						widgets = builder.addRow(_("Make a fast series of SINGLE clicks"),
 									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
 											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 2 ]
@@ -259,7 +259,7 @@ function buildPrefsWidget() {
 					builder.unshift();
 					builder.addLabel(_("This will measure the LONGEST time between the two clicks of one DOUBLE click."));
 					builder.shift();
-						widgets = builder.addRow(new Gtk.Label({ label: _("Make a series of DOUBLE clicks"), halign: Gtk.Align.START, hexpand: true }),
+						widgets = builder.addRow(_("Make a series of DOUBLE clicks"),
 									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
 											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 2 ]
