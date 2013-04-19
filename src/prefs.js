@@ -148,7 +148,7 @@ function buildPrefsWidget() {
                 builder.addSeparator();
                 builder.addCheckBox(_("Custom panel background"), 'panel-background');
                 builder.shift();
-                    builder.addScaleColorButton(_("Opacity and color"), 'panel-opacity', 'panel-color', 0, 100, 1, _("Choose panel background color"), 'panel-background');
+                    builder.addColorButtonScale(_("Color and opacity"), 'panel-color', 'panel-opacity', _("Choose panel background color"), 0, 100, 1, 'panel-background');
                 builder.unshift();
 
             builder.addPage(_("Icons"), 'icon.png');
@@ -160,7 +160,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);
                 builder.addSeparator();
                 builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
-                builder.addScale(_("Distance between icons (% of icon size)"), 'icons-distance', 0, 100, 1);
+                builder.addScale(_("Distance between icons\n(% of icon size)"), 'icons-distance', 0, 100, 1);
 
             builder.addPage(_("Animation"), 'animation.png');
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'icons-animation-time', 0, 1000, 1, null, true);
@@ -172,7 +172,7 @@ function buildPrefsWidget() {
 					builder.addScale(_("Change opacity"), 'icons-hover-opacity', 50, 100, 1, 'icons-hover-animation');
 					builder.addCheckBox(_("Show full width if partially hidden"), 'icons-hover-fit', 'icons-hover-animation');
 	                builder.addSeparator();
-	                builder.addScale(_("Mouse over animation time (% of animation time)"), 'icons-hover-animation-time', 0, 200, 1, 'icons-hover-animation');
+	                builder.addScale(_("Mouse over animation time\n(% of animation time)"), 'icons-hover-animation-time', 0, 200, 1, 'icons-hover-animation');
                     builder.addComboBoxText(_("Mouse over animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
 				builder.unshift();
 
@@ -184,10 +184,10 @@ function buildPrefsWidget() {
                 builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming');
                 builder.shift();
                     builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
-					builder.addScaleColorButton(_("Background opacity and color"), 'windows-background-opacity', 'windows-background-color', 0, 100, 1, _("Choose thumbnail panel background color"), [ 'windows-theming', '!windows-background-panel' ]);
-					builder.addScaleColorButton(_("Text size and color"), 'windows-text-size', 'windows-text-color', 6, 36, 1, _("Choose thumbnail panel text color"), 'windows-theming');
+					builder.addColorButtonScale(_("Background color and opacity"), 'windows-background-color', 'windows-background-opacity', _("Choose thumbnail panel background color"), 0, 100, 1, [ 'windows-theming', '!windows-background-panel' ]);
+					builder.addColorButtonScale(_("Text color and size"), 'windows-text-color', 'windows-text-size', _("Choose thumbnail panel text color"), 6, 36, 1, 'windows-theming');
                     builder.addScale(_("Padding"), 'windows-padding', 0, 20, 1, 'windows-theming');
-                    builder.addScaleColorButton(_("Border width and color"), 'windows-border-width', 'windows-border-color', 0, 3, 1, _("Choose thumbnail panel border color"), 'windows-theming');
+                    builder.addColorButtonScale(_("Border color and width"), 'windows-border-color', 'windows-border-width', _("Choose thumbnail panel border color"), 0, 3, 1, 'windows-theming');
                     builder.addScale(_("Border radius"), 'windows-border-radius', 0, 10, 1, 'windows-theming');
                 builder.unshift();
 
@@ -200,7 +200,7 @@ function buildPrefsWidget() {
 				builder.addScale(_("Default thumbnail opacity"), 'windows-thumbnails-opacity', 50, 100, 1);
 				builder.addScale(_("Minimized thumbnail opacity"), 'windows-thumbnails-minimized-opacity', 10, 100, 1);
                 builder.addSeparator();
-                builder.addScale(_("Distance between thumbnails (% of thumbnail size)"), 'windows-thumbnails-distance', 0, 50, 1);
+                builder.addScale(_("Distance between thumbnails\n(% of thumbnail size)"), 'windows-thumbnails-distance', 0, 50, 1);
                 builder.addScale(_("Thumbnail top padding (px)"), 'windows-thumbnails-padding-top', 0, 20, 1);
 
 			builder.addPage(_("Animation"), 'animation_thumbnail.png');
@@ -213,7 +213,7 @@ function buildPrefsWidget() {
 					builder.addScale(_("Change opacity"), 'windows-hover-opacity', 50, 100, 1);
 					builder.addCheckBox(_("Show full width if partially hidden"), 'windows-hover-fit');
 	                builder.addSeparator();
-	                builder.addScale(_("Mouse over animation time (% of animation time)"), 'windows-hover-animation-time', 0, 200, 1);
+	                builder.addScale(_("Mouse over animation time\n(% of animation time)"), 'windows-hover-animation-time', 0, 200, 1);
                     builder.addComboBoxText(_("Mouse over animation effect"), 'windows-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
                 builder.unshift();
 
@@ -227,9 +227,10 @@ function buildPrefsWidget() {
                     builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-left-shift', dbFinConsts.arrayAppClickFunctions, 0);
                     builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-left-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
 	                builder.addSeparator();
-					builder.addLabel(_("The following option will work only if 'Mouse events on button release' is enabled on the Fine-tuning page"));
+					builder.addLabel(_("Long left button click emulates right click (useful for touch screens)"));
                     builder.shift();
-    	                builder.addCheckBox(_("Long left button click emulates right button click (useful for touch screens)"), 'mouse-long-click', 'mouse-click-release');
+						builder.addLabel(_("\u26a0 This will work only if option 'Fine-tuning \u2192 Mouse events on button release' is enabled"));
+    	                builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', 'mouse-click-release');
                     builder.unshift();
 
                 builder.addPage(_("Middle button"), 'mouse-middle.png');
@@ -241,7 +242,7 @@ function buildPrefsWidget() {
                     builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0);
 
                 builder.addPage(_("Fine-tuning"), 'tuning.png');
-	                builder.addCheckBox(_("Mouse events on button release (default for Gnome-Shell is off)"), 'mouse-click-release');
+	                builder.addCheckBox(_("Mouse events on button release\n(default for Gnome-Shell is off)"), 'mouse-click-release');
 	                builder.addSeparator();
                     let threshold = new dbFinClicksThreshold();
                     builder.getWidget()._threshold = threshold;
@@ -276,10 +277,10 @@ function buildPrefsWidget() {
                 builder.closeNotebook();
 
 			builder.addPage(_("Debug"), 'debug.png');
-				builder.addCheckBox(_("Debugging: autohiding panel on the right side of the rightmost monitor"), 'debug');
+				builder.addCheckBox(_("Debugging panel on the right side of the rightmost monitor"), 'debug');
 				builder.shift();
 					builder.addCheckBox(_("Force all messages"), 'debug-force', 'debug');
-					builder.addScale(_("Debug window width (% of the monitor width)"), 'debug-width', 10, 70, 1, 'debug');
+					builder.addScale(_("Debug window width\n(% of the monitor width)"), 'debug-width', 10, 70, 1, 'debug');
 				builder.unshift();
 
             builder.closeNotebook();
