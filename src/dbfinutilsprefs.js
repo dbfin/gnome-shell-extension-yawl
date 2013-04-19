@@ -455,6 +455,25 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
         } // let (rowLabel, rowScaleEntry, rowScale, settingsbind)
     },
 
+    addScaleScale: function(label, settingsKey1, settingsKey2, min1, max1, step1, min2, max2, step2, bindSensitive/* = null*/, showEntry1/* = false*/, showEntry2/* = false*/) {
+		if (!this._notebook) return [];
+		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, hexpand: true }),
+             rowScaleEntry1 = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, hexpand: true, width_chars: 5 }),
+             rowScale1 = new Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min1, max1, step1,
+                                                 { halign: Gtk.Align.FILL, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+             rowScaleEntry2 = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, hexpand: true, width_chars: 5 }),
+             rowScale2 = new Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min2, max2, step2,
+                                                 { halign: Gtk.Align.FILL, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+		     settingsbind1 = new dbFinSettingsBindEntryScale(),
+		     settingsbind2 = new dbFinSettingsBindEntryScale()) {
+			this._notebook.widget._settingsbinds.push(settingsbind1);
+			this._notebook.widget._settingsbinds.push(settingsbind2);
+			settingsbind1.bind(settingsKey1, rowScaleEntry1, rowScale1);
+			settingsbind2.bind(settingsKey2, rowScaleEntry2, rowScale2);
+			return this.addRow(rowLabel, [ [ rowScaleEntry1, !showEntry1 ? 0 : 1 ], [ rowScale1, !showEntry1 ? 2 : 1 ], [ rowScaleEntry2, !showEntry2 ? 0 : 1 ], [ rowScale2, !showEntry2 ? 2 : 1 ] ], bindSensitive);
+        } // let (rowLabel, rowScaleEntry, rowScale, settingsbind)
+    },
+
     addScaleColorButton: function(label, settingsKeyScale, settingsKeyColor, min, max, step, titleColorChooser, bindSensitive/* = null*/, showEntryScale/* = false*/, showEntryColor/* = false*/) {
 		if (!this._notebook) return [];
 		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, hexpand: true }),

@@ -137,8 +137,7 @@ function buildPrefsWidget() {
 
         builder.addNotebook(_("Icons"));
             builder.addNotebook(_("Panel"), 'panel.png');
-                builder.addScale(_("YAWL-panel position"), 'yawl-panel-position', 0, 50, 1);
-                builder.addScale(_("YAWL-panel width"), 'yawl-panel-width', 1, 100, 1);
+                builder.addScaleScale(_("YAWL-panel position and width"), 'yawl-panel-position', 'yawl-panel-width', 0, 50, 1, 1, 100, 1);
                 builder.addSeparator();
                 builder.addCheckBox(_("Move central panel"), 'move-center');
                 builder.addCheckBox(_("Hide Activities button"), 'hide-activities');
