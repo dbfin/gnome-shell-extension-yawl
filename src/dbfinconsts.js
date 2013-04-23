@@ -147,5 +147,6 @@ const Settings = [
 
     [ 'debug', false, { } ],
     [ 'debug-force', false, { } ],
-    [ 'debug-width', 50, { min: 10, max: 70 } ]
+    [ 'debug-width', 50, { min: 10, max: 70 } ],
+    [ 'debug-bottom', false, { } ]
 ];

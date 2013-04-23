@@ -116,6 +116,7 @@ const dbFinYAWL = new Lang.Class({
 			}
 		};
 		this._updatedDebugWidth = function () { if (global._yawlDebugView) global._yawlDebugView.updatePosition(); };
+		this._updatedDebugBottom = function () { if (global._yawlDebugView) global._yawlDebugView.updatePosition(); };
 
         global.yawl.watch(this);
         _D('<');

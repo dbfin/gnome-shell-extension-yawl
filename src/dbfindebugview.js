@@ -124,16 +124,19 @@ const dbFinDebugView = new Lang.Class({
 		_D('@');
 		if (this.container && this.container.get_stage()) {
 			let (monitor =	Main.layoutManager && Main.layoutManager.monitors && Main.layoutManager.monitors.length
-							&& Main.layoutManager.monitors[Main.layoutManager.monitors.length - 1]) {
+							&& Main.layoutManager.monitors[global.yawl && global.yawl._debugBottom
+							                               ? 0
+							                               : Main.layoutManager.monitors.length - 1]) {
 				if (monitor) {
-					let (width = Math.round(monitor.width
+					let (width =	Math.round(monitor.width
 					                        * dbFinUtils.inRange(global.yawl && global.yawl._debugWidth, 0, 100, 50)
-					                        / 100.),
-					     height = monitor.height - 64) {
-						let (x = this.hovered || this.pinned
-					     			? monitor.x + monitor.width - width
-					     			: monitor.x + monitor.width - 8,
-						     y = monitor.y + 32) {
+					                        / 100.)
+					     			+ (global.yawl && global.yawl._debugBottom ? 0 : 14),
+					     height = monitor.height - (global.yawl && global.yawl._debugBottom ? 21 : 64)) {
+						let (x = monitor.x + (global.yawl && global.yawl._debugBottom
+						                      ? 11 : monitor.width - (this.hovered || this.pinned ? width - 14 : 8)),
+						     y = monitor.y + (global.yawl && global.yawl._debugBottom
+						                      ? (this.hovered || this.pinned ? 32 : monitor.height - 8) : 32)) {
 							if (this.container.width !== width) this.container.width = width;
 							if (this.container.height !== height) this.container.height = height;
 							if (this.container.x !== x) this.container.x = x;

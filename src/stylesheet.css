@@ -30,10 +30,10 @@
 #dbFinDebugView {
 	background-color: rgba(0, 0, 0, 0.777);
 	color: white;
-	padding: 11px 0 11px 14px;
+	padding: 11px 14px;
 	border: 1px solid #ccc;
 	border-right-width: 0;
-	border-radius: 7px 0 0 7px;
+	border-radius: 7px;
 	font-size: 12px;
 	font-family: monospace;
 }
@@ -41,7 +41,7 @@
 #dbFinDebugViewToolbar {
     border: 0px solid #ccc;
     border-bottom-width: 1px;
-    padding: 0 14px 7px 0;
+    padding-bottom: 7px;
 }
 
 .dbfin-debugview-toolbar-button {

@@ -372,5 +372,10 @@
       <_summary>Debug window width as % of the monitor width.</_summary>
       <_description>Debug window width as % of the monitor width.</_description>
     </key>
+    <key name="debug-bottom" type="b">
+      <default>false</default>
+      <_summary>Whether to place debug window at the bottom of the first monitor.</_summary>
+      <_description>If true then the debug window is placed at the bottom of the first monitor.</_description>
+    </key>
   </schema>
 </schemalist>

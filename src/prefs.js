@@ -280,7 +280,8 @@ function buildPrefsWidget() {
 				builder.addCheckBox(_("Debugging panel on the right side of the rightmost monitor"), 'debug');
 				builder.shift();
 					builder.addCheckBox(_("Force all messages (\u26a0 ouch!)"), 'debug-force', 'debug');
-					builder.addScale(_("Debug window width\n(% of the monitor width)"), 'debug-width', 10, 70, 1, 'debug');
+					builder.addScale(_("Debug panel width\n(% of the monitor width)"), 'debug-width', 10, 70, 1, 'debug');
+					builder.addCheckBox(_("Move debug panel to the bottom left"), 'debug-bottom', 'debug');
 				builder.unshift();
 
             builder.closeNotebook();
