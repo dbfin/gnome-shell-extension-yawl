@@ -148,7 +148,8 @@ function buildPrefsWidget() {
                 builder.addSeparator();
                 builder.addCheckBox(_("Custom panel background"), 'panel-background');
                 builder.shift();
-                    builder.addColorButtonScale(_("Color and opacity"), 'panel-color', 'panel-opacity', _("Choose panel background color"), 0, 100, 1, 'panel-background');
+                    builder.addColorButtonScale(_("Top color and opacity"), 'panel-top-color', 'panel-top-opacity', _("Choose panel background color"), 0, 100, 1, 'panel-background');
+                    builder.addColorButtonScale(_("Bottom color and opacity"), 'panel-color', 'panel-opacity', _("Choose panel background color"), 0, 100, 1, 'panel-background');
                 builder.unshift();
 
             builder.addPage(_("Icons"), 'icon.png');

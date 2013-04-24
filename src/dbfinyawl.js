@@ -199,7 +199,7 @@ const dbFinYAWL = new Lang.Class({
 
 	_updatePanelWindowsStyle: function() {
         _D('>' + this.__name__ + '._updatePanelWindowsStyle()');
-		if (!this._style || !global.yawl.panelWindows || !global.yawl.panelWindows.actor
+		if (!this._style || !global.yawl || !global.yawl.panelWindows || !global.yawl.panelWindows.actor
 		    || !global.yawl.panelWindows.actor.get_stage()) {
 			_D('<');
 			return;
@@ -208,13 +208,19 @@ const dbFinYAWL = new Lang.Class({
 			if (global.yawl._windowsTheming) {
 				let (color = '') {
 					if (global.yawl._windowsBackgroundPanel) {
-						let (node = Main.panel && Main.panel.actor && Main.panel.actor.get_stage()
-									&& Main.panel.actor.get_theme_node()) {
-							if (node) {
-								color = node.get_background_color();
-								color = 'rgba(' + color.red + ', ' + color.green + ', ' + color.blue + ', ' + color.alpha / 255. + ')';
+						if (global.yawl._panelBackground) {
+							color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._panelColor,
+							                                                     global.yawl._panelOpacity);
+						} // if (global.yawl._panelBackground)
+						else {
+							let (node = Main.panel && Main.panel.actor && Main.panel.actor.get_stage()
+										&& Main.panel.actor.get_theme_node()) {
+								if (node) {
+									color = node.get_background_color();
+									color = 'rgba(' + color.red + ', ' + color.green + ', ' + color.blue + ', ' + color.alpha / 255. + ')';
+								}
 							}
-						}
+						} // if (global.yawl._panelBackground) else
 					} // if (global.yawl._windowsBackgroundPanel)
 					if (color == '') {
 						color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._windowsBackgroundColor,

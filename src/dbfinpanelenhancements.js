@@ -40,7 +40,9 @@ const dbFinPanelEnhancements = new Lang.Class({
 		if (Main.panel._rightCorner) {
 			this._styleRightCorner = new dbFinStyle.dbFinStyle(Main.panel._rightCorner.actor);
 		}
-        this._updatedPanelColor =
+        this._updatedPanelTopColor =
+        		this._updatedPanelTopOpacity =
+		        this._updatedPanelColor =
         		this._updatedPanelOpacity = this._updatePanelStyle;
         this._updatedPanelBackground = function () {
             if (global.yawl._panelBackground) this._updatePanelStyle();
@@ -77,8 +79,12 @@ const dbFinPanelEnhancements = new Lang.Class({
 		}
         let (style = {},
 			 styleCorner = {}) {
-            let (color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._panelColor, global.yawl._panelOpacity)) {
+            let (color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._panelColor, global.yawl._panelOpacity),
+                 colorTop = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._panelTopColor, global.yawl._panelTopOpacity)) {
                 style['background-color'] = color;
+				style['background-gradient-start'] = colorTop;
+				style['background-gradient-end'] = color;
+				style['background-gradient-direction'] = 'vertical';
                 styleCorner['-panel-corner-border-width'] = '0';
                 styleCorner['-panel-corner-border-color'] = color;
                 styleCorner['-panel-corner-background-color'] = color;
@@ -95,6 +101,9 @@ const dbFinPanelEnhancements = new Lang.Class({
         let (style = {},
 			 styleCorner = {}) {
 			style['background-color'] = '';
+			style['background-gradient-start'] = '';
+			style['background-gradient-end'] = '';
+			style['background-gradient-direction'] = '';
 			styleCorner['-panel-corner-border-width'] = '';
 			styleCorner['-panel-corner-border-color'] = '';
 			styleCorner['-panel-corner-background-color'] = '';

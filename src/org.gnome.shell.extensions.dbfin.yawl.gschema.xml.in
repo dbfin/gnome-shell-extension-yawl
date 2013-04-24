@@ -36,15 +36,25 @@
       <_summary>Custom panel background.</_summary>
       <_description>If true the top panel is painted with custom color and opacity.</_description>
     </key>
+    <key name="panel-top-color" type="s">
+      <default>'#000000'</default>
+      <_summary>Choose custom panel top color.</_summary>
+      <_description>Custom color to paint top of the panel.</_description>
+    </key>
+    <key name="panel-top-opacity" type="s">
+      <default>'77'</default>
+      <_summary>Choose custom panel top opacity.</_summary>
+      <_description>Custom opacity to paint top of the panel.</_description>
+    </key>
     <key name="panel-color" type="s">
       <default>'#000000'</default>
       <_summary>Choose custom panel color.</_summary>
-      <_description>Custom color to paint the top panel.</_description>
+      <_description>Custom color to paint the panel.</_description>
     </key>
     <key name="panel-opacity" type="s">
-      <default>'100'</default>
+      <default>'77'</default>
       <_summary>Choose custom panel opacity.</_summary>
-      <_description>Custom opacity to paint the top panel.</_description>
+      <_description>Custom opacity to paint the panel.</_description>
     </key>
 
     <key name="icons-size" type="s">

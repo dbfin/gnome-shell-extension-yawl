@@ -72,8 +72,10 @@ const Settings = [
     [ 'preserve-hot-corner', true, { } ],
     [ 'hide-app-menu', false, { } ],
     [ 'panel-background', false, { } ],
+    [ 'panel-top-color', '#000000', { } ],
+    [ 'panel-top-opacity', 77, { min: 0, max: 100 } ],
     [ 'panel-color', '#000000', { } ],
-    [ 'panel-opacity', 100, { min: 0, max: 100 } ],
+    [ 'panel-opacity', 77, { min: 0, max: 100 } ],
 
     [ 'icons-size', 48, { min: 16, max: 128 } ],
     [ 'icons-faded', true, { } ],
