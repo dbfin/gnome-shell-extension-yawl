@@ -1,8 +1,23 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
  * YAWL (Yet Another Window List) Gnome-Shell Extension
- * Copyright (C) 2013 Vadim @ dbFin <vadim@dbfin.com>
- * You should have received a copy of the License along with this program.
+ *
+ * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
+ *
+ * Yet Another Window List (YAWL) Gnome-Shell extension is
+ * free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License (GPL)
+ * as published by the Free Software Foundation, version 3
+ * of the License, or any later version.
+ *
+ * YAWL is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY: without even implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the License (in file
+ * GNUGPLv3) along with the program. A copy of the License
+ * is also available at <http://www.gnu.org/licenses/>.
  *
  * dbfinutils.js
  * Common utilities.
