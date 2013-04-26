@@ -364,6 +364,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
         }
     },
 
+	// gtkWidget = Gtk.Widget or a string for Gtk.Label
 	// gtkOthers = [ [ gtkWidget, width ] ]
 	// bindSensitive = either 'key' or '!key' or array of 'key''s or '!key''s
 	addRow: function(gtkWidget/* = null*/, gtkOthers/* = []*/, bindSensitive/* = null*/) {
@@ -375,20 +376,18 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     x = this._notebook.shift,
 		     widgets = []) {
 			gtkOthers = gtkOthers || [];
-			if (gtkWidget) {
-				let (w = this._notebook.width - x) {
-					for (let i = 0; i < gtkOthers.length; ++i) w -= gtkOthers[i][1];
-					gtkOthers.unshift([ gtkWidget, w ]);
-				} // let (w)
-			} // if (gtkWidget)
+			let (w = this._notebook.width - x) {
+				for (let i = 0; i < gtkOthers.length; ++i) w -= gtkOthers[i][1];
+				gtkOthers.unshift([ gtkWidget, w ]);
+			} // let (w)
 			for (let i = 0; i < gtkOthers.length; ++i) {
 				if (gtkOthers[i][0]) {
 					widgets.push(gtkOthers[i][0]);
-					if (!gtkOthers[i][1]) {
+					if (!gtkOthers[i][1] || gtkOthers[i][1] < 0) {
 						this._notebook.page.attach(gtkOthers[i][0], x, this._notebook.row, 1, 1);
 						gtkOthers[i][0].sensitive = false;
 						gtkOthers[i][0].hide();
-					} // if (!gtkOthers[i][1])
+					} // if (!gtkOthers[i][1] || gtkOthers[i][1] < 0)
 					else {
 						let (bindBox = null) {
 							for (let j = 0; j < binds.length; ++j) {
@@ -398,18 +397,18 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 									 bindBoxNew = new Gtk.Box({	hexpand:	true,
 																halign:		Gtk.Align.FILL,
 																valign:		Gtk.Align.CENTER })) {
-									if (!j) this._notebook.page.attach(bindBoxNew, x, this._notebook.row, gtkOthers[i][1], 1);
+									if (!bindBox) this._notebook.page.attach(bindBoxNew, x, this._notebook.row, gtkOthers[i][1], 1);
 									else bindBox.pack_end(bindBoxNew, /*expand =*/true, /*fill =*/true, /*padding =*/0);
 									bindBoxNew.show();
 									this._settings.bind(bindKey, bindBoxNew, 'sensitive', bindInverse);
 									bindBox = bindBoxNew;
 								} // let (bindInverse, bindKey, bindBoxNew)
 							} // for (let j)
-							if (bindBox) bindBox.pack_end(gtkOthers[i][0], /*expand =*/true, /*fill =*/true, /*padding =*/0);
-							else this._notebook.page.attach(gtkOthers[i][0], x, this._notebook.row, gtkOthers[i][1], 1);
+							if (!bindBox) this._notebook.page.attach(gtkOthers[i][0], x, this._notebook.row, gtkOthers[i][1], 1);
+							else bindBox.pack_end(gtkOthers[i][0], /*expand =*/true, /*fill =*/true, /*padding =*/0);
 							gtkOthers[i][0].show();
 						} // let (bindBox)
-					} // if (!gtkOthers[i][1]) else
+					} // if (!gtkOthers[i][1] || gtkOthers[i][1] < 0) else
 				} // if (gtkOthers[i][0])
 				x += gtkOthers[i][1];
 			} // for (let i)
