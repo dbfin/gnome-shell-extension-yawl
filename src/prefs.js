@@ -148,7 +148,8 @@ const dbFinClicksThreshold = new Lang.Class({
 
 function buildPrefsWidget() {
     _D('@'); // supress all debugging
-    let (builder = new dbFinUtilsPrefs.dbFinSettingsWidgetBuilder(), widgets) {
+    let (builder = new dbFinUtilsPrefs.dbFinSettingsWidgetBuilder(),
+         widgets = null) {
 
         builder.addNotebook(_("Icons"));
             builder.addNotebook(_("Panel"), 'panel.png');
@@ -301,6 +302,62 @@ function buildPrefsWidget() {
 				builder.unshift();
 
             builder.closeNotebook();
+
+		builder.addPage(_("About"));
+			widgets = new Gtk.Image.new_from_file(Me.path + '/images/yawl.png');
+			if (widgets) {
+				builder.addWidget(widgets, 0, 0, 3, 7);
+				widgets.hexpand = true;
+				widgets.vexpand = true;
+				widgets.xalign = 0.5;
+				widgets.yalign = 0.5;
+			}
+			widgets = new Gtk.Image.new_from_file(Me.path + '/images/gplv3.png');
+			if (widgets) {
+				builder.addWidget(widgets, 8, 0, 2, 2);
+				widgets.hexpand = true;
+				widgets.vexpand = true;
+				widgets.xalign = 1.0;
+				widgets.yalign = 0.0;
+			}
+
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 5 ], [ null, 2 ] ]);
+			if (widgets && widgets.length) widgets[0].set_markup(_("<span size='x-large'><span color='#347'>Y</span>et <span color='#347'>A</span>nother <span color='#347'>W</span>indow <span color='#347'>L</span>ist</span>"));
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 5 ], [ null, 2 ] ]);
+			if (widgets && widgets.length) widgets[0].set_markup(_("<span size='large'>Gnome-Shell Extension</span>"));
+			widgets = builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
+			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin.com'><span underline='none'>&lt;vadim@dbfin.com&gt;</span></a></span>"));
+			widgets = builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
+			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Home page:\t<a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a></span>"));
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
+			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Source code:\t<a href='https://github.com/dbfin/gnome-shell-extension-yawl'><span underline='none'>https://github.com/dbfin/gnome-shell-extension-yawl</span></a></span>"));
+
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
+			if (widgets && widgets.length) widgets[0].set_markup(_("<span size='small'> </span>"));
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
+			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Please report problems on GitHub. If you would like to translate the program to your language please email me.</span>"));
+
+			builder.addSeparator();
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 10 ] ]);
+			if (widgets && widgets.length) {
+				widgets[0].set_line_wrap(true);
+				widgets[0].set_markup(_("<span size='small'>This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.</span>")
+							  + ' ' + _("<span size='small'>A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.</span>"));
+			}
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 10 ] ]);
+			if (widgets && widgets.length) {
+				widgets[0].set_line_wrap(true);
+				widgets[0].set_markup(_("<span size='small'>You are free to use, modify or otherwise distribute the code of this software provided that your actions comply with all applicable laws and GPL.</span>")
+							  + ' ' + _("<span size='small'>In particular, you must include the above copyright notice and a copy of the License in all copies or substantial portions of the software, whether original or modified.</span>"));
+			}
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 10 ] ]);
+			if (widgets && widgets.length) {
+				widgets[0].set_line_wrap(true);
+				widgets[0].set_markup(_("<span size='small'>This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>")
+							  + ' ' + _("<span size='small'>For more details please see the GNU General Public License (GPL) version 3.</span>"));
+			}
 
         return builder.getWidget();
     } // let (builder, widgets)

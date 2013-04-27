@@ -365,6 +365,43 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
     },
 
 	// gtkWidget = Gtk.Widget or a string for Gtk.Label
+	// bindSensitive = either 'key' or '!key' or array of 'key''s or '!key''s
+	addWidget: function(gtkWidget, x, y, w, h, bindSensitive/* = null*/) {
+		if (!gtkWidget || !this._notebook || !this._notebook.page) return [];
+		if (!(gtkWidget instanceof Gtk.Widget)) {
+			gtkWidget = new Gtk.Label({ label: '' + gtkWidget, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true });
+		}
+		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || []) {
+			if (!w || w < 0 || !h || h < 0) {
+				this._notebook.page.attach(gtkWidget, x, y, 1, 1);
+				gtkWidget.sensitive = false;
+				gtkWidget.hide();
+			} // if (!w || w < 0 || !h || h < 0)
+			else {
+				let (bindBox = null) {
+					for (let j = 0; j < binds.length; ++j) {
+						let (bindInverse = binds[j] && binds[j][0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
+																			: Gio.SettingsBindFlags.DEFAULT,
+							 bindKey = binds[j] && binds[j][0] == '!' ? binds[j].substring(1) : binds[j],
+							 bindBoxNew = new Gtk.Box({	hexpand:	true,
+														halign:		Gtk.Align.FILL,
+														valign:		Gtk.Align.CENTER })) {
+							if (!bindBox) this._notebook.page.attach(bindBoxNew, x, y, w, h);
+							else bindBox.pack_end(bindBoxNew, /*expand =*/true, /*fill =*/true, /*padding =*/0);
+							bindBoxNew.show();
+							this._settings.bind(bindKey, bindBoxNew, 'sensitive', bindInverse);
+							bindBox = bindBoxNew;
+						} // let (bindInverse, bindKey, bindBoxNew)
+					} // for (let j)
+					if (!bindBox) this._notebook.page.attach(gtkWidget, x, y, w, h);
+					else bindBox.pack_end(gtkWidget, /*expand =*/true, /*fill =*/true, /*padding =*/0);
+					gtkWidget.show();
+				} // let (bindBox)
+			} // if (!w || w < 0 || !h || h < 0) else
+		} // let (binds)
+	},
+
+	// gtkWidget = Gtk.Widget or a string for Gtk.Label
 	// gtkOthers = [ [ gtkWidget, width ] ]
 	// bindSensitive = either 'key' or '!key' or array of 'key''s or '!key''s
 	addRow: function(gtkWidget/* = null*/, gtkOthers/* = []*/, bindSensitive/* = null*/) {

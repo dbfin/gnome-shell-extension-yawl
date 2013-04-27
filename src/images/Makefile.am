@@ -15,7 +15,9 @@ images = \
 	thumbnail.png \
 	animation_thumbnail.png \
 	panel_thumbnail.png \
-	debug.png
+	debug.png \
+	yawl.png \
+	gplv3.png
 
 imagedir = $(extensiondir)/images
 dist_image_DATA = $(images)
