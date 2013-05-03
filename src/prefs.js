@@ -306,7 +306,7 @@ function buildPrefsWidget() {
 				builder.unshift();
 				builder.addCheckBox(_("Debugging panel"), 'debug');
 				builder.shift();
-					builder.addLabel(_("By default the panel is placed at the right side (of the last monitor)."));
+					builder.addLabel(_("By default the panel is placed at the right side (of the last monitor)."), 'debug');
 					builder.addCheckBox(_("Move the panel to the bottom left"), 'debug-bottom', 'debug');
 					builder.addScale(_("Debug panel width\n(% of the monitor width)"), 'debug-width', 10, 70, 1, 'debug');
 					builder.addCheckBox(_("Force all messages (\u26a0 ouch!)"), 'debug-force', 'debug');
