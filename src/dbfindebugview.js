@@ -28,6 +28,8 @@ const Lang = imports.lang;
 
 const St = imports.gi.St;
 
+const Util = imports.misc.util;
+
 const ExtensionSystem = imports.ui.extensionSystem;
 const Main = imports.ui.main;
 
@@ -62,20 +64,24 @@ const dbFinDebugView = new Lang.Class({
 		if (this.toolbar) {
 			if (this.container) this.container.add_actor(this.toolbar);
 
-			this.buttonPin = new St.Label({ name: 'dbFinDebugViewButtonPin', style_class: 'dbfin-debugview-toolbar-button',
+			this.buttonPin = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
 											text: '[ ]', reactive: true, track_hover: true, visible: true });
 			if (this.buttonPin) this.toolbar.add_actor(this.buttonPin);
 
-			this.buttonPause = new St.Label({ name: 'dbFinDebugViewButtonPause', style_class: 'dbfin-debugview-toolbar-button',
+			this.buttonPause = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
 											  text: '[\u25fe]', reactive: true, track_hover: true, visible: true });
 			if (this.buttonPause) this.toolbar.add_actor(this.buttonPause);
 
-			this.buttonClear = new St.Label({ name: 'dbFinDebugViewButtonClear', style_class: 'dbfin-debugview-toolbar-button',
-											  text: 'Clear', reactive: true, track_hover: true, visible: true });
+			this.buttonClear = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
+											  text: '[\u224b]', reactive: true, track_hover: true, visible: true });
 			if (this.buttonClear) this.toolbar.add_actor(this.buttonClear);
 
-			this.buttonReload = new St.Label({ name: 'dbFinDebugViewButtonReload', style_class: 'dbfin-debugview-toolbar-button',
-											   text: 'Reload', reactive: true, track_hover: true, visible: true });
+			this.buttonPreferences = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
+											   text: '[\u2692]', reactive: true, track_hover: true, visible: true });
+			if (this.buttonPreferences) this.toolbar.add_actor(this.buttonPreferences);
+
+			this.buttonReload = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
+											   text: '[\u27f2]', reactive: true, track_hover: true, visible: true });
 			if (this.buttonReload) this.toolbar.add_actor(this.buttonReload);
 		}
 
@@ -105,6 +111,8 @@ const dbFinDebugView = new Lang.Class({
 									callback: this._buttonPauseButtonPressEvent, scope: this });
 		this._signals.connectNoId({	emitter: this.buttonClear, signal: 'button-press-event',
 									callback: this._buttonClearButtonPressEvent, scope: this });
+		this._signals.connectNoId({	emitter: this.buttonPreferences, signal: 'button-press-event',
+									callback: this._buttonPreferencesButtonPressEvent, scope: this });
 		this._signals.connectNoId({	emitter: this.buttonReload, signal: 'button-press-event',
 									callback: this._buttonReloadButtonPressEvent, scope: this });
 		_D('<');
@@ -245,6 +253,13 @@ const dbFinDebugView = new Lang.Class({
 		if (!event) return;
 		let (button = event.get_button()) {
 			if (button == 1) this.clear();
+		}
+	},
+
+	_buttonPreferencesButtonPressEvent: function(label, event) {
+		if (!event) return;
+		let (button = event.get_button()) {
+			if (button == 1) Util.trySpawn([ 'gnome-shell-extension-prefs', 'yawl@dbfin.com' ]);
 		}
 	},
 

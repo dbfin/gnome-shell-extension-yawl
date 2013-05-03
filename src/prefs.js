@@ -301,6 +301,7 @@ function buildPrefsWidget() {
 				builder.shift();
 					builder.addLabel(_("\u00b7 pin the panel (so that it is always visible)"));
 					builder.addLabel(_("\u00b7 stop, resume and clear all messages"));
+					builder.addLabel(_("\u00b7 access extension preferences"));
 					builder.addLabel(_("\u00b7 restart the extension"));
 				builder.unshift();
 				builder.addCheckBox(_("Debugging panel"), 'debug');
