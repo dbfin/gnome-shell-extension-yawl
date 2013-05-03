@@ -163,7 +163,7 @@ const Settings = [
     [ 'mouse-clicks-time-threshold', 300, { min: 150, max: 550 } ],
 
     [ 'debug', false, { } ],
-    [ 'debug-force', false, { } ],
-    [ 'debug-width', 50, { min: 10, max: 70 } ],
-    [ 'debug-bottom', false, { } ]
+    [ 'debug-bottom', false, { } ],
+    [ 'debug-width', 33, { min: 10, max: 70 } ],
+    [ 'debug-force', false, { } ]
 ];

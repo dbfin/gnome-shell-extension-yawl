@@ -372,20 +372,20 @@
       <_summary>Whether to open debug window.</_summary>
       <_description>Whether to open debug window.</_description>
     </key>
-    <key name="debug-force" type="b">
-      <default>false</default>
-      <_summary>Whether to force all debug messages.</_summary>
-      <_description>Whether to force all debug messages.</_description>
-    </key>
-    <key name="debug-width" type="s">
-      <default>'50'</default>
-      <_summary>Debug window width as % of the monitor width.</_summary>
-      <_description>Debug window width as % of the monitor width.</_description>
-    </key>
     <key name="debug-bottom" type="b">
       <default>false</default>
       <_summary>Whether to place debug window at the bottom of the first monitor.</_summary>
       <_description>If true then the debug window is placed at the bottom of the first monitor.</_description>
+    </key>
+    <key name="debug-width" type="s">
+      <default>'33'</default>
+      <_summary>Debug window width as % of the monitor width.</_summary>
+      <_description>Debug window width as % of the monitor width.</_description>
+    </key>
+    <key name="debug-force" type="b">
+      <default>false</default>
+      <_summary>Whether to force all debug messages.</_summary>
+      <_description>Whether to force all debug messages.</_description>
     </key>
   </schema>
 </schemalist>
