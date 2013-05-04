@@ -266,7 +266,7 @@ function buildPrefsWidget() {
 					builder.addLabel(_("This will measure the SHORTEST time between two consecutive SINGLE clicks."));
 					builder.shift();
 						widgets = builder.addRow(_("Make a fast series of SINGLE clicks"),
-									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
+									   [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
 											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 2 ]
 										]);
@@ -277,7 +277,7 @@ function buildPrefsWidget() {
 					builder.addLabel(_("This will measure the LONGEST time between the two clicks of one DOUBLE click."));
 					builder.shift();
 						widgets = builder.addRow(_("Make a series of DOUBLE clicks"),
-									   [	[ new Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
+									   [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
 											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 2 ]
 										]);
@@ -315,7 +315,7 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("About"));
-			widgets = new Gtk.Image.new_from_file(Me.path + '/images/yawl.png');
+			widgets = Gtk.Image.new_from_file(Me.path + '/images/yawl.png');
 			if (widgets) {
 				builder.addWidget(widgets, 0, 0, 3, 7);
 				widgets.hexpand = true;
@@ -323,7 +323,7 @@ function buildPrefsWidget() {
 				widgets.xalign = 0.5;
 				widgets.yalign = 0.5;
 			}
-			widgets = new Gtk.Image.new_from_file(Me.path + '/images/gplv3.png');
+			widgets = Gtk.Image.new_from_file(Me.path + '/images/gplv3.png');
 			if (widgets) {
 				builder.addWidget(widgets, 8, 0, 2, 2);
 				widgets.hexpand = true;

@@ -351,7 +351,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			pageLabelBox.homogeneous = false;
 			pageLabelBox.pack_end(pageLabel, /*expand =*/true, /*fill =*/true, /*padding =*/0);
 			if (iconfile) {
-				let (pageImage = new Gtk.Image.new_from_file(Me.path + '/images/' + iconfile)) {
+				let (pageImage = Gtk.Image.new_from_file(Me.path + '/images/' + iconfile)) {
 					pageLabelBox.pack_start(pageImage, /*expand =*/true, /*fill =*/true, /*padding =*/0);
 				}
 			}
@@ -469,7 +469,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
              rowImages = []) {
             if (images) {
                 images.forEach(function (image) {
-                	rowImages.push([ new Gtk.Image.new_from_file(Me.path + '/images/' + image, { halign: Gtk.Align.END, valign: Gtk.Align.CENTER }), 1 ]);
+                	rowImages.push([ Gtk.Image.new_from_file(Me.path + '/images/' + image, { halign: Gtk.Align.END, valign: Gtk.Align.CENTER }), 1 ]);
                 });
             }
     		return this.addRow(rowLabel, rowImages, bindSensitive);
@@ -500,7 +500,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		if (!this._notebook) return [];
 		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }),
              rowScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
-             rowScale = new Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min, max, step,
+             rowScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min, max, step,
                                                  { halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
 		     settingsbind = new dbFinSettingsBindEntryScale()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
@@ -513,11 +513,11 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		if (!this._notebook) return [];
 		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }),
              rowScaleEntry1 = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
-             rowScale1 = new Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min1, max1, step1,
-                                                 { halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+             rowScale1 = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min1, max1, step1,
+                                                  { halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
              rowScaleEntry2 = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
-             rowScale2 = new Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min2, max2, step2,
-                                                 { halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+             rowScale2 = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min2, max2, step2,
+                                                  { halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
 		     settingsbind1 = new dbFinSettingsBindEntryScale(),
 		     settingsbind2 = new dbFinSettingsBindEntryScale()) {
 			this._notebook.widget._settingsbinds.push(settingsbind1);
@@ -534,7 +534,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
              rowColorButtonEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 9 }),
              rowColorButton = new Gtk.ColorButton({ halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, use_alpha: false, title: titleColorChooser }),
              rowScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
-             rowScale = new Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min, max, step,
+             rowScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min, max, step,
                                                  { halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
 		     settingsbindColor = new dbFinSettingsBindEntryColorButton(),
 		     settingsbindScale = new dbFinSettingsBindEntryScale()) {
