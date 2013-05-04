@@ -315,21 +315,19 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("About"));
-			widgets = Gtk.Image.new_from_file(Me.path + '/images/yawl.png');
-			if (widgets) {
-				builder.addWidget(widgets, 0, 0, 3, 7);
-				widgets.hexpand = true;
-				widgets.vexpand = true;
-				widgets.xalign = 0.5;
-				widgets.yalign = 0.5;
+			widgets = builder.addWidget(Gtk.Image.new_from_file(Me.path + '/images/yawl.png'), 0, 0, 3, 7);
+			if (widgets && widgets.length) {
+				widgets[0].hexpand = true;
+				widgets[0].vexpand = true;
+				widgets[0].xalign = 0.5;
+				widgets[0].yalign = 0.5;
 			}
-			widgets = Gtk.Image.new_from_file(Me.path + '/images/gplv3.png');
-			if (widgets) {
-				builder.addWidget(widgets, 8, 0, 2, 2);
-				widgets.hexpand = true;
-				widgets.vexpand = true;
-				widgets.xalign = 1.0;
-				widgets.yalign = 0.0;
+			widgets = builder.addWidget(Gtk.Image.new_from_file(Me.path + '/images/gplv3.png'), 8, 0, 2, 2);
+			if (widgets && widgets.length) {
+				widgets[0].hexpand = true;
+				widgets[0].vexpand = true;
+				widgets[0].xalign = 1.0;
+				widgets[0].yalign = 0.0;
 			}
 
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 5 ], [ null, 2 ] ]);
