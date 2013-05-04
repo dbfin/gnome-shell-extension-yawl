@@ -399,6 +399,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 				} // let (bindBox)
 			} // if (!w || w < 0 || !h || h < 0) else
 		} // let (binds)
+		return [ gtkWidget ];
 	},
 
 	// gtkWidget = Gtk.Widget or a string for Gtk.Label
