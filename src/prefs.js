@@ -526,7 +526,7 @@ function buildPrefsWidget() {
 				fcw = fcw[0];
 				fcw.set_current_folder('~');
 				fcw.set_show_hidden(true);
-				fcw.set_current_name('.gnome-shell-extension-yawl@dbfin.com.settings');
+				fcw.set_current_name('all.yawl.settings');
 			}
 			let status = builder.addRow(_("Status:"), [ [ new Gtk.Label({ label: '', halign: Gtk.Align.FILL }), 9 ] ]);
 			status = status && status.length && status[1] || null;
