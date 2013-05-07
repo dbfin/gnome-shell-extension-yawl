@@ -25,7 +25,9 @@
  */
 
 const Lang = imports.lang;
+const Mainloop = imports.mainloop;
 
+const Gio = imports.gi.Gio;
 const Gtk = imports.gi.Gtk;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -144,6 +146,138 @@ const dbFinClicksThreshold = new Lang.Class({
 			}
 		}
     }
+});
+
+const dbFinSettingsExportImport = new Lang.Class({
+	Name: 'dbFin.SettingsExportImport',
+
+	_init: function(gtkButtonExport, gtkButtonImport, gtkFileChooser, gtkLabelStatus) {
+        this._signals = new dbFinSignals.dbFinSignals();
+		this._settings = Convenience.getSettings();
+
+		if (gtkButtonExport) {
+			this._gtkButtonExport = gtkButtonExport;
+			this._signals.connectNoId({	emitter: gtkButtonExport, signal: 'clicked',
+					 					callback: this.doExport, scope: this });
+		}
+		if (gtkButtonImport) {
+			this._gtkButtonImport = gtkButtonImport;
+			this._signals.connectNoId({	emitter: gtkButtonImport, signal: 'clicked',
+					 					callback: this.doImport, scope: this });
+		}
+		if (gtkFileChooser) {
+			this._gtkFileChooser = gtkFileChooser;
+		}
+		if (gtkLabelStatus) {
+			this._gtkLabelStatus = gtkLabelStatus;
+			gtkLabelStatus.label = '';
+		}
+		this._timeoutStatus = null;
+	},
+
+	destroy: function() {
+        if (this._signals) {
+            this._signals.destroy();
+            this._signals = null;
+        }
+		this._cancelTimeoutStatus();
+		this._gtkButtonExport = null;
+		this._gtkButtonImport = null;
+		this._gtkFileChooser = null;
+		this._gtkLabelStatus = null;
+        this._settings = null;
+	},
+
+	doExport: function() {
+		if (!this._gtkFileChooser || !this._settings) return;
+		let (pf = this._gtkFileChooser.get_filename()) {
+			try {
+				if (!pf) throw _("Please specify settings file name.");
+				let (s = '', gf = null, gfos = null, gbos = null) {
+					this._settings.list_keys().forEach(Lang.bind(this, function (k) {
+						let (v = this._settings.get_value(k)) {
+							let (t = v.get_type_string(), vs = '') {
+								if (t == 's') vs = v.get_string()[0];
+								else if (t == 'b') vs = '' + (v.get_boolean() ? '+' : '-');
+								if (vs) {
+									if (s) s += '\n';
+									s += k + '\t' + t + '\t' + vs;
+								}
+							}
+						}
+					}));
+					if (!(gf = Gio.file_new_for_path(pf))) throw _("Cannot create Gio.File object for file ") + pf + '.';
+					if (!(gfos = gf.replace(/* etag = */null,
+											/* make_backup = */true,
+											/* flags = */Gio.FileCreateFlags.NONE,
+											/* cancellable = */null))) {
+						// typically, this throws its own exception if something goes wrong, but just in case...
+						throw _("Cannot create/replace file ") + pf + '.';
+					}
+					if (!(gbos = Gio.DataOutputStream.new(/* base_stream = */gfos))) throw _("Cannot create Gio.DataOutputStream object for file ") + pf + '.';
+					if (!gbos.put_string(/* str = */s + '\n',
+										 /* cancellable = */null)) throw _("Cannot write to file ") + pf + '.';
+					if (gbos) {
+						gbos.close(null);
+					}
+					this._updateStatus(_("File was created/updated successfully!"), '#dfa');
+				} // let (s, gf, gfos, gbos)
+			} // try
+			catch (e) {
+				if (e.message) this._updateStatus(e.message, '#faa');
+				else this._updateStatus('' + e, '#faa');
+			} // try catch (e)
+		} // let (pf)
+	},
+
+	doImport: function() {
+		if (!this._gtkFileChooser || !this._settings) return;
+		let (pf = this._gtkFileChooser.get_filename()) {
+			try {
+				if (!pf) throw _("Please specify settings file name.");
+				let (s = '', keys = this._settings.list_keys(), gf = null, gfis = null, gbis = null) {
+					if (!(gf = Gio.file_new_for_path(pf))) throw _("Cannot create Gio.File object for file ") + pf + '.';
+					if (!(gfis = gf.read(/* cancellable = */null))) throw _("Cannot open file ") + pf + '.';
+					if (!(gbis = Gio.DataInputStream.new(/* base_stream = */gfis))) throw _("Cannot create Gio.DataInputStream object for file ") + pf + '.';
+					while ((s = gbis.read_line(/* cancellable = */null)[0]) !== null) { // read line returns NULL at the end
+						let (res = /(.*?)\t(.*?)\t(.*)/.exec(s)) {
+							if (!res) continue;
+							let (k = res[1], t = res[2], v = res[3]) {
+								if (k && t && v && keys.indexOf(k) != -1) {
+									if (t == 's') this._settings.set_string(k, v);
+									else if (t == 'b') this._settings.set_boolean(k, v == '+');
+								}
+							}
+						}
+					}
+					if (gbis) {
+						gbis.close(null);
+					}
+					this._updateStatus(_("File was read successfully!"), '#dfa');
+				} // let (s, keys, gf, gfis, gbis)
+			} // try
+			catch (e) {
+				if (e.message) this._updateStatus(e.message, '#faa');
+				else this._updateStatus('' + e, '#faa');
+			} // try catch (e)
+		} // let (pf)
+	},
+
+	_cancelTimeoutStatus: function() {
+		if (this._timeoutStatus) {
+			Mainloop.source_remove(this._timeoutStatus);
+			this._timeoutStatus = null;
+		}
+	},
+
+	_updateStatus: function(msg, color) {
+		this._cancelTimeoutStatus();
+		if (!this._gtkLabelStatus) return;
+		msg = msg || '';
+		if (color) this._gtkLabelStatus.set_markup('<span background="' + color + '">   ' + msg + '   </span>');
+		else this._gtkLabelStatus.set_markup('<span>   ' + msg + '   </span>');
+		if (msg || color) this._timeoutStatus = Mainloop.timeout_add(2222, Lang.bind(this, function() { this._updateStatus(); }));
+	}
 });
 
 function buildPrefsWidget() {
@@ -313,6 +447,30 @@ function buildPrefsWidget() {
 				builder.unshift();
 
             builder.closeNotebook();
+
+		builder.addPage(_("Export/Import"));
+			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
+																	do_overwrite_confirmation: false, select_multiple: false,
+																	show_hidden: false, hexpand: true, vexpand: true,
+																	halign: Gtk.Align.FILL, valign: Gtk.Align.FILL }));
+			if (fcw && fcw.length) {
+				fcw = fcw[0];
+				fcw.set_current_folder('~');
+				fcw.set_show_hidden(true);
+				fcw.set_current_name('.gnome-shell-extension-yawl@dbfin.com.settings');
+			}
+			let status = builder.addRow(_("Status:"), [ [ new Gtk.Label({ label: '', halign: Gtk.Align.FILL }), 9 ] ]);
+			status = status && status.length && status[1] || null;
+			widgets = builder.addRow(null, [
+									[ new Gtk.Label({ label: _("This will overwrite the file with settings"), halign: Gtk.Align.END }), 4 ],
+									[ new Gtk.Button({ label: _("Export"), halign: Gtk.Align.FILL }), 1 ],
+									[ new Gtk.Label({ label: _("This will overwrite all current settings"), halign: Gtk.Align.END }), 4 ],
+									[ new Gtk.Button({ label: _("Import"), halign: Gtk.Align.FILL }), 1 ]
+			                     ]);
+			if (widgets && widgets.length) {
+				let sei = new dbFinSettingsExportImport(widgets[1], widgets[3], fcw, status);
+				builder.getWidget()._sei = sei;
+			}
 
 		builder.addPage(_("About"));
 			widgets = builder.addWidget(Gtk.Image.new_from_file(Me.path + '/images/yawl.png'), 0, 0, 3, 7);
