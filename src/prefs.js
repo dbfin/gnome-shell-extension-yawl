@@ -193,19 +193,31 @@ const dbFinSettingsExportImport = new Lang.Class({
 		let (pf = this._gtkFileChooser.get_filename()) {
 			try {
 				if (!pf) throw _("Please specify settings file name.");
-				let (s = '', gf = null, gfos = null, gbos = null) {
-					this._settings.list_keys().forEach(Lang.bind(this, function (k) {
-						let (v = this._settings.get_value(k)) {
-							let (t = v.get_type_string(), vs = '') {
-								if (t == 's') vs = v.get_string()[0];
-								else if (t == 'b') vs = '' + (v.get_boolean() ? '+' : '-');
-								if (vs) {
-									if (s) s += '\n';
-									s += k + '\t' + t + '\t' + vs;
-								}
+				let (s = '', groups = {}, groupsArray = [], gf = null, gfos = null, gbos = null) {
+					dbFinConsts.Settings.forEach(function (ss) {
+						if (ss[3]) {
+							if (groups[ss[3]] === undefined) {
+								groups[ss[3]] = [];
+								groupsArray.push(ss[3]);
 							}
+							groups[ss[3]].push(ss[0]);
 						}
-					}));
+					});
+					groupsArray.sort();
+					groupsArray.forEach(Lang.bind(this, function (g) {
+						if (s) s += '\n';
+						s += '[' + g + ']\n';
+						groups[g].forEach(Lang.bind(this, function (k) {
+							if (this._settings.list_keys().indexOf(k) == -1) return;
+							let (v = this._settings.get_value(k)) {
+								let (t = v.get_type_string(), vs = '') {
+									if (t == 's') vs = v.get_string()[0];
+									else if (t == 'b') vs = (v.get_boolean() ? '+' : '-');
+									if (vs) s += k + '\t' + t + '\t' + vs + '\n';
+								} // let (t, vs)
+							} // let (v)
+						})); // groups[g].forEach(k)
+					})); // groupsArray.forEach(g)
 					if (!(gf = Gio.file_new_for_path(pf))) throw _("Cannot create Gio.File object for file ") + pf + '.';
 					if (!(gfos = gf.replace(/* etag = */null,
 											/* make_backup = */true,
@@ -221,7 +233,7 @@ const dbFinSettingsExportImport = new Lang.Class({
 						gbos.close(null);
 					}
 					this._updateStatus(_("File was created/updated successfully!"), '#dfa');
-				} // let (s, gf, gfos, gbos)
+				} // let (s, groups, groupsArray, gf, gfos, gbos)
 			} // try
 			catch (e) {
 				if (e.message) this._updateStatus(e.message, '#faa');
@@ -235,7 +247,7 @@ const dbFinSettingsExportImport = new Lang.Class({
 		let (pf = this._gtkFileChooser.get_filename()) {
 			try {
 				if (!pf) throw _("Please specify settings file name.");
-				let (s = '', keys = this._settings.list_keys(), gf = null, gfis = null, gbis = null) {
+				let (s = '', keys = this._settings.list_keys(), imported = 0, gf = null, gfis = null, gbis = null) {
 					if (!(gf = Gio.file_new_for_path(pf))) throw _("Cannot create Gio.File object for file ") + pf + '.';
 					if (!(gfis = gf.read(/* cancellable = */null))) throw _("Cannot open file ") + pf + '.';
 					if (!(gbis = Gio.DataInputStream.new(/* base_stream = */gfis))) throw _("Cannot create Gio.DataInputStream object for file ") + pf + '.';
@@ -244,8 +256,10 @@ const dbFinSettingsExportImport = new Lang.Class({
 							if (!res) continue;
 							let (k = res[1], t = res[2], v = res[3]) {
 								if (k && t && v && keys.indexOf(k) != -1) {
+									++imported;
 									if (t == 's') this._settings.set_string(k, v);
 									else if (t == 'b') this._settings.set_boolean(k, v == '+');
+									else --imported;
 								}
 							}
 						}
@@ -253,8 +267,8 @@ const dbFinSettingsExportImport = new Lang.Class({
 					if (gbis) {
 						gbis.close(null);
 					}
-					this._updateStatus(_("File was read successfully!"), '#dfa');
-				} // let (s, keys, gf, gfis, gbis)
+					this._updateStatus(_("File was read successfully") + ': ' + imported + ' ' + _("settings values imported."), '#dfa');
+				} // let (s, keys, imported, gf, gfis, gbis)
 			} // try
 			catch (e) {
 				if (e.message) this._updateStatus(e.message, '#faa');
