@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="gnome-shell-extension-yawl">
   <schema id="org.gnome.shell.extensions.dbfin.yawl" path="/org/gnome/shell/extensions/dbfin/yawl/">
+    <key name="first-time" type="b">
+      <default>true</default>
+      <_summary>Whether the extension is run for the first time.</_summary>
+      <_description>Whether the extension is run for the first time.</_description>
+    </key>
     <key name="yawl-panel-position" type="s">
       <default>'21'</default>
       <_summary>YAWL-panel position in percentage.</_summary>

@@ -80,6 +80,8 @@ const arrayAppMenuItems = [
 ];
 
 const Settings = [
+	[ 'first-time', true, { } ],
+
     [ 'yawl-panel-position', 21, { min: 0, max: 50 } ],
     [ 'yawl-panel-width', 100, { min: 1, max: 100 } ],
     [ 'move-center', true, { } ],

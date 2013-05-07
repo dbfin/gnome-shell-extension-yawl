@@ -29,6 +29,8 @@ const Signals = imports.signals;
 
 const Meta = imports.gi.Meta;
 
+const Util = imports.misc.util;
+
 const Main = imports.ui.main;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -62,6 +64,13 @@ const dbFinYAWL = new Lang.Class({
 		}
 
         this._signals = new dbFinSignals.dbFinSignals();
+
+		if (global.yawl._firstTime) {
+			Util.trySpawn([ 'gnome-shell-extension-prefs', 'yawl@dbfin.com' ]);
+			let (settings = Me.imports.convenience2 && Me.imports.convenience2.getSettings()) {
+				if (settings) settings.set_boolean('first-time', false);
+			}
+		}
 
         global.yawl.panelApps = new dbFinYAWLPanel.dbFinYAWLPanel({ panelname: 'panelYAWL',
                                                                     parent: Main.panel || null,
