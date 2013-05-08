@@ -42,6 +42,32 @@
     background-gradient-direction: vertical;
 }
 
+#panelYAWLWindows .yawl-thumbnail:hover .yawl-thumbnail-toolbar {
+    background-gradient-start: rgba(77, 77, 77, 1.0);
+    background-gradient-end: rgba(77, 77, 77, 0.0);
+    background-gradient-direction: vertical;
+}
+
+#panelYAWLWindows .yawl-thumbnail-toolbar StIcon {
+	icon-size: 1px;
+	color: #777;
+	border: 0px solid rgba(0, 0, 0, 0.0);
+	border-left-width: 1px;
+}
+
+#panelYAWLWindows .yawl-thumbnail:hover .yawl-thumbnail-toolbar StIcon {
+	icon-size: 14px;
+	color: black;
+	padding: 1px;
+    background-gradient-start: rgba(255, 255, 255, 1.0);
+    background-gradient-end: rgba(255, 255, 255, 0.0);
+    background-gradient-direction: vertical;
+}
+
+#panelYAWLWindows .yawl-thumbnail:hover .yawl-thumbnail-toolbar StIcon.button-window-close:hover {
+    background-gradient-start: rgba(255, 192, 192, 1.0);
+}
+
 /* dbFinDebugView */
 #dbFinDebugView {
 	background-color: rgba(0, 0, 0, 0.777);

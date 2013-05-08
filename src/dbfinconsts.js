@@ -79,6 +79,10 @@ const arrayAppMenuItems = [
     [   _("Quit"),                  					'quitApplication'				]
 ];
 
+const arrayThumbnailButtons = [
+	[	'window-close',									'closeWindow'					]
+];
+
 const Settings = [
 	[ 'first-time', true, { }, null ],
 
