@@ -54,6 +54,7 @@ const dbFinWindowThumbnail = new Lang.Class({
         this.metaWindow = metaWindow;
         this._trackerWindow = trackerWindow;
 		this._clone = new Clutter.Clone({ reactive: true });
+		this._scale = null;
 		this._compositor = null;
 		[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
 		this._updateClone();
@@ -179,6 +180,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 			[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
         }
 		this.hidden = true;
+		this._scale = null;
 		this._toolbarButtonHovered = null;
         this._trackerWindow = null;
         this.metaWindow = null;
@@ -302,17 +304,23 @@ const dbFinWindowThumbnail = new Lang.Class({
 
     _updateThumbnailSize: function() {
         _D('>' + this.__name__ + '._updateThumbnailSize()');
-		if (this._clone && this._cloneWidth && this._cloneHeight) {
-			let (scale = 1.0) {
-				scale = Math.min(scale, global.yawl._windowsThumbnailsHeight / this._cloneHeight);
-                if (!global.yawl._windowsThumbnailsFitHeight) {
-					scale = Math.min(scale, global.yawl._windowsThumbnailsWidth / this._cloneWidth);
-				}
-				this._clone.set_width(Math.round(this._cloneWidth * scale));
-				this._clone.set_height(Math.round(this._cloneHeight * scale));
-                this._update();
-			} // let (scale)
-		} // if (this._clone && this._cloneWidth && this._cloneHeight)
+		if (this._cloneWidth && this._cloneHeight) {
+			this._scale = Math.min(1.0, global.yawl._windowsThumbnailsHeight / this._cloneHeight);
+			if (!global.yawl._windowsThumbnailsFitHeight) {
+				this._scale = Math.min(this._scale, global.yawl._windowsThumbnailsWidth / this._cloneWidth);
+			}
+			this._updateThumbnailScale();
+		} // if (this._cloneWidth && this._cloneHeight)
+        _D('<');
+    },
+
+    _updateThumbnailScale: function() {
+        _D('>' + this.__name__ + '._updateThumbnailScale()');
+		if (this._clone && this._scale) {
+			this._clone.set_width(Math.round(this._cloneWidth * this._scale));
+			this._clone.set_height(Math.round(this._cloneHeight * this._scale));
+			this._update();
+		} // if (this._clone && this._scale)
         _D('<');
     },
 
