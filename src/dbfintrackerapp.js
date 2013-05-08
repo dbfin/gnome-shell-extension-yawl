@@ -218,7 +218,10 @@ const dbFinTrackerApp = new Lang.Class({
 					this._resetNextWindows();
 				}
             }
-            if (this._autohideshow && !this.windows.length && this.appButton) this.appButton.hide();
+			if (!this.windows.length) {
+				if (this._autohideshow && this.appButton) this.appButton.hide();
+				this.hideWindowsGroup();
+			}
         }
         _D('<');
     },
@@ -260,7 +263,8 @@ const dbFinTrackerApp = new Lang.Class({
     showWindowsGroup: function() {
         _D('>' + this.__name__ + '.showWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
-        if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen) {
+        if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen
+            || !this.windows || !this.windows.length) {
             _D('<');
             return;
         }
