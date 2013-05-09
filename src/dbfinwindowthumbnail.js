@@ -54,9 +54,10 @@ const dbFinWindowThumbnail = new Lang.Class({
         this.metaWindow = metaWindow;
         this._trackerWindow = trackerWindow;
 		this._clone = new Clutter.Clone({ reactive: true });
-		this._scale = null;
 		this._compositor = null;
+		this._texture = null;
 		[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
+		this._scale = 0.0;
 		this._updateClone();
 
         this.hidden = false;
@@ -176,12 +177,13 @@ const dbFinWindowThumbnail = new Lang.Class({
         if (this._clone) {
             this._clone.destroy();
             this._clone = null;
-			this._compositor = null;
-			[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
         }
 		this.hidden = true;
-		this._scale = null;
+		this._scale = 0.0;
 		this._toolbarButtonHovered = null;
+		this._compositor = null;
+		this._texture = null;
+		[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
         this._trackerWindow = null;
         this.metaWindow = null;
         this.emit('destroy');
@@ -282,23 +284,18 @@ const dbFinWindowThumbnail = new Lang.Class({
 					this._signals.connectId('clone-resize', {	emitter: this._compositor, signal: 'size-changed',
 																callback: this._updateCloneTexture, scope: this });
 				}
-				this._updateCloneTexture();
 			} // if (this._compositor)
+			this._updateCloneTexture();
 		} // if (this._clone)
         _D('<');
     },
 
 	_updateCloneTexture: function() {
 		_D('>' + this.__name__ + '._updateCloneTexture()');
-		let (texture = this._compositor && this._compositor.get_texture && this._compositor.get_texture()) {
-			if (texture && texture.get_size) {
-				this._clone.set_source(null);
-				[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
-				this._clone.set_source(texture);
-				[ this._cloneWidth, this._cloneHeight ] = texture.get_size();
-				this._updateThumbnailSize();
-			} // if (texture && texture.get_size)
-		} // let (texture)
+		this._texture = this._compositor && this._compositor.get_texture && this._compositor.get_texture() || null;
+		this._clone.set_source(this._texture);
+		[ this._cloneWidth, this._cloneHeight ] = this._texture && this._texture.get_size ? this._texture.get_size() : [ 0, 0 ];
+		this._updateThumbnailSize();
 		_D('<');
 	},
 
@@ -309,8 +306,11 @@ const dbFinWindowThumbnail = new Lang.Class({
 			if (!global.yawl._windowsThumbnailsFitHeight) {
 				this._scale = Math.min(this._scale, global.yawl._windowsThumbnailsWidth / this._cloneWidth);
 			}
-			this._updateThumbnailScale();
 		} // if (this._cloneWidth && this._cloneHeight)
+		else {
+			this._scale = 0.0;
+		}
+		this._updateThumbnailScale();
         _D('<');
     },
 
