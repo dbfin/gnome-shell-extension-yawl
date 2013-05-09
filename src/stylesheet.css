@@ -65,7 +65,7 @@
 }
 
 #panelYAWLWindows .yawl-thumbnail:hover .yawl-thumbnail-toolbar StIcon.button-window-close:hover {
-    background-gradient-start: rgba(255, 192, 192, 1.0);
+    background-gradient-end: rgba(255, 0, 0, 0.0);
 }
 
 /* dbFinDebugView */
