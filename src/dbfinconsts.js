@@ -31,25 +31,25 @@ const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
 const arrayAnimationTransitions = [
-    [   'Linear',										'linear'						],
-    [	'Slow at the end',								'easeOutQuad'					],
-    [	'Slow at the beginning',						'easeInQuad'					],
-    [	'Slow on both sides',							'easeInOutQuad'					],
-    [	'Slow in the middle',							'easeOutInQuad'					],
-    [	'Slower at the end',							'easeOutCubic'   				],
-    [	'Slower at the beginning',						'easeInCubic'   				],
-    [	'Slower on both sides',							'easeInOutCubic'   				],
-    [	'Slower in the middle',							'easeOutInCubic'   				],
-    [	'Slowest at the end',							'easeOutQuart'   				],
-    [	'Slowest at the beginning',						'easeInQuart'   				],
-    [	'Slowest on both sides',						'easeInOutQuart'   				],
-    [	'Slowest in the middle',						'easeOutInQuart'   				],
-    [	'Bounce at the end',							'easeOutBounce'  				],
-    [	'Bounce at the beginning',						'easeInBounce'  				],
-    [	'Bounce on both sides',							'easeInOutBounce'  				],
-    [	'Bounce in the middle',							'easeOutInBounce'  				],
-    [	'Back\'n\'force in the middle',					'easeOutInBack'					],
-    [	'Elastic in the middle',						'easeOutInElastic' 				]
+    [   _("Linear"),									'linear'						],
+    [	_("Slow at the end"),							'easeOutQuad'					],
+    [	_("Slow at the beginning"),						'easeInQuad'					],
+    [	_("Slow on both sides"),						'easeInOutQuad'					],
+    [	_("Slow in the middle"),						'easeOutInQuad'					],
+    [	_("Slower at the end"),							'easeOutCubic'   				],
+    [	_("Slower at the beginning"),					'easeInCubic'   				],
+    [	_("Slower on both sides"),						'easeInOutCubic'   				],
+    [	_("Slower in the middle"),						'easeOutInCubic'   				],
+    [	_("Slowest at the end"),						'easeOutQuart'   				],
+    [	_("Slowest at the beginning"),					'easeInQuart'   				],
+    [	_("Slowest on both sides"),						'easeInOutQuart'   				],
+    [	_("Slowest in the middle"),						'easeOutInQuart'   				],
+    [	_("Bounce at the end"),							'easeOutBounce'  				],
+    [	_("Bounce at the beginning"),					'easeInBounce'  				],
+    [	_("Bounce on both sides"),						'easeInOutBounce'  				],
+    [	_("Bounce in the middle"),						'easeOutInBounce'  				],
+    [	_("Back'n'force in the middle"),				'easeOutInBack'					],
+    [	_("Elastic in the middle"),						'easeOutInElastic' 				]
 ];
 
 const arrayAppClickFunctions = [

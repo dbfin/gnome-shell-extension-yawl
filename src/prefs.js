@@ -596,7 +596,7 @@ function buildPrefsWidget() {
 						+ ' ' + _("App icons shown on the panel are indicative of which workspace you are currently on and what task/activity it is intended for.")
 						+ ' ' + _("If you also want quick access to all applications running on all workspaces and favorites")
 						+ ' ' + _("please consider installing in addition this highly recommended extension:")
-					    + ' ' + '<b>Dash to Dock</b> by <b>michele_g</b>'
+					    + ' ' + '<b>Dash to Dock</b> (' + _("author") + ': <b>michele_g</b>)'
 					+ '</span>');
 				}
 			builder.unshift();
@@ -613,10 +613,10 @@ function buildPrefsWidget() {
 				if (widgets && widgets.length) {
 					widgets[0].set_line_wrap(true);
 					widgets[0].set_markup('<span size="small">' +
-								_("It is placed right where there is space for it, not claimed by anything else.")
+								_("It is embedded into the panel right where there is space for it not claimed by anything else, and uses panel theme by default.")
 						+ ' ' + _("It further allows you to hide some unnecessary buttons on the left and shift the central panel to the right to give itself more space.")
-						+ ' ' + _("You can tweak the panel even more by installing some of the following extensions:")
-						+ ' ' + '<b>Frippery Move Clock</b> by <b>rmyorston</b>, <b>Status Area Horizontal Spacing</b> by <b>mathematical.coffee</b>, <b>User Themes</b> by <b>gcampax</b>'
+						+ ' ' + _("You can tweak the panel even more by installing some of the following recommended extensions:")
+						+ ' ' + '<b>Frippery Move Clock</b> (' + _("author") + ': <b>rmyorston</b>), <b>Status Area Horizontal Spacing</b> (' + _("author") + ': <b>mathematical.coffee</b>), <b>User Themes</b> (' + _("author") + ': <b>gcampax</b>)'
 					+ '</span>');
 				}
 			builder.unshift();
@@ -648,7 +648,7 @@ function buildPrefsWidget() {
 					widgets[0].set_line_wrap(true);
 					widgets[0].set_markup('<span size="small">' +
 								_("The development of this extension would not be possible without this wonderful FOSS:")
-						+ ' ' + 'Anjuta, Inkscape, Gimp, OmegaT, Ubuntu, Fedora and, of course, Gnome-Shell!'
+						+ ' ' + 'Anjuta, Inkscape, Gimp, OmegaT, Ubuntu, Fedora ' + _("and, of course,") + ' Gnome-Shell!'
 					+ '</span>');
 				}
 			builder.unshift();
