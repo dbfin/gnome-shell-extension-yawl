@@ -158,10 +158,12 @@ const Settings = [
 
     [ 'mouse-app-right', 10, { min: 0, max: arrayAppClickFunctions.length - 1 }, null ],
 
-    [ 'mouse-window-left', 1, { min: 0, max: arrayWindowClickFunctions.length - 1 }, null ],
-    [ 'mouse-window-left-shift', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 }, null ],
-    [ 'mouse-window-middle', 3, { min: 0, max: arrayWindowClickFunctions.length - 1 }, null ],
-    [ 'mouse-window-right', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 }, null ],
+    [ 'mouse-window-left', 1, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-window-left-ctrl', 0, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-window-left-shift', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-window-left-ctrl-shift', 0, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-window-middle', 3, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-window-right', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
 
     [ 'mouse-click-release', false, { }, 'mouse' ],
     [ 'mouse-clicks-time-single', 400, { min: 250, max: 750 }, 'mouse' ],

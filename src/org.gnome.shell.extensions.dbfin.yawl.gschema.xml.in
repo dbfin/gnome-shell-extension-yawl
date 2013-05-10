@@ -335,10 +335,20 @@
       <_summary>Window left click function.</_summary>
       <_description>Window left click function.</_description>
     </key>
+    <key name="mouse-window-left-ctrl" type="s">
+      <default>'0'</default>
+      <_summary>Window ctrl-left click function.</_summary>
+      <_description>Window ctrl-left click function.</_description>
+    </key>
     <key name="mouse-window-left-shift" type="s">
       <default>'2'</default>
       <_summary>Window shift-left click function.</_summary>
       <_description>Window shift-left click function.</_description>
+    </key>
+    <key name="mouse-window-left-ctrl-shift" type="s">
+      <default>'0'</default>
+      <_summary>Window ctrl-shift-left click function.</_summary>
+      <_description>Window ctrl-shift-left click function.</_description>
     </key>
     <key name="mouse-window-middle" type="s">
       <default>'3'</default>
