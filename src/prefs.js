@@ -318,23 +318,23 @@ function buildPrefsWidget() {
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 6 ], [ new Gtk.Label({ halign: Gtk.Align.END }), 1 ] ]);
 			if (widgets && widgets.length) {
 				widgets[0].set_markup(_("<span size='x-large'><span color='#347'>Y</span>et <span color='#347'>A</span>nother <span color='#347'>W</span>indow <span color='#347'>L</span>ist</span>"));
-				widgets[1].set_markup('<span>v' + Me.metadata.version + '</span>');
+				widgets[1].set_markup('v' + Me.metadata.version);
 			}
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
 			if (widgets && widgets.length) widgets[0].set_markup(_("<span size='large'>Gnome-Shell Extension</span>"));
 			widgets = builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin.com'><span underline='none'>&lt;vadim@dbfin.com&gt;</span></a></span>"));
+			if (widgets && widgets.length) widgets[0].set_markup(_("Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin.com'><span underline='none'>&lt;vadim@dbfin.com&gt;</span></a>"));
 			widgets = builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Home page:\t<a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a></span>"));
+			if (widgets && widgets.length) widgets[0].set_markup(_("Home page:\t<a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Source code:\t<a href='https://github.com/dbfin/gnome-shell-extension-yawl'><span underline='none'>https://github.com/dbfin/gnome-shell-extension-yawl</span></a></span>"));
+			if (widgets && widgets.length) widgets[0].set_markup(_("Source code:\t<a href='https://github.com/dbfin/gnome-shell-extension-yawl'><span underline='none'>https://github.com/dbfin/gnome-shell-extension-yawl</span></a>"));
 
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
 			if (widgets && widgets.length) widgets[0].set_markup(_("<span size='small'> </span>"));
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Please report problems on GitHub. If you would like to translate the program to your language please email me.</span>"));
+			if (widgets && widgets.length) widgets[0].set_markup(_("Please report problems on GitHub. If you would like to translate the program to your language please email me."));
 
 			builder.addSeparator();
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 9 ], [ null, 1 ] ]);
@@ -532,7 +532,7 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Export/Import"));
 			widgets = builder.addRow(new Gtk.Label({ halign: Gtk.Align.START }));
-			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Backup, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a></span>"));
+			if (widgets && widgets.length) widgets[0].set_markup(_("Backup, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
 			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,
