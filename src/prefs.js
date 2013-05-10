@@ -556,6 +556,103 @@ function buildPrefsWidget() {
 				builder.getWidget()._sei = sei;
 			}
 
+		builder.addPage(_("Did you know?"));
+			widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+			if (widgets && widgets.length) {
+				widgets[0].set_line_wrap(true);
+				widgets[0].set_markup(
+								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
+						+ ' ' + _("is designed to be simple to use yet highly customizable.")
+				);
+			}
+			builder.shift();
+				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+				if (widgets && widgets.length) {
+					widgets[0].set_line_wrap(true);
+					widgets[0].set_markup('<span size="small">' +
+								(Math.floor((dbFinConsts.Settings.length - 1) / 10) * 10) + '+'
+						+ ' ' + _("settings are currently available to customize feel and look of the extension.")
+						+ ' ' + _("Exploring the options also helps you to uncover some hidden features.")
+						+ ' ' + _("For example, <b>did you know</b> that there is an option to preview a window when its thumbnail is hovered, and that you can easily switch it on and off just by scrolling the middle mouse button over the thumbnail?")
+					+ '</span>');
+				}
+			builder.unshift();
+			widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+			if (widgets && widgets.length) {
+				widgets[0].set_line_wrap(true);
+				widgets[0].set_markup(
+								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
+						+ ' ' + _("is workspace-centric.")
+				);
+			}
+			builder.shift();
+				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+				if (widgets && widgets.length) {
+					widgets[0].set_line_wrap(true);
+					widgets[0].set_markup('<span size="small">' +
+								_("It shows apps and windows open on the current active workspace only.")
+						+ ' ' + _("Most of its functionality (such as cycling through windows) is also active-workspace-oriented.")
+						+ ' ' + _("This is intentional and was set as one of the initial goals.")
+						+ ' ' + _("App icons shown on the panel are indicative of which workspace you are currently on and what task/activity it is intended for.")
+						+ ' ' + _("If you also want quick access to all applications running on all workspaces and favorites")
+						+ ' ' + _("please consider installing in addition this highly recommended extension:")
+					    + ' ' + '<b>Dash to Dock</b> by <b>michele_g</b>'
+					+ '</span>');
+				}
+			builder.unshift();
+			widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+			if (widgets && widgets.length) {
+				widgets[0].set_line_wrap(true);
+				widgets[0].set_markup(
+								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
+						+ ' ' + _("tries to seamlessly integrate into the Gnome-Shell panel.")
+				);
+			}
+			builder.shift();
+				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+				if (widgets && widgets.length) {
+					widgets[0].set_line_wrap(true);
+					widgets[0].set_markup('<span size="small">' +
+								_("It is placed right where there is space for it, not claimed by anything else.")
+						+ ' ' + _("It further allows you to hide some unnecessary buttons on the left and shift the central panel to the right to give itself more space.")
+						+ ' ' + _("You can tweak the panel even more by installing some of the following extensions:")
+						+ ' ' + '<b>Frippery Move Clock</b> by <b>rmyorston</b>, <b>Status Area Horizontal Spacing</b> by <b>mathematical.coffee</b>, <b>User Themes</b> by <b>gcampax</b>'
+					+ '</span>');
+				}
+			builder.unshift();
+			widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+			if (widgets && widgets.length) {
+				widgets[0].set_line_wrap(true);
+				widgets[0].set_markup(
+								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
+						+ ' ' + _("is a part of greater FOSS ")
+				);
+			}
+			builder.shift();
+				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+				if (widgets && widgets.length) {
+					widgets[0].set_line_wrap(true);
+					widgets[0].set_markup('<span size="small">' +
+								_("And as such it is completely free to use, study, distribute and modify provided you acknowledge all the copyrights and your actions comply with the applicable law and GNU GPL.")
+					+ '</span>');
+				}
+				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+				if (widgets && widgets.length) {
+					widgets[0].set_line_wrap(true);
+					widgets[0].set_markup('<span size="small">' +
+								_("Your contribution in the form of feature suggestions, bug reports, translations, donations or even development is highly appreciated.")
+					+ '</span>');
+				}
+				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
+				if (widgets && widgets.length) {
+					widgets[0].set_line_wrap(true);
+					widgets[0].set_markup('<span size="small">' +
+								_("The development of this extension would not be possible without this wonderful FOSS:")
+						+ ' ' + 'Anjuta, Inkscape, Gimp, OmegaT, Ubuntu, Fedora and, of course, Gnome-Shell!'
+					+ '</span>');
+				}
+			builder.unshift();
+
         return builder.getWidget();
     } // let (builder, widgets)
 }
