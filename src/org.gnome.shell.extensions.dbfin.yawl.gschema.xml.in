@@ -42,12 +42,12 @@
       <_description>If true the top panel is painted with custom color and opacity.</_description>
     </key>
     <key name="panel-top-color" type="s">
-      <default>'#000000'</default>
+      <default>'#212133'</default>
       <_summary>Choose custom panel top color.</_summary>
       <_description>Custom color to paint top of the panel.</_description>
     </key>
     <key name="panel-top-opacity" type="s">
-      <default>'77'</default>
+      <default>'75'</default>
       <_summary>Choose custom panel top opacity.</_summary>
       <_description>Custom opacity to paint top of the panel.</_description>
     </key>
@@ -57,18 +57,18 @@
       <_description>Custom color to paint the panel.</_description>
     </key>
     <key name="panel-opacity" type="s">
-      <default>'77'</default>
+      <default>'75'</default>
       <_summary>Choose custom panel opacity.</_summary>
       <_description>Custom opacity to paint the panel.</_description>
     </key>
 
     <key name="icons-size" type="s">
-      <default>'48'</default>
+      <default>'42'</default>
       <_summary>Size of application icons.</_summary>
       <_description>The size of application icons. The size is adjusted to be divisible by 8.</_description>
     </key>
     <key name="icons-faded" type="b">
-      <default>true</default>
+      <default>false</default>
       <_summary>Use faded icons.</_summary>
       <_description>Whether to use faded icons (like AppMenu button).</_description>
     </key>
@@ -78,12 +78,12 @@
       <_description>Icon opacity when not hovered (and when hovered if not otherwise set).</_description>
     </key>
     <key name="icons-clip-top" type="s">
-      <default>'3'</default>
+      <default>'2'</default>
       <_summary>Clip icons: top (px).</_summary>
       <_description>Clip icons on top (in pixels).</_description>
     </key>
     <key name="icons-clip-bottom" type="s">
-      <default>'3'</default>
+      <default>'2'</default>
       <_summary>Clip icons: bottom (px).</_summary>
       <_description>Clip icons on bottom (in pixels).</_description>
     </key>
@@ -93,7 +93,7 @@
       <_description>Icons center alignment on the panel (%).</_description>
     </key>
     <key name="icons-distance" type="s">
-      <default>'21'</default>
+      <default>'11'</default>
       <_summary>Distance between icons (%).</_summary>
       <_description>Distance between two icons as % of the icon size.</_description>
     </key>
@@ -134,7 +134,7 @@
       <_description>Icons animation time when hovered as % of animation time.</_description>
     </key>
     <key name="icons-hover-animation-effect" type="s">
-      <default>'0'</default>
+      <default>'3'</default>
       <_summary>Icons on hover animation effect.</_summary>
       <_description>Icons animation effect when hovered.</_description>
     </key>
@@ -160,12 +160,12 @@
       <_description>If true thumbnail panel background matches main panel background.</_description>
     </key>
     <key name="windows-background-color" type="s">
-      <default>'#000000'</default>
+      <default>'#2e3436'</default>
       <_summary>Window thumbnail panel background color.</_summary>
       <_description>Window thumbnail panel background color.</_description>
     </key>
     <key name="windows-background-opacity" type="s">
-      <default>'70'</default>
+      <default>'75'</default>
       <_summary>Window thumbnail panel background opacity.</_summary>
       <_description>Window thumbnail panel background background opacity.</_description>
     </key>
@@ -180,7 +180,7 @@
       <_description>Window thumbnail panel text size in pt.</_description>
     </key>
     <key name="windows-padding" type="s">
-      <default>'7'</default>
+      <default>'11'</default>
       <_summary>Window thumbnail padding.</_summary>
       <_description>Window thumbnail padding.</_description>
     </key>
@@ -195,13 +195,13 @@
       <_description>Window thumbnail border width.</_description>
     </key>
     <key name="windows-border-radius" type="s">
-      <default>'7'</default>
+      <default>'5'</default>
       <_summary>Window thumbnail border radius.</_summary>
       <_description>Window thumbnail border radius.</_description>
     </key>
 
     <key name="windows-thumbnails-fit-height" type="b">
-      <default>true</default>
+      <default>false</default>
       <_summary>Whether to show all thumbnails same height.</_summary>
       <_description>If true then all thumbnails are same height.</_description>
     </key>
@@ -226,7 +226,7 @@
       <_description>Window thumbnails opacity when not hovered.</_description>
     </key>
     <key name="windows-thumbnails-minimized-opacity" type="s">
-      <default>'40'</default>
+      <default>'42'</default>
       <_summary>Default minimized window thumbnails opacity.</_summary>
       <_description>Minimized window thumbnails opacity when not hovered.</_description>
     </key>
@@ -267,7 +267,7 @@
       <_description>If true window thuumbnails are shown full width when hovered.</_description>
     </key>
     <key name="windows-hover-animation-time" type="s">
-      <default>'77'</default>
+      <default>'144'</default>
       <_summary>Window thumbnails on hover animation time (%).</_summary>
       <_description>Window thumbnails animation time when hovered as % of animation time.</_description>
     </key>
@@ -309,7 +309,7 @@
       <_description>App middle click/double click function.</_description>
     </key>
     <key name="mouse-app-middle-ctrl" type="s">
-      <default>'3'</default>
+      <default>'9'</default>
       <_summary>App ctrl-middle click/double click function.</_summary>
       <_description>App ctrl-middle click/double click function.</_description>
     </key>
@@ -319,7 +319,7 @@
       <_description>App shift-middle click/double click function.</_description>
     </key>
     <key name="mouse-app-middle-ctrl-shift" type="s">
-      <default>'0'</default>
+      <default>'3'</default>
       <_summary>App ctrl-shift-middle click/double click function.</_summary>
       <_description>App ctrl-shift-middle click/double click function.</_description>
     </key>
