@@ -28,7 +28,9 @@ const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
+const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
+const St = imports.gi.St;
 
 const Main = imports.ui.main;
 
@@ -58,6 +60,19 @@ const dbFinTracker = new Lang.Class({
 		this.windows = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaWindow, { state:, trackerWindow: } ] ]
 		this.state = 0; // when refreshing we increase the state to indicate apps and windows that are no longer there
         this.stateInfo = '';
+
+		this._preview = false;
+		this._previewWindow = null;
+		this._previewCompositor = null;
+		this._previewBin = new St.Bin({ name: 'yawlWindowPreview', reactive: false, visible: false });
+		if (this._previewBin) {
+			if (Main.uiGroup) Main.uiGroup.add_actor(this._previewBin);
+		}
+		this._previewClone = new Clutter.Clone({ reactive: false, visible: true });
+		if (this._previewClone) {
+			if (this._previewBin) this._previewBin.set_child(this._previewClone);
+		}
+
 		this.update(null, 'Tracker: initial update.');
 		this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
 									callback: this._switchWorkspace, scope: this });
@@ -96,6 +111,18 @@ const dbFinTracker = new Lang.Class({
 			this.windows.destroy();
 			this.windows = null;
 		}
+        if (this._previewBin) {
+			this._previewBin.set_child(null);
+            this._previewBin.destroy();
+            this._previewBin = null;
+        }
+        if (this._previewClone) {
+            this._previewClone.destroy();
+            this._previewClone = null;
+        }
+		this._preview = false;
+		this._previewWindow = null;
+		this._previewCompositor = null;
         this._tracker = null;
         this.emit('destroy');
         _D('<');
@@ -398,18 +425,85 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	},
 
+	_updatePreview: function() {
+        _D('>' + this.__name__ + '._updatePreview()');
+		if (this._preview && this._previewBin && this._previewClone && this._previewCompositor) {
+			let (texture = this._previewCompositor.get_texture
+						&& this._previewCompositor.get_texture()) {
+				let (size = texture && texture.get_size && texture.get_size()) {
+					if (size && size[0] && size[0] > 0 && size[1] && size[1] > 0) {
+						this._previewClone.set_source(texture);
+						this._previewClone.set_size(size[0], size[1]);
+					}
+				}
+			}
+			let (xy = this._previewCompositor.get_position()) {
+				this._previewBin.set_position(xy[0] - this._previewClone.x,
+											  xy[1] - this._previewClone.y);
+			}
+		}
+        _D('<');
+	},
+
+	_showPreview: function(trackerWindow) {
+        _D('>' + this.__name__ + '._showPreview()');
+		this._hidePreview();
+		if (this._preview && this._previewBin
+		    	&& trackerWindow && trackerWindow.hovered) {
+			let (compositor = trackerWindow.metaWindow
+			     		&& trackerWindow.metaWindow.get_compositor_private
+			     		&& trackerWindow.metaWindow.get_compositor_private()) {
+				if (compositor) {
+					this._previewWindow = trackerWindow.metaWindow;
+					this._previewCompositor = compositor;
+					this._updatePreview();
+					if (this._signals) {
+						this._signals.connectId('clone-resize', {	emitter: this._previewCompositor, signal: 'size-changed',
+																	callback: this._updatePreview, scope: this });
+					}
+					this._previewBin.show();
+				}
+				else {
+					this._previewWindow = null;
+					this._previewCompositor = null;
+				}
+			}
+		}
+        _D('<');
+	},
+
+	_hidePreview: function(trackerWindow/* = all*/) {
+        _D('>' + this.__name__ + '._hidePreview()');
+		if (this._previewBin && (!trackerWindow || trackerWindow.metaWindow == this._previewWindow)) {
+			if (this._signals) this._signals.disconnectId('clone-resize');
+			this._previewBin.hide();
+		}
+        _D('<');
+	},
+
     windowEvent: function (trackerWindow, event, params) {
         _D('>' + this.__name__ + '.windowEvent()');
         if (!trackerWindow || !event) {
             _D('<');
             return;
         }
-        if (event === 'enter' || event === 'leave' || event === 'title'
-	            || event === 'minimized') {
+		if (event === 'enter') {
+			this.updateTrackerAppLabel(trackerWindow);
+			this._showPreview(trackerWindow);
+		}
+		else if (event === 'leave') {
+			this._hidePreview(trackerWindow);
+		}
+        else if (event === 'title' || event === 'minimized') {
 			this.updateTrackerAppLabel(trackerWindow);
         }
 		else if (event === 'focused') {
         }
+		else if (event === 'preview') {
+			this._preview = !this._preview;
+			if (this._preview) this._showPreview(trackerWindow);
+			else this._hidePreview();
+		}
         _D('<');
     }
 });

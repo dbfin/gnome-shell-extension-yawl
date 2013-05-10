@@ -70,7 +70,9 @@ const arrayWindowClickFunctions = [
     [   _("No action"),	                            	''                              ],
     [   _("Show and focus"),                           	'showWindow'                    ],
     [   _("Minimize"),	                            	'minimizeWindow'                ],
-    [   _("Maximize"),	                            	'maximizeWindowToggle'          ]
+    [   _("Maximize"),	                            	'maximizeWindowToggle'          ],
+	[	_("Close"),										'closeWindow'					],
+	[	_("Preview on/off"),							'previewWindow'					]
 ];
 
 const arrayAppMenuItems = [
@@ -163,6 +165,7 @@ const Settings = [
     [ 'mouse-window-left-shift', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-window-left-ctrl-shift', 0, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-window-middle', 3, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-window-scroll', 5, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-window-right', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
 
     [ 'mouse-click-release', false, { }, 'mouse' ],

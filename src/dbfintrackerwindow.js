@@ -220,6 +220,12 @@ const dbFinTrackerWindow = new Lang.Class({
         _D('>' + this.__name__ + '.closeWindow()');
         if (this.metaWindow) this.metaWindow.delete(global.get_current_time());
         _D('<');
+	},
+
+	previewWindow: function() {
+        _D('>' + this.__name__ + '.previewWindow()');
+		if (this._tracker) this._tracker.windowEvent(this, 'preview');
+        _D('<');
 	}
 });
 Signals.addSignalMethods(dbFinTrackerWindow.prototype);

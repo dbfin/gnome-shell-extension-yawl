@@ -468,6 +468,7 @@ function buildPrefsWidget() {
                     builder.addComboBoxText(_("Left button Ctrl + Shift + Click"), 'mouse-window-left-ctrl-shift', dbFinConsts.arrayWindowClickFunctions, 0);
 	                builder.addSeparator();
                     builder.addComboBoxText(_("Middle button Click"), 'mouse-window-middle', dbFinConsts.arrayWindowClickFunctions, 0);
+                    builder.addComboBoxText(_("Scroll"), 'mouse-window-scroll', dbFinConsts.arrayWindowClickFunctions, 0);
 	                builder.addSeparator();
                     builder.addComboBoxText(_("Right button Click"), 'mouse-window-right', dbFinConsts.arrayWindowClickFunctions, 0);
 

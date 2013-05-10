@@ -129,7 +129,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 				this._clicked = null;
 			}
 			this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*doubleClicks = */false,
-							/*scroll = */false, /*sendSingleClicksImmediately = */true,
+							/*scroll = */true, /*sendSingleClicksImmediately = */true,
                             /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
 		};
 
@@ -331,7 +331,7 @@ const dbFinWindowThumbnail = new Lang.Class({
             _D('<');
             return;
         }
-        if (!name || !state.clicks || state.clicks < 1) {
+        if (!name || name == '' || (!state.scroll && (!state.clicks || state.clicks < 1))) {
             _D('<');
             return;
         }

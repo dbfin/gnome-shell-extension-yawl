@@ -274,6 +274,8 @@ const dbFinTrackerApp = new Lang.Class({
                     Lang.bind(this, function() {
                         this._cancelShowThumbnailsTimeout();
                         this.positionWindowsGroup(); // position it before showing if it is hidden
+						if (this._tracker && this._tracker._previewBin) this._tracker._previewBin.raise_top();
+						if (global.yawl.panelWindows.container) global.yawl.panelWindows.container.raise_top();
                         global.yawl.panelWindows.showChild(this.yawlPanelWindowsGroup, true);
                         global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;
                     })

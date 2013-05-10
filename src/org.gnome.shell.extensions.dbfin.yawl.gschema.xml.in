@@ -355,6 +355,11 @@
       <_summary>Window middle click function.</_summary>
       <_description>Window middle click function.</_description>
     </key>
+    <key name="mouse-window-scroll" type="s">
+      <default>'5'</default>
+      <_summary>Window mouse scroll function.</_summary>
+      <_description>Window mouse scroll function.</_description>
+    </key>
     <key name="mouse-window-right" type="s">
       <default>'2'</default>
       <_summary>Window right click function.</_summary>
