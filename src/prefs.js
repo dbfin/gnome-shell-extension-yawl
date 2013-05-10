@@ -321,7 +321,7 @@ function buildPrefsWidget() {
 				widgets[1].set_markup('v' + Me.metadata.version);
 			}
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("<span size='large'>Gnome-Shell Extension</span>"));
+			if (widgets && widgets.length) widgets[0].set_markup('<span size="large">' + _("Gnome-Shell Extension") + '</span>');
 			widgets = builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
 			if (widgets && widgets.length) widgets[0].set_markup(_("Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin.com'><span underline='none'>&lt;vadim@dbfin.com&gt;</span></a>"));
@@ -338,20 +338,20 @@ function buildPrefsWidget() {
 
 			builder.addSeparator();
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 9 ], [ null, 1 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("<span size='small'>This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.</span>"));
+			if (widgets && widgets.length) widgets[0].set_markup('<span size="small">' + _("This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.") + '</span>');
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 9 ], [ null, 1 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("<span size='small'>A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.</span>"));
+			if (widgets && widgets.length) widgets[0].set_markup('<span size="small">' + _("A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.") + '</span>');
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 10 ] ]);
 			if (widgets && widgets.length) {
 				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup(_("<span size='small'>You are free to use, modify or otherwise distribute the code of this software provided that your actions comply with all applicable laws and GPL.</span>")
-							  + ' ' + _("<span size='small'>In particular, you must include the above copyright notice and a copy of the License in all copies or substantial portions of the software, whether original or modified.</span>"));
+				widgets[0].set_markup('<span size="small">' + _("You are free to use, modify or otherwise distribute the code of this software provided that your actions comply with all applicable laws and GPL.") + '</span>'
+							  + ' ' + '<span size="small">' + _("In particular, you must include the above copyright notice and a copy of the License in all copies or substantial portions of the software, whether original or modified.") + '</span>');
 			}
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 10 ] ]);
 			if (widgets && widgets.length) {
 				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup(_("<span size='small'>This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span>")
-							  + ' ' + _("<span size='small'>For more details please see the GNU General Public License (GPL) version 3.</span>"));
+				widgets[0].set_markup('<span size="small">' + _("This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.") + '</span>'
+							  + ' ' + '<span size="small">' + _("For more details please see the GNU General Public License (GPL) version 3.") + '</span>');
 			}
 
 		builder.addPage(_("Icons"));
