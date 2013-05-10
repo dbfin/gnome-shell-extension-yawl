@@ -38,6 +38,7 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const Convenience = Me.imports.convenience2;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinTrackerApp = Me.imports.dbfintrackerapp;
@@ -55,6 +56,7 @@ const dbFinTracker = new Lang.Class({
 
     _init: function() {
         _D('>' + this.__name__ + '._init()');
+		this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
         this._tracker = Shell.WindowTracker.get_default();
 		this.apps = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, { state:, trackerApp: } ] ]
@@ -79,6 +81,11 @@ const dbFinTracker = new Lang.Class({
 			if (this._previewClone) this._previewClone.add_effect(this._previewRedBorderEffect);
 		}
 
+		this._updatedWindowsPreview = function () {
+			this._preview = global.yawl._windowsPreview;
+			if (!this._preview) this._hidePreview();
+		}
+
 		this.update(null, 'Tracker: initial update.');
 		this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
 									callback: this._switchWorkspace, scope: this });
@@ -87,6 +94,9 @@ const dbFinTracker = new Lang.Class({
 		// it seems to work just fine without this but just in case:
 		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
 									callback: function () { this.update(null, 'Overview hiding.'); }, scope: this });
+
+		global.yawl.watch(this);
+
         _D('<');
     },
 
@@ -135,6 +145,7 @@ const dbFinTracker = new Lang.Class({
 		this._previewWindow = null;
 		this._previewCompositor = null;
         this._tracker = null;
+		this._settings = null;
         this.emit('destroy');
         _D('<');
 	},
@@ -512,8 +523,14 @@ const dbFinTracker = new Lang.Class({
         }
 		else if (event === 'preview') {
 			this._preview = !this._preview;
-			if (this._preview) this._showPreview(trackerWindow);
-			else this._hidePreview();
+			if (this._preview) {
+				if (this._settings) this._settings.set_boolean('windows-preview', true);
+				this._showPreview(trackerWindow);
+			}
+			else {
+				if (this._settings) this._settings.set_boolean('windows-preview', false);
+				else this._hidePreview();
+			}
 		}
         _D('<');
     }

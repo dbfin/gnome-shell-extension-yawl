@@ -144,6 +144,11 @@
       <_summary>Whether to use arrow-style thumbnail application indicator.</_summary>
       <_description>If true the indicator of the current thumbnails application is drawn as an arrow.</_description>
     </key>
+    <key name="windows-preview" type="b">
+      <default>false</default>
+      <_summary>Whether to preview window when thumbnail is hovered.</_summary>
+      <_description>If true the window is shown on top when its thumbnail is hovered.</_description>
+    </key>
     <key name="windows-theming" type="b">
       <default>true</default>
       <_summary>Whether to apply thumbnail theming.</_summary>
