@@ -317,7 +317,7 @@ function buildPrefsWidget() {
 
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 6 ], [ new Gtk.Label({ halign: Gtk.Align.END }), 1 ] ]);
 			if (widgets && widgets.length) {
-				widgets[0].set_markup(_("<span size='x-large'><span color='#347'>Y</span>et <span color='#347'>A</span>nother <span color='#347'>W</span>indow <span color='#347'>L</span>ist</span>"));
+				widgets[0].set_markup('<span size="x-large"><span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist</span>');
 				widgets[1].set_markup('v' + Me.metadata.version);
 			}
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
@@ -332,7 +332,7 @@ function buildPrefsWidget() {
 			if (widgets && widgets.length) widgets[0].set_markup(_("Source code:\t<a href='https://github.com/dbfin/gnome-shell-extension-yawl'><span underline='none'>https://github.com/dbfin/gnome-shell-extension-yawl</span></a>"));
 
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("<span size='small'> </span>"));
+			if (widgets && widgets.length) widgets[0].set_markup('<span size="small"> </span>');
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
 			if (widgets && widgets.length) widgets[0].set_markup(_("Please report problems on GitHub. If you would like to translate the program to your language please email me."));
 
@@ -515,10 +515,10 @@ function buildPrefsWidget() {
 				builder.addLabel(_("Debugging panel shows a hierarchical structure of internal function calls... Is that right?"));
 				builder.addLabel(_("The panel has a small toolbar which allows one to:"));
 				builder.shift();
-					builder.addLabel(_("\u00b7 pin the panel (so that it is always visible)"));
-					builder.addLabel(_("\u00b7 stop, resume and clear all messages"));
-					builder.addLabel(_("\u00b7 access extension preferences"));
-					builder.addLabel(_("\u00b7 restart the extension"));
+					builder.addLabel('\u00b7 ' + _("pin the panel (so that it is always visible)"));
+					builder.addLabel('\u00b7 ' + _("stop, resume and clear all messages"));
+					builder.addLabel('\u00b7 ' + _("access extension preferences"));
+					builder.addLabel('\u00b7 ' + _("restart the extension"));
 				builder.unshift();
 				builder.addCheckBox(_("Debugging panel"), 'debug');
 				builder.shift();
