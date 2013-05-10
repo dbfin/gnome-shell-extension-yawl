@@ -32,6 +32,7 @@ const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
+const LookingGlass = imports.ui.lookingGlass;
 const Main = imports.ui.main;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -72,6 +73,11 @@ const dbFinTracker = new Lang.Class({
 		if (this._previewClone) {
 			if (this._previewBin) this._previewBin.set_child(this._previewClone);
 		}
+		// GNOMENEXT: ui/lookingGlass.js
+		this._previewRedBorderEffect = new LookingGlass.RedBorderEffect();
+		if (this._previewRedBorderEffect) {
+			if (this._previewClone) this._previewClone.add_effect(this._previewRedBorderEffect);
+		}
 
 		this.update(null, 'Tracker: initial update.');
 		this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
@@ -110,6 +116,11 @@ const dbFinTracker = new Lang.Class({
 			}));
 			this.windows.destroy();
 			this.windows = null;
+		}
+		if (this._previewRedBorderEffect) {
+			if (this._previewClone) this._previewClone.remove_effect(this._previewRedBorderEffect);
+			//this._previewRedBorderEffect.destroy(); // no destroy()
+			this._previewRedBorderEffect = null;
 		}
         if (this._previewBin) {
 			this._previewBin.set_child(null);
