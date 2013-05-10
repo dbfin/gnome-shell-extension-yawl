@@ -28,18 +28,8 @@ Activities AppMenu |App1|App2|App3| 11:11pm          System-Area Icons   User
 
 
 Main features shall include (+ implemented):
- - List of application icons (current workspace only) integrated into the top panel
- - Preview window thumbnails when mouse is over an application icon
- - Left click on an application icon brings all the application windows on top
- - Left click on a window thumbnail brings that window alone on top
- - Shift-click on an application icon minimizes all application windows
- - Shift-click on a window thumbnail minimizes this single window
- - Right click on an icon or a thumbnail brings up a menu
-Extra features:
- - Text next to icons
- - Move clock
- - Drag'n'drop rearrangement of icons "with memory"
- - Substitute AppMenu button
- - Multimonitor support
- - Overview functionality
-
+ + List of application icons (current workspace only) integrated into the top panel
+ + Preview window thumbnails when mouse is over an application icon
+ + Customizable clicks on both application icons and window thumbnails
+ + Preview window when its thumbnail is hovered
+ + Panel customization and theming
