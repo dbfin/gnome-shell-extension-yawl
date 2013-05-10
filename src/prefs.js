@@ -531,6 +531,8 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("Export/Import"));
+			widgets = builder.addRow(new Gtk.Label({ halign: Gtk.Align.START }));
+			if (widgets && widgets.length) widgets[0].set_markup(_("<span>Backup, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a></span>"));
 			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,

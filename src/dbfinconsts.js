@@ -70,7 +70,7 @@ const arrayWindowClickFunctions = [
     [   _("No action"),	                            	''                              ],
     [   _("Show and focus"),                           	'showWindow'                    ],
     [   _("Minimize"),	                            	'minimizeWindow'                ],
-    [   _("Maximize"),	                            	'maximizeWindowToggle'          ],
+    [   _("(Un)Maximize"),                            	'maximizeWindowToggle'          ],
 	[	_("Close"),										'closeWindow'					],
 	[	_("Preview on/off"),							'previewWindow'					]
 ];
