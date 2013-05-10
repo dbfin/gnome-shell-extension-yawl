@@ -22,7 +22,7 @@
       <_description>If true the central panel is moved to the right.</_description>
     </key>
     <key name="hide-activities" type="b">
-      <default>true</default>
+      <default>false</default>
       <_summary>Hide Activities button.</_summary>
       <_description>If true the Activities button is hidden.</_description>
     </key>
@@ -278,7 +278,7 @@
     </key>
 
     <key name="mouse-app-left" type="s">
-      <default>'1'</default>
+      <default>'2'</default>
       <_summary>App left click/double click function.</_summary>
       <_description>App left click/double click function.</_description>
     </key>
@@ -293,7 +293,7 @@
       <_description>App shift-left click/double click function.</_description>
     </key>
     <key name="mouse-app-left-ctrl-shift" type="s">
-      <default>'2'</default>
+      <default>'1'</default>
       <_summary>App ctrl-shift-left click/double click function.</_summary>
       <_description>App ctrl-shift-left click/double click function.</_description>
     </key>

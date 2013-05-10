@@ -91,7 +91,7 @@ const Settings = [
     [ 'yawl-panel-position', 21, { min: 0, max: 50 }, 'panel' ],
     [ 'yawl-panel-width', 100, { min: 1, max: 100 }, 'panel' ],
     [ 'move-center', true, { }, 'panel' ],
-    [ 'hide-activities', true, { }, 'panel' ],
+    [ 'hide-activities', false, { }, 'panel' ],
     [ 'preserve-hot-corner', true, { }, 'panel' ],
     [ 'hide-app-menu', false, { }, 'panel' ],
     [ 'panel-background', false, { }, 'panel' ],
@@ -147,10 +147,10 @@ const Settings = [
     [ 'windows-hover-animation-time', 144, { min: 0, max: 200 }, 'thumbnails>animation' ],
     [ 'windows-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'thumbnails>animation' ],
 
-    [ 'mouse-app-left', 1, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-app-left', 2, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-left-ctrl', 8, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-left-shift', 6, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
-    [ 'mouse-app-left-ctrl-shift', 2, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-app-left-ctrl-shift', 1, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-long-click', true, { }, 'mouse' ],
 
     [ 'mouse-app-middle', 9, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
