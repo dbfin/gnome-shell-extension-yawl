@@ -48,7 +48,7 @@ const arrayAnimationTransitions = [
     [	_("Bounce at the beginning"),					'easeInBounce'  				],
     [	_("Bounce on both sides"),						'easeInOutBounce'  				],
     [	_("Bounce in the middle"),						'easeOutInBounce'  				],
-    [	_("Back'n'force in the middle"),				'easeOutInBack'					],
+    [	_("Back'n'forth in the middle"),				'easeOutInBack'					],
     [	_("Elastic in the middle"),						'easeOutInElastic' 				]
 ];
 
