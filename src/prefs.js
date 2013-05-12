@@ -491,10 +491,10 @@ function buildPrefsWidget() {
                     builder.getWidget()._threshold = threshold;
 					builder.addLabel(_("This will measure the SHORTEST time between two consecutive SINGLE clicks."));
 					builder.shift();
-						widgets = builder.addRow(_("Make a fast series of SINGLE clicks"),
+						widgets = builder.addRow(_("A fast series of SINGLE clicks"),
 									   [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
-											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
-											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 2 ]
+											[ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
+											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
 										]);
 	                    if (widgets && widgets.length) { widgets[1].hexpand = true; widgets[1].xalign = 0.0; }
 	                    widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
@@ -502,10 +502,10 @@ function buildPrefsWidget() {
 					builder.unshift();
 					builder.addLabel(_("This will measure the LONGEST time between the two clicks of one DOUBLE click."));
 					builder.shift();
-						widgets = builder.addRow(_("Make a series of DOUBLE clicks"),
+						widgets = builder.addRow(_("A series of DOUBLE clicks"),
 									   [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
-											[ new Gtk.Label({ label: _("here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 1 ],
-											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 2 ]
+											[ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
+											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
 										]);
 	                    if (widgets && widgets.length) { widgets[1].hexpand = true; widgets[1].xalign = 0.0; }
 	                    widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
@@ -542,7 +542,7 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Export/Import"));
 			widgets = builder.addRow(new Gtk.Label({ halign: Gtk.Align.START }));
-			if (widgets && widgets.length) widgets[0].set_markup(_("Backup, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
+			if (widgets && widgets.length) widgets[0].set_markup(_("Back up, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
 			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,
@@ -592,7 +592,7 @@ function buildPrefsWidget() {
 				widgets[0].set_line_wrap(true);
 				widgets[0].set_markup(
 								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-						+ ' ' + _("is workspace-centric.")
+						+ ' ' + _("is active workspace centric.")
 				);
 			}
 			builder.shift();
@@ -635,7 +635,7 @@ function buildPrefsWidget() {
 				widgets[0].set_line_wrap(true);
 				widgets[0].set_markup(
 								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-						+ ' ' + _("is a part of greater FOSS ")
+						+ ' ' + _("is a part of greater FOSS.")
 				);
 			}
 			builder.shift();
@@ -658,7 +658,7 @@ function buildPrefsWidget() {
 					widgets[0].set_line_wrap(true);
 					widgets[0].set_markup('<span size="small">' +
 								_("The development of this extension would not be possible without this wonderful FOSS:")
-						+ ' ' + 'Anjuta, Inkscape, Gimp, OmegaT, Ubuntu, Fedora ' + _("and, of course,") + ' Gnome-Shell!'
+						+ ' ' + '<b>Anjuta</b>, <b>Inkscape</b>, <b>Gimp</b>, <b>OmegaT</b>, <b>Ubuntu</b>, <b>Fedora</b> ' + _("and, of course,") + ' <b>Gnome-Shell</b>!'
 					+ '</span>');
 				}
 			builder.unshift();

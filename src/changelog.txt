@@ -2,4 +2,15 @@ v0.1	2013-01-27
     	- Initial commit: empty extension
 		- Support for autogen and make
     	- Support for GSettings and Localization
-		- Support for debuggin and logging
+		- Support for debugging and logging
+v13.05	2013-05-09
+		- Version ready to be released
+    	- App icons on top panel
+    	- Window thumbnails
+    	- Window preview
+    	- Customizable top and thumbnail panels
+    	- Customizable clicks and other options
+    	- Preferences sorted and organized for greater convenience
+    	- Settings export/import
+    	- Debugging features such as panel with messages, restarting extension etc.
+

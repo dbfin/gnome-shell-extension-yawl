@@ -4,10 +4,10 @@
 # Vadim @ dbFin <vadim@dbfin.com>, 2013
 #
 msgid ""
-msgstr "Project-Id-Version: YAWL 0.1\n"
+msgstr "Project-Id-Version: YAWL 13.05\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-21 02:24-0600\n"
-"PO-Revision-Date: 2013-02-21 02:24-0600\n"
+"POT-Creation-Date: 2013-05-12 11:35-0500\n"
+"PO-Revision-Date: 2013-05-12 11:35-0500\n"
 "Last-Translator: Vadim @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -15,58 +15,801 @@ msgstr "Project-Id-Version: YAWL 0.1\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/prefs.js:28
-msgid "Panel"
-msgstr "Панель"
+#: src/dbfinconsts.js:34
+msgid "Linear"
+msgstr "Равномерно"
 
-#: src/prefs.js:29
-msgid "YAWL-panel position"
-msgstr "Позиция панели YAWL"
+#: src/dbfinconsts.js:35
+msgid "Slow at the end"
+msgstr "Медленно в конце"
 
-#: src/prefs.js:30
-msgid "Move central panel"
-msgstr "Сдвинуть центральную панель"
+#: src/dbfinconsts.js:36
+msgid "Slow at the beginning"
+msgstr "Медленно в начале"
 
-#: src/prefs.js:31
-msgid "Hide Activities button"
-msgstr "Скрыть кнопку Обзор"
+#: src/dbfinconsts.js:37
+msgid "Slow on both sides"
+msgstr "Медленно с обоих концов"
 
-#: src/prefs.js:32
-msgid "Preserve Hot Corner"
-msgstr "Оставить «горячий» угол"
+#: src/dbfinconsts.js:38
+msgid "Slow in the middle"
+msgstr "Медленно в середине"
 
-#: src/prefs.js:34
-msgid "Custom panel background"
-msgstr "Изменить фон панели"
+#: src/dbfinconsts.js:39
+msgid "Slower at the end"
+msgstr "Медленнее в конце"
 
-#: src/prefs.js:35
-msgid "Panel color"
-msgstr "Цвет панели"
+#: src/dbfinconsts.js:40
+msgid "Slower at the beginning"
+msgstr "Медленнее в начале"
 
-#: src/prefs.js:35
-msgid "Choose Panel Color"
-msgstr "Выберите цвет панели"
+#: src/dbfinconsts.js:41
+msgid "Slower on both sides"
+msgstr "Медленнее с обоих концов"
 
-#: src/prefs.js:36
-msgid "Panel opacity"
-msgstr "Непрозрачность панели"
+#: src/dbfinconsts.js:42
+msgid "Slower in the middle"
+msgstr "Медленнее в середине"
 
-#: src/prefs.js:38
+#: src/dbfinconsts.js:43
+msgid "Slowest at the end"
+msgstr "Еще медленнее в конце"
+
+#: src/dbfinconsts.js:44
+msgid "Slowest at the beginning"
+msgstr "Еще медленнее в начале"
+
+#: src/dbfinconsts.js:45
+msgid "Slowest on both sides"
+msgstr "Еще медленнее с обоих концов"
+
+#: src/dbfinconsts.js:46
+msgid "Slowest in the middle"
+msgstr "Еще медленнее в середине"
+
+#: src/dbfinconsts.js:47
+msgid "Bounce at the end"
+msgstr "Отскок в конце"
+
+#: src/dbfinconsts.js:48
+msgid "Bounce at the beginning"
+msgstr "Отскок в начале"
+
+#: src/dbfinconsts.js:49
+msgid "Bounce on both sides"
+msgstr "Отскок с обоих концов"
+
+#: src/dbfinconsts.js:50
+msgid "Bounce in the middle"
+msgstr "Отскок в середине"
+
+#: src/dbfinconsts.js:51
+msgid "Back'n'forth in the middle"
+msgstr "Туда-обратно в середине"
+
+#: src/dbfinconsts.js:52
+msgid "Elastic in the middle"
+msgstr "Эластичный по середине"
+
+#: src/dbfinconsts.js:56 src/dbfinconsts.js:70
+msgid "No action"
+msgstr "Бездействие"
+
+#: src/dbfinconsts.js:57
+msgid "Show next : all non-minimized windows"
+msgstr "Показать следующее : все несвернутые окна"
+
+#: src/dbfinconsts.js:58
+msgid "Show next : all windows"
+msgstr "Показать следующее : все окна"
+
+#: src/dbfinconsts.js:59
+msgid "Show non-minimized : all windows"
+msgstr "Показать несвернутые : все окна"
+
+#: src/dbfinconsts.js:60
+msgid "Rotate windows forward : backward"
+msgstr "Прокрутить окна вперед : назад"
+
+#: src/dbfinconsts.js:61
+msgid "Rotate windows backward : forward"
+msgstr "Прокрутить окна назад : вперед"
+
+#: src/dbfinconsts.js:62
+msgid "Minimize top : all windows"
+msgstr "Свернуть верхнее : все окна"
+
+#: src/dbfinconsts.js:63
+msgid "(Un)Maximize top : all windows"
+msgstr "Развернуть верхнее : все окна"
+
+#: src/dbfinconsts.js:64
+msgid "Open new window : none"
+msgstr "Открыть новое окно : ничего"
+
+#: src/dbfinconsts.js:65
+msgid "Open new window (new workspace) : none"
+msgstr "Открыть новое окно (новый рабочий стол) : ничего"
+
+#: src/dbfinconsts.js:66
+msgid "Open menu : none"
+msgstr "Открыть меню : ничего"
+
+#: src/dbfinconsts.js:71
+msgid "Show and focus"
+msgstr "Показать и фокусировать"
+
+#: src/dbfinconsts.js:72
+msgid "Minimize"
+msgstr "Свернуть"
+
+#: src/dbfinconsts.js:73
+msgid "(Un)Maximize"
+msgstr "Развернуть"
+
+#: src/dbfinconsts.js:74
+msgid "Close"
+msgstr "Закрыть"
+
+#: src/dbfinconsts.js:75
+msgid "Preview on"
+msgstr "Включить предпросмотр"
+
+#: src/dbfinconsts.js:76
+msgid "Preview off"
+msgstr "Выключить предпросмотр"
+
+#: src/dbfinconsts.js:80
+msgid "New window"
+msgstr "Новое окно"
+
+#: src/dbfinconsts.js:82
+msgid "Quit"
+msgstr "Выйти"
+
+#: src/prefs.js:195 src/prefs.js:249
+msgid "Please specify settings file name."
+msgstr "Пожалуйста, укажите имя файла настроек."
+
+#: src/prefs.js:221 src/prefs.js:251
+msgid "Cannot create Gio.File object for file "
+msgstr "Не могу создать объект Gio.File для файла "
+
+#: src/prefs.js:227
+msgid "Cannot create/replace file "
+msgstr "Не могу создать/заменить файл "
+
+#: src/prefs.js:229
+msgid "Cannot create Gio.DataOutputStream object for file "
+msgstr "Не могу создать объект Gio.DataOutputStream для файла "
+
+#: src/prefs.js:231
+msgid "Cannot write to file "
+msgstr "Не могу записать в файл "
+
+#: src/prefs.js:235
+msgid "File was created/updated successfully!"
+msgstr "Файл создан/обновлен успешно!"
+
+#: src/prefs.js:252
+msgid "Cannot open file "
+msgstr "Не могу открыть файл "
+
+#: src/prefs.js:253
+msgid "Cannot create Gio.DataInputStream object for file "
+msgstr "Не могу создать объект Gio.DataInputStream для файла "
+
+#: src/prefs.js:270
+msgid "File was read successfully"
+msgstr "Файл прочитан успешно"
+
+#: src/prefs.js:270
+msgid "settings values imported."
+msgstr "значений параметров импортировано."
+
+#: src/prefs.js:302
+msgid "Welcome"
+msgstr "Добро пожаловать!"
+
+#: src/prefs.js:324
+msgid "Gnome-Shell Extension"
+msgstr "Расширение Gnome-Shell"
+
+#: src/prefs.js:327
+msgid ""
+"Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin."
+"com'><span underline='none'>&lt;vadim@dbfin.com&gt;</span></a>"
+msgstr "Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin.com'><span underline='none'>&lt;vadim@dbfin.com&gt;</span></a>"
+
+#: src/prefs.js:330
+msgid ""
+"Home page:\t<a href='http://dbfin.com/yawl'><span underline='none'>http://"
+"dbfin.com/yawl</span></a>"
+msgstr "Веб-страница:\t<a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"
+
+#: src/prefs.js:332
+msgid ""
+"Source code:\t<a href='https://github.com/dbfin/gnome-shell-extension-"
+"yawl'><span underline='none'>https://github.com/dbfin/gnome-shell-extension-"
+"yawl</span></a>"
+msgstr "Исходный код:\t<a href='https://github.com/dbfin/gnome-shell-extension-yawl'><span underline='none'>https://github.com/dbfin/gnome-shell-extension-yawl</span></a>"
+
+#: src/prefs.js:337
+msgid ""
+"Please report problems on GitHub. If you would like to translate the program "
+"to your language please email me."
+msgstr "Пожалуйста, о всех проблемах сообщайте на GitHub. Если Вы желаете перевести программу на свой язык, напишите мне."
+
+#: src/prefs.js:341
+msgid ""
+"This is free software -- free as in beer and free as in freeman -- "
+"distributed under the terms of the GNU General Public License (GPL) version "
+"3."
+msgstr "Это бесплатное и свободное программное обеспечение (ПО), распространяемое под Лицензией GNU General Public License 3 (GPL 3)."
+
+#: src/prefs.js:343
+msgid ""
+"A copy of the License is distributed along with the software (file GNUGPLv3) "
+"and is also available at <a href='http://www.gnu.org/licenses/'><span "
+"color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</"
+"span></a>."
+msgstr "Копия Лицензии приложена к программе (файл GNUGPLv3), а также доступна по адресу <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>."
+
+#: src/prefs.js:347
+msgid ""
+"You are free to use, modify or otherwise distribute the code of this "
+"software provided that your actions comply with all applicable laws and GPL."
+msgstr "Вы можете свободно использовать, изменять и распространять данное ПО при условии, что Вы действуете в рамках закона и в соответствии с условиями GPL."
+
+#: src/prefs.js:348
+msgid ""
+"In particular, you must include the above copyright notice and a copy of the "
+"License in all copies or substantial portions of the software, whether "
+"original or modified."
+msgstr "В частности, Вы обязаны указывать приведенные выше авторские права и прилагать Лицензию ко всем копиям или частям данного ПО в оригинальном или измененном виде."
+
+#: src/prefs.js:353
+msgid ""
+"This software is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE."
+msgstr "Данное ПО распространяется с лучшими намерениями, но без каких-либо гарантий: в частности, без косвенных гарантий товарного качества или пригодности для использования."
+
+#: src/prefs.js:354
+msgid ""
+"For more details please see the GNU General Public License (GPL) version 3."
+msgstr "Для дополнительной информации смотрите GNU GPL версии 3."
+
+#: src/prefs.js:357 src/prefs.js:374 src/prefs.js:446
 msgid "Icons"
 msgstr "Иконки"
 
-#: src/prefs.js:39
+#: src/prefs.js:358 src/prefs.js:402
+msgid "Panel"
+msgstr "Панель"
+
+#: src/prefs.js:359
+msgid "YAWL-panel position and width"
+msgstr "Позиция и ширина панели YAWL"
+
+#: src/prefs.js:361
+msgid "Move central panel"
+msgstr "Сдвинуть центральную панель"
+
+#: src/prefs.js:362
+msgid "Hide Activities button"
+msgstr "Скрыть кнопку Обзор"
+
+#: src/prefs.js:364
+msgid "Preserve Hot Corner"
+msgstr "Оставить «горячий» угол"
+
+#: src/prefs.js:366
+msgid "Hide AppMenu button"
+msgstr "Скрыть кнопку меню приложения"
+
+#: src/prefs.js:368
+msgid "Custom panel background"
+msgstr "Изменить фон панели"
+
+#: src/prefs.js:370
+msgid "Top color and opacity"
+msgstr "Цвет и непрозрачность сверху"
+
+#: src/prefs.js:370 src/prefs.js:371
+msgid "Choose panel background color"
+msgstr "Выберите цвет фона панели"
+
+#: src/prefs.js:371
+msgid "Bottom color and opacity"
+msgstr "Цвет и непрозрачность снизу"
+
+#: src/prefs.js:375
 msgid "Icon size"
 msgstr "Размер иконок"
 
-#: src/prefs.js:40
-msgid "Distance between icons"
-msgstr "Расстояние между иконками"
-
-#: src/prefs.js:42
+#: src/prefs.js:376
 msgid "Faded icons"
 msgstr "Затемнение"
 
-#: src/prefs.js:44
-msgid "Animation Time in ms (0: no animation)"
+#: src/prefs.js:377
+msgid "Default icon opacity"
+msgstr "Непрозрачность иконок"
+
+#: src/prefs.js:379
+msgid "Clip icons: top (px)"
+msgstr "Усечение сверху (пикселы)"
+
+#: src/prefs.js:380
+msgid "Clip icons: bottom (px)"
+msgstr "Усечение снизу (пикселы)"
+
+#: src/prefs.js:382
+msgid "Align icons on the panel (%)"
+msgstr "Выравнивание иконок на панели (%)"
+
+#: src/prefs.js:383
+msgid "Distance between icons"
+msgstr "Расстояние между иконками"
+
+#: src/prefs.js:383
+msgid "% of icon size"
+msgstr "% от размера иконок"
+
+#: src/prefs.js:385 src/prefs.js:428
+msgid "Animation"
+msgstr "Анимация"
+
+#: src/prefs.js:386 src/prefs.js:430
+msgid "Animation time in ms (0: no animation)"
 msgstr "Время анимации (0: без анимации)"
+
+#: src/prefs.js:387 src/prefs.js:431
+msgid "Animation effect"
+msgstr "Эффект анимации"
+
+#: src/prefs.js:389
+msgid "Animate icons on mouse over"
+msgstr "Анимировать при наведении указателя мыши"
+
+#: src/prefs.js:391
+msgid "Change size (%)"
+msgstr "Изменить размер (%)"
+
+#: src/prefs.js:392 src/prefs.js:435
+msgid "Change opacity"
+msgstr "Изменить непрозрачность"
+
+#: src/prefs.js:393 src/prefs.js:436
+msgid "Show full width if partially hidden"
+msgstr "Показать во всю ширину"
+
+#: src/prefs.js:395 src/prefs.js:438
+msgid "Mouse over animation time"
+msgstr "Время анимации при наведении мыши"
+
+#: src/prefs.js:395 src/prefs.js:438
+msgid "% of animation time"
+msgstr "% от времени анимации"
+
+#: src/prefs.js:396 src/prefs.js:439
+msgid "Mouse over animation effect"
+msgstr "Эффект анимации при наведении мыши"
+
+#: src/prefs.js:401 src/prefs.js:416 src/prefs.js:466
+msgid "Thumbnails"
+msgstr "Миниатюры"
+
+#: src/prefs.js:403
+msgid "Use arrow-style thumbnails app indicator"
+msgstr "Индикатор-стрелка для текущего приложения"
+
+#: src/prefs.js:404
+msgid "Preview window when its thumbnail is hovered"
+msgstr "Предпросмотр окна при наведении мыши на миниатюру"
+
+#: src/prefs.js:406
+msgid "Customize thumbnail panel theme"
+msgstr "Настроить внешний вид панели миниатюр"
+
+#: src/prefs.js:408
+msgid "Match main panel background"
+msgstr "Фон, как у главной панели"
+
+#: src/prefs.js:409
+msgid "Background color and opacity"
+msgstr "Цвет и непрозрачность фона"
+
+#: src/prefs.js:409
+msgid "Choose thumbnail panel background color"
+msgstr "Выберите цвет фона панели миниатюр"
+
+#: src/prefs.js:410
+msgid "Text color and size"
+msgstr "Цвет и размер текста"
+
+#: src/prefs.js:410
+msgid "Choose thumbnail panel text color"
+msgstr "Выберите цвет текста панели миниатюр"
+
+#: src/prefs.js:411
+msgid "Padding"
+msgstr "Отступ (padding)"
+
+#: src/prefs.js:412
+msgid "Border color and width"
+msgstr "Цвет и ширина границы"
+
+#: src/prefs.js:412
+msgid "Choose thumbnail panel border color"
+msgstr "Выберите цвет границы панели миниатюр"
+
+#: src/prefs.js:413
+msgid "Border radius"
+msgstr "Радиус границы"
+
+#: src/prefs.js:417
+msgid "Same height thumbnails"
+msgstr "Миниатюры одной высоты"
+
+#: src/prefs.js:418
+msgid "Thumbnail maximum width"
+msgstr "Максимальная ширина миниатюр"
+
+#: src/prefs.js:419
+msgid "Thumbnail maximum height"
+msgstr "Максимальная высота миниатюр"
+
+#: src/prefs.js:420
+msgid "Thumbnail maximum visible height"
+msgstr "Максимальная видимая высота миниатюр"
+
+#: src/prefs.js:422
+msgid "Default thumbnail opacity"
+msgstr "Непрозрачность миниатюры"
+
+#: src/prefs.js:423
+msgid "Minimized thumbnail opacity"
+msgstr "Непрозрачность миниатюры свернутого окна"
+
+#: src/prefs.js:425
+msgid "Distance between thumbnails"
+msgstr "Расстояние между миниатюрами"
+
+#: src/prefs.js:425
+msgid "% of thumbnail size"
+msgstr "% от размера миниатюр"
+
+#: src/prefs.js:426
+msgid "Thumbnail top padding (px)"
+msgstr "Отступ (padding) сверху (пикселы)"
+
+#: src/prefs.js:429
+msgid "Thumbnails show delay in ms"
+msgstr "Задержка перед показом миниатюр (мс)"
+
+#: src/prefs.js:433
+msgid "Animate thumbnails on mouse over"
+msgstr "Анимировать при наведении указателя мыши"
+
+#: src/prefs.js:444
+msgid "Behavior"
+msgstr "Поведение"
+
+#: src/prefs.js:445
+msgid "Mouse"
+msgstr "Мышь"
+
+#: src/prefs.js:447 src/prefs.js:467
+msgid "Left button"
+msgstr "Левая кнопка"
+
+#: src/prefs.js:448 src/prefs.js:454 src/prefs.js:462
+msgid "Click : Double click"
+msgstr "Клик : Двойной клик"
+
+#: src/prefs.js:449 src/prefs.js:455
+msgid "Ctrl + Click : Double click"
+msgstr "Ctrl + Клик : Двойной клик"
+
+#: src/prefs.js:450 src/prefs.js:456
+msgid "Shift + Click : Double click"
+msgstr "Shift + Клик : Двойной клик"
+
+#: src/prefs.js:451 src/prefs.js:457
+msgid "Ctrl + Shift + Click : Double click"
+msgstr "Ctrl + Shift + Клик : Двойной клик"
+
+#: src/prefs.js:453 src/prefs.js:473
+msgid "Middle button"
+msgstr "Средняя кнопка"
+
+#: src/prefs.js:459
+msgid "Scroll up : down"
+msgstr "Прокрутить вверх : вниз"
+
+#: src/prefs.js:461 src/prefs.js:479
+msgid "Right button"
+msgstr "Правая кнопка"
+
+#: src/prefs.js:468 src/prefs.js:474 src/prefs.js:480
+msgid "Click"
+msgstr "Клик"
+
+#: src/prefs.js:469
+msgid "Ctrl + Click"
+msgstr "Ctrl + Клик"
+
+#: src/prefs.js:470
+msgid "Shift + Click"
+msgstr "Shift + Клик"
+
+#: src/prefs.js:471
+msgid "Ctrl + Shift + Click"
+msgstr "Ctrl + Shift + Клик"
+
+#: src/prefs.js:476
+msgid "Scroll up"
+msgstr "Прокрутить вверх"
+
+#: src/prefs.js:477
+msgid "Scroll down"
+msgstr "Прокрутить вниз"
+
+#: src/prefs.js:484
+msgid "Fine-tuning"
+msgstr "Настройка"
+
+#: src/prefs.js:485
+msgid "Register mouse events on button release"
+msgstr "Регистрировать сигналы мыши при отпускании кнопки"
+
+#: src/prefs.js:487
+msgid "Long left button click = right button click"
+msgstr "Долгая левая кнопка = правая кнопка"
+
+#: src/prefs.js:492
+msgid ""
+"This will measure the SHORTEST time between two consecutive SINGLE clicks."
+msgstr "Измерение НАИМЕНЬШЕГО времени между двумя ОДИНОЧНЫМИ кликами."
+
+#: src/prefs.js:494
+msgid "A fast series of SINGLE clicks"
+msgstr "Быстрая серия ОДИНОЧНЫХ кликов"
+
+#: src/prefs.js:496 src/prefs.js:507
+msgid "click here"
+msgstr "щелкайте здесь"
+
+#: src/prefs.js:500
+msgid "Consequent single clicks time:"
+msgstr "Время между последовательными кликами:"
+
+#: src/prefs.js:503
+msgid ""
+"This will measure the LONGEST time between the two clicks of one DOUBLE "
+"click."
+msgstr "Измерение НАИБОЛЬШЕГО времени между двумя кликами одного ДВОЙНОГО клика."
+
+#: src/prefs.js:505
+msgid "A series of DOUBLE clicks"
+msgstr "Серия ДВОЙНЫХ кликов"
+
+#: src/prefs.js:511
+msgid "Double clicks time:"
+msgstr "Время двойных кликов:"
+
+#: src/prefs.js:514
+msgid ""
+"Based on the data provided above we set the following value (you can adjust "
+"it manually):"
+msgstr "На основании указанных данных установлено следующее значение (можно менять вручную):"
+
+#: src/prefs.js:516
+msgid "Single/Double clicks threshold:"
+msgstr "Граница одиночных/двойных кликов:"
+
+#: src/prefs.js:522
+msgid "Debug"
+msgstr "Отладка"
+
+#: src/prefs.js:523
+msgid "These options are for developers only."
+msgstr "Данная страница опций только для разработчиков."
+
+#: src/prefs.js:525
+msgid ""
+"Debugging panel shows a hierarchical structure of internal function calls... "
+"Is that right?"
+msgstr "Панель отладки показывает иерархическую структуру внутренних вызовов функций... Так сказал?"
+
+#: src/prefs.js:526
+msgid "The panel has a small toolbar which allows one to:"
+msgstr "Панель имеет небольшой набор инструментов, позволяющих:"
+
+#: src/prefs.js:528
+msgid "pin the panel (so that it is always visible)"
+msgstr "закрепить панель (сделать постоянно видимой)"
+
+#: src/prefs.js:529
+msgid "stop, resume and clear all messages"
+msgstr "остановить, продолжить и очистить сообщения"
+
+#: src/prefs.js:530
+msgid "access extension preferences"
+msgstr "вызвать окно настроек расширения"
+
+#: src/prefs.js:531
+msgid "restart the extension"
+msgstr "перезапустить расширение"
+
+#: src/prefs.js:533
+msgid "Debugging panel"
+msgstr "Панель отладки"
+
+#: src/prefs.js:535
+msgid "By default the panel is placed at the right side (of the last monitor)."
+msgstr "По умолчанию, панель размещается справа (на последнем мониторе)."
+
+#: src/prefs.js:536
+msgid "Move the panel to the bottom left"
+msgstr "Переместить панель вниз-влево"
+
+#: src/prefs.js:537
+msgid "Debug panel width"
+msgstr "Ширина панели отладки"
+
+#: src/prefs.js:537
+msgid "% of the monitor width"
+msgstr "% от ширины монитора"
+
+#: src/prefs.js:538
+msgid "Force all messages"
+msgstr "Форсировать все сообщения"
+
+#: src/prefs.js:538
+msgid "ouch!"
+msgstr "осторожно!"
+
+#: src/prefs.js:543
+msgid "Export/Import"
+msgstr "Экспорт/Импорт"
+
+#: src/prefs.js:545
+msgid ""
+"Back up, sync and share settings. To download default and other settings "
+"please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://"
+"dbfin.com/yawl</span></a>"
+msgstr "Для резервного копирования и синхронизации. Настройки по умолчанию можно скачать с сайта: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"
+
+#: src/prefs.js:556
+msgid "Status:"
+msgstr "Статус:"
+
+#: src/prefs.js:559
+msgid "This will overwrite the file with settings"
+msgstr "Создать/обновить файл с настройками"
+
+#: src/prefs.js:560
+msgid "Export"
+msgstr "Экспорт"
+
+#: src/prefs.js:561
+msgid "This will overwrite all current settings"
+msgstr "Восстановить настройки из файла"
+
+#: src/prefs.js:562
+msgid "Import"
+msgstr "Импорт"
+
+#: src/prefs.js:569
+msgid "Did you know?"
+msgstr "Знаете ли Вы?"
+
+#: src/prefs.js:575
+msgid "is designed to be simple to use yet highly customizable."
+msgstr "задумано быть простым в использовании, но с огромным числом настроек."
+
+#: src/prefs.js:584
+msgid ""
+"settings are currently available to customize feel and look of the extension."
+msgstr "опций доступно для адаптации на любой вкус и цвет."
+
+#: src/prefs.js:585
+msgid "Exploring the options also helps you to uncover some hidden features."
+msgstr "Исследование настроек поможет Вам открыть ряд скрытых возможностей расширения."
+
+#: src/prefs.js:586
+msgid ""
+"For example, <b>did you know</b> that there is an option to preview a window "
+"when its thumbnail is hovered, and that you can easily switch it on and off "
+"just by scrolling the middle mouse button over the thumbnail?"
+msgstr "Например, <b>знаете ли Вы</b>, что есть опция предпросмотра окна при наведении курсора мыши на его миниатюру, и что Вы можете легко включать и выключать данную возможность простым поворотом колеса мыши?"
+
+#: src/prefs.js:595
+msgid "is active workspace centric."
+msgstr "ориентировано на активный рабочий стол."
+
+#: src/prefs.js:603
+msgid "It shows apps and windows open on the current active workspace only."
+msgstr "Расширение показывает только приложения и окна, открытые на текущем активном рабочем столе."
+
+#: src/prefs.js:604
+msgid ""
+"Most of its functionality (such as cycling through windows) is also active-"
+"workspace-oriented."
+msgstr "Также большинство действий (таких, как циклический перебор окон) выполняется на активном рабочем столе."
+
+#: src/prefs.js:605
+msgid "This is intentional and was set as one of the initial goals."
+msgstr "Так было изначально задумано и реализовано."
+
+#: src/prefs.js:606
+msgid ""
+"App icons shown on the panel are indicative of which workspace you are "
+"currently on and what task/activity it is intended for."
+msgstr "Иконки приложений на панели показывают, на как каком рабочем столе Вы находитесь, и для какой задачи этот стол предназначен."
+
+#: src/prefs.js:607
+msgid ""
+"If you also want quick access to all applications running on all workspaces "
+"and favorites"
+msgstr "Если же Вы также хотите иметь быстрый доступ ко всем открытым приложениям на всех рабочих столах и к избранным приложениям,"
+
+#: src/prefs.js:608
+msgid ""
+"please consider installing in addition this highly recommended extension:"
+msgstr "Вы можете также установить это очень рекомендуемое расширение:"
+
+#: src/prefs.js:609 src/prefs.js:629
+msgid "author"
+msgstr "автор"
+
+#: src/prefs.js:618
+msgid "tries to seamlessly integrate into the Gnome-Shell panel."
+msgstr "аккуратно интегрировано в панель Gnome-Shell."
+
+#: src/prefs.js:626
+msgid ""
+"It is embedded into the panel right where there is space for it not claimed "
+"by anything else, and uses panel theme by default."
+msgstr "Расширение встраивается там, где для него есть незанятое никем больше место, и использует тему главной панели по умолчанию."
+
+#: src/prefs.js:627
+msgid ""
+"It further allows you to hide some unnecessary buttons on the left and shift "
+"the central panel to the right to give itself more space."
+msgstr "Оно также позволяет расчистить немного места для себя, убрав ненужные кнопки слева и сдвинув центральную панель вправо."
+
+#: src/prefs.js:628
+msgid ""
+"You can tweak the panel even more by installing some of the following "
+"recommended extensions:"
+msgstr "Вы можете далее изменить внешний вид панели, установив одно из этих рекомендуемых расширений:"
+
+#: src/prefs.js:638
+msgid "is a part of greater FOSS."
+msgstr "явлется частью большого FOSS (свободное и открытое ПО)."
+
+#: src/prefs.js:646
+msgid ""
+"And as such it is completely free to use, study, distribute and modify "
+"provided you acknowledge all the copyrights and your actions comply with the "
+"applicable law and GNU GPL."
+msgstr "Вы можете свободно использовать, изучать, распространять и изменять его при условии признания и подтверждения всех установленных прав собственности и при условии, что Вы действуете в рамках закона и в соответствии с условиями GPL."
+
+#: src/prefs.js:653
+msgid ""
+"Your contribution in the form of feature suggestions, bug reports, "
+"translations, donations or even development is highly appreciated."
+msgstr "Ваша поддержка в форме предложений, отчетов об ошибках, переводе, благотворительных взносов или дальнейшей разработки всегда очень приветствуется."
+
+#: src/prefs.js:660
+msgid ""
+"The development of this extension would not be possible without this "
+"wonderful FOSS:"
+msgstr "Разработка расширения не была бы возможной без этого замечательного свободного и бесплатного ПО:"
+
+#: src/prefs.js:661
+msgid "and, of course,"
+msgstr "и, конечно,"
