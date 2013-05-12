@@ -343,6 +343,10 @@ const dbFinWindowThumbnail = new Lang.Class({
             _D('<');
 			return;
 		}
+		if (state.scroll) {
+			if (state.up) name += 'Up';
+			else name += 'Down';
+		}
         let (functionIndex = global.yawl && global.yawl['_mouseWindow' + name]) {
             if (functionIndex) { // functionIndex === 0 is default corresponding to no action
                 let (functionRow = dbFinConsts.arrayWindowClickFunctions[functionIndex]) {

@@ -521,16 +521,15 @@ const dbFinTracker = new Lang.Class({
         }
 		else if (event === 'focused') {
         }
-		else if (event === 'preview') {
-			this._preview = !this._preview;
-			if (this._preview) {
-				if (this._settings) this._settings.set_boolean('windows-preview', true);
-				this._showPreview(trackerWindow);
-			}
-			else {
-				if (this._settings) this._settings.set_boolean('windows-preview', false);
-				else this._hidePreview();
-			}
+		else if (event === 'preview-on') {
+			this._preview = true;
+			if (this._settings) this._settings.set_boolean('windows-preview', true);
+			this._showPreview(trackerWindow);
+		}
+		else if (event === 'preview-off') {
+			this._preview = false;
+			if (this._settings) this._settings.set_boolean('windows-preview', false);
+			else this._hidePreview();
 		}
         _D('<');
     }

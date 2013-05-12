@@ -360,10 +360,15 @@
       <_summary>Window middle click function.</_summary>
       <_description>Window middle click function.</_description>
     </key>
-    <key name="mouse-window-scroll" type="s">
+    <key name="mouse-window-scroll-up" type="s">
       <default>'5'</default>
-      <_summary>Window mouse scroll function.</_summary>
-      <_description>Window mouse scroll function.</_description>
+      <_summary>Window mouse scroll up function.</_summary>
+      <_description>Window mouse scroll up function.</_description>
+    </key>
+    <key name="mouse-window-scroll-down" type="s">
+      <default>'6'</default>
+      <_summary>Window mouse scroll down function.</_summary>
+      <_description>Window mouse scroll down function.</_description>
     </key>
     <key name="mouse-window-right" type="s">
       <default>'2'</default>

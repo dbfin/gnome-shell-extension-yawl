@@ -443,39 +443,49 @@ function buildPrefsWidget() {
 
         builder.addPage(_("Behavior"));
             builder.addNotebook(_("Mouse"), 'mouse.png');
-                builder.addNotebook(_("Icons: left button"), 'mouse-left.png');
-                    builder.addComboBoxText(_("Click : Double click"), 'mouse-app-left', dbFinConsts.arrayAppClickFunctions, 0);
-                    builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-left-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
-                    builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-left-shift', dbFinConsts.arrayAppClickFunctions, 0);
-                    builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-left-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
-	                builder.addSeparator();
-					builder.addLabel(_("Long left button click emulates right button click (useful for touch screens)"));
-                    builder.shift();
-						builder.addLabel(_("\u26a0 This will work only if option 'Fine-tuning \u2192 Mouse events on button release' is enabled"));
-    	                builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', 'mouse-click-release');
-                    builder.unshift();
+				builder.addNotebook(_("Icons"), 'icon_16.png');
+					builder.addNotebook(_("Left button"), 'mouse-left.png');
+						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-left', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-left-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-left-shift', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-left-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
 
-                builder.addPage(_("Icons: middle button"), 'mouse-middle.png');
-                    builder.addComboBoxText(_("Click : Double click"), 'mouse-app-middle', dbFinConsts.arrayAppClickFunctions, 0);
-                    builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-middle-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
-                    builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0);
-                    builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
-	                builder.addSeparator();
-                    builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0);
+					builder.addPage(_("Middle button"), 'mouse-middle.png');
+						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-middle', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-middle-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addSeparator();
+						builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0);
+
+					builder.addPage(_("Right button"), 'mouse-right.png');
+						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-right', dbFinConsts.arrayAppClickFunctions, 0);
+
+					builder.closeNotebook();
 
                 builder.addPage(_("Thumbnails"), 'thumbnail_16.png');
-                    builder.addComboBoxText(_("Left button Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0);
-                    builder.addComboBoxText(_("Left button Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0);
-                    builder.addComboBoxText(_("Left button Shift + Click"), 'mouse-window-left-shift', dbFinConsts.arrayWindowClickFunctions, 0);
-                    builder.addComboBoxText(_("Left button Ctrl + Shift + Click"), 'mouse-window-left-ctrl-shift', dbFinConsts.arrayWindowClickFunctions, 0);
-	                builder.addSeparator();
-                    builder.addComboBoxText(_("Middle button Click"), 'mouse-window-middle', dbFinConsts.arrayWindowClickFunctions, 0);
-                    builder.addComboBoxText(_("Scroll"), 'mouse-window-scroll', dbFinConsts.arrayWindowClickFunctions, 0);
-	                builder.addSeparator();
-                    builder.addComboBoxText(_("Right button Click"), 'mouse-window-right', dbFinConsts.arrayWindowClickFunctions, 0);
+					builder.addNotebook(_("Left button"), 'mouse-left.png');
+						builder.addComboBoxText(_("Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0);
+						builder.addComboBoxText(_("Shift + Click"), 'mouse-window-left-shift', dbFinConsts.arrayWindowClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Shift + Click"), 'mouse-window-left-ctrl-shift', dbFinConsts.arrayWindowClickFunctions, 0);
+
+					builder.addPage(_("Middle button"), 'mouse-middle.png');
+						builder.addComboBoxText(_("Click"), 'mouse-window-middle', dbFinConsts.arrayWindowClickFunctions, 0);
+						builder.addSeparator();
+						builder.addComboBoxText(_("Scroll up"), 'mouse-window-scroll-up', dbFinConsts.arrayWindowClickFunctions, 0);
+						builder.addComboBoxText(_("Scroll down"), 'mouse-window-scroll-down', dbFinConsts.arrayWindowClickFunctions, 0);
+
+					builder.addPage(_("Right button"), 'mouse-right.png');
+						builder.addComboBoxText(_("Click"), 'mouse-window-right', dbFinConsts.arrayWindowClickFunctions, 0);
+
+					builder.closeNotebook();
 
                 builder.addPage(_("Fine-tuning"), 'tuning.png');
-	                builder.addCheckBox(_("Mouse events on button release\n(default for Gnome-Shell is off)"), 'mouse-click-release');
+	                builder.addCheckBox(_("Register mouse events on button release"), 'mouse-click-release');
+					builder.shift();
+						builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', 'mouse-click-release');
+					builder.unshift();
 	                builder.addSeparator();
                     let threshold = new dbFinClicksThreshold();
                     builder.getWidget()._threshold = threshold;

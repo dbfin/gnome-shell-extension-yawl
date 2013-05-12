@@ -53,13 +53,17 @@
  *			addNotebook(label?, iconfile?)
  *			closeNotebook()
  * 			addPage(label, iconfile?)
+ * 			addWidget(gtkWidget, x, y, w, h, bindSensitive?)
+ * 			addRow(gtkWidget?, [gtkOthers], bindSensitive?)
  *          addSeparator()
  *          addLabel(label, bindSensitive?)
  *          addImages(label, [images], bindSensitive?)
  *          addCheckBox(label, settingsKey, bindSensitive?)
- *          addColorButton(label, settingsKey, titleColorChooser, bindSensitive?)
- *          addScale(label, settingsKey, min, max, step, bindSensitive?)
- *          addComboBoxText(label, settingsKey, arrayLabels, subIndex, bindSensitive?)
+ *          addColorButton(label, settingsKey, titleColorChooser, bindSensitive?, showEntry?)
+ *          addScale(label, settingsKey, min, max, step, bindSensitive?, showEntry?)
+ * 			addScaleScale(label, settingsKey1, settingsKey2, min1, max1, step1, min2, max2, step2, bindSensitive?, showEntry1?, showEntry2?)
+ * 			addColorButtonScale(label, settingsKeyColor, settingsKeyScale, titleColorChooser, min, max, step, bindSensitive?, showEntryColor?, showEntryScale?)
+ *          addComboBoxText(label, settingsKey, arrayLabels, subIndex, bindSensitive?, showEntry?)
  *
  */
 
@@ -310,7 +314,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 											valign:		Gtk.Align.FILL,
                                             tab_pos:    this._notebooksPagesCircle
                                                         ? (this._notebooks.length * 3 + 2) % 5 // why not? ;)
-                                                        : 2 - this._notebooks.length % 2 * 2 })) {
+                                                        : this._notebooks.length == 1 ? 0 : 2 })) {
 			if (this._notebook && this._notebook.page)
 				this._notebook.page.attach(notebook,
 				                           this._notebook.shift, this._notebook.row,
@@ -321,7 +325,9 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			notebook.show();
         }
 		this._notebooks.push(this._notebook);
-		this._notebook.width = 10 - Math.floor(this._notebooks.length / 2); // new this._notebooks length
+		this._notebook.width = this._notebooksPagesCircle // new this._notebooks length
+				? 10 - Math.floor(this._notebooks.length / 2)
+				: 11 - Math.min(this._notebooks.length, 2);
 		this._notebook.page = null;
 		this._notebook.row = 0;
 		this._notebook.shift = 0;
@@ -345,8 +351,12 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 									column_spacing:		7,
 									column_homogeneous:	true }),
              pageLabel = new Gtk.Label({ label: label }),
-             pageLabelBox = (this._notebooks.length & 1 ? new Gtk.HBox() : new Gtk.VBox())) {
-			pageLabelBox.margin = this._notebooks.length & 1 ? 3 : 7;
+             pageLabelBox = (this._notebooksPagesCircle
+                             ? (this._notebooks.length & 1 ? new Gtk.HBox() : new Gtk.VBox())
+                             : (this._notebooks.length != 2 ? new Gtk.HBox() : new Gtk.VBox()))) {
+			pageLabelBox.margin = this._notebooksPagesCircle
+							? (this._notebooks.length & 1 ? 3 : 7)
+							: (this._notebooks.length != 2 ? 3 : 7);
 			pageLabelBox.spacing = 3;
 			pageLabelBox.homogeneous = false;
 			pageLabelBox.pack_end(pageLabel, /*expand =*/true, /*fill =*/true, /*padding =*/0);

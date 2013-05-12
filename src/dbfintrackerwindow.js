@@ -222,9 +222,15 @@ const dbFinTrackerWindow = new Lang.Class({
         _D('<');
 	},
 
-	previewWindow: function() {
-        _D('>' + this.__name__ + '.previewWindow()');
-		if (this._tracker) this._tracker.windowEvent(this, 'preview');
+	previewWindowOn: function() {
+        _D('>' + this.__name__ + '.previewWindowOn()');
+		if (this._tracker) this._tracker.windowEvent(this, 'preview-on');
+        _D('<');
+	},
+
+	previewWindowOff: function() {
+        _D('>' + this.__name__ + '.previewWindowOff()');
+		if (this._tracker) this._tracker.windowEvent(this, 'preview-off');
         _D('<');
 	}
 });
