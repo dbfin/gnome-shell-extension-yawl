@@ -380,7 +380,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);
                 builder.addSeparator();
                 builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
-                builder.addScale(_("Distance between icons\n(% of icon size)"), 'icons-distance', 0, 100, 1);
+                builder.addScale(_("Distance between icons") + '\n(' + _("% of icon size") + ')', 'icons-distance', 0, 100, 1);
 
             builder.addPage(_("Animation"), 'animation.png');
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'icons-animation-time', 0, 1000, 1, null, true);
@@ -392,7 +392,7 @@ function buildPrefsWidget() {
 					builder.addScale(_("Change opacity"), 'icons-hover-opacity', 50, 100, 1, 'icons-hover-animation');
 					builder.addCheckBox(_("Show full width if partially hidden"), 'icons-hover-fit', 'icons-hover-animation');
 	                builder.addSeparator();
-	                builder.addScale(_("Mouse over animation time\n(% of animation time)"), 'icons-hover-animation-time', 0, 200, 1, 'icons-hover-animation');
+	                builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')', 'icons-hover-animation-time', 0, 200, 1, 'icons-hover-animation');
                     builder.addComboBoxText(_("Mouse over animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
 				builder.unshift();
 
@@ -422,7 +422,7 @@ function buildPrefsWidget() {
 				builder.addScale(_("Default thumbnail opacity"), 'windows-thumbnails-opacity', 50, 100, 1);
 				builder.addScale(_("Minimized thumbnail opacity"), 'windows-thumbnails-minimized-opacity', 10, 100, 1);
                 builder.addSeparator();
-                builder.addScale(_("Distance between thumbnails\n(% of thumbnail size)"), 'windows-thumbnails-distance', 0, 50, 1);
+                builder.addScale(_("Distance between thumbnails") + '\n(' + _("% of thumbnail size") + ')', 'windows-thumbnails-distance', 0, 50, 1);
                 builder.addScale(_("Thumbnail top padding (px)"), 'windows-thumbnails-padding-top', 0, 20, 1);
 
 			builder.addPage(_("Animation"), 'animation_thumbnail.png');
@@ -435,7 +435,7 @@ function buildPrefsWidget() {
 					builder.addScale(_("Change opacity"), 'windows-hover-opacity', 50, 100, 1);
 					builder.addCheckBox(_("Show full width if partially hidden"), 'windows-hover-fit');
 	                builder.addSeparator();
-	                builder.addScale(_("Mouse over animation time\n(% of animation time)"), 'windows-hover-animation-time', 0, 200, 1);
+	                builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')', 'windows-hover-animation-time', 0, 200, 1);
                     builder.addComboBoxText(_("Mouse over animation effect"), 'windows-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
                 builder.unshift();
 
@@ -534,8 +534,8 @@ function buildPrefsWidget() {
 				builder.shift();
 					builder.addLabel(_("By default the panel is placed at the right side (of the last monitor)."), 'debug');
 					builder.addCheckBox(_("Move the panel to the bottom left"), 'debug-bottom', 'debug');
-					builder.addScale(_("Debug panel width\n(% of the monitor width)"), 'debug-width', 10, 70, 1, 'debug');
-					builder.addCheckBox(_("Force all messages (\u26a0 ouch!)"), 'debug-force', 'debug');
+					builder.addScale(_("Debug panel width") + '\n(' + _("% of the monitor width") + ')', 'debug-width', 10, 70, 1, 'debug');
+					builder.addCheckBox(_("Force all messages") + ' (\u26a0 ' + _("ouch!") + ')', 'debug-force', 'debug');
 				builder.unshift();
 
             builder.closeNotebook();
