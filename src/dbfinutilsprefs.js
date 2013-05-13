@@ -566,14 +566,14 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
                 if (subIndex === undefined || subIndex === null) {
                     for (let i = 0; i < arrayLabels.length; ++i) {
                         if (arrayLabels[i]) {
-                            rowComboBoxText.append_text('' + arrayLabels[i]);
+                            rowComboBoxText.append_text(_('' + arrayLabels[i]));
                         }
                     }
                 }
                 else {
                     for (let i = 0; i < arrayLabels.length; ++i) {
                         if (arrayLabels[i] && arrayLabels[i].length) {
-                            rowComboBoxText.append_text('' + arrayLabels[i][subIndex]);
+                            rowComboBoxText.append_text(_('' + arrayLabels[i][subIndex]));
                         }
                     }
                 }

@@ -238,7 +238,7 @@ const dbFinAppButton = new Lang.Class({
 				if (this._trackerApp && dbFinConsts.arrayAppMenuItems.length) {
 					menu = new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.TOP, 0);
 					for (let i = 0; i < dbFinConsts.arrayAppMenuItems.length; ++i) {
-						let (   text = dbFinConsts.arrayAppMenuItems[i][0],
+						let (   text = _(dbFinConsts.arrayAppMenuItems[i][0]),
 								functionName = dbFinConsts.arrayAppMenuItems[i][1]) {
 							if (text && text != '' && this._trackerApp[functionName]) {
 								menu.addAction(text, Lang.bind(this._trackerApp, this._trackerApp[functionName]));
