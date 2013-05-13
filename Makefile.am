@@ -11,9 +11,9 @@ zip-file: all
 	$(MAKE) install DESTDIR="$(abs_builddir)/Build"; \
 	cp -r "$(builddir)/Build$(extensiondir)" "$(builddir)/Build/"; \
 	cp -r "$(builddir)/Build$(datadir)/locale" "$(builddir)/Build/$(uuid)"; \
-	if [ -f "$(builddir)/Build$(datadir)/glib-2.0/schemas/$(gschemabase).$(EXTENSION_ID).gschema.xml" ]; then \
+	if [ -f "$(builddir)/Build$(datadir)/glib-2.0/schemas/$(gschemabase).$(EXTENSION_ID_SHORT).gschema.xml" ]; then \
 		$(MKDIR_P) "$(builddir)/Build/$(uuid)/schemas"; \
-		cp "$(builddir)/Build$(datadir)/glib-2.0/schemas/$(gschemabase).$(EXTENSION_ID).gschema.xml" "$(builddir)/Build/$(uuid)/schemas"; \
+		cp "$(builddir)/Build$(datadir)/glib-2.0/schemas/$(gschemabase).$(EXTENSION_ID_SHORT).gschema.xml" "$(builddir)/Build/$(uuid)/schemas"; \
 		glib-compile-schemas "$(builddir)/Build/$(uuid)/schemas"; \
 	fi; \
 	( cd "$(builddir)/Build/$(uuid)"; \
