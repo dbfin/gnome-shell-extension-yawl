@@ -228,32 +228,28 @@ const dbFinAppButton = new Lang.Class({
             return;
 		}
 		let (	menu = null,
-		     	actionGroup = this.metaApp.menu && this.metaApp.action_group,
-		     	thisRemote = this.menu && (this.menu instanceof PopupMenu.RemoteMenu)) {
+		     	actionGroup = this.metaApp.menu && this.metaApp.action_group) {
 			if (actionGroup) {
-				if (!thisRemote || this.menu.actionGroup != actionGroup) {
-					menu = new PopupMenu.RemoteMenu(this.actor, this.metaApp.menu, actionGroup);
-				} // if (!thisRemote || this.menu.actionGroup != actionGroup)
+				menu = new PopupMenu.RemoteMenu(this.actor, this.metaApp.menu, actionGroup);
+				if (menu.isEmpty()) menu = null;
 			} // if (actionGroup)
-			else {
-				if (!this.menu || thisRemote) {
-                    // set up menu
-                    if (this._trackerApp && dbFinConsts.arrayAppMenuItems.length) {
-                        menu = new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.TOP, 0);
-                        for (let i = 0; i < dbFinConsts.arrayAppMenuItems.length; ++i) {
-							let (   text = dbFinConsts.arrayAppMenuItems[i][0],
-                                    functionName = dbFinConsts.arrayAppMenuItems[i][1]) {
-								if (text && text != '' && this._trackerApp[functionName]) {
-									menu.addAction(text, Lang.bind(this._trackerApp, this._trackerApp[functionName]));
-                                }
-								else {
-									menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-                                }
-							} // let (text, functionName)
-						} // for (let i)
-                    } // if (this._trackerApp && dbFinConsts.arrayAppMenuItems.length)
-				} // if (!this.menu || thisRemote)
-			} // if (actionGroup) else
+			if (!menu) {
+				// set up menu
+				if (this._trackerApp && dbFinConsts.arrayAppMenuItems.length) {
+					menu = new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.TOP, 0);
+					for (let i = 0; i < dbFinConsts.arrayAppMenuItems.length; ++i) {
+						let (   text = dbFinConsts.arrayAppMenuItems[i][0],
+								functionName = dbFinConsts.arrayAppMenuItems[i][1]) {
+							if (text && text != '' && this._trackerApp[functionName]) {
+								menu.addAction(text, Lang.bind(this._trackerApp, this._trackerApp[functionName]));
+							}
+							else {
+								menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+							}
+						} // let (text, functionName)
+					} // for (let i)
+				} // if (this._trackerApp && dbFinConsts.arrayAppMenuItems.length)
+			} // if (!menu)
 			if (menu && this.menu != menu) {
 				this._signals.disconnectId('menu-toggled');
 				this.setMenu(menu);
