@@ -97,15 +97,15 @@ msgstr "Бездействие"
 
 #: src/dbfinconsts.js:57
 msgid "Show next : all non-minimized windows"
-msgstr "Показать следующее : все несвернутые окна"
+msgstr "Следующее : все несвернутые окна"
 
 #: src/dbfinconsts.js:58
 msgid "Show next : all windows"
-msgstr "Показать следующее : все окна"
+msgstr "Следующее : все окна"
 
 #: src/dbfinconsts.js:59
 msgid "Show non-minimized : all windows"
-msgstr "Показать несвернутые : все окна"
+msgstr "Все несвернутые : все окна"
 
 #: src/dbfinconsts.js:60
 msgid "Rotate windows forward : backward"
@@ -125,11 +125,11 @@ msgstr "Развернуть верхнее : все окна"
 
 #: src/dbfinconsts.js:64
 msgid "Open new window : none"
-msgstr "Открыть новое окно : ничего"
+msgstr "Новое окно : ничего"
 
 #: src/dbfinconsts.js:65
 msgid "Open new window (new workspace) : none"
-msgstr "Открыть новое окно (новый рабочий стол) : ничего"
+msgstr "Новое окно (на новом столе) : ничего"
 
 #: src/dbfinconsts.js:66
 msgid "Open menu : none"
