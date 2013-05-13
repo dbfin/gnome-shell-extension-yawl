@@ -36,7 +36,8 @@ nodist_extension_DATA = \
 	GNUGPLv3 \
 	license.txt \
 	metadata.json \
-	readme.txt
+	readme.txt \
+	icon.png
 
 EXTRA_DIST = metadata.json.in
 CLEANFILES = metadata.json
