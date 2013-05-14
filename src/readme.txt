@@ -1,6 +1,6 @@
 YAWL (Yet Another Window List) Gnome-Shell Extension
 
-(c) 2013 Vadim Cherepanov @ dbFin (vadim@dbfin.com)
+Copyright (c) 2013 Vadim Cherepanov @ dbFin (vadim (at) dbfin.com)
 
 License: GNU GPL v3, please read license.txt
 
