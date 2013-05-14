@@ -101,9 +101,12 @@ const dbFinTrackerWindow = new Lang.Class({
             this.windowThumbnail.destroy();
             this.windowThumbnail = null;
         }
+		if (this.hovered) {
+			if (this._tracker) this._tracker.windowEvent(this, 'leave');
+			this.hovered = false;
+		}
         this.minimized = false;
         this.focused = false;
-		this.hovered = false;
 		this.title = '?';
 		this.appName = '?';
         this.metaApp = null;
