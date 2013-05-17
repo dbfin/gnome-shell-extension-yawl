@@ -160,7 +160,7 @@ const Settings = [
     [ 'mouse-app-middle-ctrl-shift', 3, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-scroll', 4, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
 
-    [ 'mouse-app-right', 10, { min: 0, max: arrayAppClickFunctions.length - 1 }, null ],
+    [ 'mouse-app-right', 10, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
 
     [ 'mouse-window-left', 1, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-window-left-ctrl', 0, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
