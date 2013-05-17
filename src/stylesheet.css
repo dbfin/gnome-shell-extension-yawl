@@ -70,7 +70,9 @@
 
 /* Windows preview */
 #yawlWindowPreview {
-	background-color: rgba(128, 128, 128, 1.0);
+	background-color: rgba(127, 127, 127, 0.777);
+	border-width: 0px;
+	padding: 0;
 }
 
 /* dbFinDebugView */
