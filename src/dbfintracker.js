@@ -436,11 +436,9 @@ const dbFinTracker = new Lang.Class({
 		if (trackerWindow && trackerWindow.metaApp && trackerWindow.hovered) {
             let (trackerApp = this.getTrackerApp(trackerWindow.metaApp)) {
                 if (trackerApp) {
-					Mainloop.idle_add(function () {
-						trackerApp.setLabel(trackerWindow.minimized
-								? '[ ' + trackerWindow.title + ' ]'
-								: trackerWindow.title)
-					});
+                    trackerApp.setLabel(trackerWindow.minimized
+                            ? '[ ' + trackerWindow.title + ' ]'
+                            : trackerWindow.title)
 				} // if (trackerApp)
             } // let (trackerApp)
 		} // if (trackerWindow && trackerWindow.metaApp && trackerWindow.hovered)

@@ -431,7 +431,7 @@ const dbFinYAWLPanel = new Lang.Class({
 			_D('<');
 			return;
 		}
-		let (t = this.animationTime >> 3) {
+		let (t = this.animationTime >> 2) {
 			if (this.label.getText() === this._labelText) {
 //				this.label.setOpacity(255, 0);
 				this.label.setOpacity(255, this.hidden || this.label.hidden || this._labelText === '' ? 0 : t,
