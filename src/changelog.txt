@@ -13,4 +13,6 @@ v13.05	2013-05-09
     	- Preferences sorted and organized for greater convenience
     	- Settings export/import
     	- Debugging features such as panel with messages, restarting extension etc.
-
+v3		2013-05-20
+		- Versioning consistent with extensions.gnome.org
+		- Updated for Gnome 3.6.3.1 (Ubuntu 13.04)
