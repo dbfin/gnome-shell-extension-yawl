@@ -168,15 +168,18 @@ const dbFinSettingsBindEntryColorButton = new Lang.Class({
 	},
 
 	bind: function(settingsKey, gtkEntry, gtkColorButton) {
-		this.parent(settingsKey, gtkEntry, gtkColorButton, 'notify::color',
+		this.parent(settingsKey, gtkEntry, gtkColorButton, 'notify::rgba',
 		            Lang.bind(this, this._updateEntry), Lang.bind(this, this._updateColorButton));
 	},
 
 	_updateEntry: function() {
 		if (this._gtkEntry && this._gtkWidget) {
 			this._disconnectEntry();
-			let (rgba = new Gdk.RGBA()) {
-				this._gtkWidget.get_rgba(rgba);
+			// Since 3.8 (or 3.6.3.1?) Gtk.ColorButton.get_rgba() has changed
+			// from changing RGBA value by reference to returning new RGBA value
+			let (rgba36 = new Gdk.RGBA(), rgba = null) {
+				rgba = this._gtkWidget.get_rgba(rgba36);
+				if (!(rgba instanceof Gdk.RGBA)) rgba = rgba36;
 				let (rgbacss = rgba.to_string()) {
 					let (	rgbaarray = rgbacss.replace(/^\s*rgba?\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+).*$/, '$1,$2,$3').split(','),
 							s = '#') {
@@ -188,7 +191,7 @@ const dbFinSettingsBindEntryColorButton = new Lang.Class({
 						this._gtkEntry.set_text(s);
 					} // let (rgbaarray, s)
 				} // let (rgbacss)
-			} // let(rgba)
+			} // let(rgba36, rgba)
 			this._connectEntry();
 		} // if (this._gtkEntry && this._gtkWidget)
 	},
