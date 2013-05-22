@@ -82,8 +82,9 @@ const dbFinYAWL = new Lang.Class({
                                                                         hidden: true,
                                                                         hideinoverview: true,
                                                                         width:  Main.layoutManager
-                                                                                && Main.layoutManager.primaryMonitor
-                                                                                && Main.layoutManager.primaryMonitor.width
+                                                                                && Main.layoutManager.panelBox
+                                                                                && Main.layoutManager.panelBox.get_stage()
+                                                                                && Main.layoutManager.panelBox.get_width()
                                                                                 ||  Main.panel && Main.panel.actor
                                                                                     && Main.panel.actor.get_stage()
                                                                                     && Main.panel.actor.get_width()

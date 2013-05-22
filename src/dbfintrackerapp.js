@@ -237,25 +237,27 @@ const dbFinTrackerApp = new Lang.Class({
 	positionWindowsGroup: function() {
         _D('>' + this.__name__ + '.positionWindowsGroup()');
 		if (global.yawl.panelWindows) {
-			global.yawl.panelWindows.y = Main.layoutManager && Main.layoutManager.panelBox
-                    && Main.layoutManager.panelBox.get_stage()
-					&& Main.layoutManager.panelBox.get_y() + Main.layoutManager.panelBox.get_height() || 0;
-			if (this.yawlPanelWindowsGroup) {
-				let (container = this.appButton && this.appButton.container) {
-					if (container && container.get_stage()) {
-						let (w = Main.layoutManager && Main.layoutManager.primaryMonitor
-								         && Main.layoutManager.primaryMonitor.width
-								 || global.yawl.panelWindows.container && global.yawl.panelWindows.container.get_stage()
-                                         && global.yawl.panelWindows.container.get_width()
-								 || 0) {
-							global.yawl.panelWindows.animateToState({
-									gravity: w && Math.round(container.get_transformed_position()[0]
-											 + container.get_width() / 2) / w
-							}, null, null, global.yawl.panelWindows.hidden ? 0 : null);
-						} // let (w, y)
-					} // if (container)
-				} // let (container)
-			} // if (this.yawlPanelWindowsGroup)
+            let (x = 0,
+                 y = 0,
+                 w = 0) {
+                if (Main.layoutManager && Main.layoutManager.panelBox
+                        && Main.layoutManager.panelBox.get_stage()) {
+                    x = Main.layoutManager.panelBox.get_x();
+                    y = Main.layoutManager.panelBox.get_y() + Main.layoutManager.panelBox.get_height();
+                    w = Main.layoutManager.panelBox.get_width();
+                }
+                global.yawl.panelWindows.x = x;
+                global.yawl.panelWindows.y = y;
+                global.yawl.panelWindows.width = w;
+                let (container = this.appButton && this.appButton.container) {
+                    if (container && container.get_stage()) {
+                        global.yawl.panelWindows.animateToState({
+                            gravity: w && Math.round(container.get_transformed_position()[0]
+                                     + container.get_width() / 2 - x) / w || 0
+                        }, null, null, global.yawl.panelWindows.hidden ? 0 : null);
+                    } // if (container && container.get_stage())
+                } // let (container)
+            } // let (x, y, w)
 		} // if (global.yawl.panelWindows)
         _D('<');
 	},

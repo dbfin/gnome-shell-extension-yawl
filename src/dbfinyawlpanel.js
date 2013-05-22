@@ -633,6 +633,13 @@ const dbFinYAWLPanel = new Lang.Class({
             this.updatePanel();
         }
     },
+    get width() { return this.container && this.container.width; },
+    set width(width) {
+        if (this.container && this.container.width !== width) {
+            this.container.width = width;
+            this.updatePanel();
+        }
+    },
 
     animateToState: function(state, callback, scope, time, transition) {
         _D('>' + this.__name__ + '.animateToState()');
