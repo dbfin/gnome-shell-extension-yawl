@@ -1,10 +1,10 @@
 v0.1	2013-01-27
     	- Initial commit: empty extension
-		- Support for autogen and make
+    	- Support for autogen and make
     	- Support for GSettings and Localization
-		- Support for debugging and logging
+    	- Support for debugging and logging
 v13.05	2013-05-09
-		- Version ready to be released
+    	- Version ready to be released
     	- App icons on top panel
     	- Window thumbnails
     	- Window preview
@@ -13,6 +13,8 @@ v13.05	2013-05-09
     	- Preferences sorted and organized for greater convenience
     	- Settings export/import
     	- Debugging features such as panel with messages, restarting extension etc.
-v3		2013-05-20
-		- Versioning consistent with extensions.gnome.org
-		- Updated for Gnome 3.6.3.1 (Ubuntu 13.04)
+v3  	2013-05-20
+    	- Versioning consistent with extensions.gnome.org
+    	- Updated for Gnome 3.6.3.1 (Ubuntu 13.04)
+v4  	2013-05-21
+    	- Fix: position of thumbnails when the top panel is on the right monitor
