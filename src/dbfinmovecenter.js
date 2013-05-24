@@ -35,6 +35,7 @@ const Panel = imports.ui.panel;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinPanelButtonToggle = Me.imports.dbfinpanelbuttontoggle;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinUtils = Me.imports.dbfinutils;
@@ -162,12 +163,15 @@ const dbFinMoveCenter = new Lang.Class({
 
     _updateActivities: function() {
         _D('>' + this.__name__ + '._updateActivities()');
-		if (global.yawl._hideActivities && global.yawl._preserveHotCorner) {
-			if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
-		}
-		else if (this._hotcorner) {
-			this._hotcorner.destroy();
-			this._hotcorner = null;
+		// Gnome-Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
+		if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
+			if (global.yawl._hideActivities && global.yawl._preserveHotCorner) {
+				if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
+			}
+			else if (this._hotcorner) {
+				this._hotcorner.destroy();
+				this._hotcorner = null;
+			}
 		}
 		if (global.yawl._hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
 		else this._panelbuttonstoggle.restore('activities');

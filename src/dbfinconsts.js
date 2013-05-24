@@ -30,6 +30,8 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
+const arrayShellVersion = imports.misc.config.PACKAGE_VERSION.split('.').map(function (v) { return parseInt(v); });
+
 const arrayAnimationTransitions = [
     [   _("Linear"),									'linear'						],
     [	_("Slow at the end"),							'easeOutQuad'					],
