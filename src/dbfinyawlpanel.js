@@ -451,10 +451,6 @@ const dbFinYAWLPanel = new Lang.Class({
 
     show: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.show()');
-        if (Main.screenShield.locked) {
-            _D('<');
-            return;
-        }
         if (this.container) {
             this.container.show();
             this.container.reactive = true;
