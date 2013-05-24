@@ -92,7 +92,6 @@ const dbFinYAWLPanel = new Lang.Class({
 
 		this.actor = new St.BoxLayout({ vertical: true, reactive: true, visible: true });
 		if (this.actor) {
-            this.actor._delegate = this;
             if (this.container) this.container.add_actor(this.actor);
             this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
                                         callback: this._styleChanged, scope: this });
@@ -121,7 +120,6 @@ const dbFinYAWLPanel = new Lang.Class({
 
 		this.box = new St.BoxLayout({ vertical: false, x_align: Clutter.ActorAlign.CENTER, reactive: true, visible: true });
 		if (this.box) {
-            this.box._delegate = this;
             if (this.actor) {
                 this.actor.add_actor(this.box);
                 if (this.container) this.container._box = this.box;
@@ -202,7 +200,6 @@ const dbFinYAWLPanel = new Lang.Class({
 			if (this.container) this.container._box = null;
 			if (this.actor) this.actor.remove_actor(this.box);
 			this.box.reactive = false;
-			this.box._delegate = null;
 			this.box.destroy();
 			this.box = null;
 		}
@@ -221,7 +218,6 @@ const dbFinYAWLPanel = new Lang.Class({
                 this.container.remove_actor(this.actor);
             }
             this.actor.reactive = false;
-            this.actor._delegate = null;
 			this.actor.destroy();
 			this.actor = null;
 		}

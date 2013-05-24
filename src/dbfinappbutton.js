@@ -64,7 +64,6 @@ const dbFinAppButton = new Lang.Class({
 
 		// this.actor and this.container related stuff
         if (this.actor) {
-            this.actor._delegate = this;
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
             this.actor.reactive = true;
         }
@@ -144,7 +143,6 @@ const dbFinAppButton = new Lang.Class({
 		}
 		if (this.actor) {
 			this.actor.reactive = false;
-            this.actor._delegate = null;
 		}
         if (this._slicerIcon) {
 			if (this.actor) this.actor.remove_actor(this._slicerIcon.container);

@@ -64,14 +64,12 @@ const dbFinSlicerActor = new Lang.Class({
 			   { y_expand: true, pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }), visible: true }, true);
 		this.container = new Shell.Slicer(paramsContainer);
         if (this.container) {
-            this.container._delegate = this;
             this._signals.connectNoId({	emitter: this.container, signal: 'notify::allocation',
                                         callback: this._updateAllocation, scope: this });
         }
 
         this.actor = actor || null;
         if (this.actor) {
-            this.actor._delegate = this;
             if (this.container) this.container.set_child(this.actor);
             this._signals.connectNoId({	emitter: this.actor, signal: 'enter-event',
 										callback: this._hoverEnter, scope: this });
