@@ -52,7 +52,7 @@ const dbFinDebugView = new Lang.Class({
         this._signals = new dbFinSignals.dbFinSignals();
 		this.hovered = false;
 		this.pinned = false;
-		this.paused = false;
+		this.paused = true;
 
 		this.container = new St.BoxLayout({ name: 'dbFinDebugView', vertical: true, reactive: true, visible: true });
 		if (this.container) {
@@ -69,7 +69,7 @@ const dbFinDebugView = new Lang.Class({
 			if (this.buttonPin) this.toolbar.add_actor(this.buttonPin);
 
 			this.buttonPause = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
-											  text: '[\u25fe]', reactive: true, track_hover: true, visible: true });
+											  text: '[\u25b8]', reactive: true, track_hover: true, visible: true });
 			if (this.buttonPause) this.toolbar.add_actor(this.buttonPause);
 
 			this.buttonClear = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',

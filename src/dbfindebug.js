@@ -87,7 +87,9 @@ const dbFinDebug = new Lang.Class({
 						s = s.substring(1);
 						if (this._level && s.length) log(s);
 					}
-					if (s.length && (!this._level && (log(s), true) || !this._stoplevel || force) && global._yawlDebugView) {
+					if (s.length
+							&& (!this._level && (log(s), true) || !this._stoplevel || force)
+							&& global._yawlDebugView && !global._yawlDebugView.paused) {
 						msgs.push([ this._level, s ]);
 					}
 					if (shift == -1) {
