@@ -136,11 +136,14 @@ const dbFinClicked = new Lang.Class({
 		}
 		let (state = {},
 		     direction = event.get_scroll_direction()) {
-			state.left = false;
-			state.right = false;
-			state.middle = false;
-			state.scroll = true;
-			state.up = direction == Clutter.ScrollDirection.UP;
+			if (direction === Clutter.ScrollDirection.UP
+					|| direction === Clutter.ScrollDirection.DOWN) {
+				state.left = false;
+				state.right = false;
+				state.middle = false;
+				state.scroll = true;
+				state.up = direction === Clutter.ScrollDirection.UP;
+			}
             _D('<');
             return state;
 		} // let (state, direction)
