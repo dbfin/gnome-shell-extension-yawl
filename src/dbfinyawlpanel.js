@@ -145,9 +145,10 @@ const dbFinYAWLPanel = new Lang.Class({
         this.hiding = false;
 		if (params.hidden) this.hide(0);
 
-        if (this._parent) {
-            if (this._parent == Main.uiGroup) {
-                Main.layoutManager.addChrome(this.container);
+        if (this._parent && this.container) {
+            if (this._parent == Main.uiGroup && Main.layoutManager) {
+                Main.layoutManager.addChrome(this.container, { affectsInputRegion: false });
+				if (this.actor) Main.layoutManager.trackChrome(this.actor, { affectsInputRegion: true });
             }
             else if (this._parent.add_actor) {
                 this._parent.add_actor(this.container);
@@ -176,7 +177,8 @@ const dbFinYAWLPanel = new Lang.Class({
                     if (this._parentProperty && parent[this._parentProperty] == this.container) {
                         parent[this._parentProperty] = null;
                     }
-                    if (parent == Main.uiGroup) {
+                    if (parent == Main.uiGroup && Main.layoutManager) {
+						if (this.actor) Main.layoutManager.untrackChrome(this.actor);
                         Main.layoutManager.removeChrome(this.container);
                     }
                     else if (parent.remove_actor) {
