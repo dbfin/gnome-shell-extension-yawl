@@ -143,7 +143,7 @@ const Settings = [
     [ 'windows-thumbnails-padding-top', 7, { min: 0, max: 20 }, 'thumbnails' ],
 
     [ 'windows-show-delay', 400, { min: 0, max: 1000 }, 'thumbnails>animation' ],
-    [ 'windows-animation-time', 400, { min: 0, max: 1000 }, 'thumbnails>animation' ],
+    [ 'windows-animation-time', 300, { min: 0, max: 500 }, 'thumbnails>animation' ],
     [ 'windows-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'thumbnails>animation' ],
     [ 'windows-hover-opacity', 100, { min: 50, max: 100 }, 'thumbnails>animation' ],
     [ 'windows-hover-fit', true, { }, 'thumbnails>animation' ],

@@ -247,7 +247,7 @@
       <_description>Window thumbnails showing delay time in ms.</_description>
     </key>
     <key name="windows-animation-time" type="s">
-      <default>'400'</default>
+      <default>'300'</default>
       <_summary>Windows animation time.</_summary>
       <_description>Windows animation time in ms. If 0 then no animation is used.</_description>
     </key>
