@@ -5,7 +5,7 @@
     "version": @EXTENSIONVERSION@,
     "original-author": "Vadim@dbFin.com",
     "url": "@EXTENSIONURL@",
-    "description": "YAWL (Yet Another Window List) Gnome-Shell Extension",
+    "description": "YAWL is a highly customizable Window List extension with window thumbnail previews.\nFeatures include:\n- Icons of currently open\napplications built-in to the top panel\n- Window thumbnail previews\n- "Window peeking": view window by hovering its thumbnail without focusing (turn on/off by scrolling up/down)\n- Highly customizable: change the panel look to give app icons more space, change icons/thumbnails size, theme and animation, custom mouse clicks etc.\n- Export/import settings for easy backing up, syncing and sharing\n- Translation-ready\n- Built-in debugging features for developers\nThe FIRST TIME you install the extension, it shows preferences, so that you can customize your experience.\nPlease report problems here or on GitHub.",
     "gettext-domain": "@EXTENSIONID@",
     "settings-schema": "@GSCHEMANAME@"
 }
