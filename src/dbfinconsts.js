@@ -121,7 +121,9 @@ const Settings = [
     [ 'icons-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'icons>animation' ],
 
     [ 'windows-indicator-arrow', false, { }, 'thumbnails>panel' ],
-	[ 'windows-preview', false, { }, 'thumbnails>panel' ],
+	[ 'windows-preview', false, { }, 'thumbnails>preview' ],
+	[ 'windows-preview-dim-color', '#01234c', { }, 'thumbnails>preview' ],
+	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'thumbnails>preview' ],
     [ 'windows-theming', true, { }, 'thumbnails>panel' ],
     [ 'windows-background-panel', true, { }, 'thumbnails>panel' ],
     [ 'windows-background-color', '#2e3436', { }, 'thumbnails>panel' ],

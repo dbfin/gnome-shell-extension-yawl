@@ -14,6 +14,7 @@ dist_extension_DATA = \
 	dbfinmovecenter.js \
 	dbfinpanelbuttontoggle.js \
 	dbfinpanelenhancements.js \
+	dbfinpreview.js \
 	dbfinsettings.js \
 	dbfinsignals.js \
 	dbfinsliceractor.js \

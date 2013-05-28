@@ -146,8 +146,18 @@
     </key>
     <key name="windows-preview" type="b">
       <default>false</default>
-      <_summary>Whether to preview window when thumbnail is hovered.</_summary>
+      <_summary>Whether to preview a window when its thumbnail is hovered.</_summary>
       <_description>If true the window is shown on top when its thumbnail is hovered.</_description>
+    </key>
+    <key name="windows-preview-dim-color" type="s">
+      <default>'#01234c'</default>
+      <_summary>Dim the screen when a preview of a window is shown: color.</_summary>
+      <_description>Dim the screen when a preview of a window is shown: color.</_description>
+    </key>
+    <key name="windows-preview-dim-opacity" type="s">
+      <default>'25'</default>
+      <_summary>Dim the screen when a preview of a window is shown: opacity.</_summary>
+      <_description>Dim the screen when a preview of a window is shown: opacity.</_description>
     </key>
     <key name="windows-theming" type="b">
       <default>true</default>

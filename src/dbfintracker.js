@@ -28,11 +28,9 @@ const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
-const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
-const LookingGlass = imports.ui.lookingGlass;
 const Main = imports.ui.main;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -40,6 +38,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 const Convenience = Me.imports.convenience2;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
+const dbFinPreview = Me.imports.dbfinpreview;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinTrackerApp = Me.imports.dbfintrackerapp;
 const dbFinTrackerWindow = Me.imports.dbfintrackerwindow;
@@ -64,27 +63,11 @@ const dbFinTracker = new Lang.Class({
 		this.state = 0; // when refreshing we increase the state to indicate apps and windows that are no longer there
         this.stateInfo = '';
 
-		this._preview = false;
-		this._previewWindow = null;
-		this._previewCompositor = null;
-		this._previewBin = new St.Bin({ name: 'yawlWindowPreview', reactive: false, visible: false });
-		if (this._previewBin) {
-			if (Main.uiGroup) Main.uiGroup.add_actor(this._previewBin);
-		}
-		this._previewClone = new Clutter.Clone({ reactive: false, visible: true });
-		if (this._previewClone) {
-			if (this._previewBin) this._previewBin.set_child(this._previewClone);
-		}
-		// GNOMENEXT: ui/lookingGlass.js
-		this._previewRedBorderEffect = new LookingGlass.RedBorderEffect();
-		if (this._previewRedBorderEffect) {
-			if (this._previewClone) this._previewClone.add_effect(this._previewRedBorderEffect);
-		}
-
-		this._updatedWindowsPreview = function () {
-			this._preview = global.yawl._windowsPreview;
-			if (!this._preview) this._hidePreview();
-		}
+		this.preview = new dbFinPreview.dbFinPreview();
+		this._updatedWindowsPreview = function () { if (this.preview && !global.yawl._windowsPreview) this.preview.hide(); }
+		this._updatedWindowsPreviewDimColor = function () { if (this.preview) this.preview.dimColor = global.yawl._windowsPreviewDimColor; }
+		this._updatedWindowsPreviewDimOpacity = function () { if (this.preview) this.preview.dimOpacity = global.yawl._windowsPreviewDimOpacity; }
+        this._updatedWindowsAnimationTime = function () { if (this.preview) this.preview.animationTime = global.yawl._windowsAnimationTime; }
 
 		this.update(null, 'Tracker: initial update.');
 		this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
@@ -106,6 +89,10 @@ const dbFinTracker = new Lang.Class({
 			this._signals.destroy();
 			this._signals = null;
 		}
+        if (this.preview) {
+            this.preview.destroy();
+            this.preview = null;
+        }
         this.state++;
 		if (this.apps) {
 			this.apps.forEach(Lang.bind(this, function(metaApp, appProperties) {
@@ -127,23 +114,6 @@ const dbFinTracker = new Lang.Class({
 			this.windows.destroy();
 			this.windows = null;
 		}
-		if (this._previewRedBorderEffect) {
-			if (this._previewClone) this._previewClone.remove_effect(this._previewRedBorderEffect);
-			//this._previewRedBorderEffect.destroy(); // no destroy()
-			this._previewRedBorderEffect = null;
-		}
-        if (this._previewBin) {
-			this._previewBin.set_child(null);
-            this._previewBin.destroy();
-            this._previewBin = null;
-        }
-        if (this._previewClone) {
-            this._previewClone.destroy();
-            this._previewClone = null;
-        }
-		this._preview = false;
-		this._previewWindow = null;
-		this._previewCompositor = null;
         this._tracker = null;
 		this._settings = null;
         this.emit('destroy');
@@ -445,62 +415,6 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	},
 
-	_updatePreview: function() {
-        _D('>' + this.__name__ + '._updatePreview()');
-		if (this._preview && this._previewBin && this._previewClone && this._previewCompositor) {
-			let (texture = this._previewCompositor.get_texture
-						&& this._previewCompositor.get_texture()) {
-				let (size = texture && texture.get_size && texture.get_size()) {
-					if (size && size[0] && size[0] > 0 && size[1] && size[1] > 0) {
-						this._previewClone.set_source(texture);
-						this._previewClone.set_size(size[0], size[1]);
-					}
-				}
-			}
-			let (xy = this._previewCompositor.get_position()) {
-				this._previewBin.set_position(xy[0] - this._previewClone.x,
-											  xy[1] - this._previewClone.y);
-			}
-		}
-        _D('<');
-	},
-
-	_showPreview: function(trackerWindow) {
-        _D('>' + this.__name__ + '._showPreview()');
-		this._hidePreview();
-		if (this._preview && this._previewBin
-		    	&& trackerWindow && trackerWindow.hovered) {
-			let (compositor = trackerWindow.metaWindow
-			     		&& trackerWindow.metaWindow.get_compositor_private
-			     		&& trackerWindow.metaWindow.get_compositor_private()) {
-				if (compositor) {
-					this._previewWindow = trackerWindow.metaWindow;
-					this._previewCompositor = compositor;
-					this._updatePreview();
-					if (this._signals) {
-						this._signals.connectId('clone-resize', {	emitter: this._previewCompositor, signal: 'size-changed',
-																	callback: this._updatePreview, scope: this });
-					}
-					this._previewBin.show();
-				}
-				else {
-					this._previewWindow = null;
-					this._previewCompositor = null;
-				}
-			}
-		}
-        _D('<');
-	},
-
-	_hidePreview: function(trackerWindow/* = all*/) {
-        _D('>' + this.__name__ + '._hidePreview()');
-		if (this._previewBin && (!trackerWindow || trackerWindow.metaWindow == this._previewWindow)) {
-			if (this._signals) this._signals.disconnectId('clone-resize');
-			this._previewBin.hide();
-		}
-        _D('<');
-	},
-
     windowEvent: function (trackerWindow, event, params) {
         _D('>' + this.__name__ + '.windowEvent()');
         if (!trackerWindow || !event) {
@@ -509,10 +423,10 @@ const dbFinTracker = new Lang.Class({
         }
 		if (event === 'enter') {
 			this.updateTrackerAppLabel(trackerWindow);
-			this._showPreview(trackerWindow);
+			if (this.preview && global.yawl && global.yawl._windowsPreview) this.preview.show(trackerWindow);
 		}
 		else if (event === 'leave') {
-			this._hidePreview(trackerWindow);
+			if (this.preview) this.preview.hide(trackerWindow);
 		}
         else if (event === 'title' || event === 'minimized') {
 			this.updateTrackerAppLabel(trackerWindow);
@@ -520,14 +434,12 @@ const dbFinTracker = new Lang.Class({
 		else if (event === 'focused') {
         }
 		else if (event === 'preview-on') {
-			this._preview = true;
 			if (this._settings) this._settings.set_boolean('windows-preview', true);
-			this._showPreview(trackerWindow);
+			if (this.preview) this.preview.show(trackerWindow);
 		}
 		else if (event === 'preview-off') {
-			this._preview = false;
 			if (this._settings) this._settings.set_boolean('windows-preview', false);
-			else this._hidePreview();
+			else if (this.preview) this.preview.hide();
 		}
         _D('<');
     }

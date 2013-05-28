@@ -28,7 +28,6 @@ const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
-const Clutter = imports.gi.Clutter;
 const Meta = imports.gi.Meta;
 const Shell = imports.gi.Shell;
 
@@ -276,8 +275,13 @@ const dbFinTrackerApp = new Lang.Class({
                     Lang.bind(this, function() {
                         this._cancelShowThumbnailsTimeout();
                         this.positionWindowsGroup(); // position it before showing if it is hidden
-						if (this._tracker && this._tracker._previewBin) this._tracker._previewBin.raise_top();
-						if (global.yawl.panelWindows.container) global.yawl.panelWindows.container.raise_top();
+						if (this._tracker && this._tracker.preview && this._tracker.preview.container
+								&& Main.layoutManager && Main.layoutManager.panelBox) {
+							Main.uiGroup.set_child_below_sibling(this._tracker.preview.container, Main.layoutManager.panelBox);
+						}
+						if (global.yawl && global.yawl.panelWindows && global.yawl.panelWindows.container) {
+							Main.uiGroup.set_child_above_sibling(global.yawl.panelWindows.container, null);
+						}
                         global.yawl.panelWindows.showChild(this.yawlPanelWindowsGroup, true);
                         global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;
                     })

@@ -68,13 +68,6 @@
     background-gradient-end: rgba(255, 0, 0, 0.0);
 }
 
-/* Windows preview */
-#yawlWindowPreview {
-	background-color: rgba(127, 127, 127, 0.777);
-	border-width: 0px;
-	padding: 0;
-}
-
 /* dbFinDebugView */
 #dbFinDebugView {
 	background-color: rgba(0, 0, 0, 0.777);

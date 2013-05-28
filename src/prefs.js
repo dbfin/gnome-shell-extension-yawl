@@ -405,6 +405,9 @@ function buildPrefsWidget() {
 			builder.addNotebook(_("Panel"), 'panel_thumbnail.png');
                 builder.addCheckBox(_("Use arrow-style thumbnails app indicator"), 'windows-indicator-arrow');
                 builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview');
+                builder.shift();
+					builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, 'windows-preview');
+                builder.unshift();
                 builder.addSeparator();
                 builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming');
                 builder.shift();
