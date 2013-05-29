@@ -277,7 +277,7 @@ const dbFinTrackerApp = new Lang.Class({
                         this.positionWindowsGroup(); // position it before showing if it is hidden
 						if (this._tracker && this._tracker.preview && this._tracker.preview.container
 								&& Main.layoutManager && Main.layoutManager.panelBox) {
-							Main.uiGroup.set_child_below_sibling(this._tracker.preview.container, Main.layoutManager.panelBox);
+							Main.uiGroup.set_child_above_sibling(this._tracker.preview.container, Main.layoutManager.panelBox);
 						}
 						if (global.yawl && global.yawl.panelWindows && global.yawl.panelWindows.container) {
 							Main.uiGroup.set_child_above_sibling(global.yawl.panelWindows.container, null);

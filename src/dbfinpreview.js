@@ -37,6 +37,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAnimation = Me.imports.dbfinanimation;
+const dbFinAnimationEquations = Me.imports.dbfinanimationequations;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinStyle = Me.imports.dbfinstyle;
 const dbFinUtils = Me.imports.dbfinutils;
@@ -179,7 +180,9 @@ const dbFinPreview = new Lang.Class({
 					}
 					this.container.show();
                     this._clone.show();
-					dbFinAnimation.animateToState(this._background, { opacity: 255 }, null, null, time);
+					dbFinAnimation.animateToState(this._clone, { opacity: 255 }, null, null, time);
+					dbFinAnimation.animateToState(this._background, { opacity: 255 }, null, null, time + (time >> 1),
+					                              dbFinAnimationEquations.delay('linear', 2 / 3));
 				}
 				else {
 					this._window = null;
@@ -195,10 +198,11 @@ const dbFinPreview = new Lang.Class({
 		if (time === undefined || time === null) time = this.animationTime || 0;
 		if (this._clone && (!trackerWindow || trackerWindow.metaWindow == this._window)) {
 			if (this._signals) this._signals.disconnectId('clone-resize');
-            this._clone.hide();
-            dbFinAnimation.animateToState(this._background, { opacity: 0 }, function () {
+            dbFinAnimation.animateToState(this._background, { opacity: 0 }, null, null, time >> 1);
+            dbFinAnimation.animateToState(this._clone, { opacity: 0 }, function () {
+		        this._clone.hide();
                 this.container.hide();
-            }, this, time);
+            }, this, (time >> 1) + time, dbFinAnimationEquations.delay('linear', 1 / 3));
 		}
         _D('<');
 	},
