@@ -66,6 +66,10 @@ const dbFinPreview = new Lang.Class({
                                         callback: this._getPreferredHeight, scope: this });
             this._signals.connectNoId({ emitter: this.container, signal: 'allocate',
                                         callback: this._allocate, scope: this });
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
+										callback: this._hideInOverview, scope: this });
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
+										callback: this._showOutOfOverview, scope: this });
 		}
 		this._background = new St.Bin({ reactive: false, visible: true, opacity: 0 });
 		if (this._background) {
@@ -198,6 +202,18 @@ const dbFinPreview = new Lang.Class({
 		}
         _D('<');
 	},
+
+    _showOutOfOverview: function () {
+        _D('>' + this.__name__ + '.showOutOfOverview()');
+        if (this.container) dbFinAnimation.animateToState(this.container, { opacity: 255 }, null, null, this.animationTime);
+        _D('<');
+    },
+
+    _hideInOverview: function () {
+        _D('>' + this.__name__ + '._hideInOverview()');
+        if (this.container) dbFinAnimation.animateToState(this.container, { opacity: 0 }, null, null, this.animationTime);
+        _D('<');
+    },
 
     _updateBackgroundStyle: function() {
         _D('>' + this.__name__ + '._updateBackgroundStyle()');
