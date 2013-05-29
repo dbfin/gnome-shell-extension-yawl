@@ -27,6 +27,7 @@
 const Lang = imports.lang;
 
 const Clutter = imports.gi.Clutter;
+const Meta = imports.gi.Meta;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
@@ -81,6 +82,7 @@ const dbFinPreview = new Lang.Class({
 		if (this._clone) {
 			if (this.container) this.container.add_actor(this._clone);
 		}
+		this._cloneEffect = null;
         _D('<');
     },
 
@@ -91,6 +93,7 @@ const dbFinPreview = new Lang.Class({
 			this._signals = null;
 		}
         this.hide();
+		this._removeCloneEffect();
 		if (this._backgroundStyle) {
 			this._backgroundStyle.destroy();
 			this._backgroundStyle = null;
@@ -173,6 +176,14 @@ const dbFinPreview = new Lang.Class({
 				if (compositor) {
 					this._window = trackerWindow.metaWindow;
 					this._compositor = compositor;
+					if ((this._window && this._window.get_maximized
+					     && this._window.get_maximized() & (Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL))
+                                                == (Meta.MaximizeFlags.HORIZONTAL | Meta.MaximizeFlags.VERTICAL)) {
+						if (!this._cloneEffect) this._addCloneEffect();
+					}
+					else {
+						if (this._cloneEffect) this._removeCloneEffect();
+					}
 					this._update();
 					if (this._signals) {
 						this._signals.connectId('clone-resize', {	emitter: this._compositor, signal: 'size-changed',
@@ -218,6 +229,28 @@ const dbFinPreview = new Lang.Class({
         if (this.container) dbFinAnimation.animateToState(this.container, { opacity: 0 }, null, null, this.animationTime);
         _D('<');
     },
+
+	_addCloneEffect: function() {
+        _D('>' + this.__name__ + '._addCloneEffect()');
+		// GNOMENEXT: ui/lookingGlass.js: class RedBorderEffect
+		if (!this._cloneEffect) {
+			this._cloneEffect = new LookingGlass.RedBorderEffect();
+			if (this._cloneEffect && this._clone) {
+				this._clone.add_effect(this._cloneEffect);
+			}
+		}
+        _D('<');
+	},
+
+	_removeCloneEffect: function() {
+        _D('>' + this.__name__ + '._removeCloneEffect()');
+		if (this._cloneEffect) {
+			if (this._clone) this._clone.remove_effect(this._cloneEffect);
+			if (this._cloneEffect.destroy) this._cloneEffect.destroy();
+			this._cloneEffect = null;
+		}
+        _D('<');
+	},
 
     _updateBackgroundStyle: function() {
         _D('>' + this.__name__ + '._updateBackgroundStyle()');

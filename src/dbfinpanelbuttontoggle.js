@@ -72,7 +72,7 @@ const dbFinPanelButtonToggle = new Lang.Class({
         _D('<');
 	},
 
-	// GNOMENEXT: ui/sessionmode.js, ui/panel.js
+	// GNOMENEXT: ui/sessionMode.js, ui/panel.js
 	hide: function(role, panelid) {
         _D('>' + this.__name__ + '.hide()');
 		if (!this._hiddenroles || !this._panelIds) {
