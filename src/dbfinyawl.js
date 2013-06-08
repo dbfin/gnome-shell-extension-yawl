@@ -80,7 +80,7 @@ const dbFinYAWL = new Lang.Class({
                                                                         parent: Main.uiGroup || null,
                                                                         parentproperty: '_yawlWindowsPanel',
                                                                         hidden: true,
-                                                                        hideinoverview: true,
+                                                                        closeinoverview: true,
                                                                         width:  Main.layoutManager
                                                                                 && Main.layoutManager.panelBox
                                                                                 && Main.layoutManager.panelBox.get_stage()

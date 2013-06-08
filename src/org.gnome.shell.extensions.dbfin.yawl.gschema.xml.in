@@ -144,21 +144,6 @@
       <_summary>Whether to use arrow-style thumbnail application indicator.</_summary>
       <_description>If true the indicator of the current thumbnails application is drawn as an arrow.</_description>
     </key>
-    <key name="windows-preview" type="b">
-      <default>false</default>
-      <_summary>Whether to preview a window when its thumbnail is hovered.</_summary>
-      <_description>If true the window is shown on top when its thumbnail is hovered.</_description>
-    </key>
-    <key name="windows-preview-dim-color" type="s">
-      <default>'#01234c'</default>
-      <_summary>Dim the screen when a preview of a window is shown: color.</_summary>
-      <_description>Dim the screen when a preview of a window is shown: color.</_description>
-    </key>
-    <key name="windows-preview-dim-opacity" type="s">
-      <default>'25'</default>
-      <_summary>Dim the screen when a preview of a window is shown: opacity.</_summary>
-      <_description>Dim the screen when a preview of a window is shown: opacity.</_description>
-    </key>
     <key name="windows-theming" type="b">
       <default>true</default>
       <_summary>Whether to apply thumbnail theming.</_summary>
@@ -285,6 +270,27 @@
       <default>'3'</default>
       <_summary>Window thumbnails on hover animation effect.</_summary>
       <_description>Window thumbnails animation effect when hovered.</_description>
+    </key>
+
+    <key name="windows-preview" type="b">
+      <default>false</default>
+      <_summary>Whether to preview a window when its thumbnail is hovered.</_summary>
+      <_description>If true the window is shown on top when its thumbnail is hovered.</_description>
+    </key>
+    <key name="windows-preview-dim-color" type="s">
+      <default>'#01234c'</default>
+      <_summary>Dim the screen when a preview of a window is shown: color.</_summary>
+      <_description>Dim the screen when a preview of a window is shown: color.</_description>
+    </key>
+    <key name="windows-preview-dim-opacity" type="s">
+      <default>'25'</default>
+      <_summary>Dim the screen when a preview of a window is shown: opacity.</_summary>
+      <_description>Dim the screen when a preview of a window is shown: opacity.</_description>
+    </key>
+    <key name="windows-preview-panel-opacity" type="s">
+      <default>'50'</default>
+      <_summary>Makes thumbnail panel transparent when previews are on.</_summary>
+      <_description>Makes thumbnail panel transparent when previews are on.</_description>
     </key>
 
     <key name="mouse-app-left" type="s">

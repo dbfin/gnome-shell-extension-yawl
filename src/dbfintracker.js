@@ -67,6 +67,7 @@ const dbFinTracker = new Lang.Class({
 		this._updatedWindowsPreview = function () { if (this.preview && !global.yawl._windowsPreview) this.preview.hide(); }
 		this._updatedWindowsPreviewDimColor = function () { if (this.preview) this.preview.dimColor = global.yawl._windowsPreviewDimColor; }
 		this._updatedWindowsPreviewDimOpacity = function () { if (this.preview) this.preview.dimOpacity = global.yawl._windowsPreviewDimOpacity; }
+		this._updatedWindowsPreviewPanelOpacity = function () { if (this.preview) this.preview.updateWindowsPanelOpacity(); }
         this._updatedWindowsAnimationTime = function () { if (this.preview) this.preview.animationTime = global.yawl._windowsAnimationTime; }
 
 		this.update(null, 'Tracker: initial update.');

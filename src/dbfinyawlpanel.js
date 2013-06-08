@@ -54,7 +54,7 @@ const dbFinYAWLPanel = new Lang.Class({
 
     // GNOMENEXT: ui/panel.js: class Panel
     // params:  panelname, parent, parentproperty,
-    //          hidden, showhidechildren, hideinoverview,
+    //          hidden, showhidechildren, hideinoverview, closeinoverview,
     //          gravity, width, maxchildheight, x, y
     //          gravityindicator, gravityindicatorcolor, gravityindicatorarrow, gravityindicatorwidth, gravityindicatorheight
 	//			title, label
@@ -67,13 +67,6 @@ const dbFinYAWLPanel = new Lang.Class({
         this._showHideChildren = params.showhidechildren || false;
         this._gravity = dbFinUtils.inRange(parseFloat(params.gravity), 0.0, 1.0, 0.0);
         this._childrenObjects = new dbFinArrayHash.dbFinArrayHash();
-        if (params.hideinoverview) {
-			if (Main.overview && Main.overview.visible) this._hideInOverview();
-			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
-										callback: this._hideInOverview, scope: this });
-			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
-										callback: this._showOutOfOverview, scope: this });
-        }
 
 		this.container = this._panelName	? new Shell.GenericContainer({ name: this._panelName, reactive: true, visible: true })
         									: new Shell.GenericContainer({ reactive: true, visible: true });
@@ -144,6 +137,21 @@ const dbFinYAWLPanel = new Lang.Class({
 		this.hidden = false;
         this.hiding = false;
 		if (params.hidden) this.hide(0);
+
+		this._hideinoverview = params.hideinoverview;
+		this._closeinoverview = params.closeinoverview;
+        if (this._hideinoverview) {
+			if (Main.overview && Main.overview.visible) this._hideInOverview();
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
+										callback: this._hideInOverview, scope: this });
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
+										callback: this._showOutOfOverview, scope: this });
+        }
+        if (this._closeinoverview) {
+			if (Main.overview && Main.overview.visible) this.hide(0);
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
+										callback: function () { this.hide(); }, scope: this });
+        }
 
         if (this._parent && this.container) {
             if (this._parent == Main.uiGroup && Main.layoutManager) {
@@ -453,6 +461,10 @@ const dbFinYAWLPanel = new Lang.Class({
 
     show: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.show()');
+		if (this._closeinoverview && Main.overview && Main.overview.visible) {
+			_D('<');
+			return;
+		}
         if (this.container) {
             this.container.show();
             this.container.reactive = true;
@@ -492,9 +504,8 @@ const dbFinYAWLPanel = new Lang.Class({
     _showOutOfOverview: function () {
         _D('>' + this.__name__ + '.showOutOfOverview()');
         if (this.container) {
-            this.container.opacity = 0;
             this.container.natural_height_set = false;
-            dbFinAnimation.animateToState(this.container, { opacity: 255 }, null, null, this.animationTime);
+            this.animateContainerToState({ opacity: 255 }, null, null, this.animationTime);
         }
         _D('<');
     },
@@ -502,9 +513,9 @@ const dbFinYAWLPanel = new Lang.Class({
     _hideInOverview: function () {
         _D('>' + this.__name__ + '._hideInOverview()');
         if (this.container) {
-            dbFinAnimation.animateToState(this.container, { opacity: 0 }, function () {
-                this.natural_height = 0;
-            }, this.container, this.animationTime);
+            this.animateContainerToState({ opacity: 0 }, function () {
+                if (this.container) this.container.natural_height = 0;
+            }, this, this.animationTime);
         }
         _D('<');
     },
@@ -642,6 +653,20 @@ const dbFinYAWLPanel = new Lang.Class({
 			transition = this.animationEffect;
 		}
 		dbFinAnimation.animateToState(this, state, callback, scope, time, transition);
+        _D('<');
+    },
+
+    animateContainerToState: function(state, callback, scope, time, transition) {
+        _D('>' + this.__name__ + '.animateContainerToState()');
+		if (!this.container) {
+			_D('<');
+			return;
+		}
+		if (time === undefined || time === null) time = this.animationTime;
+		if (transition === undefined || transition === null) {
+			transition = this.animationEffect;
+		}
+		dbFinAnimation.animateToState(this.container, state, callback, scope, time, transition);
         _D('<');
     }
 });
