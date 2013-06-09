@@ -91,13 +91,13 @@ const dbFinYAWLPanel = new Lang.Class({
         }
 
 		this.labelTitle = params.title || params.title === ''
-				? new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' + params.title })
+				? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label-title', text: '' + params.title })
 				: null;
 		if (this.labelTitle) {
 			if (this.actor && this.labelTitle.container) this.actor.add_actor(this.labelTitle.container);
 		}
 		this.label = params.label || params.label === ''
-			? new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' + params.label })
+			? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label', text: '' + params.label })
 			: null;
 		if (this.label) {
 			this._labelText = '' + params.label;
