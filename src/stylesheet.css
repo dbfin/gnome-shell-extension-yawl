@@ -25,6 +25,11 @@
  */
 
 /* Thumbnails */
+#panelYAWLWindows .yawl-panel-label-title {
+	font-size: 106.25%;
+	font-weight: bold;
+}
+
 #panelYAWLWindows .yawl-thumbnail {
     border: 1px solid rgba(255, 255, 255, 0.0);
     border-radius: 3px 3px 0 0;

@@ -59,6 +59,8 @@ const dbFinPreview = new Lang.Class({
         this.animationTime = 0;
         this._dimColor = '#000000';
         this._dimOpacity = 0;
+		this.hidden = true;
+		this.hiding = false;
 		this.container = new Shell.GenericContainer({ name: 'yawlWindowPreview', reactive: false, visible: false });
 		if (this.container) {
 			if (Main.uiGroup) Main.uiGroup.add_actor(this.container);
@@ -168,7 +170,7 @@ const dbFinPreview = new Lang.Class({
 	show: function(trackerWindow, time/* = null*/) {
         _D('>' + this.__name__ + '.show()');
 		if (time === undefined || time === null) time = this.animationTime || 0;
-		this.hide(time);
+		this.hide(null, time);
 		if (this.container && this._clone && trackerWindow && trackerWindow.hovered) {
 			let (compositor = trackerWindow.metaWindow
 							&& trackerWindow.metaWindow.get_compositor_private
@@ -191,9 +193,12 @@ const dbFinPreview = new Lang.Class({
 					}
 					this.container.show();
                     this._clone.show();
+					this.hidden = false;
+					this.hiding = false;
 					dbFinAnimation.animateToState(this._clone, { opacity: 255 }, null, null, time);
 					dbFinAnimation.animateToState(this._background, { opacity: 255 }, null, null, time + (time >> 1),
 					                              dbFinAnimationEquations.delay('linear', 2 / 3));
+					this.updateWindowsPanelOpacity(time + (time >> 1));
 				}
 				else {
 					this._window = null;
@@ -209,11 +214,15 @@ const dbFinPreview = new Lang.Class({
 		if (time === undefined || time === null) time = this.animationTime || 0;
 		if (this._clone && (!trackerWindow || trackerWindow.metaWindow == this._window)) {
 			if (this._signals) this._signals.disconnectId('clone-resize');
+		    this.hiding = true;
             dbFinAnimation.animateToState(this._background, { opacity: 0 }, null, null, time >> 1);
             dbFinAnimation.animateToState(this._clone, { opacity: 0 }, function () {
 		        this._clone.hide();
                 this.container.hide();
+                this.hidden = true;
+                this.hiding = false;
             }, this, (time >> 1) + time, dbFinAnimationEquations.delay('linear', 1 / 3));
+			this.updateWindowsPanelOpacity((time >> 1) + time);
 		}
         _D('<');
 	},
@@ -229,6 +238,18 @@ const dbFinPreview = new Lang.Class({
         if (this.container) dbFinAnimation.animateToState(this.container, { opacity: 0 }, null, null, this.animationTime);
         _D('<');
     },
+
+	updateWindowsPanelOpacity: function (time/* = null*/) {
+		_D('>' + this.__name__ + '.updateWindowsPanelOpacity()');
+		if (time === undefined || time === null) time = this.animationTime || 0;
+		if (global.yawl && global.yawl.panelWindows) {
+			global.yawl.panelWindows.animateContainerToState({
+					opacity: this.hiding || this.hidden || !global.yawl._windowsPreviewPanelOpacity
+							? 255 : dbFinUtils.opacity100to255(global.yawl._windowsPreviewPanelOpacity)
+			}, null, null, time);
+		}
+		_D('<');
+	},
 
 	_addCloneEffect: function() {
         _D('>' + this.__name__ + '._addCloneEffect()');
