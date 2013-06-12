@@ -39,6 +39,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAnimation = Me.imports.dbfinanimation;
+const dbFinAnimationEquations = Me.imports.dbfinanimationequations;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerLabel = Me.imports.dbfinslicerlabel;
@@ -476,7 +477,11 @@ const dbFinYAWLPanel = new Lang.Class({
 			if (this.labelTitle) this.labelTitle.show(time === undefined || time === null ? this.animationTime : time);
 			if (this.label) this.label.show(time === undefined || time === null ? this.animationTime : time);
 		}
-		this.animateToState({ opacity: 255 }, callback, scope, time, transition);
+		if (time === undefined || time === null) time = this.animationTime;
+		if (transition === undefined || transition === null) {
+			transition = this.animationEffect;
+		}
+		this.animateToState({ opacity: 255 }, callback, scope, (time >> 1) + time, dbFinAnimationEquations.delay(transition, 0.33));
         _D('<');
     },
 

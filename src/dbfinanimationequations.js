@@ -27,7 +27,7 @@
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const dnFinConsts = Me.imports.dbfinconsts;
+const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinUtils = Me.imports.dbfinutils;
 
 /* In all functions below the following are the parameters:
