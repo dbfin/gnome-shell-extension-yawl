@@ -74,8 +74,9 @@ const arrayWindowClickFunctions = [
     [   _("Minimize"),	                            	'minimizeWindow'                ],
     [   _("(Un)Maximize"),                            	'maximizeWindowToggle'          ],
 	[	_("Close"),										'closeWindow'					],
-	[	_("Preview on"),								'previewWindowOn'				],
-	[	_("Preview off"),								'previewWindowOff'				]
+	[	_("Preview on/Thumbnail panel opacity"),		'previewWindowOnOpacity'		],
+	[	_("Preview off"),								'previewWindowOff'				],
+	[	_("Preview on"),								'previewWindowOn'				]
 ];
 
 const arrayAppMenuItems = [

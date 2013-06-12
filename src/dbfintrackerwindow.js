@@ -225,6 +225,12 @@ const dbFinTrackerWindow = new Lang.Class({
         _D('<');
 	},
 
+	previewWindowOnOpacity: function() {
+        _D('>' + this.__name__ + '.previewWindowOnOpacity()');
+		if (this._tracker) this._tracker.windowEvent(this, 'preview-on-opacity');
+        _D('<');
+	},
+
 	previewWindowOn: function() {
         _D('>' + this.__name__ + '.previewWindowOn()');
 		if (this._tracker) this._tracker.windowEvent(this, 'preview-on');
