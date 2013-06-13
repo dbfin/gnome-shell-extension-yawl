@@ -229,7 +229,10 @@ const dbFinAppButton = new Lang.Class({
 		     	actionGroup = this.metaApp.menu && this.metaApp.action_group) {
 			if (actionGroup) {
 				menu = new PopupMenu.RemoteMenu(this.actor, this.metaApp.menu, actionGroup);
-				if (menu.isEmpty()) menu = null;
+				if (menu && menu.isEmpty()) {
+					if (typeof menu.destroy === 'function') menu.destroy();
+					menu = null;
+				}
 			} // if (actionGroup)
 			if (!menu) {
 				// set up menu
@@ -248,6 +251,10 @@ const dbFinAppButton = new Lang.Class({
 					} // for (let i)
 				} // if (this._trackerApp && dbFinConsts.arrayAppMenuItems.length)
 			} // if (!menu)
+			if (menu && menu.isEmpty()) {
+				if (typeof menu.destroy === 'function') menu.destroy();
+				menu = null;
+			}
 			if (menu && this.menu != menu) {
 				this._signals.disconnectId('menu-toggled');
 				this.setMenu(menu);
@@ -270,9 +277,14 @@ const dbFinAppButton = new Lang.Class({
 
     _menuToggled: function(menu, state) {
         _D('>' + this.__name__ + '._menuToggled()');
-		if (menu == this.menu && !state) {
-			// make sure we are still "active" if focused
-			if (this._trackerApp && this._trackerApp._updateFocused) this._trackerApp._updateFocused();
+		if (menu == this.menu) {
+            if (!state) {
+                // make sure we are still "active" if focused
+                if (this._trackerApp) this._trackerApp._updateFocused();
+            }
+            else {
+                if (this._trackerApp) this._trackerApp.hideWindowsGroup();
+            }
 		}
         _D('<');
     },

@@ -274,6 +274,7 @@ const dbFinTrackerApp = new Lang.Class({
                     Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
                     Lang.bind(this, function() {
                         this._cancelShowThumbnailsTimeout();
+                        if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen) return;
                         this.positionWindowsGroup(); // position it before showing if it is hidden
 						if (this._tracker && this._tracker.preview && this._tracker.preview.container
 								&& Main.layoutManager && Main.layoutManager.panelBox) {
@@ -537,7 +538,6 @@ const dbFinTrackerApp = new Lang.Class({
     openMenu: function() {
         _D('>' + this.__name__ + '.openMenu()');
         if (this.appButton) {
-            this.hideWindowsGroup();
             this.appButton.menuToggle();
         }
         _D('<');
