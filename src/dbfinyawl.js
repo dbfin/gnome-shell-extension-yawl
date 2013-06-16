@@ -39,6 +39,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const dbFinDebugView = Me.imports.dbfindebugview;
 const dbFinMoveCenter = Me.imports.dbfinmovecenter;
 const dbFinPanelEnhancements = Me.imports.dbfinpanelenhancements;
+const dbFinMenuBuilder = Me.imports.dbfinmenubuilder;
 const dbFinSettings = Me.imports.dbfinsettings;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinStyle = Me.imports.dbfinstyle;
@@ -127,6 +128,8 @@ const dbFinYAWL = new Lang.Class({
 
         this._tracker = new dbFinTracker.dbFinTracker();
 
+        global.yawl.menuBuilder = new dbFinMenuBuilder.dbFinMenuBuilder();
+
 		this._updatedDebug = function () {
 			if (global.yawl._debug) {
 				if (!global._yawlDebugView) {
@@ -156,6 +159,10 @@ const dbFinYAWL = new Lang.Class({
 		if (this._style) {
 			this._style.destroy();
 			this._style = null;
+		}
+		if (global.yawl.menuBuilder) {
+			global.yawl.menuBuilder.destroy();
+			global.yawl.menuBuilder = null;
 		}
 		if (this._tracker) {
 			this._tracker.destroy();

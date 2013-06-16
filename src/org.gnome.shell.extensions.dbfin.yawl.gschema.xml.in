@@ -292,6 +292,11 @@
       <_summary>Makes thumbnail panel transparent when previews are on.</_summary>
       <_description>Makes thumbnail panel transparent when previews are on.</_description>
     </key>
+    <key name="app-quicklists" type="b">
+      <default>true</default>
+      <_summary>Whether to use quicklists in menus.</_summary>
+      <_description>If true and Quicklists extension is enabled then use quicklists in menus.</_description>
+    </key>
 
     <key name="mouse-app-left" type="s">
       <default>'2'</default>

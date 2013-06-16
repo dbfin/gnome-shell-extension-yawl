@@ -11,6 +11,7 @@ dist_extension_DATA = \
 	dbfinconsts.js \
 	dbfindebug.js \
 	dbfindebugview.js \
+	dbfinmenubuilder.js \
 	dbfinmovecenter.js \
 	dbfinpanelbuttontoggle.js \
 	dbfinpanelenhancements.js \

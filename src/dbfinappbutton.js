@@ -26,12 +26,8 @@
 
 const Lang = imports.lang;
 
-const Shell = imports.gi.Shell;
-const St = imports.gi.St;
-
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -111,6 +107,7 @@ const dbFinAppButton = new Lang.Class({
 		this._updatedIconsHoverFit = function () { if (this._slicerIcon) this._slicerIcon.hoverFit = global.yawl._iconsHoverFit; };
 		this._updatedIconsHoverAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = global.yawl._iconsHoverAnimationTime; };
 		this._updatedIconsHoverAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = global.yawl._iconsHoverAnimationEffect; };
+        this._updatedAppQuicklists = function () { this._updateMenu(); }
 
         // this and this.metaApp related stuff
 		this._menuManager = Main.panel && Main.panel.menuManager || null;
@@ -221,49 +218,19 @@ const dbFinAppButton = new Lang.Class({
 	// GNOMENEXT: ui/panel.js: class AppMenuButton
 	_updateMenu: function() {
         _D('>' + this.__name__ + '._updateMenu()');
-		if (!this.metaApp || this.metaApp.state != Shell.AppState.RUNNING) {
-	        _D('<');
-            return;
-		}
-		let (	menu = null,
-		     	actionGroup = this.metaApp.menu && this.metaApp.action_group) {
-			if (actionGroup) {
-				menu = new PopupMenu.RemoteMenu(this.actor, this.metaApp.menu, actionGroup);
-				if (menu && menu.isEmpty()) {
-					if (typeof menu.destroy === 'function') menu.destroy();
-					menu = null;
-				}
-			} // if (actionGroup)
-			if (!menu) {
-				// set up menu
-				if (this._trackerApp && dbFinConsts.arrayAppMenuItems.length) {
-					menu = new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.TOP, 0);
-					for (let i = 0; i < dbFinConsts.arrayAppMenuItems.length; ++i) {
-						let (   text = _(dbFinConsts.arrayAppMenuItems[i][0]),
-								functionName = dbFinConsts.arrayAppMenuItems[i][1]) {
-							if (text && text != '' && this._trackerApp[functionName]) {
-								menu.addAction(text, Lang.bind(this._trackerApp, this._trackerApp[functionName]));
-							}
-							else {
-								menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-							}
-						} // let (text, functionName)
-					} // for (let i)
-				} // if (this._trackerApp && dbFinConsts.arrayAppMenuItems.length)
-			} // if (!menu)
-			if (menu && menu.isEmpty()) {
-				if (typeof menu.destroy === 'function') menu.destroy();
-				menu = null;
-			}
-			if (menu && this.menu != menu) {
+        let (menu = global.yawl && global.yawl.menuBuilder
+                    && global.yawl.menuBuilder.build(this._trackerApp, this.actor) || null) {
+			if (menu) {
 				this._signals.disconnectId('menu-toggled');
 				this.setMenu(menu);
-				this._menuManager.addMenu(menu);
-				// GNOMENEXT: ui/popupMenu.js: class PopupMenu
-				this._signals.connectId('menu-toggled', {	emitter: this.menu, signal: 'open-state-changed',
-				 											callback: this._menuToggled, scope: this });
+                if (this.menu) {
+                    this._menuManager.addMenu(this.menu);
+                    // GNOMENEXT: ui/popupMenu.js: class PopupMenu
+                    this._signals.connectId('menu-toggled', {	emitter: this.menu, signal: 'open-state-changed',
+                                                                callback: this._menuToggled, scope: this });
+                }
 			}
-		}
+        }
         _D('<');
 	},
 

@@ -150,10 +150,11 @@ const Settings = [
     [ 'windows-hover-animation-time', 144, { min: 0, max: 200 }, 'thumbnails>animation' ],
     [ 'windows-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'thumbnails>animation' ],
 
-	[ 'windows-preview', false, { }, 'thumbnails>preview' ],
-	[ 'windows-preview-dim-color', '#01234c', { }, 'thumbnails>preview' ],
-	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'thumbnails>preview' ],
-    [ 'windows-preview-panel-opacity', 50, { min: 25, max: 100 }, 'thumbnails>preview' ],
+	[ 'windows-preview', false, { }, 'addons>preview' ],
+	[ 'windows-preview-dim-color', '#01234c', { }, 'addons>preview' ],
+	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'addons>preview' ],
+    [ 'windows-preview-panel-opacity', 50, { min: 25, max: 100 }, 'addons>preview' ],
+    [ 'app-quicklists', true, { }, 'addons>quicklists' ],
 
     [ 'mouse-app-left', 2, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-left-ctrl', 8, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],

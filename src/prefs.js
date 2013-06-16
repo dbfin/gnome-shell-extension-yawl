@@ -443,13 +443,6 @@ function buildPrefsWidget() {
 
             builder.closeNotebook();
 
-		builder.addPage(_("Features"));
-            builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview');
-            builder.shift();
-				builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, 'windows-preview');
-				builder.addScale(_("Reduce panel opacity on preview"), 'windows-preview-panel-opacity', 25, 100, 1, 'windows-preview');
-            builder.unshift();
-
         builder.addPage(_("Behavior"));
             builder.addNotebook(_("Mouse"), 'mouse.png');
 				builder.addNotebook(_("Icons"), 'icon_16.png');
@@ -548,6 +541,14 @@ function buildPrefsWidget() {
 				builder.unshift();
 
             builder.closeNotebook();
+
+		builder.addPage(_("Add-ons"));
+            builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview');
+            builder.shift();
+				builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, 'windows-preview');
+				builder.addScale(_("Reduce panel opacity on preview"), 'windows-preview-panel-opacity', 25, 100, 1, 'windows-preview');
+            builder.unshift();
+			builder.addCheckBox('Quicklists: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
 
 		builder.addPage(_("Export/Import"));
 			widgets = builder.addRow(new Gtk.Label({ halign: Gtk.Align.START }));
