@@ -75,6 +75,10 @@ const dbFinTracker = new Lang.Class({
 									callback: this._switchWorkspace, scope: this });
 		this._signals.connectNoId({ emitter: Shell.AppSystem.get_default(), signal: 'app-state-changed',
 									callback: this._updateAppState, scope: this });
+		this._signals.connectNoId({ emitter: global.display, signal: 'window-marked-urgent',
+									callback: this._windowAttention, scope: this });
+		this._signals.connectNoId({ emitter: global.display, signal: 'window-demands-attention',
+									callback: this._windowAttention, scope: this });
 		// it seems to work just fine without this but just in case:
 		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
 									callback: function () { this.update(null, 'Overview hiding.'); }, scope: this });
@@ -380,6 +384,11 @@ const dbFinTracker = new Lang.Class({
 			}
 			this.update(null, 'App ' + (trackerApp ? trackerApp.appName : 'unknown') + ': app state changed.');
 		}
+        _D('<');
+	},
+
+	_windowAttention: function(display, metaWindow) {
+        _D('>' + this.__name__ + '._windowAttention()');
         _D('<');
 	},
 
