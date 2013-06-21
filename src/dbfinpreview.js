@@ -59,6 +59,7 @@ const dbFinPreview = new Lang.Class({
         this.animationTime = 0;
         this._dimColor = '#000000';
         this._dimOpacity = 0;
+		this._panelTransparent = false;
 		this.hidden = true;
 		this.hiding = false;
 		this.container = new Shell.GenericContainer({ name: 'yawlWindowPreview', reactive: false, visible: false });
@@ -244,7 +245,8 @@ const dbFinPreview = new Lang.Class({
 		if (time === undefined || time === null) time = this.animationTime || 0;
 		if (global.yawl && global.yawl.panelWindows) {
 			global.yawl.panelWindows.animateContainerToState({
-					opacity: this.hiding || this.hidden || !global.yawl._windowsPreviewPanelOpacity
+					opacity: !this._panelTransparent || this.hiding || this.hidden
+							|| !global.yawl._windowsPreviewPanelOpacity
 							? 255 : dbFinUtils.opacity100to255(global.yawl._windowsPreviewPanelOpacity)
 			}, null, null, time);
 		}
@@ -299,6 +301,13 @@ const dbFinPreview = new Lang.Class({
         if (!isNaN(opacity = parseInt(opacity)) && this._dimOpacity != opacity) {
             this._dimOpacity = opacity;
             this._updateBackgroundStyle();
+        }
+    },
+    get panelTransparent() { return this._panelTransparent; },
+    set panelTransparent(transparent) {
+        if (this._panelTransparent != (transparent = !!transparent)) {
+            this._panelTransparent = transparent;
+            this.updateWindowsPanelOpacity();
         }
     }
 });

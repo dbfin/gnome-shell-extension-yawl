@@ -74,9 +74,8 @@ const arrayWindowClickFunctions = [
     [   _("Minimize"),	                            	'minimizeWindow'                ],
     [   _("(Un)Maximize"),                            	'maximizeWindowToggle'          ],
 	[	_("Close"),										'closeWindow'					],
-	[	_("Preview on/Thumbnail panel opacity"),		'previewWindowOnOpacity'		],
-	[	_("Preview off"),								'previewWindowOff'				],
-	[	_("Preview on"),								'previewWindowOn'				]
+	[	_("Preview on") + '/' + _("Thumbnail panel opacity"),	'previewWindowOn'		],
+	[	_("Preview off") + '/' + _("Thumbnail panel opacity"),	'previewWindowOff'		]
 ];
 
 const arrayAppMenuItems = [
@@ -153,7 +152,7 @@ const Settings = [
 	[ 'windows-preview', false, { }, 'addons>preview' ],
 	[ 'windows-preview-dim-color', '#01234c', { }, 'addons>preview' ],
 	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'addons>preview' ],
-    [ 'windows-preview-panel-opacity', 50, { min: 25, max: 100 }, 'addons>preview' ],
+    [ 'windows-preview-panel-opacity', 33, { min: 25, max: 100 }, 'addons>preview' ],
     [ 'app-quicklists', true, { }, 'addons>quicklists' ],
 
     [ 'mouse-app-left', 2, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],

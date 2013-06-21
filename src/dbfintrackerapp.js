@@ -269,7 +269,7 @@ const dbFinTrackerApp = new Lang.Class({
             _D('<');
             return;
         }
-		if (this.yawlPanelWindowsGroup && global.yawl.panelWindows) {
+		if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows) {
 			this._showThumbnailsTimeout = Mainloop.timeout_add(
                     Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
                     Lang.bind(this, function() {
@@ -280,8 +280,16 @@ const dbFinTrackerApp = new Lang.Class({
 								&& Main.layoutManager && Main.layoutManager.panelBox) {
 							Main.uiGroup.set_child_above_sibling(this._tracker.preview.container, Main.layoutManager.panelBox);
 						}
-						if (global.yawl && global.yawl.panelWindows && global.yawl.panelWindows.container) {
-							Main.uiGroup.set_child_above_sibling(global.yawl.panelWindows.container, null);
+						if (global.yawl && global.yawl.panelWindows) {
+                            if (global.yawl.panelWindows.container) {
+    							Main.uiGroup.set_child_above_sibling(global.yawl.panelWindows.container, null);
+                            }
+                            if (global.yawl.panelWindows.hidden
+                                    || global.yawl.panelWindows._lastWindowsGroupTrackerApp !== this) {
+                                if (this._tracker && this._tracker.preview) {
+                                    this._tracker.preview.panelTransparent = false;
+                                }
+                            }
 						}
                         global.yawl.panelWindows.showChild(this.yawlPanelWindowsGroup, true);
                         global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;

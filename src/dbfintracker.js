@@ -443,27 +443,21 @@ const dbFinTracker = new Lang.Class({
         }
 		else if (event === 'focused') {
         }
-		else if (event === 'preview-on' || event === 'preview-on-opacity') {
+		else if (event === 'preview-on') {
 			if (global.yawl && global.yawl._windowsPreview) {
-				if (event === 'preview-on-opacity') {
-					let (opacity = Math.floor((global.yawl._windowsPreviewPanelOpacity - 18) / 15)) {
-						if (opacity > 0 && this._settings) {
-							this._settings.set_string('windows-preview-panel-opacity', '' + (opacity * 15 + 10));
-						}
-					} // let (opacity)
-				} // if (event === 'preview-on-opacity')
-			} // if (global.yawl && global.yawl._windowsPreview)
+				if (this.preview) this.preview.panelTransparent = true;
+			}
 			else {
-				if (event === 'preview-on-opacity') {
-					if (this._settings) this._settings.set_string('windows-preview-panel-opacity', '100');
-				} // if (event === 'preview-on-opacity')
 				if (this._settings) this._settings.set_boolean('windows-preview', true);
-			} // if (global.yawl && global.yawl._windowsPreview) else
+			}
 			if (this.preview) this.preview.show(trackerWindow);
 		}
 		else if (event === 'preview-off') {
-			if (this._settings) this._settings.set_boolean('windows-preview', false);
-			else if (this.preview) this.preview.hide();
+            if (global.yawl && global.yawl._windowsPreview) {
+				if (this.preview && this.preview.panelTransparent) this.preview.panelTransparent = false;
+                else if (this._settings) this._settings.set_boolean('windows-preview', false);
+                else if (this.preview) this.preview.hide();
+            }
 		}
         _D('<');
     }

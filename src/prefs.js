@@ -543,12 +543,15 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("Add-ons"));
-            builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview');
+			builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"));
             builder.shift();
-				builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, 'windows-preview');
-				builder.addScale(_("Reduce panel opacity on preview"), 'windows-preview-panel-opacity', 25, 100, 1, 'windows-preview');
+				builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview');
+				builder.shift();
+					builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, 'windows-preview');
+					builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 25, 100, 1, 'windows-preview');
+				builder.unshift();
             builder.unshift();
-			builder.addCheckBox('Quicklists: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
+			builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
 
 		builder.addPage(_("Export/Import"));
 			widgets = builder.addLabel(_("Back up, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));

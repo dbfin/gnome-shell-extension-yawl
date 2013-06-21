@@ -288,7 +288,7 @@
       <_description>Dim the screen when a preview of a window is shown: opacity.</_description>
     </key>
     <key name="windows-preview-panel-opacity" type="s">
-      <default>'50'</default>
+      <default>'33'</default>
       <_summary>Makes thumbnail panel transparent when previews are on.</_summary>
       <_description>Makes thumbnail panel transparent when previews are on.</_description>
     </key>
