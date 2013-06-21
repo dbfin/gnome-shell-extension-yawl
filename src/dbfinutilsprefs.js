@@ -382,7 +382,10 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 	addWidget: function(gtkWidget, x, y, w, h, bindSensitive/* = null*/) {
 		if (!gtkWidget || !this._notebook || !this._notebook.page) return [];
 		if (!(gtkWidget instanceof Gtk.Widget)) {
-			gtkWidget = new Gtk.Label({ label: '' + gtkWidget, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true });
+			let (label = '' + gtkWidget) {
+				gtkWidget = new Gtk.Label({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true });
+				gtkWidget.set_markup(label);
+			}
 		}
 		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || []) {
 			if (!w || w < 0 || !h || h < 0) {
@@ -421,7 +424,10 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 	addRow: function(gtkWidget/* = null*/, gtkOthers/* = []*/, bindSensitive/* = null*/) {
 		if (!this._notebook || !this._notebook.page) return [];
 		if (gtkWidget && !(gtkWidget instanceof Gtk.Widget)) {
-			gtkWidget = new Gtk.Label({ label: '' + gtkWidget, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true });
+			let (label = '' + gtkWidget) {
+				gtkWidget = new Gtk.Label({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true });
+	            gtkWidget.set_markup(label);
+			}
 		}
 		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || [],
 		     x = this._notebook.shift,
@@ -474,58 +480,53 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
     },
 
     addLabel: function(label, bindSensitive/* = null*/) {
-		return this.addRow(new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }), [], bindSensitive);
+		return this.addRow(label, [], bindSensitive);
     },
 
     addImages: function(label, images, bindSensitive/* = null*/) {
-        let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }),
-             rowImages = []) {
+        let (rowImages = []) {
             if (images) {
                 images.forEach(function (image) {
                 	rowImages.push([ Gtk.Image.new_from_file(Me.path + '/images/' + image, { halign: Gtk.Align.END, valign: Gtk.Align.CENTER }), 1 ]);
                 });
             }
-    		return this.addRow(rowLabel, rowImages, bindSensitive);
-        }
+    		return this.addRow(label, rowImages, bindSensitive);
+        } // let (rowImages)
     },
 
     addCheckBox: function(label, settingsKey, bindSensitive/* = null*/) {
-		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }),
-             rowSwitch = new Gtk.Switch({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER })) {
+		let (rowSwitch = new Gtk.Switch({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER })) {
 			this._settings.bind(settingsKey, rowSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-			return this.addRow(rowLabel, [ [ rowSwitch, 1 ], [ null, 3 ] ], bindSensitive);
-        } // let (rowLabel, rowSwitch)
+			return this.addRow(label, [ [ rowSwitch, 1 ], [ null, 3 ] ], bindSensitive);
+        } // let (rowSwitch)
     },
 
     addColorButton: function(label, settingsKey, titleColorChooser, bindSensitive/* = null*/, showEntry/* = false*/) {
 		if (!this._notebook) return [];
-		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }),
-             rowColorButtonEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 9 }),
+		let (rowColorButtonEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 9 }),
              rowColorButton = new Gtk.ColorButton({ halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, use_alpha: false, title: titleColorChooser }),
 		     settingsbind = new dbFinSettingsBindEntryColorButton()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowColorButtonEntry, rowColorButton);
-			return this.addRow(rowLabel, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : 2 ], [ rowColorButton, 1 ] ], bindSensitive);
-        } // let (rowLabel, rowColorButtonEntry, rowColorButton, settingsbind)
+			return this.addRow(label, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : 2 ], [ rowColorButton, 1 ] ], bindSensitive);
+        } // let (rowColorButtonEntry, rowColorButton, settingsbind)
     },
 
     addScale: function(label, settingsKey, min, max, step, bindSensitive/* = null*/, showEntry/* = false*/) {
 		if (!this._notebook) return [];
-		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }),
-             rowScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
+		let (rowScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
              rowScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min, max, step,
                                                  { halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
 		     settingsbind = new dbFinSettingsBindEntryScale()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowScaleEntry, rowScale);
-			return this.addRow(rowLabel, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, !showEntry ? 4 : 3 ] ], bindSensitive);
-        } // let (rowLabel, rowScaleEntry, rowScale, settingsbind)
+			return this.addRow(label, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, !showEntry ? 4 : 3 ] ], bindSensitive);
+        } // let (rowScaleEntry, rowScale, settingsbind)
     },
 
     addScaleScale: function(label, settingsKey1, settingsKey2, min1, max1, step1, min2, max2, step2, bindSensitive/* = null*/, showEntry1/* = false*/, showEntry2/* = false*/) {
 		if (!this._notebook) return [];
-		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }),
-             rowScaleEntry1 = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
+		let (rowScaleEntry1 = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
              rowScale1 = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min1, max1, step1,
                                                   { halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
              rowScaleEntry2 = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
@@ -537,14 +538,13 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			this._notebook.widget._settingsbinds.push(settingsbind2);
 			settingsbind1.bind(settingsKey1, rowScaleEntry1, rowScale1);
 			settingsbind2.bind(settingsKey2, rowScaleEntry2, rowScale2);
-			return this.addRow(rowLabel, [ [ rowScaleEntry1, !showEntry1 ? 0 : 1 ], [ rowScale1, !showEntry1 ? 2 : 1 ], [ rowScaleEntry2, !showEntry2 ? 0 : 1 ], [ rowScale2, !showEntry2 ? 2 : 1 ] ], bindSensitive);
-        } // let (rowLabel, rowScaleEntry, rowScale, settingsbind)
+			return this.addRow(label, [ [ rowScaleEntry1, !showEntry1 ? 0 : 1 ], [ rowScale1, !showEntry1 ? 2 : 1 ], [ rowScaleEntry2, !showEntry2 ? 0 : 1 ], [ rowScale2, !showEntry2 ? 2 : 1 ] ], bindSensitive);
+        } // let (rowScaleEntry, rowScale, settingsbind)
     },
 
     addColorButtonScale: function(label, settingsKeyColor, settingsKeyScale, titleColorChooser, min, max, step, bindSensitive/* = null*/, showEntryColor/* = false*/, showEntryScale/* = false*/) {
 		if (!this._notebook) return [];
-		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }),
-             rowColorButtonEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 9 }),
+		let (rowColorButtonEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 9 }),
              rowColorButton = new Gtk.ColorButton({ halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, use_alpha: false, title: titleColorChooser }),
              rowScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
              rowScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min, max, step,
@@ -555,14 +555,13 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			this._notebook.widget._settingsbinds.push(settingsbindScale);
 			settingsbindColor.bind(settingsKeyColor, rowColorButtonEntry, rowColorButton);
 			settingsbindScale.bind(settingsKeyScale, rowScaleEntry, rowScale);
-			return this.addRow(rowLabel, [ [ rowColorButtonEntry, !showEntryColor ? 0 : 1 ], [ rowColorButton, 1 ], [ rowScaleEntry, !showEntryScale ? 0 : 1 ], [ rowScale, 3 - (!showEntryScale ? 0 : 1) - (!showEntryColor ? 0 : 1) ] ], bindSensitive);
-        } // let (rowLabel, rowColorButtonEntry, rowColorButton, rowScaleEntry, rowScale, settingsbindColor, settingsbindScale)
+			return this.addRow(label, [ [ rowColorButtonEntry, !showEntryColor ? 0 : 1 ], [ rowColorButton, 1 ], [ rowScaleEntry, !showEntryScale ? 0 : 1 ], [ rowScale, 3 - (!showEntryScale ? 0 : 1) - (!showEntryColor ? 0 : 1) ] ], bindSensitive);
+        } // let (rowColorButtonEntry, rowColorButton, rowScaleEntry, rowScale, settingsbindColor, settingsbindScale)
     },
 
 	addComboBoxText: function(label, settingsKey, arrayLabels, subIndex, bindSensitive/* = null*/, showEntry/* = false*/) {
 		if (!this._notebook) return [];
-		let (rowLabel = new Gtk.Label({ label: label, halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true }),
-             rowComboBoxTextEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
+		let (rowComboBoxTextEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
              rowComboBoxText = new Gtk.ComboBoxText({ halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true }),
 		     settingsbind = new dbFinSettingsBindEntryComboBoxText()) {
             if (arrayLabels && arrayLabels.length) {
@@ -583,7 +582,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
             }
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowComboBoxTextEntry, rowComboBoxText);
-			return this.addRow(rowLabel, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, !showEntry ? 4 : 3 ] ], bindSensitive);
-        } // let (rowLabel, rowComboBoxTextEntry, rowComboBoxText, settingsbind)
+			return this.addRow(label, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, !showEntry ? 4 : 3 ] ], bindSensitive);
+        } // let (rowComboBoxTextEntry, rowComboBoxText, settingsbind)
     }
 });
