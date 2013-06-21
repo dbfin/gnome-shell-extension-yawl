@@ -23,3 +23,7 @@ v5	2013-05-24
 v6	2013-05-29
     	- Dimmed background while previewing windows
     	- Smoother preview animation and hiding in Overview
+v7	2013-06-21
+    	- Quicklists: requires Quicklists extension by Damian
+    	- Window previews: thumbnail panel can be made transparent to look through it
+    	- Styling adjustments
