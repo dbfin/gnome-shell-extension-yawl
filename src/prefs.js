@@ -307,12 +307,12 @@ function buildPrefsWidget() {
 				widgets[0].xalign = 0.5;
 				widgets[0].yalign = 0.5;
 			}
-			widgets = builder.addWidget(Gtk.Image.new_from_file(Me.path + '/images/gplv3.png'), 9, 10, 1, 2);
+			widgets = builder.addWidget(Gtk.Image.new_from_file(Me.path + '/images/gplv3.png'), 9, 11, 1, 2);
 			if (widgets && widgets.length) {
 				widgets[0].hexpand = true;
 				widgets[0].vexpand = true;
 				widgets[0].xalign = 1.0;
-				widgets[0].yalign = 0.0;
+				widgets[0].yalign = 0.5;
 			}
 
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 6 ], [ new Gtk.Label({ halign: Gtk.Align.END }), 1 ] ]);
@@ -343,6 +343,11 @@ function buildPrefsWidget() {
 
 			builder.addLabel('<span size="small"> </span>', null, true);
 			let (s = '') {
+				for (let i = 0; i < dbFinConsts.arrayContributors.length; ++i) {
+					s += (i ? ', ' : ' ') + dbFinConsts.arrayContributors[i][0]
+							+ ' (' + _(dbFinConsts.arrayContributors[i][1]) + ')';
+				}
+				if (s != '') builder.addLabel(_("Special thanks to") + ':' + s, null, true, true, 3);
 			}
 			builder.addLabel('<span size="small">' + _("If you would like to translate the program to your language feel free to do so: please use GitHub or email me for instructions.") + '</span>', null, true, true);
 			builder.addSeparator();

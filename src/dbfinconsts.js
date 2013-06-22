@@ -32,6 +32,10 @@ const _ = Gettext.gettext;
 
 const arrayShellVersion = imports.misc.config.PACKAGE_VERSION.split('.').map(function (v) { return parseInt(v); });
 
+const arrayContributors = [
+	[	'Jonatan Zeidler',								_("German translation")			]
+];
+
 const arrayAnimationTransitions = [
     [   _("Linear"),									'linear'						],
     [	_("Slow at the end"),							'easeOutQuad'					],
