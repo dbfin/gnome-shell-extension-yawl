@@ -63,7 +63,7 @@
  *          addScale(label, settingsKey, min, max, step, bindSensitive?, showEntry?)
  * 			addScaleScale(label, settingsKey1, settingsKey2, min1, max1, step1, min2, max2, step2, bindSensitive?, showEntry1?, showEntry2?)
  * 			addColorButtonScale(label, settingsKeyColor, settingsKeyScale, titleColorChooser, min, max, step, bindSensitive?, showEntryColor?, showEntryScale?)
- *          addComboBoxText(label, settingsKey, arrayLabels, subIndex, bindSensitive?, showEntry?)
+ *          addComboBoxText(label, settingsKey, arrayLabels, subIndex, bindSensitive?, showEntry?, wide?)
  *
  */
 
@@ -559,7 +559,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
         } // let (rowColorButtonEntry, rowColorButton, rowScaleEntry, rowScale, settingsbindColor, settingsbindScale)
     },
 
-	addComboBoxText: function(label, settingsKey, arrayLabels, subIndex, bindSensitive/* = null*/, showEntry/* = false*/) {
+	addComboBoxText: function(label, settingsKey, arrayLabels, subIndex, bindSensitive/* = null*/, showEntry/* = false*/, wide/* = false*/) {
 		if (!this._notebook) return [];
 		let (rowComboBoxTextEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
              rowComboBoxText = new Gtk.ComboBoxText({ halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true }),
@@ -582,7 +582,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
             }
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowComboBoxTextEntry, rowComboBoxText);
-			return this.addRow(label, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, !showEntry ? 4 : 3 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, (!showEntry ? 4 : 3) + (wide ? 1 : 0) ] ], bindSensitive);
         } // let (rowComboBoxTextEntry, rowComboBoxText, settingsbind)
     }
 });
