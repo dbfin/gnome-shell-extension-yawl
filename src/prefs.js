@@ -341,36 +341,17 @@ function buildPrefsWidget() {
 				widgets[1].set_markup('<a href="https://github.com/dbfin/gnome-shell-extension-yawl"><span underline="none">https://github.com/dbfin/gnome-shell-extension-yawl</span></a>');
 			}
 
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_markup('<span size="small"> </span>');
+			builder.addLabel('<span size="small"> </span>', null, true);
+			let (s = '') {
 			}
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_markup(_("Please report problems on GitHub. If you would like to translate the program to your language please email me."));
-			}
-
+			builder.addLabel('<span size="small">' + _("If you would like to translate the program to your language feel free to do so: please use GitHub or email me for instructions.") + '</span>', null, true, true);
 			builder.addSeparator();
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 9 ], [ null, 1 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_markup('<span size="small">' + _("This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.") + '</span>');
-			}
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 9 ], [ null, 1 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_markup('<span size="small">' + _("A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.") + '</span>');
-			}
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 10 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup('<span size="small">' + _("You are free to use, modify or otherwise distribute the code of this software provided that your actions comply with all applicable laws and GPL.") + '</span>'
-							  + ' ' + '<span size="small">' + _("In particular, you must include the above copyright notice and a copy of the License in all copies or substantial portions of the software, whether original or modified.") + '</span>');
-			}
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 10 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup('<span size="small">' + _("This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.") + '</span>'
-							  + ' ' + '<span size="small">' + _("For more details please see the GNU General Public License (GPL) version 3.") + '</span>');
-			}
+			builder.addLabel('<span size="small">' + _("This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.") + '</span>', null, true, true, 3, 1);
+            builder.addLabel('<span size="small">' + _("A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.") + '</span>', null, true, true, 3, 1);
+			builder.addLabel('<span size="small">' + _("You are free to use, modify or otherwise distribute the code of this software provided that your actions comply with all applicable laws and GPL.") + '</span>'
+							  + ' ' + '<span size="small">' + _("In particular, you must include the above copyright notice and a copy of the License in all copies or substantial portions of the software, whether original or modified.") + '</span>', null, true, true, 3);
+			builder.addLabel('<span size="small">' + _("This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.") + '</span>'
+							  + ' ' + '<span size="small">' + _("For more details please see the GNU General Public License (GPL) version 3.") + '</span>', null, true, true, 3);
 
 		builder.addPage(_("Icons"));
             builder.addNotebook(_("Panel"), 'panel.png');
@@ -573,7 +554,7 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("Add-ons"));
-			builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"));
+			builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), null, true, true);
             builder.shift();
 				builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview');
 				builder.shift();
@@ -584,7 +565,7 @@ function buildPrefsWidget() {
 			builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
 
 		builder.addPage(_("Export/Import"));
-			builder.addLabel(_("Back up, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
+			builder.addLabel(_("Back up, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"), null, true, true, 3);
 			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,
@@ -614,100 +595,52 @@ function buildPrefsWidget() {
 			}
 
 		builder.addPage(_("Did you know?"));
-			widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-			if (widgets && widgets.length) {
-				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup(
-								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-						+ ' ' + _("is designed to be simple to use yet highly customizable.")
-				);
-			}
+			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
+							 + ' ' + _("is designed to be simple to use yet highly customizable."), null, true, true, 3);
 			builder.shift();
-				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-				if (widgets && widgets.length) {
-					widgets[0].set_line_wrap(true);
-					widgets[0].set_markup('<span size="small">' +
-								(Math.floor((dbFinConsts.Settings.length - 1) / 10) * 10) + '+'
-						+ ' ' + _("settings are currently available to customize feel and look of the extension.")
-						+ ' ' + _("Exploring the options also helps you to uncover some hidden features.")
-						+ ' ' + _("For example, <b>did you know</b> that there is an option to preview a window when its thumbnail is hovered, and that you can easily switch it on and off just by scrolling the middle mouse button over the thumbnail?")
-					+ '</span>');
-				}
+				builder.addLabel('<span size="small">' +
+								 (Math.floor((dbFinConsts.Settings.length - 1) / 10) * 10) + '+'
+								 + ' ' + _("settings are currently available to customize feel and look of the extension.")
+								 + ' ' + _("Exploring the options also helps you to uncover some hidden features.")
+								 + ' ' + _("For example, <b>did you know</b> that there is an option to preview a window when its thumbnail is hovered, and that you can easily switch it on and off just by scrolling the middle mouse button over the thumbnail?")
+								 + '</span>', null, true, true, 3);
 			builder.unshift();
-			widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-			if (widgets && widgets.length) {
-				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup(
-								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-						+ ' ' + _("is active workspace centric.")
-				);
-			}
+			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
+							 + ' ' + _("is active workspace centric."), null, true, true, 3);
 			builder.shift();
-				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-				if (widgets && widgets.length) {
-					widgets[0].set_line_wrap(true);
-					widgets[0].set_markup('<span size="small">' +
-								_("It shows apps and windows open on the current active workspace only.")
-						+ ' ' + _("Most of its functionality (such as cycling through windows) is also active-workspace-oriented.")
-						+ ' ' + _("This is intentional and was set as one of the initial goals.")
-						+ ' ' + _("App icons shown on the panel are indicative of which workspace you are currently on and what task/activity it is intended for.")
-						+ ' ' + _("If you also want quick access to all applications running on all workspaces and favorites")
-						+ ' ' + _("please consider installing in addition this highly recommended extension:")
-					    + ' ' + '<b>Dash to Dock</b> (' + _("author") + ': <b>michele_g</b>)'
-					+ '</span>');
-				}
+				builder.addLabel('<span size="small">' +
+								 _("It shows apps and windows open on the current active workspace only.")
+								 + ' ' + _("Most of its functionality (such as cycling through windows) is also active-workspace-oriented.")
+								 + ' ' + _("This is intentional and was set as one of the initial goals.")
+								 + ' ' + _("App icons shown on the panel are indicative of which workspace you are currently on and what task/activity it is intended for.")
+								 + ' ' + _("If you also want quick access to all applications running on all workspaces and favorites")
+								 + ' ' + _("please consider installing in addition this highly recommended extension:")
+								 + ' ' + '<b>Dash to Dock</b> (' + _("author") + ': <b>michele_g</b>)'
+								 + '</span>', null, true, true, 3);
 			builder.unshift();
-			widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-			if (widgets && widgets.length) {
-				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup(
-								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-						+ ' ' + _("tries to seamlessly integrate into the Gnome-Shell panel.")
-				);
-			}
+			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
+							 + ' ' + _("tries to seamlessly integrate into the Gnome-Shell panel."), null, true, true, 3);
 			builder.shift();
-				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-				if (widgets && widgets.length) {
-					widgets[0].set_line_wrap(true);
-					widgets[0].set_markup('<span size="small">' +
-								_("It is embedded into the panel right where there is space for it not claimed by anything else, and uses panel theme by default.")
-						+ ' ' + _("It further allows you to hide some unnecessary buttons on the left and shift the central panel to the right to give itself more space.")
-						+ ' ' + _("You can tweak the panel even more by installing some of the following recommended extensions:")
-						+ ' ' + '<b>Frippery Move Clock</b> (' + _("author") + ': <b>rmyorston</b>), <b>Status Area Horizontal Spacing</b> (' + _("author") + ': <b>mathematical.coffee</b>), <b>User Themes</b> (' + _("author") + ': <b>gcampax</b>)'
-					+ '</span>');
-				}
+				builder.addLabel('<span size="small">' +
+								 _("It is embedded into the panel right where there is space for it not claimed by anything else, and uses panel theme by default.")
+								 + ' ' + _("It further allows you to hide some unnecessary buttons on the left and shift the central panel to the right to give itself more space.")
+								 + ' ' + _("You can tweak the panel even more by installing some of the following recommended extensions:")
+								 + ' ' + '<b>Frippery Move Clock</b> (' + _("author") + ': <b>rmyorston</b>), <b>Status Area Horizontal Spacing</b> (' + _("author") + ': <b>mathematical.coffee</b>), <b>User Themes</b> (' + _("author") + ': <b>gcampax</b>)'
+								 + '</span>', null, true, true, 3);
 			builder.unshift();
-			widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-			if (widgets && widgets.length) {
-				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup(
-								'YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-						+ ' ' + _("is a part of greater FOSS.")
-				);
-			}
+			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
+							 + ' ' + _("is a part of greater FOSS."), null, true, true, 3);
 			builder.shift();
-				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-				if (widgets && widgets.length) {
-					widgets[0].set_line_wrap(true);
-					widgets[0].set_markup('<span size="small">' +
-								_("And as such it is completely free to use, study, distribute and modify provided you acknowledge all the copyrights and your actions comply with the applicable law and GNU GPL.")
-					+ '</span>');
-				}
-				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-				if (widgets && widgets.length) {
-					widgets[0].set_line_wrap(true);
-					widgets[0].set_markup('<span size="small">' +
-								_("Your contribution in the form of feature suggestions, bug reports, translations, donations or even development is highly appreciated.")
-					+ '</span>');
-				}
-				widgets = builder.addRow(new Gtk.Label({ justify: 3, halign: Gtk.Align.START }));
-				if (widgets && widgets.length) {
-					widgets[0].set_line_wrap(true);
-					widgets[0].set_markup('<span size="small">' +
-								_("The development of this extension would not be possible without this wonderful FOSS:")
-						+ ' ' + '<b>Anjuta</b>, <b>Inkscape</b>, <b>Gimp</b>, <b>OmegaT</b>, <b>Ubuntu</b>, <b>Fedora</b> ' + _("and, of course,") + ' <b>Gnome-Shell</b>!'
-					+ '</span>');
-				}
+				builder.addLabel('<span size="small">' +
+								 _("And as such it is completely free to use, study, distribute and modify provided you acknowledge all the copyrights and your actions comply with the applicable law and GNU GPL.")
+								 + '</span>', null, true, true, 3);
+				builder.addLabel('<span size="small">' +
+								 _("Your contribution in the form of feature suggestions, bug reports, translations, donations or even development is highly appreciated.")
+								 + '</span>', null, true, true, 3);
+				builder.addLabel('<span size="small">' +
+								 _("The development of this extension would not be possible without this wonderful FOSS:")
+								 + ' ' + '<b>Anjuta</b>, <b>Inkscape</b>, <b>Gimp</b>, <b>OmegaT</b>, <b>Ubuntu</b>, <b>Fedora</b> ' + _("and, of course,") + ' <b>Gnome-Shell</b>!'
+								 + '</span>', null, true, true, 3);
 			builder.unshift();
 
         return builder.getWidget();
