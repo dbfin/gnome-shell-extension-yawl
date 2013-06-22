@@ -330,13 +330,15 @@ function buildPrefsWidget() {
 				widgets[0].set_markup(_("Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin.com'><span underline='none'>&lt;vadim@dbfin.com&gt;</span></a>"));
 			}
 			builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 2 ], [ new Gtk.Label({ halign: Gtk.Align.START }), 5 ] ]);
 			if (widgets && widgets.length) {
-				widgets[0].set_markup(_("Home page:\t<a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
+				widgets[0].set_markup(_("Home page") + ':');
+				widgets[1].set_markup('<a href="http://dbfin.com/yawl"><span underline="none">http://dbfin.com/yawl</span></a>');
 			}
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
+			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 2 ], [ new Gtk.Label({ halign: Gtk.Align.START }), 5 ] ]);
 			if (widgets && widgets.length) {
-				widgets[0].set_markup(_("Source code:\t<a href='https://github.com/dbfin/gnome-shell-extension-yawl'><span underline='none'>https://github.com/dbfin/gnome-shell-extension-yawl</span></a>"));
+				widgets[0].set_markup(_("Source code") + ':');
+				widgets[1].set_markup('<a href="https://github.com/dbfin/gnome-shell-extension-yawl"><span underline="none">https://github.com/dbfin/gnome-shell-extension-yawl</span></a>');
 			}
 
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
@@ -552,7 +554,7 @@ function buildPrefsWidget() {
 			builder.addPage(_("Debug"), 'debug.png');
 				builder.addLabel(_("These options are for developers only."));
 				builder.addSeparator();
-				builder.addLabel(_("Debugging panel shows a hierarchical structure of internal function calls... Is that right?"));
+				builder.addLabel(_("Debugging panel shows a hierarchical structure of internal function calls."));
 				builder.addLabel(_("The panel has a small toolbar which allows one to:"));
 				builder.shift();
 					builder.addLabel('\u00b7 ' + _("pin the panel (so that it is always visible)"));
@@ -596,12 +598,17 @@ function buildPrefsWidget() {
 			let status = builder.addRow(_("Status:"), [ [ new Gtk.Label({ label: '', halign: Gtk.Align.FILL }), 9 ] ]);
 			status = status && status.length && status[1] || null;
 			widgets = builder.addRow(null, [
-									[ new Gtk.Label({ label: _("This will overwrite the file with settings"), halign: Gtk.Align.END }), 4 ],
-									[ new Gtk.Button({ label: _("Export"), halign: Gtk.Align.FILL }), 1 ],
-									[ new Gtk.Label({ label: _("This will overwrite all current settings"), halign: Gtk.Align.END }), 4 ],
-									[ new Gtk.Button({ label: _("Import"), halign: Gtk.Align.FILL }), 1 ]
+									[ new Gtk.Label({ justify: 1, halign: Gtk.Align.END, hexpand: true }), 2 ],
+									[ new Gtk.Button({ label: _("Export"), halign: Gtk.Align.FILL, hexpand: true }), 2 ],
+			                        [ null, 1 ],
+									[ new Gtk.Label({ justify: 1, halign: Gtk.Align.END, hexpand: true }), 2 ],
+									[ new Gtk.Button({ label: _("Import"), halign: Gtk.Align.FILL, hexpand: true }), 2 ]
 			                     ]);
 			if (widgets && widgets.length) {
+				widgets[0].set_line_wrap(true);
+				widgets[0].set_markup('<span size="small">' + _("This will overwrite the file with settings") + '</span>');
+				widgets[2].set_line_wrap(true);
+				widgets[2].set_markup('<span size="small">' + _("This will overwrite all current settings") + '</span>');
 				let sei = new dbFinSettingsExportImport(widgets[1], widgets[3], fcw, status);
 				builder.getWidget()._sei = sei;
 			}
