@@ -321,26 +321,42 @@ function buildPrefsWidget() {
 				widgets[1].set_markup('v' + Me.metadata.version);
 			}
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup('<span size="large">' + _("Gnome-Shell Extension") + '</span>');
-			widgets = builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
+			if (widgets && widgets.length) {
+				widgets[0].set_markup('<span size="large">' + _("Gnome-Shell Extension") + '</span>');
+			}
+			builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin.com'><span underline='none'>&lt;vadim@dbfin.com&gt;</span></a>"));
-			widgets = builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
+			if (widgets && widgets.length) {
+				widgets[0].set_markup(_("Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin.com'><span underline='none'>&lt;vadim@dbfin.com&gt;</span></a>"));
+			}
+			builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("Home page:\t<a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
+			if (widgets && widgets.length) {
+				widgets[0].set_markup(_("Home page:\t<a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
+			}
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("Source code:\t<a href='https://github.com/dbfin/gnome-shell-extension-yawl'><span underline='none'>https://github.com/dbfin/gnome-shell-extension-yawl</span></a>"));
+			if (widgets && widgets.length) {
+				widgets[0].set_markup(_("Source code:\t<a href='https://github.com/dbfin/gnome-shell-extension-yawl'><span underline='none'>https://github.com/dbfin/gnome-shell-extension-yawl</span></a>"));
+			}
 
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup('<span size="small"> </span>');
+			if (widgets && widgets.length) {
+				widgets[0].set_markup('<span size="small"> </span>');
+			}
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 10 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup(_("Please report problems on GitHub. If you would like to translate the program to your language please email me."));
+			if (widgets && widgets.length) {
+				widgets[0].set_markup(_("Please report problems on GitHub. If you would like to translate the program to your language please email me."));
+			}
 
 			builder.addSeparator();
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 9 ], [ null, 1 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup('<span size="small">' + _("This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.") + '</span>');
+			if (widgets && widgets.length) {
+				widgets[0].set_markup('<span size="small">' + _("This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.") + '</span>');
+			}
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 9 ], [ null, 1 ] ]);
-			if (widgets && widgets.length) widgets[0].set_markup('<span size="small">' + _("A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.") + '</span>');
+			if (widgets && widgets.length) {
+				widgets[0].set_markup('<span size="small">' + _("A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.") + '</span>');
+			}
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ justify: 3, halign: Gtk.Align.START }), 10 ] ]);
 			if (widgets && widgets.length) {
 				widgets[0].set_line_wrap(true);
@@ -498,9 +514,14 @@ function buildPrefsWidget() {
 											[ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
 										]);
-	                    if (widgets && widgets.length) { widgets[1].hexpand = true; widgets[1].xalign = 0.0; }
+	                    if (widgets && widgets.length) {
+							widgets[1].hexpand = true;
+							widgets[1].xalign = 0.0;
+						}
 	                    widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
-	                    if (widgets && widgets.length) threshold.scaleSingle = widgets[widgets.length - 1];
+	                    if (widgets && widgets.length) {
+							threshold.scaleSingle = widgets[widgets.length - 1];
+						}
 					builder.unshift();
 					builder.addLabel(_("This will measure the LONGEST time between the two clicks of one DOUBLE click."));
 					builder.shift();
@@ -509,15 +530,22 @@ function buildPrefsWidget() {
 											[ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
 											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
 										]);
-	                    if (widgets && widgets.length) { widgets[1].hexpand = true; widgets[1].xalign = 0.0; }
+	                    if (widgets && widgets.length) {
+							widgets[1].hexpand = true;
+							widgets[1].xalign = 0.0;
+						}
 	                    widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
-	                    if (widgets && widgets.length) threshold.scaleDouble = widgets[widgets.length - 1];
+	                    if (widgets && widgets.length) {
+							threshold.scaleDouble = widgets[widgets.length - 1];
+						}
 					builder.unshift();
 					builder.addLabel(_("Based on the data provided above we set the following value (you can adjust it manually):"));
 					builder.shift();
 	                    widgets = builder.addScale(_("Single/Double clicks threshold:"), 'mouse-clicks-time-threshold', 150, 550, 1);
+						if (widgets && widgets.length) {
+							threshold.scaleThreshold = widgets[widgets.length - 1];
+						}
 					builder.unshift();
-                    if (widgets && widgets.length) threshold.scaleThreshold = widgets[widgets.length - 1];
 
                 builder.closeNotebook();
 
@@ -554,7 +582,7 @@ function buildPrefsWidget() {
 			builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
 
 		builder.addPage(_("Export/Import"));
-			widgets = builder.addLabel(_("Back up, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
+			builder.addLabel(_("Back up, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span underline='none'>http://dbfin.com/yawl</span></a>"));
 			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,
