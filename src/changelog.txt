@@ -27,3 +27,5 @@ v7	2013-06-21
     	- Quicklists: requires Quicklists extension by Damian
     	- Window previews: thumbnail panel can be made transparent to look through it
     	- Styling adjustments
+v8	2013-06-22
+    	- German translation
