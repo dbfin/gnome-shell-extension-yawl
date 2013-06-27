@@ -41,9 +41,21 @@
     background-gradient-direction: vertical;
 }
 
+#panelYAWLWindows.light .yawl-thumbnail:active {
+    background-gradient-start: rgba(0, 0, 0, 0.333);
+    background-gradient-end: rgba(0, 0, 0, 0.0);
+    background-gradient-direction: vertical;
+}
+
 #panelYAWLWindows .yawl-thumbnail:hover {
     background-gradient-start: rgba(255, 255, 255, 0.49);
     background-gradient-end: rgba(255, 255, 255, 0.0);
+    background-gradient-direction: vertical;
+}
+
+#panelYAWLWindows.light .yawl-thumbnail:hover {
+    background-gradient-start: rgba(0, 0, 0, 0.49);
+    background-gradient-end: rgba(0, 0, 0, 0.0);
     background-gradient-direction: vertical;
 }
 

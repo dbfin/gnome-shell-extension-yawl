@@ -231,16 +231,18 @@ const dbFinYAWL = new Lang.Class({
 
 	_updatePanelWindowsStyle: function() {
         _D('>' + this.__name__ + '._updatePanelWindowsStyle()');
-		if (!this._style || !global.yawl || !global.yawl.panelWindows || !global.yawl.panelWindows.actor
-		    || !global.yawl.panelWindows.actor.get_stage()) {
+		if (!this._style || !global.yawl || !global.yawl.panelWindows || !global.yawl.panelWindows.container
+		    || !global.yawl.panelWindows.container.get_stage()) {
 			_D('<');
 			return;
 		}
 		let (style = {}) {
 			if (global.yawl._windowsTheming) {
-				let (color = '') {
+				let (colorRGB = { red: 0, green: 0, blue: 0 },
+				     color = '') {
 					if (global.yawl._windowsBackgroundPanel) {
 						if (global.yawl._panelBackground) {
+                            colorRGB = dbFinUtils.stringColorToRGBA(global.yawl._panelColor);
 							color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._panelColor,
 							                                                     global.yawl._panelOpacity);
 						} // if (global.yawl._panelBackground)
@@ -248,18 +250,32 @@ const dbFinYAWL = new Lang.Class({
 							let (node = Main.panel && Main.panel.actor && Main.panel.actor.get_stage()
 										&& Main.panel.actor.get_theme_node()) {
 								if (node) {
-									color = node.get_background_color();
-									color = 'rgba(' + color.red + ', ' + color.green + ', ' + color.blue + ', ' + color.alpha / 255. + ')';
+									colorRGB = node.get_background_color();
+									color = 'rgba(' + colorRGB.red + ', ' + colorRGB.green + ', ' + colorRGB.blue
+                                            + ', ' + colorRGB.alpha / 255. + ')';
 								}
 							}
 						} // if (global.yawl._panelBackground) else
 					} // if (global.yawl._windowsBackgroundPanel)
 					if (color == '') {
+                        colorRGB = dbFinUtils.stringColorToRGBA(global.yawl._windowsBackgroundColor);
 						color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._windowsBackgroundColor,
 																			 global.yawl._windowsBackgroundOpacity);
 					} // if (color == '')
 					style['background-color'] = color;
-				} // let (color)
+                    if (colorRGB.red * 0.30 + colorRGB.green * 0.59 + colorRGB.blue * 0.11 >= 128) {
+                        if (!global.yawl.panelWindows._light) {
+							global.yawl.panelWindows.container.add_style_class_name('light');
+							global.yawl.panelWindows._light = true;
+						}
+                    }
+                    else {
+                        if (global.yawl.panelWindows._light) {
+							global.yawl.panelWindows.container.remove_style_class_name('light');
+							global.yawl.panelWindows._light = false;
+						}
+                    }
+				} // let (colorRGB, color)
 				style['color'] = global.yawl._windowsTextColor;
 				style['font-size'] = global.yawl._windowsTextSize + 'pt';
 				style['padding'] = global.yawl._windowsPadding + 'px';

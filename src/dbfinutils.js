@@ -31,6 +31,8 @@
  *
  * opacity100to255(opacity)		converts opacity 0-100 to 0-255, or returns undefined on fail
  *
+ * stringColorToRGBA(color)		'#808080' -> { red: 128, green: 128, blue: 128, alpha: 1.0 }
+ *
  * stringColorOpacity100ToStringRGBA(color, opacity)    '#808080', 70 -> 'rgba(128, 128, 128, 0.7)'
  *
  * setBox:box,x1,y1,x2,y2		sets x1, y1, x2, y2 of Clutter.ActorBox (or another class supporting these properties)
@@ -94,10 +96,24 @@ function opacity100to255(opacity) {
 	return Math.round(opacity * 2.55);
 }
 
+/* stringColorToRGBA(color): '#808080' -> { red: 128, green: 128, blue: 128, alpha: 1.0 }
+ */
+function stringColorToRGBA(color) {
+    if (!color) return { red: 0, green: 0, blue: 0, alpha: 0.0 };
+    let (rgba = new Gdk.RGBA()) {
+        rgba.parse(color);
+        return  {   red: Math.round(rgba.red * 255),
+                    green: Math.round(rgba.green * 255),
+                    blue: Math.round(rgba.blue * 255),
+                    alpha: rgba.alpha
+                };
+    } // let (rgba)
+}
+
 /* stringColorOpacity100ToStringRGBA(color, opacity): '#808080', 70 -> 'rgba(128, 128, 128, 0.7)'
  */
 function stringColorOpacity100ToStringRGBA(color, opacity) {
-    if (!color || opacity === undefined || isNaN(opacity = parseFloat(opacity))) return '';
+    if (!color || isNaN(opacity = parseFloat(opacity))) return '';
     let (rgba = new Gdk.RGBA()) {
         rgba.parse(color);
         return rgba.to_string().replace(/rgba?(\s*\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+).*?(\))/, 'rgba$1, ' + opacity / 100. + '$2');
