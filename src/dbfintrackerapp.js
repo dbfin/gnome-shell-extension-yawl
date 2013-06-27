@@ -78,6 +78,7 @@ const dbFinTrackerApp = new Lang.Class({
             };
         }
 
+        this._updatedWindowsShow = function () { if (global.yawl && !global.yawl._windowsShow) this.hideWindowsGroup(); }
         this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = global.yawl._windowsAnimationEffect; };
 
@@ -174,7 +175,7 @@ const dbFinTrackerApp = new Lang.Class({
 		_D('>' + this.__name__ + '._enterEvent()');
 		this.hovered = true;
 		this.setLabel('');
-		this.showWindowsGroup();
+		if (global.yawl && global.yawl._windowsShow) this.showWindowsGroup();
 		_D('<');
 	},
 

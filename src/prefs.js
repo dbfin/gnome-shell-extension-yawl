@@ -407,19 +407,21 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Thumbnails"));
 			builder.addNotebook(_("Panel"), 'panel_thumbnail.png');
-                builder.addCheckBox(_("Use arrow-style thumbnails app indicator"), 'windows-indicator-arrow');
+                builder.addCheckBox(_("Show thumbnails when app icon is hovered"), 'windows-show');
                 builder.addSeparator();
-                builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming');
+                builder.addCheckBox(_("Use arrow-style thumbnails app indicator"), 'windows-indicator-arrow', 'windows-show');
+                builder.addSeparator();
+                builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming', 'windows-show');
                 builder.shift();
-                    builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', 'windows-theming');
-					builder.addColorButtonScale(_("Background color and opacity"), 'windows-background-color', 'windows-background-opacity', _("Choose thumbnail panel background color"), 0, 100, 1, [ 'windows-theming', '!windows-background-panel' ]);
-					builder.addColorButtonScale(_("Text color and size"), 'windows-text-color', 'windows-text-size', _("Choose thumbnail panel text color"), 6, 36, 1, 'windows-theming');
-                    builder.addScale(_("Padding"), 'windows-padding', 0, 20, 1, 'windows-theming');
-                    builder.addColorButtonScale(_("Border color and width"), 'windows-border-color', 'windows-border-width', _("Choose thumbnail panel border color"), 0, 3, 1, 'windows-theming');
-                    builder.addScale(_("Border radius"), 'windows-border-radius', 0, 10, 1, 'windows-theming');
+                    builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', [ 'windows-show', 'windows-theming' ]);
+					builder.addColorButtonScale(_("Background color and opacity"), 'windows-background-color', 'windows-background-opacity', _("Choose thumbnail panel background color"), 0, 100, 1, [ 'windows-show', 'windows-theming', '!windows-background-panel' ]);
+					builder.addColorButtonScale(_("Text color and size"), 'windows-text-color', 'windows-text-size', _("Choose thumbnail panel text color"), 6, 36, 1, [ 'windows-show', 'windows-theming' ]);
+                    builder.addScale(_("Padding"), 'windows-padding', 0, 20, 1, [ 'windows-show', 'windows-theming' ]);
+                    builder.addColorButtonScale(_("Border color and width"), 'windows-border-color', 'windows-border-width', _("Choose thumbnail panel border color"), 0, 3, 1, [ 'windows-show', 'windows-theming' ]);
+                    builder.addScale(_("Border radius"), 'windows-border-radius', 0, 10, 1, [ 'windows-show', 'windows-theming' ]);
                 builder.unshift();
 
-			builder.addPage(_("Thumbnails"), 'thumbnail.png');
+			builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
                 builder.addCheckBox(_("Same height thumbnails"), 'windows-thumbnails-fit-height');
                 builder.addScale(_("Thumbnail maximum width"), 'windows-thumbnails-width', 50, 500, 25, '!windows-thumbnails-fit-height', true);
 				builder.addScale(_("Thumbnail maximum height"), 'windows-thumbnails-height', 40, 400, 20, null, true);
@@ -431,7 +433,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Distance between thumbnails") + '\n(' + _("% of thumbnail size") + ')', 'windows-thumbnails-distance', 0, 50, 1);
                 builder.addScale(_("Thumbnail top padding (px)"), 'windows-thumbnails-padding-top', 0, 20, 1);
 
-			builder.addPage(_("Animation"), 'animation_thumbnail.png');
+			builder.addPage(_("Animation"), 'animation_thumbnail.png', 'windows-show');
                 builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 500, 1, null, true);
                 builder.addComboBoxText(_("Animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
@@ -469,7 +471,7 @@ function buildPrefsWidget() {
 
 					builder.closeNotebook();
 
-                builder.addPage(_("Thumbnails"), 'thumbnail_16.png');
+                builder.addPage(_("Thumbnails"), 'thumbnail_16.png', 'windows-show');
 					builder.addNotebook(_("Left button"), 'mouse-left.png');
 						builder.addComboBoxText(_("Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
 						builder.addComboBoxText(_("Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
@@ -559,12 +561,12 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("Add-ons"));
-			builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), null, true, true);
+			builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), 'windows-show', true, true);
             builder.shift();
-				builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview');
+				builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview', 'windows-show');
 				builder.shift();
-					builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, 'windows-preview');
-					builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 5, 75, 1, 'windows-preview');
+					builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, [ 'windows-preview', 'windows-show' ]);
+					builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 5, 75, 1, [ 'windows-preview', 'windows-show' ]);
 				builder.unshift();
             builder.unshift();
 			builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');

@@ -139,6 +139,11 @@
       <_description>Icons animation effect when hovered.</_description>
     </key>
 
+    <key name="windows-show" type="b">
+      <default>true</default>
+      <_summary>Whether to show thumbnails.</_summary>
+      <_description>If true the thumbnails of an application are shown when the app icon is hovered over.</_description>
+    </key>
     <key name="windows-indicator-arrow" type="b">
       <default>false</default>
       <_summary>Whether to use arrow-style thumbnail application indicator.</_summary>

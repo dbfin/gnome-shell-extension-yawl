@@ -124,6 +124,7 @@ const Settings = [
     [ 'icons-hover-animation-time', 33, { min: 0, max: 200 }, 'icons>animation' ],
     [ 'icons-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'icons>animation' ],
 
+    [ 'windows-show', true, { }, 'thumbnails>panel' ],
     [ 'windows-indicator-arrow', false, { }, 'thumbnails>panel' ],
     [ 'windows-theming', true, { }, 'thumbnails>panel' ],
     [ 'windows-background-panel', true, { }, 'thumbnails>panel' ],
