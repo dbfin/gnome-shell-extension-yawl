@@ -50,9 +50,9 @@
  *          getWidget()
  *          shift()
  *          unshift()
- *			addNotebook(label?, iconfile?)
+ *			addNotebook(label?, iconfile?, bindSensitive?)
  *			closeNotebook()
- * 			addPage(label, iconfile?)
+ * 			addPage(label, iconfile?, bindSensitive?)
  * 			addWidget(gtkWidget, x, y, w, h, bindSensitive?)
  * 			addRow(gtkWidget?, [gtkOthers], bindSensitive?)
  *          addSeparator()
@@ -310,7 +310,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
         if (this._notebook && this._notebook.shift) this._notebook.shift--;
 	},
 
-	addNotebook: function(label/* = null*/, iconfile/* = null*/) {
+	addNotebook: function(label/* = null*/, iconfile/* = null*/, bindSensitive/* = null*/) {
         let (notebook = new Gtk.Notebook({  hexpand:	true,
 											vexpand:	true,
 											halign:		Gtk.Align.FILL,
@@ -335,6 +335,14 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		this._notebook.row = 0;
 		this._notebook.shift = 0;
         if (label) this.addPage(label, iconfile);
+		if (bindSensitive && this._notebook) {
+			this._settings.bind((bindSensitive[0] == '!'	? bindSensitive.substring(1)
+															: bindSensitive),
+								this._notebook,
+								'sensitive',
+								(bindSensitive[0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
+															: Gio.SettingsBindFlags.DEFAULT));
+		}
 	},
 
 	closeNotebook: function() {
@@ -344,7 +352,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		}
 	},
 
-	addPage: function(label, iconfile/* = null*/) {
+	addPage: function(label, iconfile/* = null*/, bindSensitive/* = null*/) {
 		if (!this._notebook) return;
         let (page = new Gtk.Grid({	hexpand:			true,
 									halign:				Gtk.Align.FILL,
@@ -374,6 +382,14 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
             this._notebook.row = 0;
 			this._notebook.shift = 0;
             page.show();
+			if (bindSensitive && this._notebook.page) {
+				this._settings.bind((bindSensitive[0] == '!'	? bindSensitive.substring(1)
+																: bindSensitive),
+									this._notebook.page,
+									'sensitive',
+									(bindSensitive[0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
+																: Gio.SettingsBindFlags.DEFAULT));
+			}
         }
     },
 
