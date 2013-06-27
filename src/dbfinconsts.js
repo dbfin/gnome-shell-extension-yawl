@@ -156,7 +156,7 @@ const Settings = [
 	[ 'windows-preview', false, { }, 'addons>preview' ],
 	[ 'windows-preview-dim-color', '#01234c', { }, 'addons>preview' ],
 	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'addons>preview' ],
-    [ 'windows-preview-panel-opacity', 33, { min: 25, max: 100 }, 'addons>preview' ],
+    [ 'windows-preview-panel-opacity', 25, { min: 5, max: 75 }, 'addons>preview' ],
     [ 'app-quicklists', true, { }, 'addons>quicklists' ],
 
     [ 'mouse-app-left', 2, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],

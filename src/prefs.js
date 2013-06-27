@@ -564,7 +564,7 @@ function buildPrefsWidget() {
 				builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview');
 				builder.shift();
 					builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, 'windows-preview');
-					builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 25, 100, 1, 'windows-preview');
+					builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 5, 75, 1, 'windows-preview');
 				builder.unshift();
             builder.unshift();
 			builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
