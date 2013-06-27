@@ -29,3 +29,4 @@ v7	2013-06-21
     	- Styling adjustments
 v8	2013-06-22
     	- German translation
+    	- Dark focused/hovered thumbnail frame if thumbnail panel itself is light
