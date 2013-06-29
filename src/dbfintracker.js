@@ -58,6 +58,7 @@ const dbFinTracker = new Lang.Class({
 		this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
         this._tracker = Shell.WindowTracker.get_default();
+        this._appSystem = Shell.AppSystem.get_default();
 		this.apps = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, { state:, trackerApp: } ] ]
 		this.windows = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaWindow, { state:, trackerWindow: } ] ]
 		this.state = 0; // when refreshing we increase the state to indicate apps and windows that are no longer there
@@ -73,7 +74,7 @@ const dbFinTracker = new Lang.Class({
 		this.update(null, 'Tracker: initial update.');
 		this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
 									callback: this._switchWorkspace, scope: this });
-		this._signals.connectNoId({ emitter: Shell.AppSystem.get_default(), signal: 'app-state-changed',
+		this._signals.connectNoId({ emitter: this._appSystem, signal: 'app-state-changed',
 									callback: this._updateAppState, scope: this });
 		this._signals.connectNoId({ emitter: global.display, signal: 'window-marked-urgent',
 									callback: this._windowAttention, scope: this });
@@ -119,6 +120,7 @@ const dbFinTracker = new Lang.Class({
 			this.windows.destroy();
 			this.windows = null;
 		}
+        this._appSystem = null;
         this._tracker = null;
 		this._settings = null;
         this.emit('destroy');
@@ -168,8 +170,8 @@ const dbFinTracker = new Lang.Class({
 	        _D('<');
 			return;
 		}
-        if (!this._tracker) {
-            _D('this._tracker == null');
+        if (!this._tracker || !this._appSystem) {
+            _D(!this._tracker ? 'this._tracker == null' : 'this._appSystem == null');
             _D('<');
             return;
         }
@@ -183,41 +185,46 @@ const dbFinTracker = new Lang.Class({
 		this.state ? this.state++ : (this.state = 1);
         this.stateInfo = (!stateInfo || stateInfo == '' ? '_refresh() call with no additional info.' : stateInfo);
 		let (appsIn = [], appsOut = [], windowsIn = [], windowsOut = []) {
+			this._appSystem.get_running().forEach(Lang.bind(this, function (metaApp) {
+				if (!metaApp || metaApp.state == Shell.AppState.STOPPED) return;
+				let (appProperties = this.apps.get(metaApp)) {
+					if (!appProperties || !appProperties.trackerApp) { // new app
+						appsIn.push(metaApp);
+						appProperties = {
+							state: this.state,
+							trackerApp: new dbFinTrackerApp.dbFinTrackerApp(metaApp, this, null, true)
+						};
+						this.apps.set(metaApp, appProperties);
+					}
+					else {
+						appProperties.state = this.state;
+						this.apps.set(metaApp, appProperties);
+					}
+				} // let (appProperties)
+			})); // this._appSystem.get_running().forEach(metaApp)
 			metaWorkspace.list_windows().forEach(Lang.bind(this, function(metaWindow) {
 				if (!metaWindow || !this._tracker.is_window_interesting(metaWindow)) return;
 				let (metaApp = this._tracker.get_window_app(metaWindow)) {
-					if (!metaApp || metaApp.state == Shell.AppState.STOPPED) return;
 					let (	windowProperties = this.windows.get(metaWindow),
 							appProperties = this.apps.get(metaApp)) {
-						if (windowProperties === undefined || !windowProperties || !windowProperties.trackerWindow) { // new window
+						if (!appProperties || !appProperties.trackerApp
+						    || !appProperties.state || appProperties.state < this.state) return;
+						if (!windowProperties || !windowProperties.trackerWindow) { // new window
 							windowsIn.push(metaWindow);
-							windowProperties = {};
-							windowProperties.trackerWindow = new dbFinTrackerWindow.dbFinTrackerWindow(
-                                                                        metaWindow, this, metaApp);
-                            windowProperties.state = this.state;
+							windowProperties = {
+								state: this.state,
+								trackerWindow: new dbFinTrackerWindow.dbFinTrackerWindow(metaWindow, this, metaApp)
+							};
                             this.windows.set(metaWindow, windowProperties);
-							if (appProperties !== undefined && appProperties && appProperties.trackerApp) {
-								appProperties.trackerApp.addWindow(metaWindow);
-							}
+							appProperties.trackerApp.addWindow(metaWindow);
 						}
                         else {
                             windowProperties.state = this.state;
                             this.windows.set(metaWindow, windowProperties);
-                        }
-						if (appProperties === undefined || !appProperties || !appProperties.trackerApp) { // new app
-							appsIn.push(metaApp);
-							appProperties = {};
-							appProperties.trackerApp = new dbFinTrackerApp.dbFinTrackerApp(metaApp, this, metaWindow, true);
-                            appProperties.state = this.state;
-                            this.apps.set(metaApp, appProperties);
-						}
-                        else {
-                            appProperties.state = this.state;
-                            this.apps.set(metaApp, appProperties);
                         }
 					} // let (windowProperties, appProperties)
 				} // let (metaApp)
-			})); // metaWorkspace.list_windows().forEach
+			})); // metaWorkspace.list_windows().forEach(metaWindow)
 			[ appsOut, windowsOut ] = this._clean();
 			if (this._signals) {
 				this._signals.connectId('tracker-window-added', {	emitter: metaWorkspace, signal: 'window-added',
