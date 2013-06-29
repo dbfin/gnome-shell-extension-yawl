@@ -192,7 +192,7 @@ const dbFinTracker = new Lang.Class({
 						appsIn.push(metaApp);
 						appProperties = {
 							state: this.state,
-							trackerApp: new dbFinTrackerApp.dbFinTrackerApp(metaApp, this, null, true)
+							trackerApp: new dbFinTrackerApp.dbFinTrackerApp(metaApp, this, null)
 						};
 						this.apps.set(metaApp, appProperties);
 					}

@@ -50,7 +50,7 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinTrackerApp = new Lang.Class({
 	Name: 'dbFin.TrackerApp',
 
-    _init: function(metaApp, tracker, metaWindow, autoHideShow/* = false*/) {
+    _init: function(metaApp, tracker, metaWindow) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
 		this.metaApp = metaApp;
@@ -61,7 +61,6 @@ const dbFinTrackerApp = new Lang.Class({
 		if (this.metaApp && this.metaApp.get_name) {
 			try { this.appName = this.metaApp.get_name(); } catch (e) { this.appName = '?'; }
 		}
-		this._autohideshow = autoHideShow || false;
 
         this.yawlPanelWindowsGroup = new dbFinYAWLPanel.dbFinYAWLPanel({    hidden: true,
                                                                             showhidechildren: true,
@@ -86,7 +85,6 @@ const dbFinTrackerApp = new Lang.Class({
 
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
 		if (this.appButton) {
-            if (!metaWindow && this._autohideshow) this.appButton.hide();
             if (global.yawl.panelApps) {
                 global.yawl.panelApps.addChild(this.appButton);
                 if (global.yawl.panelApps.container) {
@@ -195,7 +193,7 @@ const dbFinTrackerApp = new Lang.Class({
     addWindow: function(metaWindow) {
         _D('>' + this.__name__ + '.addWindow()');
         if (metaWindow && this.windows && this.windows.indexOf(metaWindow) == -1) {
-            if (this._autohideshow && !this.windows.length && this.appButton) this.appButton.show();
+            if (!this.windows.length && this.appButton) this.appButton.show();
 			this.windows.push(metaWindow);
             if (this._tracker && this._tracker.getTrackerWindow) {
                 let (trackerWindow = this._tracker.getTrackerWindow(metaWindow)) {
@@ -219,7 +217,7 @@ const dbFinTrackerApp = new Lang.Class({
 				}
             }
 			if (!this.windows.length) {
-				if (this._autohideshow && this.appButton) this.appButton.hide();
+				if (this.appButton) this.appButton.hide();
 				this.hideWindowsGroup();
 			}
         }
