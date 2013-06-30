@@ -95,6 +95,7 @@ const arrayThumbnailButtons = [
 const Settings = [
 	[ 'first-time', true, { }, null ],
 
+    [ 'icons-show-all', false, { }, 'panel' ],
     [ 'yawl-panel-position', 21, { min: 0, max: 50 }, 'panel' ],
     [ 'yawl-panel-width', 100, { min: 1, max: 100 }, 'panel' ],
     [ 'move-center', true, { }, 'panel' ],
@@ -107,9 +108,10 @@ const Settings = [
     [ 'panel-color', '#000000', { }, 'panel' ],
     [ 'panel-opacity', 75, { min: 0, max: 100 }, 'panel' ],
 
-    [ 'icons-size', 42, { min: 16, max: 128 }, 'icons' ],
+    [ 'icons-size', 24, { min: 16, max: 128 }, 'icons' ],
     [ 'icons-faded', false, { }, 'icons' ],
     [ 'icons-opacity', 84, { min: 50, max: 100 }, 'icons' ],
+    [ 'icons-opacity-inactive', 21, { min: 10, max: 100 }, 'icons' ],
     [ 'icons-clip-top', 2, { min: 0, max: 7 }, 'icons' ],
     [ 'icons-clip-bottom', 2, { min: 0, max: 7 }, 'icons' ],
     [ 'icons-align', 0, { min: 0, max: 100 }, 'icons' ],

@@ -360,6 +360,8 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Icons"));
             builder.addNotebook(_("Panel"), 'panel.png');
+				builder.addCheckBox(_("Show app icons from all workspaces"), 'icons-show-all');
+                builder.addSeparator();
                 builder.addScaleScale(_("YAWL-panel position and width"), 'yawl-panel-position', 'yawl-panel-width', 0, 50, 1, 1, 100, 1);
                 builder.addSeparator();
                 builder.addCheckBox(_("Move central panel"), 'move-center');
@@ -382,6 +384,8 @@ function buildPrefsWidget() {
                 builder.addScale(_("Icon size"), 'icons-size', 16, 96, 8);
                 builder.addCheckBox(_("Faded icons"), 'icons-faded');
 				builder.addScale(_("Default icon opacity"), 'icons-opacity', 50, 100, 1);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable app icons from all workspaces under Icons > Panel") + '</span>', '@!icons-show-all', true, true);
+				builder.addScale(_("Icon opacity if app is not on current workspace"), 'icons-opacity-inactive', 10, 100, 1, 'icons-show-all');
                 builder.addSeparator();
                 builder.addScale(_("Clip icons: top (px)"), 'icons-clip-top', 0, 7, 1);
                 builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);

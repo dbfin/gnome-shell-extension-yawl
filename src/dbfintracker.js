@@ -344,10 +344,11 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	},
 
-	_updateAppState: function(appSys, app) {
+	_updateAppState: function(appSystem, metaApp) {
         _D('>' + this.__name__ + '._updateAppState()');
-		let (trackerApp = this.getTrackerApp(app)) {
+		let (trackerApp = this.getTrackerApp(metaApp)) {
 			if (trackerApp) {
+                if (metaApp.state == Shell.AppState.STOPPED) trackerApp.updateVisibility();
 				if (trackerApp.appButton) trackerApp.appButton._updateMenu();
 			}
 			this.update(null, 'App ' + (trackerApp ? trackerApp.appName : 'unknown') + ': app state changed.');
