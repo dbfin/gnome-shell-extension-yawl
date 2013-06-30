@@ -47,12 +47,13 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinTrackerWindow = new Lang.Class({
 	Name: 'dbFin.TrackerWindow',
 
-    _init: function(metaWindow, tracker, metaApp) {
+    _init: function(metaWindow, tracker, metaApp, state) {
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
         this.metaWindow = metaWindow;
 		this._tracker = tracker;
         this.metaApp = metaApp;
+        this.state = state || 0;
 
         this.appName = '?';
 		if (this.metaApp && this.metaApp.get_name) {
