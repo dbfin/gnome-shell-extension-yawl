@@ -197,11 +197,17 @@ const dbFinTrackerApp = new Lang.Class({
                     this.appButton._slicerIcon.setOpacity100(global.yawl._iconsOpacityInactive);
                 }
 				this.hideWindowsGroup();
+				if (this.appButton.actor) {
+	                this.appButton.actor.add_style_pseudo_class('inactive');
+				}
 			}
             else {
                 if (this.appButton._slicerIcon) {
                     this.appButton._slicerIcon.setOpacity100(global.yawl._iconsOpacity);
                 }
+				if (this.appButton.actor) {
+	                this.appButton.actor.remove_style_pseudo_class('inactive');
+				}
             }
 		}
         _D('<');
