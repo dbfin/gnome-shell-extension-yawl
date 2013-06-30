@@ -84,11 +84,14 @@ const dbFinTrackerApp = new Lang.Class({
         this._updatedWindowsShow = function () { if (global.yawl && !global.yawl._windowsShow) this.hideWindowsGroup(); }
         this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = global.yawl._windowsAnimationEffect; };
+        this._updatedAppQuicklists = function () { this.updateMenu(); }
 
 		this.hovered = false;
 
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
 		if (this.appButton) {
+			this._signals.connectId('app-button-destroy', {	emitter: this.appButton, signal: 'destroy',
+															callback: this._onAppButtonDestroy, scope: this });
             if (global.yawl.panelApps) {
                 global.yawl.panelApps.addChild(this.appButton);
                 if (global.yawl.panelApps.container) {
@@ -111,6 +114,15 @@ const dbFinTrackerApp = new Lang.Class({
 											callback: this._leaveEvent, scope: this });
 			}
         }
+
+		this._menuManager = Main.panel && Main.panel.menuManager || null;
+		this.updateMenu();
+		if (this.metaApp) {
+			this._signals.connectNoId({	emitter: this.metaApp, signal: 'notify::menu',
+										callback: this.updateMenu, scope: this });
+			this._signals.connectNoId({	emitter: this.metaApp, signal: 'notify::action-group',
+										callback: this.updateMenu, scope: this });
+		}
 
 		this.focused = false;
 		this._updateFocused();
@@ -143,6 +155,7 @@ const dbFinTrackerApp = new Lang.Class({
             this.yawlPanelWindowsGroup.destroy();
             this.yawlPanelWindowsGroup = null;
         }
+        this._menuManager = null;
 		this.focused = false;
 		this.hovered = false;
 		this.appName = '?';
@@ -152,6 +165,16 @@ const dbFinTrackerApp = new Lang.Class({
         this.emit('destroy');
         _D('<');
 	},
+
+    _onAppButtonDestroy: function() {
+        _D('>' + this.__name__ + '._onAppButtonDestroy()');
+		if (this._signals) {
+			this._signals.disconnectId('app-button-destroy');
+			this._signals.disconnectId('menu-toggled');
+		}
+        this.appButton = null;
+        _D('<');
+    },
 
 	updateVisibility: function () {
         _D('>' + this.__name__ + '.updateVisibility()');
@@ -201,6 +224,49 @@ const dbFinTrackerApp = new Lang.Class({
 		} // let (focused)
         _D('<');
 	},
+
+	updateMenu: function() {
+        _D('>' + this.__name__ + '.updateMenu()');
+        let (menu = this.appButton && global.yawl && global.yawl.menuBuilder
+                    && global.yawl.menuBuilder.build(this, this.appButton.actor)
+                    || null) {
+			if (menu) {
+				this._signals.disconnectId('menu-toggled');
+                if (this.appButton.menu) {
+                    if (this._menuManager) this._menuManager.removeMenu(this.appButton.menu);
+                }
+				this.appButton.setMenu(menu);
+                if (this.appButton.menu) {
+                    if (this._menuManager) this._menuManager.addMenu(this.appButton.menu);
+                    this._signals.connectId('menu-toggled', {	emitter: this.appButton.menu, signal: 'open-state-changed',
+                                                                callback: this._menuToggled, scope: this });
+                }
+			}
+        }
+        _D('<');
+	},
+
+    _menuToggled: function(menu, state) {
+        _D('>' + this.__name__ + '._menuToggled()');
+		if (menu && this.appButton && menu == this.appButton.menu) {
+            if (!state) {
+                // make sure we are still "active" if focused
+                this._updateFocused();
+            }
+            else {
+                this.hideWindowsGroup();
+            }
+		}
+        _D('<');
+    },
+
+    menuToggle: function() {
+        _D('>' + this.__name__ + '.menuToggle()');
+        if (this.appButton && this.appButton.menu) {
+			this.appButton.menu.toggle();
+		}
+        _D('<');
+    },
 
 	_enterEvent: function() {
 		_D('>' + this.__name__ + '._enterEvent()');
@@ -574,9 +640,7 @@ const dbFinTrackerApp = new Lang.Class({
 
     openMenu: function() {
         _D('>' + this.__name__ + '.openMenu()');
-        if (this.appButton) {
-            this.appButton.menuToggle();
-        }
+        this.menuToggle();
         _D('<');
     },
 

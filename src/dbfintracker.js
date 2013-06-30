@@ -349,7 +349,7 @@ const dbFinTracker = new Lang.Class({
 		let (trackerApp = this.getTrackerApp(metaApp)) {
 			if (trackerApp) {
                 if (metaApp.state == Shell.AppState.STOPPED) trackerApp.updateVisibility();
-				if (trackerApp.appButton) trackerApp.appButton._updateMenu();
+				trackerApp.updateMenu();
 			}
 			this.update(null, 'App ' + (trackerApp ? trackerApp.appName : 'unknown') + ': app state changed.');
 		}

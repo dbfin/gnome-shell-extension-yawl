@@ -106,17 +106,6 @@ const dbFinAppButton = new Lang.Class({
 		this._updatedIconsHoverFit = function () { if (this._slicerIcon) this._slicerIcon.hoverFit = global.yawl._iconsHoverFit; };
 		this._updatedIconsHoverAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = global.yawl._iconsHoverAnimationTime; };
 		this._updatedIconsHoverAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = global.yawl._iconsHoverAnimationEffect; };
-        this._updatedAppQuicklists = function () { this._updateMenu(); }
-
-        // this and this.metaApp related stuff
-		this._menuManager = Main.panel && Main.panel.menuManager || null;
-		this._updateMenu();
-		if (this.metaApp) {
-			this._signals.connectNoId({	emitter: this.metaApp, signal: 'notify::menu',
-										callback: this._update, scope: this });
-			this._signals.connectNoId({	emitter: this.metaApp, signal: 'notify::action-group',
-										callback: this._update, scope: this });
-		}
 
         global.yawl.watch(this);
 
@@ -150,7 +139,6 @@ const dbFinAppButton = new Lang.Class({
 			this._icons.destroy();
 			this._icons = null;
 		}
-        this._menuManager = null;
 		this._bindReactiveId = null;
 		this.hidden = true;
 		this._trackerApp = null;
@@ -207,53 +195,6 @@ const dbFinAppButton = new Lang.Class({
 		} // let (icon, iconnew)
         _D('<');
 	},
-
-	_update: function() {
-        _D('>' + this.__name__ + '._update()');
-		this._updateMenu();
-        _D('<');
-	},
-
-	// GNOMENEXT: ui/panel.js: class AppMenuButton
-	_updateMenu: function() {
-        _D('>' + this.__name__ + '._updateMenu()');
-        let (menu = global.yawl && global.yawl.menuBuilder
-                    && global.yawl.menuBuilder.build(this._trackerApp, this.actor) || null) {
-			if (menu) {
-				this._signals.disconnectId('menu-toggled');
-				this.setMenu(menu);
-                if (this.menu) {
-                    this._menuManager.addMenu(this.menu);
-                    // GNOMENEXT: ui/popupMenu.js: class PopupMenu
-                    this._signals.connectId('menu-toggled', {	emitter: this.menu, signal: 'open-state-changed',
-                                                                callback: this._menuToggled, scope: this });
-                }
-			}
-        }
-        _D('<');
-	},
-
-    menuToggle: function() {
-        _D('>' + this.__name__ + '.menuToggle()');
-        if (this.menu) {
-			this.menu.toggle();
-		}
-        _D('<');
-    },
-
-    _menuToggled: function(menu, state) {
-        _D('>' + this.__name__ + '._menuToggled()');
-		if (menu == this.menu) {
-            if (!state) {
-                // make sure we are still "active" if focused
-                if (this._trackerApp) this._trackerApp._updateFocused();
-            }
-            else {
-                if (this._trackerApp) this._trackerApp.hideWindowsGroup();
-            }
-		}
-        _D('<');
-    },
 
 	_styleChanged: function() {
         _D('@' + this.__name__ + '._styleChanged()');
