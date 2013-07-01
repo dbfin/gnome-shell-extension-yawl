@@ -130,6 +130,7 @@ const dbFinMenuBuilder = new Lang.Class({
 							&& ExtensionUtils.extensions[en].stateObj
 							&& typeof ExtensionUtils.extensions[en].stateObj[f] === 'function') {
 						this._names.set(n, en);
+						_D('<');
 						return ExtensionUtils.extensions[en];
 					}
 				} // for (en)
