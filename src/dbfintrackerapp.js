@@ -132,8 +132,11 @@ const dbFinTrackerApp = new Lang.Class({
 		}
 
         this._nextWindowsTimeout = null;
-        this._showThumbnailsTimeout = null;
 		this._resetNextWindows();
+
+        this._showThumbnailsTimeout = null;
+
+		this._createMenuTimeout = null;
 
         global.yawl.watch(this);
         _D('<');
@@ -147,6 +150,7 @@ const dbFinTrackerApp = new Lang.Class({
 		}
         this._resetNextWindows();
         this._cancelShowThumbnailsTimeout();
+		this._cancelCreateMenuTimeout();
         if (this.appButton) {
             this.appButton.destroy();
             this.appButton = null;
@@ -233,6 +237,23 @@ const dbFinTrackerApp = new Lang.Class({
 
 	updateMenu: function() {
         _D('>' + this.__name__ + '.updateMenu()');
+		this._cancelCreateMenuTimeout();
+		this._createMenuTimeout = Mainloop.timeout_add(111, Lang.bind(this, this._createMenu));
+        _D('<');
+	},
+
+    _cancelCreateMenuTimeout: function() {
+        _D('>' + this.__name__ + '._cancelCreateMenuTimeout()');
+        if (this._createMenuTimeout) {
+            Mainloop.source_remove(this._createMenuTimeout);
+            this._createMenuTimeout = null;
+        }
+        _D('<');
+    },
+
+	_createMenu: function() {
+		_D('>' + this.__name__ + '._createMenu()');
+		this._cancelCreateMenuTimeout();
         let (menu = this.appButton && global.yawl && global.yawl.menuBuilder
                     && global.yawl.menuBuilder.build(this, this.appButton.actor)
                     || null) {
