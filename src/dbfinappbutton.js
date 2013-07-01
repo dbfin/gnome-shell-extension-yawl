@@ -225,6 +225,7 @@ const dbFinAppButton = new Lang.Class({
                         let (functionName = functionRow[state.clicks]) {
                             if (functionName != '' && this._trackerApp[functionName]) {
 								this._trackerApp.hideWindowsGroup();
+								if (this.menu && this.menu.isOpen && functionName !== 'openMenu') this.menu.close();
                                 Lang.bind(this._trackerApp, this._trackerApp[functionName])();
                             }
                         } // let (functionName)

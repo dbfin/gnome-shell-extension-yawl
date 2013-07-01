@@ -29,6 +29,7 @@ const Lang = imports.lang;
 const St = imports.gi.St;
 const Shell = imports.gi.Shell;
 
+const Main = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -106,10 +107,63 @@ const dbFinMenuBuilder = new Lang.Class({
 				if (typeof menu.destroy === 'function') menu.destroy();
 				menu = null;
 			}
+			if (menu) {
+				menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem(), 0);
+				menu._app = trackerApp.metaApp;
+                menu._tracker = Shell.WindowTracker.get_default();
+				menu._openWas = menu.open;
+				menu.open = this.open;
+			}
             _D('<');
             return menu;
 		} // let (menu, actionGroup)
     },
+
+	open: function(animate) {
+		_D('>' + this.__name__ + '.open()');
+		if (this) {
+			if (this._menuWindows) {
+				if (typeof this._menuWindows.destroy === 'function') this._menuWindows.destroy();
+				this._menuWindows = null;
+			}
+			if (this._app && this._tracker) {
+				// add windows
+				let (windows = []) {
+					this._app.get_windows().forEach(Lang.bind(this, function (metaWindow) {
+						if (!metaWindow || !this._tracker.is_window_interesting(metaWindow)) return;
+						windows.push([
+								(metaWindow.is_on_all_workspaces() ? -1 : metaWindow.get_workspace().index()),
+								metaWindow
+						]);
+					})); // this._app.get_windows().forEach(metaWindow)
+					if (windows.length) {
+						this._menuWindows = new PopupMenu.PopupMenuSection();
+						windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
+						let (wIndexWas = windows[0][0],
+                             focusedWindow = global.display && global.display.focus_window || null) {
+							windows.forEach(Lang.bind(this, function ([ wIndex, metaWindow ]) {
+								if (wIndex !== wIndexWas) {
+									wIndexWas = wIndex;
+									this._menuWindows.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+								}
+								let (title = metaWindow.get_title()) {
+									if (title.length > 33) title = title.substring(0, 30) + '...';
+									let (menuItem = this._menuWindows.addAction(title, function () { Main.activateWindow(metaWindow); })) {
+                                        if (metaWindow === focusedWindow || metaWindow === focusedWindow.get_transient_for()) {
+                                            menuItem.setShowDot(true);
+                                        }
+									}
+								}
+							})); // windows.forEach([ wIndex, metaWindow ])
+						} // let (wIndexWas, focusedWindow)
+						this.addMenuItem(this._menuWindows, 0);
+					}
+				} // let (windows)
+			} // if (this._app && this._tracker)
+			if (this._openWas) Lang.bind(this, this._openWas)(animate);
+		} // if (this)
+		_D('<');
+	},
 
     _getExtension: function(n, f) {
         _D('>' + this.__name__ + '._getExtension()');
