@@ -83,14 +83,14 @@ const dbFinMenuBuilder = new Lang.Class({
         _D('<');
 	},
 
-    build: function(trackerApp, actor) {
+    build: function(trackerApp, actor, hideMenuMain/* = false*/, hideMenuAddons/* = false*/) {
         _D('>' + this.__name__ + '.build()');
 		if (!trackerApp || !trackerApp.metaApp || trackerApp.metaApp.state != Shell.AppState.RUNNING || !actor) {
 	        _D('<');
             return null;
 		}
 		let (	menu = null,
-		     	actionGroup = trackerApp.metaApp.menu && trackerApp.metaApp.action_group) {
+		     	actionGroup = !hideMenuMain && trackerApp.metaApp.menu && trackerApp.metaApp.action_group) {
             // remote menu
 			if (actionGroup) {
 				menu = new PopupMenu.RemoteMenu(actor, trackerApp.metaApp.menu, actionGroup);
@@ -101,9 +101,9 @@ const dbFinMenuBuilder = new Lang.Class({
 			} // if (actionGroup)
             // if no remote menu
 			if (!menu) {
+                menu = new PopupMenu.PopupMenu(actor, 0.0, St.Side.TOP, 0);
 				// set up menu
-				if (dbFinConsts.arrayAppMenuItems.length) {
-					menu = new PopupMenu.PopupMenu(actor, 0.0, St.Side.TOP, 0);
+				if (!hideMenuMain && dbFinConsts.arrayAppMenuItems.length) {
 					for (let i = 0; i < dbFinConsts.arrayAppMenuItems.length; ++i) {
 						let (   text = _(dbFinConsts.arrayAppMenuItems[i][0]),
 								functionName = dbFinConsts.arrayAppMenuItems[i][1]) {
@@ -118,7 +118,7 @@ const dbFinMenuBuilder = new Lang.Class({
 				} // if (dbFinConsts.arrayAppMenuItems.length)
 			} // if (!menu)
             // menu add-ons
-            if (menu) {
+            if (!hideMenuAddons && menu) {
                 if (global.yawl._appQuicklists) {
                     let (mf = this._getMenuFunction('quicklists', 'setQuicklist')) {
                         if (mf) {
@@ -138,10 +138,6 @@ const dbFinMenuBuilder = new Lang.Class({
                     }
                 }
             }
-			if (menu && menu.isEmpty()) {
-				if (typeof menu.destroy === 'function') menu.destroy();
-				menu = null;
-			}
 			if (menu) {
 				menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem(), 0);
 				menu._app = trackerApp.metaApp;

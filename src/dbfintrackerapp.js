@@ -152,6 +152,7 @@ const dbFinTrackerApp = new Lang.Class({
         this._cancelShowThumbnailsTimeout();
 		this._cancelCreateMenuTimeout();
         if (this.appButton) {
+			this.appButton.setMenu(null);
             this.appButton.destroy();
             this.appButton = null;
         }
