@@ -71,11 +71,17 @@ const dbFinMenuBuilder = new Lang.Class({
     _init: function() {
         _D('>' + this.__name__ + '._init()');
         this._names = new dbFinArrayHash.dbFinArrayHash();
+		if (Main.panel && Main.panel.actor) {
+			this.menuWindowsManager = new PopupMenu.PopupMenuManager(Main.panel);
+		}
         _D('<');
     },
 
 	destroy: function() {
         _D('>' + this.__name__ + '.destroy()');
+        if (this.menuWindowsManager) {
+            this.menuWindowsManager = null;
+        }
         if (this._names) {
             this._names.destroy();
             this._names = null;

@@ -108,6 +108,17 @@ const dbFinTrackerApp = new Lang.Class({
 											callback: this._appButtonAllocationChanged, scope: this });
 			}
 			if (this.appButton.actor) {
+				if (global.yawl && global.yawl.menuBuilder && global.yawl.menuBuilder.menuWindowsManager) {
+					this.appButton.menuWindows = global.yawl.menuBuilder.build(this, this.appButton.actor, true, true);
+					if (this.appButton.menuWindows && this.appButton.menuWindows.actor) {
+						Main.uiGroup.add_actor(this.appButton.menuWindows.actor);
+						this.appButton.menuWindows.actor.hide();
+						this._menuWindowsManager = global.yawl.menuBuilder.menuWindowsManager;
+						this._menuWindowsManager.addMenu(this.appButton.menuWindows);
+						this._signals.connectNoId({	emitter: this.appButton.menuWindows, signal: 'open-state-changed',
+													callback: this._menuToggled, scope: this });
+					}
+				}
 				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'enter-event',
 											callback: this._enterEvent, scope: this });
 				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
@@ -152,6 +163,11 @@ const dbFinTrackerApp = new Lang.Class({
         this._cancelShowThumbnailsTimeout();
 		this._cancelCreateMenuTimeout();
         if (this.appButton) {
+			if (this.appButton.menuWindows) {
+	            if (this._menuWindowsManager) this._menuWindowsManager.removeMenu(this.appButton.menuWindows);
+				this.appButton.menuWindows.destroy();
+				this.appButton.menuWindows = null;
+			}
 			this.appButton.setMenu(null);
             this.appButton.destroy();
             this.appButton = null;
@@ -276,14 +292,12 @@ const dbFinTrackerApp = new Lang.Class({
 
     _menuToggled: function(menu, state) {
         _D('>' + this.__name__ + '._menuToggled()');
-		if (menu && this.appButton && menu == this.appButton.menu) {
-            if (!state) {
-                // make sure we are still "active" if focused
-                this._updateFocused();
-            }
-            else {
-                this.hideWindowsGroup();
-            }
+		if (!state) {
+			// make sure we are still "active" if focused
+			this._updateFocused();
+		}
+		else {
+			this.hideWindowsGroup();
 		}
         _D('<');
     },
@@ -398,6 +412,7 @@ const dbFinTrackerApp = new Lang.Class({
                     Lang.bind(this, function() {
                         this._cancelShowThumbnailsTimeout();
                         if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen) return;
+                        if (this.appButton && this.appButton.menuWindows && this.appButton.menuWindows.isOpen) return;
                         this.positionWindowsGroup(); // position it before showing if it is hidden
 						if (this._tracker && this._tracker.preview && this._tracker.preview.container
 								&& Main.layoutManager && Main.layoutManager.panelBox) {
@@ -437,7 +452,7 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-	_listWindowsFresh: function(minimized/* = false*/) {
+	_listWindowsFresh: function(minimized/* = false*/, allworkspacesifempty/* = false*/) {
         _D('>' + this.__name__ + '._listWindowsFresh()');
 		if (!this.metaApp || this.metaApp.state == Shell.AppState.STOPPED) {
 			_D('<');
@@ -449,6 +464,18 @@ const dbFinTrackerApp = new Lang.Class({
 					return window.get_workspace() == workspace && (minimized || window.showing_on_its_workspace());
                 });
 			} // let (workspace)
+			if (!windows.length && allworkspacesifempty) {
+				if (minimized) {
+					windows = this.metaApp.get_windows().slice();
+				}
+				else {
+					windows = this.metaApp.get_windows().slice().filter(function (window) {
+						return window.showing_on_its_workspace();
+					});
+				}
+				windows = windows.map(function (metaWindow) { return [ metaWindow.get_workspace(), metaWindow ]; });
+				windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
+			}
 	        _D('<');
 			return windows;
 		} // let (windows)
@@ -483,8 +510,13 @@ const dbFinTrackerApp = new Lang.Class({
 
     _nextWindow: function(minimized/* = false*/) {
         _D('>' + this.__name__ + '._nextWindow()');
-		let (windows = this._listWindowsFresh(minimized)) {
-			if (windows.length) {
+        if (this.appButton && this.appButton.menuWindows && this.appButton.menuWindows.isOpen) {
+            this.appButton.menuWindows.close();
+            _D('<');
+            return;
+        }
+		let (windows = this._listWindowsFresh(minimized, true)) {
+			if (windows.length && !windows[0].length) { // windows are all from the current workspace
 				if (!this.focused) {
 					Main.activateWindow(windows[0]);
                     this._resetNextWindows();
@@ -501,7 +533,19 @@ const dbFinTrackerApp = new Lang.Class({
 					this._cancelNextWindowsTimeout();
 					this._nextWindowsTimeout = Mainloop.timeout_add(3333, Lang.bind(this, this._resetNextWindows));
 				} // if (!this.focused) else
-			} // if (windows.length)
+			}
+			else if (windows.length) { // windows are all not from the current workspace
+				// if all windows are from the same workspace, activate the first one
+				if (windows[0][0] == windows[windows.length - 1][0]) {
+					Main.activateWindow(windows[0][1]);
+                    this._resetNextWindows();
+				}
+				else { // else bring up a menu listing all windows on different workspaces
+					if (this.appButton && this.appButton.menuWindows) {
+						this.appButton.menuWindows.toggle();
+					}
+				}
+			}
 		} // let (windows)
         _D('<');
     },

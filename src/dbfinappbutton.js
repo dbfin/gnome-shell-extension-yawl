@@ -226,6 +226,9 @@ const dbFinAppButton = new Lang.Class({
                             if (functionName != '' && this._trackerApp[functionName]) {
 								this._trackerApp.hideWindowsGroup();
 								if (this.menu && this.menu.isOpen && functionName !== 'openMenu') this.menu.close();
+                                if (this.menuWindows && this.menuWindows.isOpen
+                                    && functionName !== 'nextWindowNonMinimized'
+                                    && functionName !== 'nextWindow') this.menuWindows.close();
                                 Lang.bind(this._trackerApp, this._trackerApp[functionName])();
                             }
                         } // let (functionName)
