@@ -149,7 +149,8 @@ const dbFinMenuBuilder = new Lang.Class({
 								let (title = metaWindow.get_title()) {
 									if (title.length > 33) title = title.substring(0, 30) + '...';
 									let (menuItem = this._menuWindows.addAction(title, function () { Main.activateWindow(metaWindow); })) {
-                                        if (metaWindow === focusedWindow || metaWindow === focusedWindow.get_transient_for()) {
+                                        if (focusedWindow && (metaWindow === focusedWindow
+                                                              || metaWindow === focusedWindow.get_transient_for())) {
                                             menuItem.setShowDot(true);
                                         }
 									}
