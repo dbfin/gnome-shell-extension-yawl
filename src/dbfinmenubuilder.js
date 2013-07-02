@@ -43,6 +43,28 @@ const _ = Gettext.gettext;
 
 const _D = Me.imports.dbfindebug._D;
 
+const dbFinPopupMenuScrollableSection = new Lang.Class({
+    Name: 'dbFin.PopupMenuScrollableSection',
+    Extends: PopupMenu.PopupMenuSection,
+
+    _init: function() {
+        this.parent();
+		this.actor = new St.ScrollView({ style_class: 'popup-menu-section-scroll' });
+        this.actor.add_actor(this.box);
+        this.actor._delegate = this;
+        this.actor.clip_to_allocation = true;
+    },
+
+    destroy: function() {
+		if (this.actor && this.actor.has_style_class_name('popup-menu-section-scroll')) {
+			this.actor.destroy();
+			this.actor = this.box;
+	        this.actor._delegate = this;
+		}
+        this.parent();
+    }
+});
+
 const dbFinMenuBuilder = new Lang.Class({
 	Name: 'dbFin.MenuBuilder',
 
@@ -99,7 +121,20 @@ const dbFinMenuBuilder = new Lang.Class({
             if (menu) {
                 if (global.yawl._appQuicklists) {
                     let (mf = this._getMenuFunction('quicklists', 'setQuicklist')) {
-                        if (mf) mf(trackerApp.metaApp, menu);
+                        if (mf) {
+                            menu._submenuQuicklists = new dbFinPopupMenuScrollableSection();
+							if (menu._submenuQuicklists) {
+								mf(trackerApp.metaApp, menu._submenuQuicklists);
+								if (menu._submenuQuicklists.isEmpty()) {
+									menu._submenuQuicklists.destroy();
+									menu._submenuQuicklists = null;
+								}
+								else {
+									menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem(), 0);
+									menu.addMenuItem(menu._submenuQuicklists, 0);
+								}
+							}
+                        }
                     }
                 }
             }
