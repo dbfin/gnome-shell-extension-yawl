@@ -138,24 +138,27 @@ const dbFinTrackerWindow = new Lang.Class({
 
 	_updateFocused: function() {
         _D('>' + this.__name__ + '._updateFocused()');
-        let (focusedWindow = global.display.focus_window) {
+        let (   focusedWindow = global.display.focus_window,
+                focused = this.focused) {
             this.focused = this.metaWindow && focusedWindow
                                 && (focusedWindow == this.metaWindow
                                     || focusedWindow.get_transient_for() == this.metaWindow);
-			if (this.focused) this.windowThumbnail.actor.add_style_pseudo_class('active');
-			else this.windowThumbnail.actor.remove_style_pseudo_class('active');
+            if (focused != this.focused) {
+                if (this.windowThumbnail && this.windowThumbnail.actor) {
+                    if (this.focused) this.windowThumbnail.actor.add_style_pseudo_class('active');
+                    else this.windowThumbnail.actor.remove_style_pseudo_class('active');
+                }
+                if (this._tracker) {
+                    this._tracker.windowEvent(this, 'focused');
+                }
+            }
         }
         _D('<');
 	},
 
     _focusedChanged: function() {
         _D('@' + this.__name__ + '._focusedChanged()');
-        let (focused = this.focused) {
-            this._updateFocused();
-            if (this._tracker && focused !== this.focused) {
-                this._tracker.windowEvent(this, 'focused');
-            }
-        }
+        this._updateFocused();
         _D('<');
     },
 
