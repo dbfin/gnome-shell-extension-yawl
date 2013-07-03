@@ -89,6 +89,10 @@ const dbFinTrackerWindow = new Lang.Class({
 											callback: this._leaveEvent , scope: this });
 			}
         }
+
+		if (this._tracker && this._tracker.hasAppWindowAttention(this.metaApp, this.metaWindow)) {
+            this.attention(true);
+        }
         _D('<');
     },
 
@@ -194,6 +198,15 @@ const dbFinTrackerWindow = new Lang.Class({
         _D('>' + this.__name__ + '._leaveEvent()');
         this.hovered = false;
 		if (this._tracker) this._tracker.windowEvent(this, 'leave');
+        _D('<');
+    },
+
+    attention: function(state) {
+        _D('>' + this.__name__ + '.attention()');
+        if (this.windowThumbnail && this.windowThumbnail.actor) {
+            if (state) this.windowThumbnail.actor.add_style_pseudo_class('attention');
+            else this.windowThumbnail.actor.remove_style_pseudo_class('attention');
+        }
         _D('<');
     },
 

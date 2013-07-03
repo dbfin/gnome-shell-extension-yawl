@@ -24,6 +24,15 @@
  *
  */
 
+/* Apps */
+/* attention: this is the not-blinking background of the icon */
+#panelYAWL .panel-button-container:attention {
+}
+
+/* attention: this is the blinking background of the icon */
+#panelYAWL .panel-button:attention {
+}
+
 /* Thumbnails */
 #panelYAWLWindows .yawl-panel-label-title {
 	font-size: 106.25%;
@@ -44,6 +53,18 @@
 #panelYAWLWindows.light .yawl-thumbnail:active {
     background-gradient-start: rgba(0, 0, 0, 0.333);
     background-gradient-end: rgba(0, 0, 0, 0.0);
+    background-gradient-direction: vertical;
+}
+
+#panelYAWLWindows .yawl-thumbnail:attention {
+    background-gradient-start: rgba(255, 224, 192, 0.333);
+    background-gradient-end: rgba(255, 224, 192, 0.0);
+    background-gradient-direction: vertical;
+}
+
+#panelYAWLWindows.light .yawl-thumbnail:attention {
+    background-gradient-start: rgba(128, 96, 0, 0.222);
+    background-gradient-end: rgba(128, 96, 0, 0.0);
     background-gradient-direction: vertical;
 }
 

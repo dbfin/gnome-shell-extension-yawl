@@ -59,6 +59,9 @@ const dbFinAppButton = new Lang.Class({
         this.hiding = false;
 
 		// this.actor and this.container related stuff
+        if (this.container) {
+            this.container.add_style_class_name('panel-button-container');
+        }
         if (this.actor) {
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
             this.actor.reactive = true;

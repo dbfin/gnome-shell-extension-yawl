@@ -36,6 +36,7 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
@@ -142,12 +143,18 @@ const dbFinTrackerApp = new Lang.Class({
 										callback: this._updateFocused, scope: this });
 		}
 
+		if (this._tracker && this._tracker.hasAppAttention(this.metaApp)) {
+            this.attention(true);
+        }
+
         this._nextWindowsTimeout = null;
 		this._resetNextWindows();
 
         this._showThumbnailsTimeout = null;
 
 		this._createMenuTimeout = null;
+
+		this._attentionTimeout = null;
 
         global.yawl.watch(this);
         _D('<');
@@ -162,6 +169,7 @@ const dbFinTrackerApp = new Lang.Class({
         this._resetNextWindows();
         this._cancelShowThumbnailsTimeout();
 		this._cancelCreateMenuTimeout();
+        this.attention(false);
         if (this.appButton) {
 			if (this.appButton.menuWindows) {
 	            if (this._menuWindowsManager) this._menuWindowsManager.removeMenu(this.appButton.menuWindows);
@@ -361,6 +369,53 @@ const dbFinTrackerApp = new Lang.Class({
         }
         _D('<');
     },
+
+    attention: function(state) {
+        _D('>' + this.__name__ + '.attention()');
+        if (this.appButton) {
+            if (this.appButton.actor) {
+                if (state) this.appButton.actor.add_style_pseudo_class('attention');
+                else this.appButton.actor.remove_style_pseudo_class('attention');
+            }
+            if (this.appButton.container) {
+                if (state) this.appButton.container.add_style_pseudo_class('attention');
+                else this.appButton.container.remove_style_pseudo_class('attention');
+            }
+        }
+        if (!state) {
+            this._cancelAttentionTimeout();
+            if (this.appButton && this.appButton.actor) {
+                this.appButton.actor.opacity = 255;
+            }
+        }
+        else if (!this._attentionTimeout) {
+			this._attentionAnimationDirection = 1;
+            this._attentionTimeout = Mainloop.timeout_add(77, Lang.bind(this, this._attentionAnimation));
+        }
+        _D('<');
+    },
+
+    _cancelAttentionTimeout: function() {
+        _D('>' + this.__name__ + '._cancelAttentionTimeout()');
+        if (this._attentionTimeout) {
+            Mainloop.source_remove(this._attentionTimeout);
+            this._attentionTimeout = null;
+        }
+        _D('<');
+    },
+
+	_attentionAnimation: function() {
+		if (this.appButton && this.appButton.actor) {
+            let (level = Math.round((this.appButton.actor.opacity - 101) / 11)) {
+                if (level <= 0) this._attentionAnimationDirection = 1;
+                else if (level == 14) this._attentionAnimationDirection = -1;
+                else if (this._attentionAnimationDirection !== -1) this._attentionAnimationDirection = 1;
+                this.appButton.actor.opacity = (level + this._attentionAnimationDirection) * 11 + 101;
+            }
+            return true;
+		}
+		return false;
+	},
 
 	_appButtonAllocationChanged: function() {
         _D('>' + this.__name__ + '._appButtonAllocationChanged()');

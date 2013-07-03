@@ -147,7 +147,7 @@ const dbFinMenuBuilder = new Lang.Class({
 			if (menu) {
 				menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem(), 0);
 				menu._app = trackerApp.metaApp;
-                menu._tracker = Shell.WindowTracker.get_default();
+                menu._tracker = trackerApp._tracker;
 				menu._openWas = menu.open;
 				menu.open = this.open;
 			}
@@ -165,14 +165,15 @@ const dbFinMenuBuilder = new Lang.Class({
 			}
 			if (this._app && this._tracker) {
 				// add windows
-				let (windows = []) {
-					this._app.get_windows().forEach(Lang.bind(this, function (metaWindow) {
-						if (!metaWindow || !this._tracker.is_window_interesting(metaWindow)) return;
+				let (windows = [],
+                     tracker = this._tracker.getTracker()) {
+                    if (tracker) this._app.get_windows().forEach(Lang.bind(this, function (metaWindow) {
+						if (!metaWindow || !tracker.is_window_interesting(metaWindow)) return;
 						windows.push([
 								(metaWindow.is_on_all_workspaces() ? -1 : metaWindow.get_workspace().index()),
 								metaWindow
 						]);
-					})); // this._app.get_windows().forEach(metaWindow)
+					})); // if (tracker) this._app.get_windows().forEach(metaWindow)
 					if (windows.length) {
 						this._menuWindows = new PopupMenu.PopupMenuSection();
 						windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
@@ -190,13 +191,16 @@ const dbFinMenuBuilder = new Lang.Class({
                                                               || metaWindow === focusedWindow.get_transient_for())) {
                                             menuItem.setShowDot(true);
                                         }
+										if (tracker && this._tracker.hasAppWindowAttention(tracker.get_window_app(metaWindow), metaWindow)) {
+											menuItem.addActor(new St.Icon({ icon_name: 'dialog-warning', icon_size: 16, x_align: St.Align.END }));
+										}
 									}
 								}
 							})); // windows.forEach([ wIndex, metaWindow ])
 						} // let (wIndexWas, focusedWindow)
 						this.addMenuItem(this._menuWindows, 0);
-					}
-				} // let (windows)
+					} // if (windows.length)
+				} // let (windows, tracker)
 			} // if (this._app && this._tracker)
 			if (this._openWas) Lang.bind(this, this._openWas)(animate);
 		} // if (this)
