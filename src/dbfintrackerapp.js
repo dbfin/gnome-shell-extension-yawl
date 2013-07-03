@@ -473,7 +473,7 @@ const dbFinTrackerApp = new Lang.Class({
 						return window.showing_on_its_workspace();
 					});
 				}
-				windows = windows.map(function (metaWindow) { return [ metaWindow.get_workspace(), metaWindow ]; });
+				windows = windows.map(function (metaWindow) { return [ metaWindow.get_workspace().index(), metaWindow ]; });
 				windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
 			}
 	        _D('<');
