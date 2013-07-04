@@ -30,3 +30,8 @@ v7	2013-06-21
 v8	2013-06-22
     	- German translation
     	- Dark focused/hovered thumbnail frame if thumbnail panel itself is light
+v9	2013-07-03
+    	- Window demanding attention and urgent windows: blinking and styling
+    	- Show icons from all workspaces (optionally)
+    	- Optionally turn thumbnails off
+    	- Scrollable menu sections to prevent menus going over screen edge

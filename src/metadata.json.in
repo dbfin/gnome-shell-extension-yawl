@@ -1,11 +1,11 @@
 {
     "shell-version": ["3.6", "3.8"],
     "uuid": "@UUID@",
-    "name": "YAWL (Yet Another Window List)",
+    "name": "YAWL",
     "version": @EXTENSIONVERSION@,
-    "original-author": "Vadim@dbFin.com",
+    "original-author": "Vadim@dbFin",
     "url": "@EXTENSIONURL@",
-    "description": "YAWL is a highly customizable Window List extension with window thumbnail previews. Features include:\n- Icons of currently open applications built-in to the top panel\n- Window thumbnail previews\n- \"Window peeking\": view window by hovering its thumbnail without focusing (turn on/off by scrolling up/down)\n- Support for app menus\n- Highly customizable: change the panel look to give app icons more space, change icons/thumbnails size, theme and animation, custom mouse clicks etc.\n- Export/import settings for easy backing up, syncing and sharing\n- Translation-ready\n- Built-in debugging features for developers\nThe FIRST TIME you install the extension, it shows preferences, so that you can customize your experience.\nPlease report problems here or on GitHub.",
+    "description": "YAWL is a window list extension featuring App Icons (taskbar) on the top panel, Window Thumbnails, and switchable \"Window Peeking\" for quick preview of windows by hovering over their thumbnails. It supports Quicklists, app remote menus, windows requiring attention etc. It works out of the box but provides numerous settings to adjust its look/behavior: rearrange task bar to give icons more space, change sizes, colors, animation, customize mouse actions etc. You can export/import settings to back up, sync or share. Default mouse actions include (see/adjust all mouse actions in preferences):\n1) Window Thumbnails:\n- Scroll up/down: Window Peeking ON/OFF + change thumbnails opacity\n- Left click: focus window\n- Middle click: maximize/restore window\n- Right click (or Shift+left click): minimize window\n2) App Icons:\n- Left click: switch to app / cycle through its windows\n- Shift+left click (double click): minimize top (all) app window(s)\n- Right click: show app menu\n- Scroll over: cycle through app windows\nThe first time you install the extension it welcomes you with preference dialog. No settings require Gnome-Shell restart: adjust it all in real time.\nExtension is translation-ready, but your help is needed.\nPlease report problems and suggestions (here or on GitHub).\n--- What's new (check your version: Preferences: Welcome page) ---\nv9: Major update: support windows demanding attention; show (optionally) icons of applications from all workspaces; turn (optionally) thumbnails off; advanced right-click menus\nv8: German translation (thanks to Jonatan Zeidler); theme adjustments for lighter panels\nv7: Quicklists (requires Damian's Quicklists extension); thumbnail panel opacity on preview; minor styling changes",
     "gettext-domain": "@EXTENSIONID@",
     "settings-schema": "@GSCHEMANAME@"
 }
