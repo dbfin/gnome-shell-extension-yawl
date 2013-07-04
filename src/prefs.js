@@ -624,11 +624,11 @@ function buildPrefsWidget() {
 							 + ' ' + _("is active workspace centric."), null, true, true, 3);
 			builder.shift();
 				builder.addLabel('<span size="small">' +
-								 _("It shows apps and windows open on the current active workspace only.")
-								 + ' ' + _("Most of its functionality (such as cycling through windows) is also active-workspace-oriented.")
-								 + ' ' + _("This is intentional and was set as one of the initial goals.")
-								 + ' ' + _("App icons shown on the panel are indicative of which workspace you are currently on and what task/activity it is intended for.")
-								 + ' ' + _("If you also want quick access to all applications running on all workspaces and favorites")
+								 _("It highlights icons of apps and shows windows open on the current active workspace.")
+								 + ' ' + _("App icons highlighted on the top panel are indicative of what workspace you are currently on and what task/activity it is intended for.")
+				                 + ' ' + _("You can even optionally hide app icons not present on the active workspace.")
+								 + ' ' + _("Most of the extension's functionality (such as cycling through windows) is also active-workspace-oriented.")
+								 + ' ' + _("For quick access to favorites")
 								 + ' ' + _("please consider installing in addition this highly recommended extension:")
 								 + ' ' + '<b>Dash to Dock</b> (' + _("author") + ': <b>michele_g</b>)'
 								 + '</span>', null, true, true, 3);
