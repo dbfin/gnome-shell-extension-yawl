@@ -79,14 +79,6 @@ const dbFinTrackerApp = new Lang.Class({
             };
         }
 
-		this._updatedIconsShowAll =
-			this._updatedIconsOpacityInactive =
-			this._updatedIconsOpacity = function () { this.updateVisibility(); };
-        this._updatedWindowsShow = function () { if (global.yawl && !global.yawl._windowsShow) this.hideWindowsGroup(); }
-        this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
-		this._updatedWindowsAnimationEffect = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = global.yawl._windowsAnimationEffect; };
-        this._updatedAppQuicklists = function () { this.updateMenu(); }
-
 		this.hovered = false;
 
         this.appButton = new dbFinAppButton.dbFinAppButton(metaApp, this);
@@ -143,10 +135,6 @@ const dbFinTrackerApp = new Lang.Class({
 										callback: this._updateFocused, scope: this });
 		}
 
-		if (this._tracker && this._tracker.hasAppAttention(this.metaApp)) {
-            this.attention(true);
-        }
-
         this._nextWindowsTimeout = null;
 		this._resetNextWindows();
 
@@ -155,6 +143,16 @@ const dbFinTrackerApp = new Lang.Class({
 		this._createMenuTimeout = null;
 
 		this._attentionTimeout = null;
+		this.attention(!!(this._tracker && this._tracker.hasAppAttention(this.metaApp)));
+
+		this._updatedIconsShowAll =
+			this._updatedIconsOpacityInactive =
+			this._updatedIconsOpacity = function () { this.updateVisibility(); };
+        this._updatedWindowsShow = function () { if (global.yawl && !global.yawl._windowsShow) this.hideWindowsGroup(); }
+        this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
+		this._updatedWindowsAnimationEffect = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = global.yawl._windowsAnimationEffect; };
+        this._updatedIconsAttentionBlink = function () { this.attention(this._attention); }
+        this._updatedAppQuicklists = function () { this.updateMenu(); }
 
         global.yawl.watch(this);
         _D('<');
@@ -372,17 +370,18 @@ const dbFinTrackerApp = new Lang.Class({
 
     attention: function(state) {
         _D('>' + this.__name__ + '.attention()');
+        this._attention = !!state;
         if (this.appButton) {
             if (this.appButton.actor) {
-                if (state) this.appButton.actor.add_style_pseudo_class('attention');
+                if (this._attention) this.appButton.actor.add_style_pseudo_class('attention');
                 else this.appButton.actor.remove_style_pseudo_class('attention');
             }
             if (this.appButton.container) {
-                if (state) this.appButton.container.add_style_pseudo_class('attention');
+                if (this._attention) this.appButton.container.add_style_pseudo_class('attention');
                 else this.appButton.container.remove_style_pseudo_class('attention');
             }
         }
-        if (!state) {
+        if (!this._attention || global.yawl && !global.yawl._iconsAttentionBlink) {
             this._cancelAttentionTimeout();
             if (this.appButton && this.appButton.actor) {
                 this.appButton.actor.opacity = 255;
