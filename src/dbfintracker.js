@@ -74,6 +74,8 @@ const dbFinTracker = new Lang.Class({
         this._updatedWindowsAnimationTime = function () { if (this.preview) this.preview.animationTime = global.yawl._windowsAnimationTime; }
 
 		this.update(null, 'Tracker: initial update.');
+		this._signals.connectNoId({	emitter: global.screen, signal: 'notify::n-workspaces',
+									callback: this._nWorkspaces, scope: this });
 		this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
 									callback: this._switchWorkspace, scope: this });
 		this._signals.connectNoId({ emitter: this._appSystem, signal: 'app-state-changed',
@@ -347,6 +349,12 @@ const dbFinTracker = new Lang.Class({
         _D('<');
     },
 
+	_nWorkspaces: function () {
+        _D('>' + this.__name__ + '._nWorkspaces()');
+		this.update(null, 'Workspaces changed.');
+        _D('<');
+	},
+
 	_switchWorkspace: function (manager, wsiOld, wsiNew) {
         _D('>' + this.__name__ + '._switchWorkspace()');
 		this.update(global.screen.get_workspace_by_index(wsiNew), 'Workspace switched from ' + (wsiOld + 1) + ' to ' + (wsiNew + 1) + '.');
@@ -364,7 +372,7 @@ const dbFinTracker = new Lang.Class({
         }
 		let (trackerApp = this.getTrackerApp(metaApp)) {
 			if (trackerApp) {
-                if (metaApp.state == Shell.AppState.STOPPED) trackerApp.updateVisibility();
+                trackerApp.updateVisibility();
 				trackerApp.updateMenu();
 			}
 			this.update(null, 'App ' + (trackerApp ? trackerApp.appName : 'unknown') + ': app state changed.');
