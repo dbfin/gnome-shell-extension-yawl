@@ -324,8 +324,7 @@ const dbFinDebugView = new Lang.Class({
 					if (container._label) {
 						container._label.set_text('+' + container._label.get_text().substring(1));
 						if (level == 1) this._open(container._label);
-						this._signals.connectNoId({	emitter: container._label, signal: 'button-press-event',
-			 										callback: this._labelButtonPressEvent, scope: this });
+						container._label.connect('button-press-event', Lang.bind(this, this._labelButtonPressEvent));
 					}
 				}
 				if (label) container.add_actor(label);
