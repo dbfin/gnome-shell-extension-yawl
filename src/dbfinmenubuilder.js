@@ -89,11 +89,12 @@ const dbFinMenuBuilder = new Lang.Class({
         _D('<');
 	},
 
-    _menuSetProperties: function(menu, metaApp, trackerApp) {
+    _menuSetProperties: function(menu, metaApp, trackerApp, updateAddons/* = false*/) {
         _D('>' + this.__name__ + '._menuSetProperties()');
         if (menu) {
             menu._app = metaApp;
             menu._tracker = trackerApp && trackerApp._tracker || null;
+			if (updateAddons) menu._menuUpdateAddons = Lang.bind(this, this._menuUpdateAddons);
             if (!menu._openWas) {
                 menu._openWas = menu.open;
                 menu.open = this.open;
@@ -171,8 +172,7 @@ const dbFinMenuBuilder = new Lang.Class({
 					menu = null;
 				}
                 if (menu) {
-                    this._menuSetProperties(menu, metaApp, trackerApp);
-                    this._menuUpdateAddons(menu, metaApp);
+                    this._menuSetProperties(menu, metaApp, trackerApp, true);
                     _D('<');
                     return menu;
                 }
@@ -195,8 +195,7 @@ const dbFinMenuBuilder = new Lang.Class({
                     }
                 } // let (text, functionName)
             } // for (let i)
-            this._menuSetProperties(menu, metaApp, trackerApp);
-            this._menuUpdateAddons(menu, metaApp);
+            this._menuSetProperties(menu, metaApp, trackerApp, true);
             _D('<');
             return menu;
         } // let (metaApp, menu)
@@ -210,6 +209,11 @@ const dbFinMenuBuilder = new Lang.Class({
 				this._menuWindows = null;
 			}
 			if (this._app && this._tracker) {
+				// addons
+				if (this._menuUpdateAddons) {
+		            this._menuUpdateAddons(this, this._app);
+					this._menuUpdateAddons = null;
+				}
 				// add windows
 				let (windows = [],
                      tracker = this._tracker.getTracker()) {

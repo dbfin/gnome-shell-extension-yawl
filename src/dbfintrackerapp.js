@@ -261,7 +261,7 @@ const dbFinTrackerApp = new Lang.Class({
 	updateMenu: function() {
         _D('>' + this.__name__ + '.updateMenu()');
 		this._cancelCreateMenuTimeout();
-		this._createMenuTimeout = Mainloop.timeout_add(111, Lang.bind(this, this._createMenu));
+		this._createMenuTimeout = Mainloop.timeout_add(777, Lang.bind(this, this._createMenu));
         _D('<');
 	},
 
