@@ -102,7 +102,7 @@ const dbFinTrackerApp = new Lang.Class({
 			}
 			if (this.appButton.actor) {
 				if (global.yawl && global.yawl.menuBuilder && global.yawl.menuBuilder.menuWindowsManager) {
-					this.appButton.menuWindows = global.yawl.menuBuilder.build(this, this.appButton.actor, true, true);
+					this.appButton.menuWindows = global.yawl.menuBuilder.build(this, this.appButton.actor, true);
 					if (this.appButton.menuWindows && this.appButton.menuWindows.actor) {
 						Main.uiGroup.add_actor(this.appButton.menuWindows.actor);
 						this.appButton.menuWindows.actor.hide();

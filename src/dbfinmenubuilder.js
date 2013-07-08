@@ -89,71 +89,117 @@ const dbFinMenuBuilder = new Lang.Class({
         _D('<');
 	},
 
-    build: function(trackerApp, actor, hideMenuMain/* = false*/, hideMenuAddons/* = false*/) {
-        _D('>' + this.__name__ + '.build()');
-		if (!trackerApp || !trackerApp.metaApp || trackerApp.metaApp.state != Shell.AppState.RUNNING || !actor) {
-	        _D('<');
-            return null;
-		}
-		let (	menu = null,
-		     	actionGroup = !hideMenuMain && trackerApp.metaApp.menu && trackerApp.metaApp.action_group) {
-            // remote menu
-			if (actionGroup) {
-				menu = new PopupMenu.RemoteMenu(actor, trackerApp.metaApp.menu, actionGroup);
-				if (menu && menu.isEmpty()) {
-					if (typeof menu.destroy === 'function') menu.destroy();
-					menu = null;
-				}
-			} // if (actionGroup)
-            // if no remote menu
-			if (!menu) {
-                menu = new PopupMenu.PopupMenu(actor, 0.0, St.Side.TOP, 0);
-				// set up menu
-				if (!hideMenuMain && dbFinConsts.arrayAppMenuItems.length) {
-					for (let i = 0; i < dbFinConsts.arrayAppMenuItems.length; ++i) {
-						let (   text = _(dbFinConsts.arrayAppMenuItems[i][0]),
-								functionName = dbFinConsts.arrayAppMenuItems[i][1]) {
-							if (text && text != '' && trackerApp[functionName]) {
-								menu.addAction(text, Lang.bind(trackerApp, trackerApp[functionName]));
-							}
-							else {
-								menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-							}
-						} // let (text, functionName)
-					} // for (let i)
-				} // if (dbFinConsts.arrayAppMenuItems.length)
-			} // if (!menu)
-            // menu add-ons
-            if (!hideMenuAddons && menu) {
-                if (global.yawl._appQuicklists) {
-                    let (mf = this._getMenuFunction('quicklists', 'setQuicklist')) {
-                        if (mf) {
-                            menu._submenuQuicklists = new dbFinPopupMenuScrollableSection();
-							if (menu._submenuQuicklists) {
-								mf(trackerApp.metaApp, menu._submenuQuicklists);
-								if (menu._submenuQuicklists.isEmpty()) {
-									menu._submenuQuicklists.destroy();
-									menu._submenuQuicklists = null;
-								}
-								else {
-									menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem(), 0);
-									menu.addMenuItem(menu._submenuQuicklists, 0);
-								}
-							}
+    _menuSetProperties: function(menu, metaApp, trackerApp) {
+        _D('>' + this.__name__ + '._menuSetProperties()');
+        if (menu) {
+            menu._app = metaApp;
+            menu._tracker = trackerApp && trackerApp._tracker || null;
+            if (!menu._openWas) {
+                menu._openWas = menu.open;
+                menu.open = this.open;
+            }
+        }
+        _D('<');
+    },
+
+    _menuUpdateAddons: function(menu, metaApp) {
+        _D('>' + this.__name__ + '._menuUpdateAddons()');
+        // menu add-ons
+        if (menu && metaApp) {
+            if (global.yawl._appQuicklists && !menu._menuQuicklists) {
+                let (mf = this._getMenuFunction('quicklists', 'setQuicklist')) {
+                    if (mf) {
+                        menu._menuQuicklists = new dbFinPopupMenuScrollableSection();
+                        if (menu._menuQuicklists) {
+                            mf(metaApp, menu._menuQuicklists);
+                            if (menu._menuQuicklists.isEmpty()) {
+                                menu._menuQuicklists.destroy();
+                                menu._menuQuicklists = null;
+                            }
+                            else {
+                                menu.addMenuItem(menu._menuQuicklists, 0);
+                                menu._menuQuicklistsSeparator = new PopupMenu.PopupSeparatorMenuItem();
+                                if (menu._menuQuicklistsSeparator) {
+                                    menu.addMenuItem(menu._menuQuicklistsSeparator, 0);
+                                }
+                            }
                         }
                     }
                 }
             }
-			if (menu) {
-				menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem(), 0);
-				menu._app = trackerApp.metaApp;
-                menu._tracker = trackerApp._tracker;
-				menu._openWas = menu.open;
-				menu.open = this.open;
+            else if (!global.yawl._appQuicklists && menu._menuQuicklists) {
+                if (menu._menuQuicklistsSeparator) {
+                    menu._menuQuicklistsSeparator.destroy();
+                    menu._menuQuicklistsSeparator = null;
+                }
+                if (menu._menuQuicklists) {
+                    menu._menuQuicklists.destroy();
+                    menu._menuQuicklists = null;
+                }
+            }
+        } // if (menu && metaApp)
+        _D('<');
+    },
+
+    build: function(trackerApp, actor, empty/* = false*/) {
+        _D('>' + this.__name__ + '.build()');
+		if (!trackerApp || !actor) {
+	        _D('<');
+            return null;
+		}
+        let (metaApp = trackerApp.metaApp,
+             menu = null) {
+            if (!metaApp) {
+                _D('<');
+                return null;
+            }
+            if (empty) {
+                menu = new PopupMenu.PopupMenu(actor, 0.0, St.Side.TOP, 0);
+                this._menuSetProperties(menu, metaApp, trackerApp);
+                _D('<');
+                return menu;
+            }
+            if (metaApp.state != Shell.AppState.RUNNING) {
+                _D('<');
+                return null;
+            }
+            // remote menu
+			if (metaApp.action_group && metaApp.menu) {
+				menu = new PopupMenu.RemoteMenu(actor, metaApp.menu, metaApp.action_group);
+				if (menu && menu.isEmpty()) {
+					if (typeof menu.destroy === 'function') menu.destroy();
+					menu = null;
+				}
+                if (menu) {
+                    this._menuSetProperties(menu, metaApp, trackerApp);
+                    this._menuUpdateAddons(menu, metaApp);
+                    _D('<');
+                    return menu;
+                }
 			}
+            // if no remote menu
+            menu = new PopupMenu.PopupMenu(actor, 0.0, St.Side.TOP, 0);
+            if (!menu) {
+                _D('<');
+                return null;
+            }
+            // set up menu
+            for (let i = 0; i < dbFinConsts.arrayAppMenuItems.length; ++i) {
+                let (   text = _(dbFinConsts.arrayAppMenuItems[i][0]),
+                        functionName = dbFinConsts.arrayAppMenuItems[i][1]) {
+                    if (text && text != '' && trackerApp[functionName]) {
+                        menu.addAction(text, Lang.bind(trackerApp, trackerApp[functionName]));
+                    }
+                    else {
+                        menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+                    }
+                } // let (text, functionName)
+            } // for (let i)
+            this._menuSetProperties(menu, metaApp, trackerApp);
+            this._menuUpdateAddons(menu, metaApp);
             _D('<');
             return menu;
-		} // let (menu, actionGroup)
+        } // let (metaApp, menu)
     },
 
 	open: function(animate) {

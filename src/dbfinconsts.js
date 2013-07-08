@@ -83,8 +83,9 @@ const arrayWindowClickFunctions = [
 ];
 
 const arrayAppMenuItems = [
-//    [   _("New window"),            					'openNewWindowThisWorkspace'	],
 //    [   '',                         					null							],
+//    [   _("New window"),            					'openNewWindowThisWorkspace'	],
+    [   '',                         					null							],
     [   _("Quit"),                  					'quitApplication'				]
 ];
 
