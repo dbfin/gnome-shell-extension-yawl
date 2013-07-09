@@ -63,6 +63,8 @@ const dbFinTracker = new Lang.Class({
 		this.windows = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaWindow, trackerWindow ] ]
 		this.state = 0; // when refreshing we increase the state to indicate apps and windows that are no longer there
         this.stateInfo = '';
+		this._refreshScheduled = false;
+		this._refreshStateInfo = '';
 
         this._attentions = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, { signals:, metaWindows: [ metaWindow's ] } ] ]
 
@@ -73,7 +75,7 @@ const dbFinTracker = new Lang.Class({
 		this._updatedWindowsPreviewPanelOpacity = function () { if (this.preview) this.preview.updateWindowsPanelOpacity(); }
         this._updatedWindowsAnimationTime = function () { if (this.preview) this.preview.animationTime = global.yawl._windowsAnimationTime; }
 
-		this.update(null, 'Tracker: initial update.');
+		this.update('Tracker: initial update.');
 		this._signals.connectNoId({	emitter: global.screen, signal: 'notify::n-workspaces',
 									callback: this._nWorkspaces, scope: this });
 		this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
@@ -88,7 +90,7 @@ const dbFinTracker = new Lang.Class({
                                     callback: this._focusWindow, scope: this });
 		// it seems to work just fine without this but just in case:
 		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
-									callback: function () { this.update(null, 'Overview hiding.'); }, scope: this });
+									callback: function () { this.update('Overview hiding.'); }, scope: this });
 
 		global.yawl.watch(this);
 
@@ -156,8 +158,11 @@ const dbFinTracker = new Lang.Class({
 		return this.windows && this.windows.get(metaWindow) || null;
 	},
 
-	_refresh: function(metaWorkspace/* = global.screen.get_active_workspace()*/, stateInfo/* = '_refresh() call with no additional info.'*/) {
+	_refresh: function(metaWorkspace/* = global.screen.get_active_workspace()*/) {
         _D('@' + this.__name__ + '._refresh()');
+		this.stateInfo = this._refreshStateInfo;
+		this._refreshScheduled = false;
+		this._refreshStateInfo = '';
 		if (!this.apps || !this.windows) {
 			_D(!this.apps ? 'this.apps == null' : 'this.windows == null');
 	        _D('<');
@@ -176,7 +181,6 @@ const dbFinTracker = new Lang.Class({
 	        this._signals.disconnectId('tracker-window-removed');
 		}
 		this.state ? this.state++ : (this.state = 1);
-        this.stateInfo = (!stateInfo || stateInfo == '' ? '_refresh() call with no additional info.' : stateInfo);
 		let (appsIn = [], appsOut = [], windowsIn = [], windowsOut = []) {
 			this._appSystem.get_running().forEach(Lang.bind(this, function (metaApp) {
 				if (!metaApp || metaApp.state == Shell.AppState.STOPPED) return;
@@ -294,11 +298,17 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	},
 
-	update: function(metaWorkspace/* = null*/, stateInfo/* = 'update() call with no additional info.'*/) {
+	update: function(stateInfo/* = 'update() call with no additional info.'*/) {
         _D('>' + this.__name__ + '.update()');
-		metaWorkspace = metaWorkspace || null;
-        if (!stateInfo || stateInfo == '') stateInfo = 'update() call with no additional info.';
-		Mainloop.idle_add(Lang.bind(this, this._refresh, metaWorkspace, stateInfo));
+        if (!stateInfo) stateInfo = 'update() call with no additional info.';
+		if (!this._refreshScheduled) {
+			this._refreshStateInfo = '' + stateInfo;
+			this._refreshScheduled = true;
+			Mainloop.idle_add(Lang.bind(this, this._refresh));
+		}
+		else {
+			this._refreshStateInfo += '\n' + stateInfo;
+		}
         _D('<');
 	},
 
@@ -351,13 +361,13 @@ const dbFinTracker = new Lang.Class({
 
 	_nWorkspaces: function () {
         _D('>' + this.__name__ + '._nWorkspaces()');
-		this.update(null, 'Workspaces changed.');
+		this.update('Workspaces changed.');
         _D('<');
 	},
 
 	_switchWorkspace: function (manager, wsiOld, wsiNew) {
         _D('>' + this.__name__ + '._switchWorkspace()');
-		this.update(global.screen.get_workspace_by_index(wsiNew), 'Workspace switched from ' + (wsiOld + 1) + ' to ' + (wsiNew + 1) + '.');
+		this.update('Workspace switched from ' + (wsiOld + 1) + ' to ' + (wsiNew + 1) + '.');
         _D('<');
 	},
 
@@ -375,7 +385,7 @@ const dbFinTracker = new Lang.Class({
                 trackerApp.updateVisibility();
 				trackerApp.updateMenu();
 			}
-			this.update(null, 'App ' + (trackerApp ? trackerApp.appName : 'unknown') + ': app state changed.');
+			this.update('App ' + (trackerApp ? trackerApp.appName : 'unknown') + ': app state changed.');
 		}
         _D('<');
 	},
@@ -534,14 +544,14 @@ const dbFinTracker = new Lang.Class({
 
 	_windowAdded: function (metaWorkspace, metaWindow) {
         _D('>' + this.__name__ + '._windowAdded()');
-		this.update(null, 'A window was added to workspace ' + (metaWorkspace && metaWorkspace.index ? metaWorkspace.index() + 1 : '?') + '.');
+		this.update('A window was added to workspace ' + (metaWorkspace && metaWorkspace.index ? metaWorkspace.index() + 1 : '?') + '.');
         _D('<');
 	},
 
 	_windowRemoved: function (metaWorkspace, metaWindow) {
         _D('>' + this.__name__ + '._windowRemoved()');
 		let (trackerWindow = this.getTrackerWindow(metaWindow)) {
-			this.update(null, 'Window "'
+			this.update('Window "'
 			            + (trackerWindow ? trackerWindow.appName + ':' + trackerWindow.title : '?:?')
 			            + '" was removed from workspace '
 			            + (metaWorkspace && metaWorkspace.index ? metaWorkspace.index() + 1 : '?') + '.');
