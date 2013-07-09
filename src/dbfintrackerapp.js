@@ -389,7 +389,7 @@ const dbFinTrackerApp = new Lang.Class({
         }
         else if (!this._attentionTimeout) {
 			this._attentionAnimationDirection = 1;
-            this._attentionTimeout = Mainloop.timeout_add(77, Lang.bind(this, this._attentionAnimation));
+            this._attentionTimeout = Mainloop.timeout_add(55, Lang.bind(this, this._attentionAnimation));
         }
         _D('<');
     },
