@@ -151,7 +151,8 @@ const dbFinTrackerApp = new Lang.Class({
         this._updatedWindowsShow = function () { if (global.yawl && !global.yawl._windowsShow) this.hideWindowsGroup(); }
         this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = global.yawl._windowsAnimationEffect; };
-        this._updatedIconsAttentionBlink = function () { this.attention(this._attention); }
+        this._updatedIconsAttentionBlink =
+            this._updatedIconsAttentionBlinkRate = function () { this.attention(this._attention); }
         this._updatedAppQuicklists = function () { this.updateMenu(); }
 
         global.yawl.watch(this);
@@ -370,6 +371,7 @@ const dbFinTrackerApp = new Lang.Class({
 
     attention: function(state) {
         _D('>' + this.__name__ + '.attention()');
+        this._cancelAttentionTimeout();
         this._attention = !!state;
         if (this.appButton) {
             if (this.appButton.actor) {
@@ -381,14 +383,17 @@ const dbFinTrackerApp = new Lang.Class({
                 else this.appButton.container.remove_style_pseudo_class('attention');
             }
         }
-        if (!this._attention || global.yawl && !global.yawl._iconsAttentionBlink) {
-            this._cancelAttentionTimeout();
+        if (!this._attention || !global.yawl
+                || !global.yawl._iconsAttentionBlink
+                || !global.yawl._iconsAttentionBlinkRate) {
             if (this.appButton && this.appButton.actor) {
                 this.appButton.actor.opacity = 255;
             }
         }
-        else if (!this._attentionTimeout) {
+        else {
 			this._attentionAnimationDirection = 1;
+            this._attentionAnimationLevels = Math.round(545.45454545454545 / global.yawl._iconsAttentionBlinkRate);
+            this._attentionAnimationConstant = this._attentionAnimationLevels / 240;
             this._attentionTimeout = Mainloop.timeout_add(55, Lang.bind(this, this._attentionAnimation));
         }
         _D('<');
@@ -405,11 +410,13 @@ const dbFinTrackerApp = new Lang.Class({
 
 	_attentionAnimation: function() {
 		if (this.appButton && this.appButton.actor) {
-            let (level = Math.round((this.appButton.actor.opacity - 101) / 11)) {
+            let (level = Math.round((this.appButton.actor.opacity - 15)
+                    * this._attentionAnimationConstant)) {
                 if (level <= 0) this._attentionAnimationDirection = 1;
-                else if (level == 14) this._attentionAnimationDirection = -1;
+                else if (level >= this._attentionAnimationLevels) this._attentionAnimationDirection = -1;
                 else if (this._attentionAnimationDirection !== -1) this._attentionAnimationDirection = 1;
-                this.appButton.actor.opacity = (level + this._attentionAnimationDirection) * 11 + 101;
+                this.appButton.actor.opacity = Math.round((level + this._attentionAnimationDirection)
+                                                          / this._attentionAnimationConstant + 15);
             }
             return true;
 		}

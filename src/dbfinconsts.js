@@ -158,6 +158,7 @@ const Settings = [
     [ 'windows-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'thumbnails>animation' ],
 
     [ 'icons-attention-blink', true, { }, 'addons>attention' ],
+    [ 'icons-attention-blink-rate', 39, { min: 15, max: 125 }, 'addons>attention' ],
 	[ 'windows-preview', false, { }, 'addons>preview' ],
 	[ 'windows-preview-dim-color', '#01234c', { }, 'addons>preview' ],
 	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'addons>preview' ],

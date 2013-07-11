@@ -568,7 +568,10 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("Add-ons"));
-            builder.addCheckBox(_("Window demanding attention") + ': ' + _("blink"), 'icons-attention-blink');
+            builder.addCheckBox('<b>' + _("Window demanding attention") + '</b>: ' + _("blink"), 'icons-attention-blink');
+            builder.shift();
+    			builder.addScale(_("Blinking rate (times per minute)"), 'icons-attention-blink-rate', 15, 125, 1, 'icons-attention-blink');
+            builder.unshift();
 			builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true, true);
 			builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), 'windows-show', true, true);
             builder.shift();
