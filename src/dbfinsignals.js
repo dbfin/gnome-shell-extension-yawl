@@ -98,7 +98,7 @@ const dbFinSignals = new Lang.Class({
 		while (this._signalsNoId.length) {
 			let (ies = this._signalsNoId.pop()) {
 				if (ies['emitter']) {
-                    ies['emitter'].disconnect(ies['id']);
+                    try { ies['emitter'].disconnect(ies['id']); } catch (e) {}
                     ies['emitter'] = null;
                 }
 			}
@@ -134,7 +134,7 @@ const dbFinSignals = new Lang.Class({
         _D('>' + this.__name__ + '.disconnectId()');
 		let (ies = this._signalsId.remove(textId)) {
 			if (ies !== undefined && ies['emitter']) {
-				ies['emitter'].disconnect(ies['id']);
+				try { ies['emitter'].disconnect(ies['id']); } catch (e) {}
                 ies['emitter'] = null;
 			}
 		}
