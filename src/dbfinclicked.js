@@ -344,6 +344,7 @@ const dbFinClicked = new Lang.Class({
         _D('>' + this.__name__ + '._callBack()');
 		if (this._callback) {
 			let (name = this._getStateVariable(state)) {
+				global.yawl._bugfixClickTime = global.get_current_time();
 				Mainloop.timeout_add(33, Lang.bind(this, function() {
 					if (this._scope) Lang.bind(this._scope, this._callback)(state, name);
 					else this._callback(state, name);

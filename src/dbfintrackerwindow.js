@@ -212,7 +212,8 @@ const dbFinTrackerWindow = new Lang.Class({
 
     showWindow: function() {
         _D('>' + this.__name__ + '.showWindow()');
-        if (this.metaWindow && !this.focused) Main.activateWindow(this.metaWindow);
+        if (this.metaWindow && !this.focused) Main.activateWindow(this.metaWindow,
+                                                                  global.get_current_time() || global.yawl._bugfixClickTime);
         _D('<');
     },
 
@@ -238,7 +239,7 @@ const dbFinTrackerWindow = new Lang.Class({
 
 	closeWindow: function() {
         _D('>' + this.__name__ + '.closeWindow()');
-        if (this.metaWindow) this.metaWindow.delete(global.get_current_time());
+        if (this.metaWindow) this.metaWindow.delete(global.get_current_time() || global.yawl._bugfixClickTime);
         _D('<');
 	},
 
