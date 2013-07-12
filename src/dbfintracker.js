@@ -204,6 +204,9 @@ const dbFinTracker = new Lang.Class({
 							windowsIn.push(metaWindow);
                             this.windows.set(metaWindow, trackerWindow = new dbFinTrackerWindow.dbFinTrackerWindow(metaWindow, this, metaApp, this.state));
 							trackerApp.addWindow(metaWindow);
+							if (metaWindow.demans_attention || metaWindow.urgent) {
+								this.addAppWindowAttention(metaApp, metaWindow);
+							}
 						}
                         else {
                             trackerWindow.state = this.state;
