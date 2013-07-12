@@ -153,10 +153,6 @@ const dbFinWindowThumbnail = new Lang.Class({
 			this.actor.reactive = false;
             this.actor.hide();
 		}
-        if (this._slicerActor) {
-			this._slicerActor.destroy();
-			this._slicerActor = null;
-		}
 		if (this._slicerToolbar) {
 			this._slicerToolbar.destroy();
 			this._slicerToolbar = null;
@@ -166,9 +162,15 @@ const dbFinWindowThumbnail = new Lang.Class({
 			this._slicerBin.destroy();
 			this._slicerBin = null;
 		}
+/* destroyed by this._slicerActor
 		if (this._slicerContainer) {
 			this._slicerContainer.destroy();
 			this._slicerContainer = null;
+		}
+*/
+        if (this._slicerActor) {
+			this._slicerActor.destroy();
+			this._slicerActor = null;
 		}
 		if (this.actor) {
 			this.actor.destroy();
