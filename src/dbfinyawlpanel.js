@@ -162,12 +162,16 @@ const dbFinYAWLPanel = new Lang.Class({
 					Main.layoutManager.addChrome(this.container, { affectsInputRegion: false });
 					if (this.actor) Main.layoutManager.trackChrome(this.actor, { affectsInputRegion: true });
 				}
+				else if (Main.layoutManager._trackActor) {
+					Main.uiGroup.add_child(this.container);
+					Main.layoutManager._trackActor(this.actor);
+				}
 				else if (Main.layoutManager._chrome && Main.layoutManager._chrome._trackActor) {
 					Main.uiGroup.add_child(this.container);
 					Main.layoutManager._chrome._trackActor(this.actor);
 				}
 				else {
-					_D('layoutManager does not support either affectsInputRegion or _chrome._trackActor!');
+					_D('Main.layoutManager does not support either affectsInputRegion or _trackActor!');
 				}
             }
             else if (this._parent.add_actor) {
