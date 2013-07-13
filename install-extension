@@ -1,11 +1,35 @@
 #!/bin/bash --
-[ ! -d ./zip/ ] || rm -rf ./zip/
-./autogen.sh --prefix="$(readlink -f ~/.local)/" --with-local-install=yes && make && make zip-file && make distclean
-if [ -d ./zip/ ]; then
-  d="$(readlink -f ~/.local)/share/gnome-shell/extensions/yawl@dbfin.com/"
-  [ ! -d "$d" ] || rm -rf "$d"
-  mkdir -p "$d"
-  if [ -d "$d" ]; then
-    unzip -q './zip/yawl@dbfin.com.shell-extension.zip' -d "$d"
+echo 'Creating Build directory...'
+[ ! -d ./Build/ ] || rm -rf ./Build/
+mkdir -p ./Build/
+e=0
+if [ -d ./Build/ ]; then
+  cd ./Build/
+  echo 'Running autogen...'
+  [ ! -d ./zip/ ] || rm -rf ./zip/
+  if [ -f ../autogen.sh ]; then
+    ../autogen.sh --prefix="$(readlink -f ~/.local)/" && make && make zip-file && make distclean
+    if [ -d ./zip/ ]; then
+      d="$(readlink -f ~/.local)/share/gnome-shell/extensions/yawl@dbfin.com/"
+      [ ! -d "$d" ] || rm -rf "$d"
+      mkdir -p "$d"
+      if [ -d "$d" ]; then
+        unzip -q './zip/yawl@dbfin.com.shell-extension.zip' -d "$d" || e=5
+      else
+        e=4
+      fi
+    else
+      e=3
+    fi
+  else
+    e=2
   fi
+  cd ..
+else
+  e=1
+fi
+if [ $e -eq 0 ]; then
+  echo 'Everything seems OK.'
+else
+  echo "Step $e went wrong..."
 fi
