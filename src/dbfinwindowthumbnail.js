@@ -80,7 +80,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 		this._slicerBin = new St.Bin();
 		if (this._slicerBin) {
-			if (this._slicerContainer) this._slicerContainer.add_actor(this._slicerBin);
+			if (this._slicerContainer) this._slicerContainer.add_child(this._slicerBin);
 			this._slicerBin.set_child(this._clone);
 		}
 
@@ -88,11 +88,11 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 		this._slicerToolbar = new St.BoxLayout({ style_class: 'yawl-thumbnail-toolbar', vertical: false, x_align: Clutter.ActorAlign.END });
 		if (this._slicerToolbar) {
-			if (this._slicerContainer) this._slicerContainer.add_actor(this._slicerToolbar);
+			if (this._slicerContainer) this._slicerContainer.add_child(this._slicerToolbar);
 			dbFinConsts.arrayThumbnailButtons.forEach(Lang.bind(this, function (p) {
 				let (icon = new St.Icon({ icon_name: p[0] + '-symbolic', style_class: 'button-' + p[0], reactive: true, track_hover: true })) {
 					icon._do = p[1];
-					this._slicerToolbar.add_actor(icon);
+					this._slicerToolbar.add_child(icon);
 					this._signals.connectNoId({	emitter: icon, signal: 'enter-event',
 												callback: function (actor) { this._toolbarButtonHovered = actor; }, scope: this });
 					this._signals.connectNoId({	emitter: icon, signal: 'leave-event',
@@ -103,7 +103,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 		this._slicerActor = new dbFinSlicerActor.dbFinSlicerActor(this._slicerContainer, { y_align: St.Align.START });
         if (this._slicerActor) {
-			if (this.actor) this.actor.add_actor(this._slicerActor.container);
+			if (this.actor) this.actor.set_child(this._slicerActor.container);
 		}
 
         this._updatedWindowsThumbnailsWidth =

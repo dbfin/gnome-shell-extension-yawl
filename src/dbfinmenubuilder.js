@@ -50,13 +50,20 @@ const dbFinPopupMenuScrollableSection = new Lang.Class({
     _init: function() {
         this.parent();
 		this.actor = new St.ScrollView({ style_class: 'popup-menu-section-scroll' });
-        this.actor.add_actor(this.box);
-        this.actor._delegate = this;
-        this.actor.clip_to_allocation = true;
+		if (this.actor) {
+			this.actor.add_actor(this.box);
+			this.actor._delegate = this;
+			this.actor.clip_to_allocation = true;
+		}
+		else if (this.box) {
+			this.actor = this.box;
+	        this.actor._delegate = this;
+		}
     },
 
     destroy: function() {
 		if (this.actor && this.actor.has_style_class_name('popup-menu-section-scroll')) {
+            this.actor.remove_actor(this.box);
 			this.actor.destroy();
 			this.actor = this.box;
 	        this.actor._delegate = this;

@@ -62,35 +62,35 @@ const dbFinDebugView = new Lang.Class({
 
 		this.toolbar = new St.BoxLayout({ name: 'dbFinDebugViewToolbar', vertical: false, reactive: true, visible: true });
 		if (this.toolbar) {
-			if (this.container) this.container.add_actor(this.toolbar);
+			if (this.container) this.container.add_child(this.toolbar);
 
 			this.buttonPin = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
 											text: '[ ]', reactive: true, track_hover: true, visible: true });
-			if (this.buttonPin) this.toolbar.add_actor(this.buttonPin);
+			if (this.buttonPin) this.toolbar.add_child(this.buttonPin);
 
 			this.buttonPause = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
 											  text: '[\u25b8]', reactive: true, track_hover: true, visible: true });
-			if (this.buttonPause) this.toolbar.add_actor(this.buttonPause);
+			if (this.buttonPause) this.toolbar.add_child(this.buttonPause);
 
 			this.buttonClear = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
 											  text: '[\u224b]', reactive: true, track_hover: true, visible: true });
-			if (this.buttonClear) this.toolbar.add_actor(this.buttonClear);
+			if (this.buttonClear) this.toolbar.add_child(this.buttonClear);
 
 			this.buttonPreferences = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
 											   text: '[\u2692]', reactive: true, track_hover: true, visible: true });
-			if (this.buttonPreferences) this.toolbar.add_actor(this.buttonPreferences);
+			if (this.buttonPreferences) this.toolbar.add_child(this.buttonPreferences);
 
 			this.buttonReload = new St.Label({ style_class: 'dbfin-debugview-toolbar-button',
 											   text: '[\u27f2]', reactive: true, track_hover: true, visible: true });
-			if (this.buttonReload) this.toolbar.add_actor(this.buttonReload);
+			if (this.buttonReload) this.toolbar.add_child(this.buttonReload);
 		}
 
 		this.scrollView = new St.ScrollView({ name: 'dbFinDebugViewScrollView', reactive: true, visible: true });
 		if (this.scrollView) {
-			if (this.container) this.container.add_actor(this.scrollView);
+			if (this.container) this.container.add_child(this.scrollView);
 		}
 
-		this.level0 = null;
+		this._level0 = null;
 		this.clear();
 
 		if (Main.overview && Main.overview.visible) this.hide();
@@ -202,14 +202,14 @@ const dbFinDebugView = new Lang.Class({
 	},
 
 	clear: function() {
-		if (this.level0) {
-			if (this.scrollView) this.scrollView.remove_actor(this.level0);
-			this.level0.destroy();
-			this.level0 = null;
+		if (this._level0) {
+			if (this.scrollView) this.scrollView.remove_actor(this._level0);
+			this._level0.destroy();
+			this._level0 = null;
 		}
-		this.level0 = new St.BoxLayout({ vertical: true, reactive: true, visible: true });
-		if (this.level0) {
-			if (this.scrollView) this.scrollView.add_actor(this.level0);
+		this._level0 = new St.BoxLayout({ vertical: true, reactive: true, visible: true });
+		if (this._level0) {
+			if (this.scrollView) this.scrollView.add_actor(this._level0);
 		}
 		this._level1 = null;
 		this._level2 = null;
@@ -272,7 +272,7 @@ const dbFinDebugView = new Lang.Class({
 
 	log: function(level, text) {
 		_D('@');
-		if (this.paused || !this.level0) {
+		if (this.paused || !this._level0) {
 			_D('<');
 			return;
 		}
@@ -300,7 +300,7 @@ const dbFinDebugView = new Lang.Class({
 			else if (!level) {
 				label = new St.Label({ text: ' ' + text, reactive: true, visible: true });
 				box = new St.BoxLayout({ name: 'dbFinDebugViewBox', vertical: true, reactive: true, visible: false });
-				container = this.level0;
+				container = this._level0;
 				this._level1 = box;
 				this._level2 = null;
 			}
@@ -327,8 +327,8 @@ const dbFinDebugView = new Lang.Class({
 						container._label.connect('button-press-event', Lang.bind(this, this._labelButtonPressEvent));
 					}
 				}
-				if (label) container.add_actor(label);
-				if (box) container.add_actor(box);
+				if (label) container.add_child(label);
+				if (box) container.add_child(box);
 			}
 		} // let (label, box, container)
 		_D('<');

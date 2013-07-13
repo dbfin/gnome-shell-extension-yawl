@@ -88,7 +88,7 @@ const dbFinAppButton = new Lang.Class({
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
         if (this._slicerIcon && this._slicerIcon.container) {
-            if (this.actor) this.actor.add_actor(this._slicerIcon.container);
+            if (this.actor) this.actor.add_child(this._slicerIcon.container);
             if (Main.panel && Main.panel.actor && Main.panel.actor.get_stage()) {
                 this._slicerIcon.container.min_height = Main.panel.actor.get_height();
             }
@@ -133,7 +133,7 @@ const dbFinAppButton = new Lang.Class({
 			this.actor.reactive = false;
 		}
         if (this._slicerIcon) {
-			if (this.actor) this.actor.remove_actor(this._slicerIcon.container);
+			if (this.actor) this.actor.remove_child(this._slicerIcon.container);
 			this._slicerIcon.destroy();
 			this._slicerIcon = null;
 		}

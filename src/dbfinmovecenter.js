@@ -75,7 +75,7 @@ const dbFinHotCorner = new Lang.Class({
 			this._signals = null;
 		}
 		if (this._button) {
-			Main.panel['_leftBox'].remove_actor(this._button.container);
+			Main.panel['_leftBox'].remove_child(this._button.container);
 			this._button.destroy();
 			this._button = null;
 		}

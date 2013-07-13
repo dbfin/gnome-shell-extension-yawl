@@ -64,7 +64,7 @@ const dbFinPreview = new Lang.Class({
 		this.hiding = false;
 		this.container = new Shell.GenericContainer({ name: 'yawlWindowPreview', reactive: false, visible: false });
 		if (this.container) {
-			if (Main.uiGroup) Main.uiGroup.add_actor(this.container);
+			if (Main.uiGroup) Main.uiGroup.add_child(this.container);
             this._signals.connectNoId({ emitter: this.container, signal: 'get-preferred-width',
                                         callback: this._getPreferredWidth, scope: this });
             this._signals.connectNoId({ emitter: this.container, signal: 'get-preferred-height',
@@ -78,12 +78,12 @@ const dbFinPreview = new Lang.Class({
 		}
 		this._background = new St.Bin({ reactive: false, visible: true, opacity: 0 });
 		if (this._background) {
-			if (this.container) this.container.add_actor(this._background);
+			if (this.container) this.container.add_child(this._background);
 			this._backgroundStyle = new dbFinStyle.dbFinStyle(this._background);
 		}
 		this._clone = new Clutter.Clone({ reactive: false, visible: true });
 		if (this._clone) {
-			if (this.container) this.container.add_actor(this._clone);
+			if (this.container) this.container.add_child(this._clone);
 		}
 		this._cloneEffect = null;
         _D('<');

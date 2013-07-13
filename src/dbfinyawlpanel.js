@@ -86,7 +86,7 @@ const dbFinYAWLPanel = new Lang.Class({
 
 		this.actor = new St.BoxLayout({ vertical: true, reactive: true, visible: true });
 		if (this.actor) {
-            if (this.container) this.container.add_actor(this.actor);
+            if (this.container) this.container.add_child(this.actor);
             this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
                                         callback: this._styleChanged, scope: this });
         }
@@ -95,7 +95,7 @@ const dbFinYAWLPanel = new Lang.Class({
 				? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label-title', text: '' + params.title })
 				: null;
 		if (this.labelTitle) {
-			if (this.actor && this.labelTitle.container) this.actor.add_actor(this.labelTitle.container);
+			if (this.actor && this.labelTitle.container) this.actor.add_child(this.labelTitle.container);
 		}
 		this.label = params.label || params.label === ''
 			? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label', text: '' + params.label })
@@ -103,7 +103,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (this.label) {
 			this._labelText = '' + params.label;
 			if (this.actor) {
-				if (this.label.container) this.actor.add_actor(this.label.container);
+				if (this.label.container) this.actor.add_child(this.label.container);
 				this._signals.connectNoId({	emitter: this.actor, signal: 'notify::allocation',
 											callback: this._actorAllocationChanged, scope: this });
 			}
@@ -115,7 +115,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		this.box = new St.BoxLayout({ vertical: false, x_align: Clutter.ActorAlign.CENTER, reactive: true, visible: true });
 		if (this.box) {
             if (this.actor) {
-                this.actor.add_actor(this.box);
+                this.actor.add_child(this.box);
                 if (this.container) this.container._box = this.box;
             }
         }
@@ -129,7 +129,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (this._gravityIndicator) {
             this._signals.connectNoId({	emitter: this._gravityIndicator, signal: 'repaint',
                                         callback: this._drawGravityIndicator, scope: this });
-			this.container.add_actor(this._gravityIndicator);
+			this.container.add_child(this._gravityIndicator);
 		}
 
         this.animationTime = Overview.ANIMATION_TIME * 1000;
@@ -162,8 +162,14 @@ const dbFinYAWLPanel = new Lang.Class({
             else if (this._parent.add_actor) {
                 this._parent.add_actor(this.container);
             }
+            else if (this._parent.add_child) {
+                this._parent.add_child(this.container);
+            }
             else if (this._parent.actor && this._parent.actor.add_actor) {
                 this._parent.actor.add_actor(this.container);
+            }
+            else if (this._parent.actor && this._parent.actor.add_child) {
+                this._parent.actor.add_child(this.container);
             }
             if (this._parentProperty) {
                 this._parent[this._parentProperty] = this.container;
@@ -193,8 +199,14 @@ const dbFinYAWLPanel = new Lang.Class({
                     else if (parent.remove_actor) {
                         parent.remove_actor(this.container);
                     }
+                    else if (parent.remove_child) {
+                        parent.remove_child(this.container);
+                    }
                     else if (parent.actor && parent.actor.remove_actor) { // this might be this._parent
                         parent.actor.remove_actor(this.container);
+                    }
+                    else if (parent.actor && parent.actor.remove_child) { // this might be this._parent
+                        parent.actor.remove_child(this.container);
                     }
                 }
             } // let (parent)
@@ -203,30 +215,30 @@ const dbFinYAWLPanel = new Lang.Class({
             this._childrenObjects.forEach(Lang.bind(this, function(childObject, signals) { this.removeChild(childObject); }));
         }
 		if (this._gravityIndicator) {
-			if (this.container) this.container.remove_actor(this._gravityIndicator);
+			if (this.container) this.container.remove_child(this._gravityIndicator);
 			this._gravityIndicator.destroy();
 			this._gravityIndicator = null;
 		}
 		if (this.box) {
 			if (this.container) this.container._box = null;
-			if (this.actor) this.actor.remove_actor(this.box);
+			if (this.actor) this.actor.remove_child(this.box);
 			this.box.reactive = false;
 			this.box.destroy();
 			this.box = null;
 		}
 		if (this.label) {
-			if (this.label.container && this.actor) this.actor.remove_actor(this.label.container);
+			if (this.label.container && this.actor) this.actor.remove_child(this.label.container);
 			this.label.destroy();
 			this.label = null;
 		}
 		if (this.labelTitle) {
-			if (this.labelTitle.container && this.actor) this.actor.remove_actor(this.labelTitle.container);
+			if (this.labelTitle.container && this.actor) this.actor.remove_child(this.labelTitle.container);
 			this.labelTitle.destroy();
 			this.labelTitle = null;
 		}
 		if (this.actor) {
 			if (this.container) {
-                this.container.remove_actor(this.actor);
+                this.container.remove_child(this.actor);
             }
             this.actor.reactive = false;
 			this.actor.destroy();
@@ -358,7 +370,7 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('>' + this.__name__ + '.addChild()');
         if (childObject && this._childrenObjects.get(childObject) === undefined) {
             let (actor = childObject.container || childObject.actor || childObject) {
-                if (actor instanceof Clutter.Actor) this.box.add_actor(actor);
+                if (actor instanceof Clutter.Actor) this.box.add_child(actor);
             }
             let (signals = new dbFinSignals.dbFinSignals()) {
                 signals.connectNoId({   emitter: childObject, signal: 'destroy',
@@ -381,7 +393,7 @@ const dbFinYAWLPanel = new Lang.Class({
                     signals.destroy();
                     signals = null;
                     let (actor = childObject.container || childObject.actor || childObject) {
-                        if (actor.get_parent && actor.get_parent() == this.box) this.box.remove_actor(actor);
+                        if (actor.get_parent && actor.get_parent() == this.box) this.box.remove_child(actor);
                     }
                 }
             }
