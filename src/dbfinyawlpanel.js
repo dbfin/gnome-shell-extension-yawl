@@ -32,6 +32,7 @@ const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
+const Layout = imports.ui.layout;
 const Main = imports.ui.main;
 const Overview = imports.ui.overview;
 
@@ -156,8 +157,18 @@ const dbFinYAWLPanel = new Lang.Class({
 
         if (this._parent && this.container) {
             if (this._parent == Main.uiGroup && Main.layoutManager) {
-                Main.layoutManager.addChrome(this.container, { affectsInputRegion: false });
-				if (this.actor) Main.layoutManager.trackChrome(this.actor, { affectsInputRegion: true });
+				// check whether GS version still supports affectsInputRegion
+				if (Layout.defaultParams && Layout.defaultParams.affectsInputRegion !== undefined) {
+					Main.layoutManager.addChrome(this.container, { affectsInputRegion: false });
+					if (this.actor) Main.layoutManager.trackChrome(this.actor, { affectsInputRegion: true });
+				}
+				else if (Main.layoutManager._chrome && Main.layoutManager._chrome._trackActor) {
+					Main.uiGroup.add_child(this.container);
+					Main.layoutManager._chrome._trackActor(this.actor);
+				}
+				else {
+					_D('layoutManager does not support either affectsInputRegion or _chrome._trackActor!');
+				}
             }
             else if (this._parent.add_actor) {
                 this._parent.add_actor(this.container);
