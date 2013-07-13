@@ -662,6 +662,7 @@ function buildPrefsWidget() {
 								 + '</span>', null, true, true, 3);
 			builder.unshift();
 
+		_D('<');
         return builder.getWidget();
     } // let (builder, widgets)
 }

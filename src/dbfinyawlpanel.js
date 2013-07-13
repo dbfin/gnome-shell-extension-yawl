@@ -368,7 +368,8 @@ const dbFinYAWLPanel = new Lang.Class({
 
     addChild: function(childObject) {
         _D('>' + this.__name__ + '.addChild()');
-        if (childObject && this._childrenObjects.get(childObject) === undefined) {
+        if (childObject && this._childrenObjects
+            	&& this._childrenObjects.get(childObject) === undefined) {
             let (actor = childObject.container || childObject.actor || childObject) {
                 if (actor instanceof Clutter.Actor) this.box.add_child(actor);
             }
@@ -388,7 +389,7 @@ const dbFinYAWLPanel = new Lang.Class({
     removeChild: function(childObject) {
         _D('>' + this.__name__ + '.removeChild()');
         if (childObject) {
-            let (signals = this._childrenObjects.remove(childObject)) {
+            let (signals = this._childrenObjects && this._childrenObjects.remove(childObject)) {
                 if (signals !== undefined) {
                     signals.destroy();
                     signals = null;
