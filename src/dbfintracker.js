@@ -194,7 +194,7 @@ const dbFinTracker = new Lang.Class({
 					}
 				} // let (trackerApp)
 			})); // this._appSystem.get_running().forEach(metaApp)
-			metaWorkspace.list_windows().forEach(Lang.bind(this, function(metaWindow) {
+			metaWorkspace.list_windows().reverse().forEach(Lang.bind(this, function(metaWindow) {
 				if (!metaWindow || !this._tracker.is_window_interesting(metaWindow)) return;
 				let (metaApp = this._tracker.get_window_app(metaWindow)) {
 					let (trackerWindow = this.windows.get(metaWindow),

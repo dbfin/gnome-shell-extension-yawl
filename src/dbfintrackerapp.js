@@ -119,6 +119,18 @@ const dbFinTrackerApp = new Lang.Class({
 			}
         }
 
+        if (this._tracker && this._tracker.apps) {
+            let (index = this.getStableSequence()) {
+                if (index !== Infinity) {
+                    let (position = this._tracker.apps.getKeys().filter(function (metaApp) {
+                                        return metaApp.stable_sequence < index;
+                                    }).length) {
+                        this.moveToPosition(position);
+                    }
+                }
+            }
+        }
+
 		this._menuManager = Main.panel && Main.panel.menuManager || null;
 		this.updateMenu();
 		if (this.metaApp) {
@@ -430,6 +442,37 @@ const dbFinTrackerApp = new Lang.Class({
 		}
         _D('<');
 	},
+
+	getStableSequence: function() {
+        _D('>' + this.__name__ + '.getStableSequence()');
+		let (index = undefined) {
+			if (this.metaApp) {
+				if (this.metaApp.stable_sequence && this.metaApp.stable_sequence !== Infinity
+						|| this.metaApp.stable_sequence === 0) {
+					index = this.metaApp.stable_sequence;
+				}
+				else {
+					index = Math.min.apply(Math, this.metaApp.get_windows().map(function (metaWindow) {
+								return metaWindow.get_stable_sequence();
+							}));
+					this.metaApp.stable_sequence = index;
+				}
+			}
+            _D('<');
+			return index;
+		} // let (index)
+	},
+
+    moveToPosition: function(position) {
+        _D('>' + this.__name__ + '.moveToPosition()');
+        if ((position || position === 0)
+            	&& this.appButton && this.yawlPanelWindowsGroup
+                && global.yawl.panelApps && global.yawl.panelWindows) {
+            position = global.yawl.panelApps.moveChild(this.appButton, position);
+            global.yawl.panelWindows.moveChild(this.yawlPanelWindowsGroup, position);
+        }
+        _D('<');
+    },
 
 	positionWindowsGroup: function() {
         _D('>' + this.__name__ + '.positionWindowsGroup()');

@@ -402,6 +402,21 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('<');
     },
 
+    moveChild: function(childObject, position) {
+        _D('>' + this.__name__ + '.moveChild()');
+        if (!childObject || !this._childrenObjects) position = undefined;
+		else if ((position = this._childrenObjects.move(childObject, position)) !== undefined) {
+            let (actor = childObject.container || childObject.actor || childObject) {
+                if (actor.get_parent && actor.get_parent() == this.box) {
+					this.box.remove_child(actor);
+					this.box.insert_child_at_index(actor, position);
+				}
+            }
+        }
+        _D('<');
+        return position;
+    },
+
     showChild: function(childObject, showSelf, time) {
         _D('>' + this.__name__ + '.showChild()');
         if (childObject && childObject.show && this._childrenObjects && this._childrenObjects.get(childObject) !== undefined) {
