@@ -288,7 +288,7 @@ const dbFinDebugView = new Lang.Class({
 				text = dbFinUtils.stringRepeat('    ', level - 2) + text;
 				if (this._level2._labelChild) {
 					this._level2._labelText += '\n' + text;
-					this._level2._labelChild.set_text(this._level2._labelText);
+					this._level2._labelChild.set_text(this._level2._labelText || ' ');
 				}
 				else {
 					this._level2._labelText = text;
