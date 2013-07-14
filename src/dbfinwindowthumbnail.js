@@ -275,7 +275,10 @@ const dbFinWindowThumbnail = new Lang.Class({
     _updateClone: function() {
         _D('>' + this.__name__ + '._updateClone()');
 		if (this._clone) {
-			if (this._signals) this._signals.disconnectId('clone-resize');
+			if (this._signals) {
+                this._signals.disconnectId('window-destroy');
+			    this._signals.disconnectId('window-resize');
+            }
 			this._clone.set_source(null);
 			[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
 			this._compositor =	this.metaWindow
@@ -283,7 +286,13 @@ const dbFinWindowThumbnail = new Lang.Class({
                                 && this.metaWindow.get_compositor_private();
 			if (this._compositor) {
 				if (this._signals) {
-					this._signals.connectId('clone-resize', {	emitter: this._compositor, signal: 'size-changed',
+					this._signals.connectId('window-destroy', {	emitter: this._compositor, signal: 'destroy',
+																callback: function () {
+                                                                    this.hide(0);
+                                                                    this.metaWindow = null;
+                                                                    this._updateClone();
+                                                                }, scope: this });
+					this._signals.connectId('window-resize', {	emitter: this._compositor, signal: 'size-changed',
 																callback: this._updateCloneTexture, scope: this });
 				}
 			} // if (this._compositor)

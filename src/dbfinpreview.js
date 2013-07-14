@@ -148,9 +148,12 @@ const dbFinPreview = new Lang.Class({
 
 	_update: function() {
         _D('>' + this.__name__ + '._update()');
-		if (this._clone && this._compositor) {
-			let (texture = this._compositor.get_texture()) {
-				let (size = texture && texture.get_size && texture.get_size()) {
+		if (this._clone) {
+            this._clone.set_source(null);
+            this._cloneWidth = 0;
+            this._cloneHeight = 0;
+			let (texture = this._compositor && this._compositor.get_texture() || null) {
+				let (size = texture && texture.get_size()) {
 					if (size && size[0] && size[0] > 0 && size[1] && size[1] > 0) {
 						this._clone.set_source(texture);
 						this._cloneWidth = size[0];
@@ -159,10 +162,12 @@ const dbFinPreview = new Lang.Class({
 					}
 				}
 			}
-			let (xy = this._compositor.get_position()) {
-                this._cloneX = xy[0];
-                this._cloneY = xy[1];
-                this._clone.set_position(this._cloneX, this._cloneY);
+			let (xy = this._compositor && this._compositor.get_position() || null) {
+				if (xy) {
+					this._cloneX = xy[0];
+					this._cloneY = xy[1];
+					this._clone.set_position(this._cloneX, this._cloneY);
+				}
 			}
 		}
         _D('<');
@@ -172,8 +177,10 @@ const dbFinPreview = new Lang.Class({
         _D('>' + this.__name__ + '.show()');
 		if (time === undefined || time === null) time = this.animationTime || 0;
 		this.hide(null, time);
-		if (this.container && this._clone && trackerWindow && trackerWindow.hovered) {
-			let (compositor = trackerWindow.metaWindow
+		if (this.container && this._clone) {
+			let (compositor = trackerWindow
+                            && trackerWindow.metaWindow
+                            && trackerWindow.hovered
 							&& trackerWindow.metaWindow.get_compositor_private
 							&& trackerWindow.metaWindow.get_compositor_private()) {
 				if (compositor) {
@@ -189,7 +196,9 @@ const dbFinPreview = new Lang.Class({
 					}
 					this._update();
 					if (this._signals) {
-						this._signals.connectId('clone-resize', {	emitter: this._compositor, signal: 'size-changed',
+						this._signals.connectId('window-destroy', {	emitter: this._compositor, signal: 'destroy',
+																	callback: function () { this.show(null, 0); }, scope: this });
+						this._signals.connectId('window-resize', {	emitter: this._compositor, signal: 'size-changed',
 																	callback: this._update, scope: this });
 					}
 					this.container.show();
@@ -204,6 +213,7 @@ const dbFinPreview = new Lang.Class({
 				else {
 					this._window = null;
 					this._compositor = null;
+                    this._update();
 				}
 			}
 		}
@@ -214,7 +224,10 @@ const dbFinPreview = new Lang.Class({
         _D('>' + this.__name__ + '.hide()');
 		if (time === undefined || time === null) time = this.animationTime || 0;
 		if (this._clone && (!trackerWindow || trackerWindow.metaWindow == this._window)) {
-			if (this._signals) this._signals.disconnectId('clone-resize');
+			if (this._signals) {
+				this._signals.disconnectId('window-destroy');
+				this._signals.disconnectId('window-resize');
+			}
 		    this.hiding = true;
             dbFinAnimation.animateToState(this._background, { opacity: 0 }, null, null, time >> 1);
             dbFinAnimation.animateToState(this._clone, { opacity: 0 }, function () {
