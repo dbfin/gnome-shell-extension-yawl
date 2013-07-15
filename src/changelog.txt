@@ -35,3 +35,9 @@ v9	2013-07-03
     	- Show icons from all workspaces (optionally)
     	- Optionally turn thumbnails off
     	- Scrollable menu sections to prevent menus going over screen edge
+v10	2013-07-14
+    	- Performance optimizations
+    	- Fix warnings including those caused by GS
+    	- Added preference options: attention blinking rate and change workspace by scrolling over YAWL panel
+    	- Keep windows order even when extension is restarted
+    	- Updated install-extension script for easy installation of Git-version

@@ -1,7 +1,7 @@
 EXTENSION_ID = gnome-shell-extension-yawl
 EXTENSION_ID_SHORT = yawl
 
-extensionversion = 9
+extensionversion = 10
 
 extensionbase = @dbfin.com
 uuid = $(EXTENSION_ID_SHORT)$(extensionbase)

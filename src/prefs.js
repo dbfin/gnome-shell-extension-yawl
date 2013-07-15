@@ -327,7 +327,7 @@ function buildPrefsWidget() {
 			builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
 			if (widgets && widgets.length) {
-				widgets[0].set_markup(_("Copyright &#169; 2013 Vadim Cherepanov @ dbFin <a href='mailto:vadim@dbfin.com'><span color='#000000' underline='none'>&lt;vadim@dbfin.com&gt;</span></a>"));
+				widgets[0].set_markup(_("Copyright") + ' &#169; 2013 Vadim Cherepanov @ dbFin <a href="mailto:vadim@dbfin.com"><span color="#000000" underline="none">&lt;vadim@dbfin.com&gt;</span></a>');
 			}
 			builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
 			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 2 ], [ new Gtk.Label({ halign: Gtk.Align.START }), 5 ] ]);
@@ -590,7 +590,9 @@ function buildPrefsWidget() {
 			builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
 
 		builder.addPage(_("Export/Import"));
-			builder.addLabel(_("Back up, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span color='#000000' underline='none'>http://dbfin.com/yawl</span></a>"), null, true, 3);
+			builder.addLabel(_("Back up, sync and share settings.")
+			                 + ' ' + _("To download default and other settings please visit")
+			                 + ': <a href="http://dbfin.com/yawl"><span color="#000000" underline="none">http://dbfin.com/yawl</span></a>', null, true, 3);
 			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,
