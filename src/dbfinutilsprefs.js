@@ -62,7 +62,7 @@
  *          addScale(label, settingsKey, min, max, step, bindSensitive?, showEntry?)
  * 			addScaleScale(label, settingsKey1, settingsKey2, min1, max1, step1, min2, max2, step2, bindSensitive?, showEntry1?, showEntry2?)
  * 			addColorButtonScale(label, settingsKeyColor, settingsKeyScale, titleColorChooser, min, max, step, bindSensitive?, showEntryColor?, showEntryScale?)
- *          addComboBoxText(label, settingsKey, arrayLabels, subIndex, bindSensitive?, showEntry?, wide?)
+ *          addComboBoxText(label, settingsKey, arrayLabels, subIndex, bindSensitive?, showEntry?)
  *
  */
 
@@ -309,6 +309,14 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
         if (this._notebook && this._notebook.shift) this._notebook.shift--;
 	},
 
+	setWidthRight: function(widthRight) {
+        if (this._notebook) {
+            this._notebook.widthRight = widthRight
+                    || this._notebook.parent && this._notebook.parent.widthRight
+                    || 4;
+        }
+	},
+
 	// bindSensitive = '[!]key'
 	addNotebook: function(label/* = null*/, iconfile/* = null*/, bindSensitive/* = null*/) {
         let (notebook = new Gtk.Notebook({  hexpand:	true,
@@ -318,11 +326,12 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
                                             tab_pos:    this._notebooksPagesCircle
                                                         ? (this._notebooks.length * 3 + 2) % 5 // why not? ;)
                                                         : this._notebooks.length == 1 ? 0 : 2 })) {
-			if (this._notebook && this._notebook.page)
+			if (this._notebook && this._notebook.page) {
 				this._notebook.page.attach(notebook,
 				                           this._notebook.shift, this._notebook.row,
 				                           this._notebook.width - this._notebook.shift, 1);
-			this._notebook = {};
+            }
+			this._notebook = { parent: this._notebook };
 			this._notebook.widget = notebook;
 	        this._notebook.widget._settingsbinds = [];
 			notebook.show();
@@ -331,6 +340,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		this._notebook.width = this._notebooksPagesCircle // new this._notebooks length
 				? 10 - Math.floor(this._notebooks.length / 2)
 				: 11 - Math.min(this._notebooks.length, 2);
+		this.setWidthRight();
 		this._notebook.page = null;
 		this._notebook.row = 0;
 		this._notebook.shift = 0;
@@ -515,7 +525,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
     addCheckBox: function(label, settingsKey, bindSensitive/* = null*/) {
 		let (rowSwitch = new Gtk.Switch({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER })) {
 			this._settings.bind(settingsKey, rowSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-			return this.addRow(label, [ [ rowSwitch, 1 ], [ null, 3 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowSwitch, 1 ], [ null, this._notebook.widthRight - 1 ] ], bindSensitive);
         } // let (rowSwitch)
     },
 
@@ -526,7 +536,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     settingsbind = new dbFinSettingsBindEntryColorButton()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowColorButtonEntry, rowColorButton);
-			return this.addRow(label, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : 2 ], [ rowColorButton, 1 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : (this._notebook.widthRight - 2) ], [ rowColorButton, 1 ] ], bindSensitive);
         } // let (rowColorButtonEntry, rowColorButton, settingsbind)
     },
 
@@ -538,7 +548,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     settingsbind = new dbFinSettingsBindEntryScale()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowScaleEntry, rowScale);
-			return this.addRow(label, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, !showEntry ? 4 : 3 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, this._notebook.widthRight - (!showEntry ? 0 : 1) ] ], bindSensitive);
         } // let (rowScaleEntry, rowScale, settingsbind)
     },
 
@@ -556,7 +566,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			this._notebook.widget._settingsbinds.push(settingsbind2);
 			settingsbind1.bind(settingsKey1, rowScaleEntry1, rowScale1);
 			settingsbind2.bind(settingsKey2, rowScaleEntry2, rowScale2);
-			return this.addRow(label, [ [ rowScaleEntry1, !showEntry1 ? 0 : 1 ], [ rowScale1, !showEntry1 ? 2 : 1 ], [ rowScaleEntry2, !showEntry2 ? 0 : 1 ], [ rowScale2, !showEntry2 ? 2 : 1 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowScaleEntry1, !showEntry1 ? 0 : 1 ], [ rowScale1, (this._notebook.widthRight >> 1) - (!showEntry1 ? 0 : 1) ], [ null, this._notebook.widthRight & 1 ], [ rowScaleEntry2, !showEntry2 ? 0 : 1 ], [ rowScale2, (this._notebook.widthRight >> 1) - (!showEntry2 ? 0 : 1) ] ], bindSensitive);
         } // let (rowScaleEntry, rowScale, settingsbind)
     },
 
@@ -573,11 +583,11 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			this._notebook.widget._settingsbinds.push(settingsbindScale);
 			settingsbindColor.bind(settingsKeyColor, rowColorButtonEntry, rowColorButton);
 			settingsbindScale.bind(settingsKeyScale, rowScaleEntry, rowScale);
-			return this.addRow(label, [ [ rowColorButtonEntry, !showEntryColor ? 0 : 1 ], [ rowColorButton, 1 ], [ rowScaleEntry, !showEntryScale ? 0 : 1 ], [ rowScale, 3 - (!showEntryScale ? 0 : 1) - (!showEntryColor ? 0 : 1) ] ], bindSensitive);
+			return this.addRow(label, [ [ rowColorButtonEntry, !showEntryColor ? 0 : 1 ], [ rowColorButton, 1 ], [ rowScaleEntry, !showEntryScale ? 0 : 1 ], [ rowScale, this._notebook.widthRight - 1 - (!showEntryScale ? 0 : 1) - (!showEntryColor ? 0 : 1) ] ], bindSensitive);
         } // let (rowColorButtonEntry, rowColorButton, rowScaleEntry, rowScale, settingsbindColor, settingsbindScale)
     },
 
-	addComboBoxText: function(label, settingsKey, arrayLabels, subIndex, bindSensitive/* = null*/, showEntry/* = false*/, wide/* = false*/) {
+	addComboBoxText: function(label, settingsKey, arrayLabels, subIndex, bindSensitive/* = null*/, showEntry/* = false*/) {
 		if (!this._notebook) return [];
 		let (rowComboBoxTextEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
              rowComboBoxText = new Gtk.ComboBoxText({ halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true }),
@@ -600,7 +610,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
             }
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowComboBoxTextEntry, rowComboBoxText);
-			return this.addRow(label, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, (!showEntry ? 4 : 3) + (wide ? 1 : 0) ] ], bindSensitive);
+			return this.addRow(label, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, this._notebook.widthRight - (!showEntry ? 0 : 1) ] ], bindSensitive);
         } // let (rowComboBoxTextEntry, rowComboBoxText, settingsbind)
     }
 });

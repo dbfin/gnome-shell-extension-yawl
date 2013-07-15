@@ -458,43 +458,48 @@ function buildPrefsWidget() {
         builder.addPage(_("Behavior"));
             builder.addNotebook(_("Mouse"), 'mouse.png');
 				builder.addNotebook(_("Icons"), 'icon_16.png');
+
+				builder.setWidthRight(5);
+
 					builder.addNotebook(_("Left button"), 'mouse-left.png');
-						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-left', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-left-ctrl', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-left-shift', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-left-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
+						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-left', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-left-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-left-shift', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-left-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
 
 					builder.addPage(_("Middle button"), 'mouse-middle.png');
-						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-middle', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-middle-ctrl', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
+						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-middle', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-middle-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
 						builder.addSeparator();
-						builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
+						builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0);
 
 					builder.addPage(_("Right button"), 'mouse-right.png');
-						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-right', dbFinConsts.arrayAppClickFunctions, 0, null, false, true);
+						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-right', dbFinConsts.arrayAppClickFunctions, 0);
 
 					builder.closeNotebook();
 
                 builder.addPage(_("Thumbnails"), 'thumbnail_16.png', 'windows-show');
 		            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true, true);
 					builder.addNotebook(_("Left button"), 'mouse-left.png');
-						builder.addComboBoxText(_("Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Shift + Click"), 'mouse-window-left-shift', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Ctrl + Shift + Click"), 'mouse-window-left-ctrl-shift', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
+						builder.addComboBoxText(_("Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0);
+						builder.addComboBoxText(_("Shift + Click"), 'mouse-window-left-shift', dbFinConsts.arrayWindowClickFunctions, 0);
+						builder.addComboBoxText(_("Ctrl + Shift + Click"), 'mouse-window-left-ctrl-shift', dbFinConsts.arrayWindowClickFunctions, 0);
 
 					builder.addPage(_("Middle button"), 'mouse-middle.png');
-						builder.addComboBoxText(_("Click"), 'mouse-window-middle', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
+						builder.addComboBoxText(_("Click"), 'mouse-window-middle', dbFinConsts.arrayWindowClickFunctions, 0);
 						builder.addSeparator();
-						builder.addComboBoxText(_("Scroll up"), 'mouse-window-scroll-up', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
-						builder.addComboBoxText(_("Scroll down"), 'mouse-window-scroll-down', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
+						builder.addComboBoxText(_("Scroll up"), 'mouse-window-scroll-up', dbFinConsts.arrayWindowClickFunctions, 0);
+						builder.addComboBoxText(_("Scroll down"), 'mouse-window-scroll-down', dbFinConsts.arrayWindowClickFunctions, 0);
 
 					builder.addPage(_("Right button"), 'mouse-right.png');
-						builder.addComboBoxText(_("Click"), 'mouse-window-right', dbFinConsts.arrayWindowClickFunctions, 0, null, false, true);
+						builder.addComboBoxText(_("Click"), 'mouse-window-right', dbFinConsts.arrayWindowClickFunctions, 0);
 
 					builder.closeNotebook();
+
+				builder.setWidthRight(4);
 
                 builder.addPage(_("Fine-tuning"), 'tuning.png');
 	                builder.addCheckBox(_("Register mouse events on button release"), 'mouse-click-release');
