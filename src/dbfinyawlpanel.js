@@ -138,6 +138,7 @@ const dbFinYAWLPanel = new Lang.Class({
 
 		this.hidden = false;
         this.hiding = false;
+		this.showing = false;
 		if (params.hidden) this.hide(0);
 
 		this._hideinoverview = params.hideinoverview;
@@ -516,6 +517,7 @@ const dbFinYAWLPanel = new Lang.Class({
         }
         this.hidden = false;
         this.hiding = false;
+		this.showing = true;
         if (this._showHideChildren) {
 			this.showChildren(false, time);
 			if (this.labelTitle) this.labelTitle.show(time === undefined || time === null ? this.animationTime : time);
@@ -525,13 +527,18 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (transition === undefined || transition === null) {
 			transition = this.animationEffect;
 		}
-		this.animateToState({ opacity: 255 }, callback, scope, (time >> 1) + time, dbFinAnimationEquations.delay(transition, 0.33));
+		this.animateToState({ opacity: 255 },
+		                    function() {
+								this.showing = false;
+								if (callback) (scope ? Lang.bind(scope, callback) : callback)();
+							}, this, (time >> 1) + time, dbFinAnimationEquations.delay(transition, 0.33));
         _D('<');
     },
 
     hide: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.hide()');
         this.hiding = true;
+		this.showing = false;
         if (this._showHideChildren) {
 			this.hideChildren(false, time);
 			if (this.labelTitle) this.labelTitle.hide(time === undefined || time === null ? this.animationTime : time);
