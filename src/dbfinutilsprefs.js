@@ -57,7 +57,6 @@
  * 			addRow(gtkWidget?, [gtkOthers], bindSensitive?)
  *          addSeparator()
  *          addLabel(label, bindSensitive?, markup?, linewrap?, justify=0, rightmargin=0)
- *          addImages(label, [images], bindSensitive?)
  *          addCheckBox(label, settingsKey, bindSensitive?)
  *          addColorButton(label, settingsKey, titleColorChooser, bindSensitive?, showEntry?)
  *          addScale(label, settingsKey, min, max, step, bindSensitive?, showEntry?)
@@ -511,17 +510,6 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			}
 			return widgets;
 		}
-    },
-
-    addImages: function(label, images, bindSensitive/* = null*/) {
-        let (rowImages = []) {
-            if (images) {
-                images.forEach(function (image) {
-                	rowImages.push([ Gtk.Image.new_from_file(Me.path + '/images/' + image, { halign: Gtk.Align.END, valign: Gtk.Align.CENTER }), 1 ]);
-                });
-            }
-    		return this.addRow(label, rowImages, bindSensitive);
-        } // let (rowImages)
     },
 
     addCheckBox: function(label, settingsKey, bindSensitive/* = null*/) {
