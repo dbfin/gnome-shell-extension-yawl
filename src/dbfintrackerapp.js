@@ -564,16 +564,16 @@ const dbFinTrackerApp = new Lang.Class({
 		}
 		let (windows = []) {
 			let (workspace = global.screen.get_active_workspace()) {
-				windows = this.metaApp.get_windows().slice().filter(function (window) {
+				windows = this.metaApp.get_windows().filter(function (window) {
 					return window.get_workspace() == workspace && (minimized || window.showing_on_its_workspace());
                 });
 			} // let (workspace)
 			if (!windows.length && allworkspacesifempty) {
 				if (minimized) {
-					windows = this.metaApp.get_windows().slice();
+					windows = this.metaApp.get_windows();
 				}
 				else {
-					windows = this.metaApp.get_windows().slice().filter(function (window) {
+					windows = this.metaApp.get_windows().filter(function (window) {
 						return window.showing_on_its_workspace();
 					});
 				}
