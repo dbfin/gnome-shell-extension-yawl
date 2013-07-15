@@ -347,16 +347,16 @@ function buildPrefsWidget() {
 					s += (i ? ', ' : ' ') + dbFinConsts.arrayContributors[i][0]
 							+ ' (' + _(dbFinConsts.arrayContributors[i][1]) + ')';
 				}
-				if (s != '') builder.addLabel(_("Special thanks to") + ':' + s, null, true, true, 3);
+				if (s != '') builder.addLabel(_("Special thanks to") + ':' + s, null, true, 3);
 			}
-			builder.addLabel('<span size="small">' + _("If you would like to translate the program to your language feel free to do so: please use GitHub or email me for instructions.") + '</span>', null, true, true);
+			builder.addLabel('<span size="small">' + _("If you would like to translate the program to your language feel free to do so: please use GitHub or email me for instructions.") + '</span>', null, true);
 			builder.addSeparator();
-			builder.addLabel('<span size="small">' + _("This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.") + '</span>', null, true, true, 3, 1);
-            builder.addLabel('<span size="small">' + _("A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.") + '</span>', null, true, true, 3, 1);
+			builder.addLabel('<span size="small">' + _("This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.") + '</span>', null, true, 3, 1);
+            builder.addLabel('<span size="small">' + _("A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.") + '</span>', null, true, 3, 1);
 			builder.addLabel('<span size="small">' + _("You are free to use, modify or otherwise distribute the code of this software provided that your actions comply with all applicable laws and GPL.") + '</span>'
-							  + ' ' + '<span size="small">' + _("In particular, you must include the above copyright notice and a copy of the License in all copies or substantial portions of the software, whether original or modified.") + '</span>', null, true, true, 3);
+							  + ' ' + '<span size="small">' + _("In particular, you must include the above copyright notice and a copy of the License in all copies or substantial portions of the software, whether original or modified.") + '</span>', null, true, 3);
 			builder.addLabel('<span size="small">' + _("This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.") + '</span>'
-							  + ' ' + '<span size="small">' + _("For more details please see the GNU General Public License (GPL) version 3.") + '</span>', null, true, true, 3);
+							  + ' ' + '<span size="small">' + _("For more details please see the GNU General Public License (GPL) version 3.") + '</span>', null, true, 3);
 
 		builder.addPage(_("Icons"));
             builder.addNotebook(_("Panel"), 'panel.png');
@@ -384,7 +384,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Icon size"), 'icons-size', 16, 96, 8);
                 builder.addCheckBox(_("Faded icons"), 'icons-faded');
 				builder.addScale(_("Default icon opacity"), 'icons-opacity', 50, 100, 1);
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable app icons from all workspaces under Icons > Panel") + '</span>', '@!icons-show-all', true, true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable app icons from all workspaces under Icons > Panel") + '</span>', '@!icons-show-all', true);
 				builder.addScale(_("Icon opacity if app is not on current workspace"), 'icons-opacity-inactive', 10, 100, 1, 'icons-show-all');
                 builder.addSeparator();
                 builder.addScale(_("Clip icons: top (px)"), 'icons-clip-top', 0, 7, 1);
@@ -426,7 +426,7 @@ function buildPrefsWidget() {
                 builder.unshift();
 
 			builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true, true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true);
                 builder.addCheckBox(_("Same height thumbnails"), 'windows-thumbnails-fit-height');
                 builder.addScale(_("Thumbnail maximum width"), 'windows-thumbnails-width', 50, 500, 25, '!windows-thumbnails-fit-height', true);
 				builder.addScale(_("Thumbnail maximum height"), 'windows-thumbnails-height', 40, 400, 20, null, true);
@@ -439,7 +439,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Thumbnail top padding (px)"), 'windows-thumbnails-padding-top', 0, 20, 1);
 
 			builder.addPage(_("Animation"), 'animation_thumbnail.png', 'windows-show');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true, true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true);
                 builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 500, 1, null, true);
                 builder.addComboBoxText(_("Animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
@@ -482,7 +482,7 @@ function buildPrefsWidget() {
 					builder.closeNotebook();
 
                 builder.addPage(_("Thumbnails"), 'thumbnail_16.png', 'windows-show');
-		            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true, true);
+		            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true);
 					builder.addNotebook(_("Left button"), 'mouse-left.png');
 						builder.addComboBoxText(_("Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0);
 						builder.addComboBoxText(_("Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0);
@@ -578,8 +578,8 @@ function buildPrefsWidget() {
             builder.shift();
     			builder.addScale(_("Blinking rate (times per minute)"), 'icons-attention-blink-rate', 15, 125, 1, 'icons-attention-blink');
             builder.unshift();
-			builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true, true);
-			builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), 'windows-show', true, true);
+			builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true);
+			builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), 'windows-show', true);
             builder.shift();
 				builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview', 'windows-show');
 				builder.shift();
@@ -590,7 +590,7 @@ function buildPrefsWidget() {
 			builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
 
 		builder.addPage(_("Export/Import"));
-			builder.addLabel(_("Back up, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span color='#000000' underline='none'>http://dbfin.com/yawl</span></a>"), null, true, true, 3);
+			builder.addLabel(_("Back up, sync and share settings. To download default and other settings please visit: <a href='http://dbfin.com/yawl'><span color='#000000' underline='none'>http://dbfin.com/yawl</span></a>"), null, true, 3);
 			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,
@@ -621,17 +621,17 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Did you know?"));
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-							 + ' ' + _("is designed to be simple to use yet highly customizable."), null, true, true, 3);
+							 + ' ' + _("is designed to be simple to use yet highly customizable."), null, true, 3);
 			builder.shift();
 				builder.addLabel('<span size="small">' +
 								 (Math.floor((dbFinConsts.Settings.length - 1) / 10) * 10) + '+'
 								 + ' ' + _("settings are currently available to customize feel and look of the extension.")
 								 + ' ' + _("Exploring the options also helps you to uncover some hidden features.")
 								 + ' ' + _("For example, <b>did you know</b> that there is an option to preview a window when its thumbnail is hovered, and that you can easily switch it on and off just by scrolling the middle mouse button over the thumbnail?")
-								 + '</span>', null, true, true, 3);
+								 + '</span>', null, true, 3);
 			builder.unshift();
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-							 + ' ' + _("is active workspace centric."), null, true, true, 3);
+							 + ' ' + _("is active workspace centric."), null, true, 3);
 			builder.shift();
 				builder.addLabel('<span size="small">' +
 								 _("It highlights icons of apps and shows windows open on the current active workspace.")
@@ -641,31 +641,31 @@ function buildPrefsWidget() {
 								 + ' ' + _("For quick access to favorites")
 								 + ' ' + _("please consider installing in addition this highly recommended extension:")
 								 + ' ' + '<b>Dash to Dock</b> (' + _("author") + ': <b>michele_g</b>)'
-								 + '</span>', null, true, true, 3);
+								 + '</span>', null, true, 3);
 			builder.unshift();
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-							 + ' ' + _("tries to seamlessly integrate into the Gnome-Shell panel."), null, true, true, 3);
+							 + ' ' + _("tries to seamlessly integrate into the Gnome-Shell panel."), null, true, 3);
 			builder.shift();
 				builder.addLabel('<span size="small">' +
 								 _("It is embedded into the panel right where there is space for it not claimed by anything else, and uses panel theme by default.")
 								 + ' ' + _("It further allows you to hide some unnecessary buttons on the left and shift the central panel to the right to give itself more space.")
 								 + ' ' + _("You can tweak the panel even more by installing some of the following recommended extensions:")
 								 + ' ' + '<b>Frippery Move Clock</b> (' + _("author") + ': <b>rmyorston</b>), <b>Status Area Horizontal Spacing</b> (' + _("author") + ': <b>mathematical.coffee</b>), <b>User Themes</b> (' + _("author") + ': <b>gcampax</b>)'
-								 + '</span>', null, true, true, 3);
+								 + '</span>', null, true, 3);
 			builder.unshift();
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-							 + ' ' + _("is a part of greater FOSS."), null, true, true, 3);
+							 + ' ' + _("is a part of greater FOSS."), null, true, 3);
 			builder.shift();
 				builder.addLabel('<span size="small">' +
 								 _("And as such it is completely free to use, study, distribute and modify provided you acknowledge all the copyrights and your actions comply with the applicable law and GNU GPL.")
-								 + '</span>', null, true, true, 3);
+								 + '</span>', null, true, 3);
 				builder.addLabel('<span size="small">' +
 								 _("Your contribution in the form of feature suggestions, bug reports, translations, donations or even development is highly appreciated.")
-								 + '</span>', null, true, true, 3);
+								 + '</span>', null, true, 3);
 				builder.addLabel('<span size="small">' +
 								 _("The development of this extension would not be possible without this wonderful FOSS:")
 								 + ' ' + '<b>Anjuta</b>, <b>Inkscape</b>, <b>Gimp</b>, <b>OmegaT</b>, <b>Ubuntu</b>, <b>Fedora</b> ' + _("and, of course,") + ' <b>Gnome-Shell</b>!'
-								 + '</span>', null, true, true, 3);
+								 + '</span>', null, true, 3);
 			builder.unshift();
 
 		_D('<');

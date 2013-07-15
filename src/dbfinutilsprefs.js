@@ -56,7 +56,7 @@
  * 			addWidget(gtkWidget, x, y, w, h, bindSensitive?)
  * 			addRow(gtkWidget?, [gtkOthers], bindSensitive?)
  *          addSeparator()
- *          addLabel(label, bindSensitive?, markup?, linewrap?, justify=0, rightmargin=0)
+ *          addLabel(label, bindSensitive?, markup?, justify=0, rightmargin=0)
  *          addCheckBox(label, settingsKey, bindSensitive?)
  *          addColorButton(label, settingsKey, titleColorChooser, bindSensitive?, showEntry?)
  *          addScale(label, settingsKey, min, max, step, bindSensitive?, showEntry?)
@@ -454,8 +454,12 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		if (!this._notebook || !this._notebook.page) return [];
 		if (gtkWidget && !(gtkWidget instanceof Gtk.Widget) || gtkWidget === '') {
 			let (label = '' + gtkWidget) {
-				gtkWidget = new Gtk.Label({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true });
-	            gtkWidget.set_markup(label);
+				gtkWidget = new Gtk.Label({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER,
+											xalign: 0.0, yalign: 0.5, hexpand: true });
+				if (gtkWidget) {
+					gtkWidget.set_markup(label);
+					gtkWidget.set_line_wrap(true);
+				}
 			}
 		}
 		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || [],
@@ -510,10 +514,9 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		return this.addRow(new Gtk.Separator({ hexpand: true }));
     },
 
-    addLabel: function(label, bindSensitive/* = null*/, markup/* = false*/, linewrap/* = false*/, justify/* = 0*/, rightmargin/* = 0*/) {
+    addLabel: function(label, bindSensitive/* = null*/, markup/* = false*/, justify/* = 0*/, rightmargin/* = 0*/) {
 		let (widgets = this.addRow('', [ [ null, rightmargin || 0 ] ], bindSensitive)) {
 			if (widgets && widgets.length) {
-				if (linewrap) widgets[0].set_line_wrap(true);
 				if (justify) widgets[0].set_justify(justify);
 				if (markup) widgets[0].set_markup(label);
 				else widgets[0].set_text(label);
