@@ -369,6 +369,11 @@
       <_summary>App ctrl-shift-middle click/double click function.</_summary>
       <_description>App ctrl-shift-middle click/double click function.</_description>
     </key>
+    <key name="mouse-scroll-workspace" type="b">
+      <default>true</default>
+      <_summary>Mouse scroll to change workspace.</_summary>
+      <_description>Mouse scroll to change workspace.</_description>
+    </key>
     <key name="mouse-app-scroll" type="s">
       <default>'4'</default>
       <_summary>App mouse scroll function.</_summary>

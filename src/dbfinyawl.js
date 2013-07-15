@@ -25,8 +25,10 @@
  */
 
 const Lang = imports.lang;
+const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
+const Clutter = imports.gi.Clutter;
 const Meta = imports.gi.Meta;
 
 const Util = imports.misc.util;
@@ -118,6 +120,8 @@ const dbFinYAWL = new Lang.Class({
                 this._updatedWindowsBorderRadius = this._updatePanelWindowsStyle;
 		this._updatedWindowsAnimationTime = function () { if (global.yawl.panelWindows) global.yawl.panelWindows.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (global.yawl.panelWindows) global.yawl.panelWindows.animationEffect = global.yawl._windowsAnimationEffect; };
+        // this._updatedMouseScrollWorkspace: below
+
 		if (Main.panel && Main.panel.actor) {
 			this._signals.connectNoId({	emitter: Main.panel.actor, signal: 'style-changed',
 										callback: this._mainPanelStyleChanged, scope: this });
@@ -204,6 +208,52 @@ const dbFinYAWL = new Lang.Class({
         _D('>' + this.__name__ + '._hoverLeave()');
         if (global.yawl.panelWindows && global.yawl.panelWindows._lastWindowsGroupTrackerApp) {
             global.yawl.panelWindows._lastWindowsGroupTrackerApp.hideWindowsGroup();
+        }
+        _D('<');
+    },
+
+    changeWorkspace: function (direction) {
+        _D('>' + this.__name__ + '.changeWorkspace()');
+		let (workspaceIndex = direction
+							&& dbFinUtils.inRange(global.screen.get_active_workspace_index() + direction,
+							0, global.screen.n_workspaces - 1, undefined)) {
+			let (workspace = (workspaceIndex !== undefined)
+					 && global.screen.get_workspace_by_index(workspaceIndex)) {
+				if (workspace) {
+                    if (this._tracker && this._tracker.apps) this._tracker.apps.forEach(function (metaApp, trackerApp) {
+                         if (trackerApp) trackerApp.hideWindowsGroup();
+                    });
+                    workspace.activate(global.get_current_time() || global.yawl._bugfixClickTime);
+                }
+			}
+		}
+        _D('<');
+   },
+
+    _updatedMouseScrollWorkspace: function () {
+        _D('>' + this.__name__ + '._updatedMouseScrollWorkspace()');
+        if (global.yawl && global.yawl._mouseScrollWorkspace) {
+			if (global.yawl.panelApps && global.yawl.panelApps.container) {
+				this._signals.connectId('panel-apps-scroll', {
+					emitter: global.yawl.panelApps.container,
+					signal: 'scroll-event',
+					callback: function (actor, event) {
+						let (direction = event && event.get_scroll_direction && event.get_scroll_direction()) {
+							global.yawl._bugfixClickTime = global.get_current_time();
+							if (direction === Clutter.ScrollDirection.UP) {
+								Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(-1); }));
+							}
+							else if (direction === Clutter.ScrollDirection.DOWN) {
+								Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(1); }));
+							}
+						}
+					},
+					scope: this
+				});
+			}
+        }
+        else {
+            this._signals.disconnectId('panel-apps-scroll');
         }
         _D('<');
     },

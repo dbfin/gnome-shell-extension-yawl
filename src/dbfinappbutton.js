@@ -74,15 +74,18 @@ const dbFinAppButton = new Lang.Class({
                                   /*after = */true);
 
         this._clicked = null;
+        this._updatedMouseScrollWorkspace =
 		this._updatedMouseClickRelease =
                 this._updatedMouseLongClick = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
 				this._clicked = null;
 			}
-			this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*doubleClicks = */true,
-							/*scroll = */true, /*sendSingleClicksImmediately = */true,
-                            /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
+            if (global.yawl) {
+                this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*doubleClicks = */true,
+                                /*scroll = */!global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
+                                /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
+            }
 		};
 
 		// this._slicerIcon related stuff
