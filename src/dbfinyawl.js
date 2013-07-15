@@ -214,31 +214,47 @@ const dbFinYAWL = new Lang.Class({
 
     changeWorkspace: function (direction) {
         _D('>' + this.__name__ + '.changeWorkspace()');
-		let (workspaceIndex = direction
-							&& dbFinUtils.inRange(global.screen.get_active_workspace_index() + direction,
-							0, global.screen.n_workspaces - 1, undefined)) {
-			let (workspace = (workspaceIndex !== undefined)
-					 && global.screen.get_workspace_by_index(workspaceIndex)) {
+		if (!direction || !global.screen) {
+			_D('<');
+			return;
+		}
+		let (workspaceIndexNow = global.screen.get_active_workspace_index(),
+             workspaceIndex = 0,
+             hide = !global.yawl || !global.yawl._iconsShowAll,
+             trackerApp = global.yawl && global.yawl.panelWindows
+                        && global.yawl.panelWindows._lastWindowsGroupTrackerApp) {
+            hide = hide || !trackerApp
+                        || !trackerApp.metaApp
+                        || !trackerApp.yawlPanelWindowsGroup
+                        || trackerApp.yawlPanelWindowsGroup.hidden
+                        || trackerApp.yawlPanelWindowsGroup.hiding
+                        || trackerApp.yawlPanelWindowsGroup.showing;
+            if (hide) {
+                workspaceIndex = workspaceIndexNow + direction;
+            }
+            else let (windows = trackerApp.metaApp.get_windows()) {
+                workspaceIndex = workspaceIndexNow;
+                while ((workspaceIndex += direction) >= 0 && workspaceIndex < global.screen.n_workspaces) {
+                    if (windows.some(function (metaWindow) {
+                            return metaWindow && metaWindow.get_workspace().index() == workspaceIndex;
+                        })) break;
+                }
+            }
+			let (workspace = workspaceIndex >= 0
+			     		  && workspaceIndex < global.screen.n_workspaces
+			     		  && global.screen.get_workspace_by_index(workspaceIndex)) {
 				if (workspace) {
                     if (this._tracker && this._tracker.apps) {
-						let (hide = !global.yawl || !global.yawl._iconsShowAll) {
-							this._tracker.apps.forEach(function (metaApp, trackerApp) {
-								if (trackerApp) {
-                                    trackerApp[hide
-                                               ||  trackerApp.yawlPanelWindowsGroup
-                                                   && (trackerApp.yawlPanelWindowsGroup.hidden
-                                                       || trackerApp.yawlPanelWindowsGroup.hiding
-                                                       || trackerApp.yawlPanelWindowsGroup.showing)
-                                               ? 'hideWindowsGroup'
-                                               : '_cancelShowThumbnailsTimeout'].call(trackerApp);
-                                }
-							});
-						}
+						this._tracker.apps.forEach(function (metaApp, trackerApp) {
+							if (trackerApp) {
+								trackerApp[hide ? 'hideWindowsGroup' : '_cancelShowThumbnailsTimeout'].call(trackerApp);
+							}
+						});
 					}
                     workspace.activate(global.get_current_time() || global.yawl._bugfixClickTime);
                 }
-			}
-		}
+			} // let (workspace)
+		} // let (workspaceIndexNow, workspaceIndex, hide, trackerApp)
         _D('<');
    },
 
