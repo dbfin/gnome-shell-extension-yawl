@@ -220,9 +220,21 @@ const dbFinYAWL = new Lang.Class({
 			let (workspace = (workspaceIndex !== undefined)
 					 && global.screen.get_workspace_by_index(workspaceIndex)) {
 				if (workspace) {
-                    if (this._tracker && this._tracker.apps) this._tracker.apps.forEach(function (metaApp, trackerApp) {
-                         if (trackerApp) trackerApp.hideWindowsGroup();
-                    });
+                    if (this._tracker && this._tracker.apps) {
+						let (hide = !global.yawl || !global.yawl._iconsShowAll) {
+							this._tracker.apps.forEach(function (metaApp, trackerApp) {
+								if (trackerApp) {
+                                    trackerApp[hide
+                                               ||  trackerApp.yawlPanelWindowsGroup
+                                                   && (trackerApp.yawlPanelWindowsGroup.hidden
+                                                       || trackerApp.yawlPanelWindowsGroup.hiding
+                                                       || trackerApp.yawlPanelWindowsGroup.showing)
+                                               ? 'hideWindowsGroup'
+                                               : '_cancelShowThumbnailsTimeout'].call(trackerApp);
+                                }
+							});
+						}
+					}
                     workspace.activate(global.get_current_time() || global.yawl._bugfixClickTime);
                 }
 			}
