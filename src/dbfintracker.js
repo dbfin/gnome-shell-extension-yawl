@@ -583,7 +583,7 @@ const dbFinTracker = new Lang.Class({
                 if (trackerApp) {
                     trackerApp.setLabel(trackerWindow.minimized
                             ? '[ ' + trackerWindow.title + ' ]'
-                            : trackerWindow.title)
+                            : trackerWindow.title);
 				} // if (trackerApp)
             } // let (trackerApp)
 		} // if (trackerWindow && trackerWindow.metaApp && trackerWindow.hovered)

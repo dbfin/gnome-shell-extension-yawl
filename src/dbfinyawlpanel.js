@@ -482,26 +482,30 @@ const dbFinYAWLPanel = new Lang.Class({
 			_D('<');
 			return;
 		}
-		let (t = this.animationTime >> 2) {
+		let (t = this.animationTime >> 2,
+		     labelText = this.label.getText()) {
             this._labelText = this._labelText || ' ';
-			if (this.label.getText() === this._labelText) {
+			if (labelText === this._labelText) {
 //				this.label.setOpacity(255, 0);
-				this.label.setOpacity(255, this.hidden || this.label.hidden || this._labelText === ' ' ? 0 : t,
+				this.label.setOpacity(255, this.hidden || this.label.hidden
+				                           || !this._labelText || this._labelText === ' ' ? 0 : t,
 									  null, null, 'easeInOutQuad');
-			} // if (this.label.getText() === this._labelText)
+			} // if (labelText === this._labelText)
 			else {
 //				this.label.setOpacity(0, 0);
-				this.label.setOpacity(0, this.hidden || this.label.hidden || this.label.getText() === ' ' ? 0 : t, function () {
+				this.label.setOpacity(0, this.hidden || this.label.hidden
+				                         || !labelText || labelText === ' ' ? 0 : t, function () {
 					if (this.label) {
 						this.label.setText(this._labelText);
 						this._updateLabelWidth(0);
 //						this.label.setOpacity(255, 0);
-						this.label.setOpacity(255, this.hidden || this.label.hidden || this._labelText === ' ' ? 0 : t,
+						this.label.setOpacity(255, this.hidden || this.label.hidden
+						                           || !this._labelText || this._labelText === ' ' ? 0 : t,
 											  null, null, 'easeInOutQuad');
 					} // if (this.label)
 				}, this, 'easeInOutQuad'); // this.label.setOpacity(0)
-			} // if (this.label.getText() === this._labelText) else
-		} // let (t)
+			} // if (labelText === this._labelText) else
+		} // let (t, labelText)
 		_D('<');
 	},
 
