@@ -412,6 +412,7 @@ function buildPrefsWidget() {
 		builder.addPage(_("Thumbnails"));
 			builder.addNotebook(_("Panel"), 'panel_thumbnail.png');
                 builder.addCheckBox(_("Show thumbnails when app icon is hovered"), 'windows-show');
+				builder.addCheckBox(_("Show thumbnails of 'interesting' windows only"), 'windows-show-interesting', 'windows-show');
                 builder.addSeparator();
                 builder.addCheckBox(_("Use arrow-style thumbnails app indicator"), 'windows-indicator-arrow', 'windows-show');
                 builder.addSeparator();
@@ -420,9 +421,8 @@ function buildPrefsWidget() {
                     builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', [ 'windows-show', 'windows-theming' ]);
 					builder.addColorButtonScale(_("Background color and opacity"), 'windows-background-color', 'windows-background-opacity', _("Choose thumbnail panel background color"), 0, 100, 1, [ 'windows-show', 'windows-theming', '!windows-background-panel' ]);
 					builder.addColorButtonScale(_("Text color and size"), 'windows-text-color', 'windows-text-size', _("Choose thumbnail panel text color"), 6, 36, 1, [ 'windows-show', 'windows-theming' ]);
-                    builder.addScale(_("Padding"), 'windows-padding', 0, 20, 1, [ 'windows-show', 'windows-theming' ]);
                     builder.addColorButtonScale(_("Border color and width"), 'windows-border-color', 'windows-border-width', _("Choose thumbnail panel border color"), 0, 3, 1, [ 'windows-show', 'windows-theming' ]);
-                    builder.addScale(_("Border radius"), 'windows-border-radius', 0, 10, 1, [ 'windows-show', 'windows-theming' ]);
+                    builder.addScaleScale(_("Border radius") + ' ' + _("and") + ' ' + _("Padding"), 'windows-border-radius', 'windows-padding', 0, 10, 1, 0, 20, 1, [ 'windows-show', 'windows-theming' ]);
                 builder.unshift();
 
 			builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');

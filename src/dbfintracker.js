@@ -69,6 +69,8 @@ const dbFinTracker = new Lang.Class({
         this._attentions = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, { signals:, metaWindows: [ metaWindow's ] } ] ]
 
 		this.preview = new dbFinPreview.dbFinPreview();
+
+        this._updatedWindowsShowInteresting = function () { this.update('Tracker: updated windows-show-interesting.'); }
 		this._updatedWindowsPreview = function () { if (this.preview && !global.yawl._windowsPreview) this.preview.hide(); }
 		this._updatedWindowsPreviewDimColor = function () { if (this.preview) this.preview.dimColor = global.yawl._windowsPreviewDimColor; }
 		this._updatedWindowsPreviewDimOpacity = function () { if (this.preview) this.preview.dimOpacity = global.yawl._windowsPreviewDimOpacity; }
@@ -158,6 +160,18 @@ const dbFinTracker = new Lang.Class({
 		return this.windows && this.windows.get(metaWindow) || null;
 	},
 
+	isWindowInteresting: function(metaWindow) {
+		return	!!metaWindow
+				&& (!global.yawl
+				    || !global.yawl._windowsShowInteresting
+				    ||	!metaWindow.is_skip_taskbar()
+						&& this._tracker
+						&& this._tracker.is_window_interesting(metaWindow)
+				    );
+		// note also, that metaWindow must have app in this.apps, so that
+		// it is not orphant and its app must be "interesting" as well
+	},
+
 	_refresh: function(metaWorkspace/* = global.screen.get_active_workspace()*/) {
         _D('@' + this.__name__ + '._refresh()');
 		this.stateInfo = this._refreshStateInfo;
@@ -195,10 +209,10 @@ const dbFinTracker = new Lang.Class({
 				} // let (trackerApp)
 			})); // this._appSystem.get_running().forEach(metaApp)
 			metaWorkspace.list_windows().reverse().forEach(Lang.bind(this, function(metaWindow) {
-				if (!metaWindow || !this._tracker.is_window_interesting(metaWindow)) return;
+				if (!metaWindow || !this.isWindowInteresting(metaWindow)) return;
 				let (metaApp = this._tracker.get_window_app(metaWindow)) {
 					let (trackerWindow = this.windows.get(metaWindow),
-						 trackerApp = this.apps.get(metaApp)) {
+						 trackerApp = metaApp && this.apps.get(metaApp)) {
 						if (!trackerApp || !trackerApp.state || trackerApp.state < this.state) return;
 						if (!trackerWindow) { // new window
 							windowsIn.push(metaWindow);

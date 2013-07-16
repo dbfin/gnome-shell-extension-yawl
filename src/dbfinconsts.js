@@ -128,6 +128,7 @@ const Settings = [
     [ 'icons-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'icons>animation' ],
 
     [ 'windows-show', true, { }, 'thumbnails>panel' ],
+    [ 'windows-show-interesting', false, { }, 'thumbnails>panel' ],
     [ 'windows-indicator-arrow', false, { }, 'thumbnails>panel' ],
     [ 'windows-theming', true, { }, 'thumbnails>panel' ],
     [ 'windows-background-panel', true, { }, 'thumbnails>panel' ],
@@ -135,10 +136,10 @@ const Settings = [
     [ 'windows-background-opacity', 75, { min: 0, max: 100 }, 'thumbnails>panel' ],
     [ 'windows-text-color', 'white', { }, 'thumbnails>panel' ],
     [ 'windows-text-size', 9, { min: 6, max: 36 }, 'thumbnails>panel' ],
-    [ 'windows-padding', 11, { min: 0, max: 20 }, 'thumbnails>panel' ],
     [ 'windows-border-color', '#d3d7cf', { }, 'thumbnails>panel' ],
     [ 'windows-border-width', 2, { min: 0, max: 3 }, 'thumbnails>panel' ],
     [ 'windows-border-radius', 5, { min: 0, max: 10 }, 'thumbnails>panel' ],
+    [ 'windows-padding', 11, { min: 0, max: 20 }, 'thumbnails>panel' ],
 
     [ 'windows-thumbnails-fit-height', false, { }, 'thumbnails' ],
     [ 'windows-thumbnails-width', 248, { min: 50, max: 500 }, 'thumbnails' ],

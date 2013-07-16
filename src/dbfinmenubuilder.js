@@ -225,7 +225,7 @@ const dbFinMenuBuilder = new Lang.Class({
 				let (windows = [],
                      tracker = this._tracker.getTracker()) {
                     if (tracker) this._app.get_windows().forEach(Lang.bind(this, function (metaWindow) {
-						if (!metaWindow || !tracker.is_window_interesting(metaWindow)) return;
+						if (!metaWindow || !this._tracker.isWindowInteresting(metaWindow)) return;
 						windows.push([
 								(metaWindow.is_on_all_workspaces() ? -1 : metaWindow.get_workspace().index()),
 								metaWindow
