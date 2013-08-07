@@ -186,6 +186,13 @@ const dbFinTrackerWindow = new Lang.Class({
                 this._tracker.windowEvent(this, 'minimized');
             }
         }
+		if (this.metaWindow && this._tracker) {
+			this.metaWindow.foreach_transient(Lang.bind(this, function (metaWindow) {
+				let (trackerWindow = this._tracker.getTrackerWindow(metaWindow)) {
+					if (trackerWindow) trackerWindow._minimizedChanged();
+				}
+			}));
+		}
         _D('<');
 	},
 
