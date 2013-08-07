@@ -803,7 +803,7 @@ const dbFinTrackerApp = new Lang.Class({
 				return;
 			}
 			let (workspace = global.screen.get_workspace_by_index(workspaceIndex)) {
-				if (workspace) workspace.activate(global.get_current_time() || global.yawl._bugfixClickTime);
+				if (workspace) workspace.activate(global.get_current_time() || global.yawl && global.yawl._bugfixClickTime || null);
 			}
 		} // if (workspaceIndex !== undefined)
 		if (this.metaApp.state != Shell.AppState.STOPPED) this.metaApp.open_new_window(-1);

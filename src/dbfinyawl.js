@@ -75,6 +75,8 @@ const dbFinYAWL = new Lang.Class({
 			}
 		}
 
+        global.yawl._bugfixClickTime = global.get_current_time() || null;
+
         global.yawl.panelApps = new dbFinYAWLPanel.dbFinYAWLPanel({ panelname: 'panelYAWL',
                                                                     parent: Main.panel || null,
                                                                     parentproperty: '_yawlPanel',
@@ -251,7 +253,7 @@ const dbFinYAWL = new Lang.Class({
 							}
 						});
 					}
-                    workspace.activate(global.get_current_time() || global.yawl._bugfixClickTime);
+                    workspace.activate(global.get_current_time() || global.yawl && global.yawl._bugfixClickTime || null);
                 }
 			} // let (workspace)
 		} // let (workspaceIndexNow, workspaceIndex, hide, trackerApp)
