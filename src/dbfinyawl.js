@@ -266,8 +266,9 @@ const dbFinYAWL = new Lang.Class({
 					emitter: global.yawl.panelApps.container,
 					signal: 'scroll-event',
 					callback: function (actor, event) {
-						let (direction = event && event.get_scroll_direction && event.get_scroll_direction()) {
-							global.yawl._bugfixClickTime = global.get_current_time();
+						let (direction = event && event.get_scroll_direction && event.get_scroll_direction(),
+						     time = global.get_current_time()) {
+							if (time) global.yawl._bugfixClickTime = time;
 							if (direction === Clutter.ScrollDirection.UP) {
 								Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(-1); }));
 							}
