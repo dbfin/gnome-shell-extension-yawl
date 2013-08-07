@@ -221,14 +221,15 @@ const dbFinTrackerWindow = new Lang.Class({
 
     showWindow: function() {
         _D('>' + this.__name__ + '.showWindow()');
-        if (this.metaWindow && !this.focused) Main.activateWindow(this.metaWindow,
-                                                                  global.get_current_time() || global.yawl._bugfixClickTime);
+        if (this.metaWindow && this._tracker) {
+            this._tracker.activateWindow(this.metaWindow);
+        }
         _D('<');
     },
 
     minimizeWindow: function() {
         _D('>' + this.__name__ + '.minimizeWindow()');
-        if (this.metaWindow) this.metaWindow.minimize();
+        if (this._tracker) this._tracker.minimizeWindow(this.metaWindow);
         _D('<');
     },
 

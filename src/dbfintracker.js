@@ -625,6 +625,26 @@ const dbFinTracker = new Lang.Class({
             }
 		}
         _D('<');
+    },
+
+    activateWindow: function (metaWindow) {
+        _D('>' + this.__name__ + '.activateWindow()');
+        if (metaWindow) {
+            Main.activateWindow(metaWindow, global.get_current_time() || global.yawl && global.yawl._bugfixClickTime || null);
+            metaWindow.foreach_transient(Lang.bind(this, function (metaWindow) { this.activateWindow(metaWindow); }));
+        }
+        _D('<');
+    },
+
+    minimizeWindow: function(metaWindow) {
+        _D('>' + this.__name__ + '.minimizeWindow()');
+        if (metaWindow) {
+            metaWindow.minimize();
+            let (metaWindowTransientFor = metaWindow.get_transient_for()) {
+				if (metaWindowTransientFor) this.minimizeWindow(metaWindowTransientFor);
+            }
+        }
+        _D('<');
     }
 });
 Signals.addSignalMethods(dbFinTracker.prototype);

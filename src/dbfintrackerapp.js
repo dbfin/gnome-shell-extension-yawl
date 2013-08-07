@@ -622,7 +622,7 @@ const dbFinTrackerApp = new Lang.Class({
 		let (windows = this._listWindowsFresh(minimized, true)) {
 			if (windows.length && !windows[0].length) { // windows are all from the current workspace
 				if (!this.focused) {
-					Main.activateWindow(windows[0], global.get_current_time() || global.yawl._bugfixClickTime);
+					if (this._tracker) this._tracker.activateWindow(windows[0]);
                     this._resetNextWindows();
 				} // if (!this.focused)
 				else {
@@ -633,8 +633,7 @@ const dbFinTrackerApp = new Lang.Class({
 						this._nextWindowsLength = windows.length;
 						this._nextWindowsIndex = 0;
 					}
-					Main.activateWindow(windows[Math.min(++this._nextWindowsIndex, this._nextWindowsLength - 1)],
-                                        global.get_current_time() || global.yawl._bugfixClickTime);
+					if (this._tracker) this._tracker.activateWindow(windows[Math.min(++this._nextWindowsIndex, this._nextWindowsLength - 1)]);
 					this._cancelNextWindowsTimeout();
 					this._nextWindowsTimeout = Mainloop.timeout_add(3333, Lang.bind(this, this._resetNextWindows));
 				} // if (!this.focused) else
@@ -642,7 +641,7 @@ const dbFinTrackerApp = new Lang.Class({
 			else if (windows.length) { // windows are all not from the current workspace
 				// if all windows are from the same workspace, activate the first one
 				if (windows[0][0] == windows[windows.length - 1][0]) {
-					Main.activateWindow(windows[0][1], global.get_current_time() || global.yawl._bugfixClickTime);
+					if (this._tracker) this._tracker.activateWindow(windows[0][1]);
                     this._resetNextWindows();
 				}
 				else { // else bring up a menu listing all windows on different workspaces
@@ -672,7 +671,7 @@ const dbFinTrackerApp = new Lang.Class({
 		let (windows = this._listWindowsFresh(minimized)) {
             if (windows.length) { // not necessary, but for consistency
     			for (let i = windows.length - 1; i >= 0; --i) {
-                    Main.activateWindow(windows[i], global.get_current_time() || global.yawl._bugfixClickTime);
+                    if (this._tracker) this._tracker.activateWindow(windows[i]);
                 }
             } // if (windows.length)
 		} // let (windows)
@@ -696,19 +695,17 @@ const dbFinTrackerApp = new Lang.Class({
 		let (windows = this._listWindowsFresh()) {
             if (windows.length) {
 				if (!this.focused) {
-					Main.activateWindow(windows[0], global.get_current_time() || global.yawl._bugfixClickTime);
+					if (this._tracker) this._tracker.activateWindow(windows[0]);
 				} // if (!this.focused)
 				else {
                     if (backward) {
                         if (windows.length > 1) {
-                            Main.activateWindow(windows[windows.length - 1],
-                                                global.get_current_time() || global.yawl._bugfixClickTime);
+                            if (this._tracker) this._tracker.activateWindow(windows[windows.length - 1]);
                         }
                     }
                     else {
                         for (let i = windows.length - 1; i > 0; --i) {
-                            Main.activateWindow(windows[i],
-                                                global.get_current_time() || global.yawl._bugfixClickTime);
+                            if (this._tracker) this._tracker.activateWindow(windows[i]);
                         }
                     }
 				} // if (!this.focused) else
@@ -732,9 +729,9 @@ const dbFinTrackerApp = new Lang.Class({
 	_minimizeWindows: function(topOnly/* = false*/) {
         _D('>' + this.__name__ + '._minimizeWindows()');
 		let (windows = this._listWindowsFresh()) {
-			if (windows.length) {
-				if (topOnly) windows[0].minimize();
-				else windows.forEach(function(window) { window.minimize(); });
+			if (windows.length && this._tracker) {
+				if (topOnly) this._tracker.minimizeWindow(windows[0]);
+				else windows.forEach(Lang.bind(this, function (window) { this._tracker.minimizeWindow(window); }));
 			} // if (windows.length)
 		} // let (windows)
         _D('<');
