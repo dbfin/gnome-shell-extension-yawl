@@ -52,6 +52,7 @@ const dbFinHotCorner = new Lang.Class({
     _init: function() {
         _D('>' + this.__name__ + '._init()');
 		this._button = new Panel.ActivitiesButton();
+		this._button.actor.name = null;
 		this._button._minHPadding = 0;
 		this._button._natHPadding = 0;
 		this._signals = new dbFinSignals.dbFinSignals();
