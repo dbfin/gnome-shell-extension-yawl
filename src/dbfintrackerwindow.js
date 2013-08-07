@@ -146,7 +146,9 @@ const dbFinTrackerWindow = new Lang.Class({
                 focused = this.focused) {
             this.focused = this.metaWindow && focusedWindow
                                 && (focusedWindow == this.metaWindow
-                                    || focusedWindow.get_transient_for() == this.metaWindow);
+								||	global.yawl && global.yawl._windowsShowInteresting
+									&& focusedWindow.get_transient_for() == this.metaWindow
+								);
             if (focused != this.focused) {
                 if (this.windowThumbnail && this.windowThumbnail.actor) {
                     if (this.focused) this.windowThumbnail.actor.add_style_pseudo_class('active');
