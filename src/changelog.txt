@@ -41,3 +41,7 @@ v10	2013-07-14
     	- Added preference options: attention blinking rate and change workspace by scrolling over YAWL panel
     	- Keep windows order even when extension is restarted
     	- Updated install-extension script for easy installation of Git-version
+v11	2013-08-09
+    	- Search app's windows on other workspaces: scroll over app's icon while its thumbnails are shown.
+    	- Option to show thumbnails of interesting windows only: if off it will show all windows including modal dialogs.
+    	- Compatibility with other extensions that might accidentally unhide hidden panel icons.

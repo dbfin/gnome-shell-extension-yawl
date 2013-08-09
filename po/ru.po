@@ -4,10 +4,10 @@
 # Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
 #
 msgid ""
-msgstr "Project-Id-Version: YAWL 10\n"
+msgstr "Project-Id-Version: YAWL 11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-14 20:32-0500\n"
-"PO-Revision-Date: 2013-07-14 20:32-0500\n"
+"POT-Creation-Date: 2013-08-09 14:04-0500\n"
+"PO-Revision-Date: 2013-08-09 14:04-0500\n"
 "Last-Translator: Vadim Cherepanov @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -413,37 +413,37 @@ msgstr "Миниатюры"
 msgid "Show thumbnails when app icon is hovered"
 msgstr "Показывать миниатюры при наведении мыши на иконку"
 
-#: src/prefs.js:416
+#: src/prefs.js:415
+msgid "Show thumbnails of 'interesting' windows only"
+msgstr "Показывать миниатюры только \"интересных\" окон"
+
+#: src/prefs.js:417
 msgid "Use arrow-style thumbnails app indicator"
 msgstr "Индикатор-стрелка для текущего приложения"
 
-#: src/prefs.js:418
+#: src/prefs.js:419
 msgid "Customize thumbnail panel theme"
 msgstr "Настроить внешний вид панели миниатюр"
 
-#: src/prefs.js:420
+#: src/prefs.js:421
 msgid "Match main panel background"
 msgstr "Фон, как у главной панели"
 
-#: src/prefs.js:421
+#: src/prefs.js:422
 msgid "Background color and opacity"
 msgstr "Цвет и непрозрачность фона"
 
-#: src/prefs.js:421
+#: src/prefs.js:422
 msgid "Choose thumbnail panel background color"
 msgstr "Выберите цвет фона панели миниатюр"
 
-#: src/prefs.js:422
+#: src/prefs.js:423
 msgid "Text color and size"
 msgstr "Цвет и размер текста"
 
-#: src/prefs.js:422
+#: src/prefs.js:423
 msgid "Choose thumbnail panel text color"
 msgstr "Выберите цвет текста панели миниатюр"
-
-#: src/prefs.js:423
-msgid "Padding"
-msgstr "Отступ (padding)"
 
 #: src/prefs.js:424
 msgid "Border color and width"
@@ -456,6 +456,14 @@ msgstr "Выберите цвет границы панели миниатюр"
 #: src/prefs.js:425
 msgid "Border radius"
 msgstr "Радиус границы"
+
+#: src/prefs.js:425
+msgid "and"
+msgstr "и"
+
+#: src/prefs.js:425
+msgid "Padding"
+msgstr "Отступ (padding)"
 
 #: src/prefs.js:429 src/prefs.js:442 src/prefs.js:485 src/prefs.js:581
 msgid "Enable thumbnails under Thumbnails > Panel"
