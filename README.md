@@ -18,7 +18,7 @@ The extension works out of the box but provides numerous settings to adjust its 
 
 ### How to install
 
-If you are not a developer and not interested in testing the latest commits, then the best way to install/update the extension is by following this <a href="https://extensions.gnome.org/extension/674/yawl-yet-another-window-list/" target="_blank" title="YAWL on extensions.gnome.org">link</a>. If in description you see that there is a newer version that is still under review, please feel free to manually download it using the link provided there and unzip it to _~/.local/share/gnome-shell/extensions/yawl@dbfin.com_.
+If you are not a developer and not interested in testing the latest commits, then the best way to install/update the extension is by following this <a href="https://extensions.gnome.org/extension/674/yawl-yet-another-window-list/" target="_blank" title="YAWL on extensions.gnome.org">link</a>. If in description you see that there is a newer version that is still under review, please feel free to manually download it using the link provided there and unzip it to _~/.local/share/gnome-shell/extensions/yawl@dbfin\.com_.
 
 If you want to keep up with the latest features that have not made it yet into an official release, or want to contribute, please follow these simple steps:
 
