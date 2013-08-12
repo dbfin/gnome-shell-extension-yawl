@@ -25,8 +25,10 @@
  */
 
 const Lang = imports.lang;
+const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
+const Clutter = imports.gi.Clutter;
 const Meta = imports.gi.Meta;
 
 const Util = imports.misc.util;
@@ -73,6 +75,8 @@ const dbFinYAWL = new Lang.Class({
 			}
 		}
 
+        global.yawl._bugfixClickTime = global.get_current_time() || null;
+
         global.yawl.panelApps = new dbFinYAWLPanel.dbFinYAWLPanel({ panelname: 'panelYAWL',
                                                                     parent: Main.panel || null,
                                                                     parentproperty: '_yawlPanel',
@@ -118,6 +122,8 @@ const dbFinYAWL = new Lang.Class({
                 this._updatedWindowsBorderRadius = this._updatePanelWindowsStyle;
 		this._updatedWindowsAnimationTime = function () { if (global.yawl.panelWindows) global.yawl.panelWindows.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (global.yawl.panelWindows) global.yawl.panelWindows.animationEffect = global.yawl._windowsAnimationEffect; };
+        // this._updatedMouseScrollWorkspace: below
+
 		if (Main.panel && Main.panel.actor) {
 			this._signals.connectNoId({	emitter: Main.panel.actor, signal: 'style-changed',
 										callback: this._mainPanelStyleChanged, scope: this });
@@ -208,6 +214,81 @@ const dbFinYAWL = new Lang.Class({
         _D('<');
     },
 
+    changeWorkspace: function (direction) {
+        _D('>' + this.__name__ + '.changeWorkspace()');
+		if (!direction || !global.screen) {
+			_D('<');
+			return;
+		}
+		let (workspaceIndexNow = global.screen.get_active_workspace_index(),
+             workspaceIndex = 0,
+             hide = !global.yawl || !global.yawl._iconsShowAll,
+             trackerApp = global.yawl && global.yawl.panelWindows
+                        && global.yawl.panelWindows._lastWindowsGroupTrackerApp) {
+            hide = hide || !trackerApp
+                        || !trackerApp.metaApp
+                        || !trackerApp.yawlPanelWindowsGroup
+                        || trackerApp.yawlPanelWindowsGroup.hidden
+                        || trackerApp.yawlPanelWindowsGroup.hiding
+                        || trackerApp.yawlPanelWindowsGroup.showing;
+            if (hide) {
+                workspaceIndex = workspaceIndexNow + direction;
+            }
+            else let (windows = trackerApp.metaApp.get_windows()) {
+                workspaceIndex = workspaceIndexNow;
+                while ((workspaceIndex += direction) >= 0 && workspaceIndex < global.screen.n_workspaces) {
+                    if (windows.some(function (metaWindow) {
+                            return metaWindow && metaWindow.get_workspace().index() == workspaceIndex;
+                        })) break;
+                }
+            }
+			let (workspace = workspaceIndex >= 0
+			     		  && workspaceIndex < global.screen.n_workspaces
+			     		  && global.screen.get_workspace_by_index(workspaceIndex)) {
+				if (workspace) {
+                    if (this._tracker && this._tracker.apps) {
+						this._tracker.apps.forEach(function (metaApp, trackerApp) {
+							if (trackerApp) {
+								trackerApp[hide ? 'hideWindowsGroup' : '_cancelShowThumbnailsTimeout'].call(trackerApp);
+							}
+						});
+					}
+                    workspace.activate(global.get_current_time() || global.yawl && global.yawl._bugfixClickTime || null);
+                }
+			} // let (workspace)
+		} // let (workspaceIndexNow, workspaceIndex, hide, trackerApp)
+        _D('<');
+   },
+
+    _updatedMouseScrollWorkspace: function () {
+        _D('>' + this.__name__ + '._updatedMouseScrollWorkspace()');
+        if (global.yawl && global.yawl._mouseScrollWorkspace) {
+			if (global.yawl.panelApps && global.yawl.panelApps.container) {
+				this._signals.connectId('panel-apps-scroll', {
+					emitter: global.yawl.panelApps.container,
+					signal: 'scroll-event',
+					callback: function (actor, event) {
+						let (direction = event && event.get_scroll_direction && event.get_scroll_direction(),
+						     time = global.get_current_time()) {
+							if (time) global.yawl._bugfixClickTime = time;
+							if (direction === Clutter.ScrollDirection.UP) {
+								Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(-1); }));
+							}
+							else if (direction === Clutter.ScrollDirection.DOWN) {
+								Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(1); }));
+							}
+						}
+					},
+					scope: this
+				});
+			}
+        }
+        else {
+            this._signals.disconnectId('panel-apps-scroll');
+        }
+        _D('<');
+    },
+
 	_mainPanelStyleChanged: function() {
         _D('@' + this.__name__ + '._mainPanelStyleChanged()');
 		this._updatePanelWindowsStyle();
@@ -231,16 +312,18 @@ const dbFinYAWL = new Lang.Class({
 
 	_updatePanelWindowsStyle: function() {
         _D('>' + this.__name__ + '._updatePanelWindowsStyle()');
-		if (!this._style || !global.yawl || !global.yawl.panelWindows || !global.yawl.panelWindows.actor
-		    || !global.yawl.panelWindows.actor.get_stage()) {
+		if (!this._style || !global.yawl || !global.yawl.panelWindows || !global.yawl.panelWindows.container
+		    || !global.yawl.panelWindows.container.get_stage()) {
 			_D('<');
 			return;
 		}
 		let (style = {}) {
 			if (global.yawl._windowsTheming) {
-				let (color = '') {
+				let (colorRGB = { red: 0, green: 0, blue: 0 },
+				     color = '') {
 					if (global.yawl._windowsBackgroundPanel) {
 						if (global.yawl._panelBackground) {
+                            colorRGB = dbFinUtils.stringColorToRGBA(global.yawl._panelColor);
 							color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._panelColor,
 							                                                     global.yawl._panelOpacity);
 						} // if (global.yawl._panelBackground)
@@ -248,18 +331,32 @@ const dbFinYAWL = new Lang.Class({
 							let (node = Main.panel && Main.panel.actor && Main.panel.actor.get_stage()
 										&& Main.panel.actor.get_theme_node()) {
 								if (node) {
-									color = node.get_background_color();
-									color = 'rgba(' + color.red + ', ' + color.green + ', ' + color.blue + ', ' + color.alpha / 255. + ')';
+									colorRGB = node.get_background_color();
+									color = 'rgba(' + colorRGB.red + ', ' + colorRGB.green + ', ' + colorRGB.blue
+                                            + ', ' + colorRGB.alpha / 255. + ')';
 								}
 							}
 						} // if (global.yawl._panelBackground) else
 					} // if (global.yawl._windowsBackgroundPanel)
 					if (color == '') {
+                        colorRGB = dbFinUtils.stringColorToRGBA(global.yawl._windowsBackgroundColor);
 						color = dbFinUtils.stringColorOpacity100ToStringRGBA(global.yawl._windowsBackgroundColor,
 																			 global.yawl._windowsBackgroundOpacity);
 					} // if (color == '')
 					style['background-color'] = color;
-				} // let (color)
+                    if (colorRGB.red * 0.30 + colorRGB.green * 0.59 + colorRGB.blue * 0.11 >= 128) {
+                        if (!global.yawl.panelWindows._light) {
+							global.yawl.panelWindows.container.add_style_class_name('light');
+							global.yawl.panelWindows._light = true;
+						}
+                    }
+                    else {
+                        if (global.yawl.panelWindows._light) {
+							global.yawl.panelWindows.container.remove_style_class_name('light');
+							global.yawl.panelWindows._light = false;
+						}
+                    }
+				} // let (colorRGB, color)
 				style['color'] = global.yawl._windowsTextColor;
 				style['font-size'] = global.yawl._windowsTextSize + 'pt';
 				style['padding'] = global.yawl._windowsPadding + 'px';

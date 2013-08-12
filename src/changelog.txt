@@ -27,3 +27,21 @@ v7	2013-06-21
     	- Quicklists: requires Quicklists extension by Damian
     	- Window previews: thumbnail panel can be made transparent to look through it
     	- Styling adjustments
+v8	2013-06-22
+    	- German translation
+    	- Dark focused/hovered thumbnail frame if thumbnail panel itself is light
+v9	2013-07-03
+    	- Window demanding attention and urgent windows: blinking and styling
+    	- Show icons from all workspaces (optionally)
+    	- Optionally turn thumbnails off
+    	- Scrollable menu sections to prevent menus going over screen edge
+v10	2013-07-14
+    	- Performance optimizations
+    	- Fix warnings including those caused by GS
+    	- Added preference options: attention blinking rate and change workspace by scrolling over YAWL panel
+    	- Keep windows order even when extension is restarted
+    	- Updated install-extension script for easy installation of Git-version
+v11	2013-08-09
+    	- Search app's windows on other workspaces: scroll over app's icon while its thumbnails are shown.
+    	- Option to show thumbnails of interesting windows only: if off it will show all windows including modal dialogs.
+    	- Compatibility with other extensions that might accidentally unhide hidden panel icons.

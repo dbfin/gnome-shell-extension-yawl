@@ -32,6 +32,7 @@ const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
+const Layout = imports.ui.layout;
 const Main = imports.ui.main;
 const Overview = imports.ui.overview;
 
@@ -86,7 +87,7 @@ const dbFinYAWLPanel = new Lang.Class({
 
 		this.actor = new St.BoxLayout({ vertical: true, reactive: true, visible: true });
 		if (this.actor) {
-            if (this.container) this.container.add_actor(this.actor);
+            if (this.container) this.container.add_child(this.actor);
             this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
                                         callback: this._styleChanged, scope: this });
         }
@@ -95,7 +96,7 @@ const dbFinYAWLPanel = new Lang.Class({
 				? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label-title', text: '' + params.title })
 				: null;
 		if (this.labelTitle) {
-			if (this.actor && this.labelTitle.container) this.actor.add_actor(this.labelTitle.container);
+			if (this.actor && this.labelTitle.container) this.actor.add_child(this.labelTitle.container);
 		}
 		this.label = params.label || params.label === ''
 			? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label', text: '' + params.label })
@@ -103,7 +104,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (this.label) {
 			this._labelText = '' + params.label;
 			if (this.actor) {
-				if (this.label.container) this.actor.add_actor(this.label.container);
+				if (this.label.container) this.actor.add_child(this.label.container);
 				this._signals.connectNoId({	emitter: this.actor, signal: 'notify::allocation',
 											callback: this._actorAllocationChanged, scope: this });
 			}
@@ -115,7 +116,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		this.box = new St.BoxLayout({ vertical: false, x_align: Clutter.ActorAlign.CENTER, reactive: true, visible: true });
 		if (this.box) {
             if (this.actor) {
-                this.actor.add_actor(this.box);
+                this.actor.add_child(this.box);
                 if (this.container) this.container._box = this.box;
             }
         }
@@ -129,7 +130,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (this._gravityIndicator) {
             this._signals.connectNoId({	emitter: this._gravityIndicator, signal: 'repaint',
                                         callback: this._drawGravityIndicator, scope: this });
-			this.container.add_actor(this._gravityIndicator);
+			this.container.add_child(this._gravityIndicator);
 		}
 
         this.animationTime = Overview.ANIMATION_TIME * 1000;
@@ -137,6 +138,7 @@ const dbFinYAWLPanel = new Lang.Class({
 
 		this.hidden = false;
         this.hiding = false;
+		this.showing = false;
 		if (params.hidden) this.hide(0);
 
 		this._hideinoverview = params.hideinoverview;
@@ -156,14 +158,34 @@ const dbFinYAWLPanel = new Lang.Class({
 
         if (this._parent && this.container) {
             if (this._parent == Main.uiGroup && Main.layoutManager) {
-                Main.layoutManager.addChrome(this.container, { affectsInputRegion: false });
-				if (this.actor) Main.layoutManager.trackChrome(this.actor, { affectsInputRegion: true });
+				// check whether GS version still supports affectsInputRegion
+				if (Layout.defaultParams && Layout.defaultParams.affectsInputRegion !== undefined) {
+					Main.layoutManager.addChrome(this.container, { affectsInputRegion: false });
+					if (this.actor) Main.layoutManager.trackChrome(this.actor, { affectsInputRegion: true });
+				}
+				else if (Main.layoutManager._trackActor) {
+					Main.uiGroup.add_child(this.container);
+					Main.layoutManager._trackActor(this.actor);
+				}
+				else if (Main.layoutManager._chrome && Main.layoutManager._chrome._trackActor) {
+					Main.uiGroup.add_child(this.container);
+					Main.layoutManager._chrome._trackActor(this.actor);
+				}
+				else {
+					_D('Main.layoutManager does not support either affectsInputRegion or _trackActor!');
+				}
             }
             else if (this._parent.add_actor) {
                 this._parent.add_actor(this.container);
             }
+            else if (this._parent.add_child) {
+                this._parent.add_child(this.container);
+            }
             else if (this._parent.actor && this._parent.actor.add_actor) {
                 this._parent.actor.add_actor(this.container);
+            }
+            else if (this._parent.actor && this._parent.actor.add_child) {
+                this._parent.actor.add_child(this.container);
             }
             if (this._parentProperty) {
                 this._parent[this._parentProperty] = this.container;
@@ -193,8 +215,14 @@ const dbFinYAWLPanel = new Lang.Class({
                     else if (parent.remove_actor) {
                         parent.remove_actor(this.container);
                     }
+                    else if (parent.remove_child) {
+                        parent.remove_child(this.container);
+                    }
                     else if (parent.actor && parent.actor.remove_actor) { // this might be this._parent
                         parent.actor.remove_actor(this.container);
+                    }
+                    else if (parent.actor && parent.actor.remove_child) { // this might be this._parent
+                        parent.actor.remove_child(this.container);
                     }
                 }
             } // let (parent)
@@ -203,30 +231,30 @@ const dbFinYAWLPanel = new Lang.Class({
             this._childrenObjects.forEach(Lang.bind(this, function(childObject, signals) { this.removeChild(childObject); }));
         }
 		if (this._gravityIndicator) {
-			if (this.container) this.container.remove_actor(this._gravityIndicator);
+			if (this.container) this.container.remove_child(this._gravityIndicator);
 			this._gravityIndicator.destroy();
 			this._gravityIndicator = null;
 		}
 		if (this.box) {
 			if (this.container) this.container._box = null;
-			if (this.actor) this.actor.remove_actor(this.box);
+			if (this.actor) this.actor.remove_child(this.box);
 			this.box.reactive = false;
 			this.box.destroy();
 			this.box = null;
 		}
 		if (this.label) {
-			if (this.label.container && this.actor) this.actor.remove_actor(this.label.container);
+			if (this.label.container && this.actor) this.actor.remove_child(this.label.container);
 			this.label.destroy();
 			this.label = null;
 		}
 		if (this.labelTitle) {
-			if (this.labelTitle.container && this.actor) this.actor.remove_actor(this.labelTitle.container);
+			if (this.labelTitle.container && this.actor) this.actor.remove_child(this.labelTitle.container);
 			this.labelTitle.destroy();
 			this.labelTitle = null;
 		}
 		if (this.actor) {
 			if (this.container) {
-                this.container.remove_actor(this.actor);
+                this.container.remove_child(this.actor);
             }
             this.actor.reactive = false;
 			this.actor.destroy();
@@ -356,9 +384,10 @@ const dbFinYAWLPanel = new Lang.Class({
 
     addChild: function(childObject) {
         _D('>' + this.__name__ + '.addChild()');
-        if (childObject && this._childrenObjects.get(childObject) === undefined) {
+        if (childObject && this._childrenObjects
+            	&& this._childrenObjects.get(childObject) === undefined) {
             let (actor = childObject.container || childObject.actor || childObject) {
-                if (actor instanceof Clutter.Actor) this.box.add_actor(actor);
+                if (actor instanceof Clutter.Actor) this.box.add_child(actor);
             }
             let (signals = new dbFinSignals.dbFinSignals()) {
                 signals.connectNoId({   emitter: childObject, signal: 'destroy',
@@ -376,17 +405,32 @@ const dbFinYAWLPanel = new Lang.Class({
     removeChild: function(childObject) {
         _D('>' + this.__name__ + '.removeChild()');
         if (childObject) {
-            let (signals = this._childrenObjects.remove(childObject)) {
+            let (signals = this._childrenObjects && this._childrenObjects.remove(childObject)) {
                 if (signals !== undefined) {
                     signals.destroy();
                     signals = null;
                     let (actor = childObject.container || childObject.actor || childObject) {
-                        if (actor.get_parent && actor.get_parent() == this.box) this.box.remove_actor(actor);
+                        if (actor.get_parent && actor.get_parent() == this.box) this.box.remove_child(actor);
                     }
                 }
             }
         }
         _D('<');
+    },
+
+    moveChild: function(childObject, position) {
+        _D('>' + this.__name__ + '.moveChild()');
+        if (!childObject || !this._childrenObjects) position = undefined;
+		else if ((position = this._childrenObjects.move(childObject, position)) !== undefined) {
+            let (actor = childObject.container || childObject.actor || childObject) {
+                if (actor.get_parent && actor.get_parent() == this.box) {
+					this.box.remove_child(actor);
+					this.box.insert_child_at_index(actor, position);
+				}
+            }
+        }
+        _D('<');
+        return position;
     },
 
     showChild: function(childObject, showSelf, time) {
@@ -438,25 +482,30 @@ const dbFinYAWLPanel = new Lang.Class({
 			_D('<');
 			return;
 		}
-		let (t = this.animationTime >> 2) {
-			if (this.label.getText() === this._labelText) {
+		let (t = this.animationTime >> 2,
+		     labelText = this.label.getText()) {
+            this._labelText = this._labelText || ' ';
+			if (labelText === this._labelText) {
 //				this.label.setOpacity(255, 0);
-				this.label.setOpacity(255, this.hidden || this.label.hidden || this._labelText === '' ? 0 : t,
+				this.label.setOpacity(255, this.hidden || this.label.hidden
+				                           || !this._labelText || this._labelText === ' ' ? 0 : t,
 									  null, null, 'easeInOutQuad');
-			} // if (this.label.getText() === this._labelText)
+			} // if (labelText === this._labelText)
 			else {
 //				this.label.setOpacity(0, 0);
-				this.label.setOpacity(0, this.hidden || this.label.hidden || this.label.getText() === '' ? 0 : t, function () {
+				this.label.setOpacity(0, this.hidden || this.label.hidden
+				                         || !labelText || labelText === ' ' ? 0 : t, function () {
 					if (this.label) {
 						this.label.setText(this._labelText);
 						this._updateLabelWidth(0);
 //						this.label.setOpacity(255, 0);
-						this.label.setOpacity(255, this.hidden || this.label.hidden || this._labelText === '' ? 0 : t,
+						this.label.setOpacity(255, this.hidden || this.label.hidden
+						                           || !this._labelText || this._labelText === ' ' ? 0 : t,
 											  null, null, 'easeInOutQuad');
 					} // if (this.label)
 				}, this, 'easeInOutQuad'); // this.label.setOpacity(0)
-			} // if (this.label.getText() === this._labelText) else
-		} // let (t)
+			} // if (labelText === this._labelText) else
+		} // let (t, labelText)
 		_D('<');
 	},
 
@@ -472,6 +521,7 @@ const dbFinYAWLPanel = new Lang.Class({
         }
         this.hidden = false;
         this.hiding = false;
+		this.showing = true;
         if (this._showHideChildren) {
 			this.showChildren(false, time);
 			if (this.labelTitle) this.labelTitle.show(time === undefined || time === null ? this.animationTime : time);
@@ -481,13 +531,18 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (transition === undefined || transition === null) {
 			transition = this.animationEffect;
 		}
-		this.animateToState({ opacity: 255 }, callback, scope, (time >> 1) + time, dbFinAnimationEquations.delay(transition, 0.33));
+		this.animateToState({ opacity: 255 },
+		                    function() {
+								this.showing = false;
+								if (callback) (scope ? Lang.bind(scope, callback) : callback)();
+							}, this, (time >> 1) + time, dbFinAnimationEquations.delay(transition, 0.33));
         _D('<');
     },
 
     hide: function(time, callback, scope, transition) {
         _D('>' + this.__name__ + '.hide()');
         this.hiding = true;
+		this.showing = false;
         if (this._showHideChildren) {
 			this.hideChildren(false, time);
 			if (this.labelTitle) this.labelTitle.hide(time === undefined || time === null ? this.animationTime : time);

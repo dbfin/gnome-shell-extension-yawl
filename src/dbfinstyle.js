@@ -96,7 +96,7 @@ const dbFinStyle = new Lang.Class({
 					}
 				});
 			}
-			if ((cssNow || css) && cssNow !== css) this._actor.set_style(css);
+			if ((cssNow || css) && cssNow !== css) this._actor.set_style(css || null);
 		}
         _D('<');
 	}

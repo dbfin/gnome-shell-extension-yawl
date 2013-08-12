@@ -50,14 +50,13 @@
  *          getWidget()
  *          shift()
  *          unshift()
- *			addNotebook(label?, iconfile?)
+ *			addNotebook(label?, iconfile?, bindSensitive?)
  *			closeNotebook()
- * 			addPage(label, iconfile?)
+ * 			addPage(label, iconfile?, bindSensitive?)
  * 			addWidget(gtkWidget, x, y, w, h, bindSensitive?)
  * 			addRow(gtkWidget?, [gtkOthers], bindSensitive?)
  *          addSeparator()
- *          addLabel(label, bindSensitive?)
- *          addImages(label, [images], bindSensitive?)
+ *          addLabel(label, bindSensitive?, markup?, justify=0, rightmargin=0)
  *          addCheckBox(label, settingsKey, bindSensitive?)
  *          addColorButton(label, settingsKey, titleColorChooser, bindSensitive?, showEntry?)
  *          addScale(label, settingsKey, min, max, step, bindSensitive?, showEntry?)
@@ -310,7 +309,16 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
         if (this._notebook && this._notebook.shift) this._notebook.shift--;
 	},
 
-	addNotebook: function(label/* = null*/, iconfile/* = null*/) {
+	setWidthRight: function(widthRight) {
+        if (this._notebook) {
+            this._notebook.widthRight = widthRight
+                    || this._notebook.parent && this._notebook.parent.widthRight
+                    || 4;
+        }
+	},
+
+	// bindSensitive = '[!]key'
+	addNotebook: function(label/* = null*/, iconfile/* = null*/, bindSensitive/* = null*/) {
         let (notebook = new Gtk.Notebook({  hexpand:	true,
 											vexpand:	true,
 											halign:		Gtk.Align.FILL,
@@ -318,11 +326,12 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
                                             tab_pos:    this._notebooksPagesCircle
                                                         ? (this._notebooks.length * 3 + 2) % 5 // why not? ;)
                                                         : this._notebooks.length == 1 ? 0 : 2 })) {
-			if (this._notebook && this._notebook.page)
+			if (this._notebook && this._notebook.page) {
 				this._notebook.page.attach(notebook,
 				                           this._notebook.shift, this._notebook.row,
 				                           this._notebook.width - this._notebook.shift, 1);
-			this._notebook = {};
+            }
+			this._notebook = { parent: this._notebook };
 			this._notebook.widget = notebook;
 	        this._notebook.widget._settingsbinds = [];
 			notebook.show();
@@ -331,10 +340,19 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		this._notebook.width = this._notebooksPagesCircle // new this._notebooks length
 				? 10 - Math.floor(this._notebooks.length / 2)
 				: 11 - Math.min(this._notebooks.length, 2);
+		this.setWidthRight();
 		this._notebook.page = null;
 		this._notebook.row = 0;
 		this._notebook.shift = 0;
         if (label) this.addPage(label, iconfile);
+		if (bindSensitive && this._notebook) {
+			this._settings.bind((bindSensitive[0] == '!'	? bindSensitive.substring(1)
+															: bindSensitive),
+								this._notebook,
+								'sensitive',
+								(bindSensitive[0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
+															: Gio.SettingsBindFlags.DEFAULT));
+		}
 	},
 
 	closeNotebook: function() {
@@ -344,7 +362,8 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		}
 	},
 
-	addPage: function(label, iconfile/* = null*/) {
+	// bindSensitive = '[!]key'
+	addPage: function(label, iconfile/* = null*/, bindSensitive/* = null*/) {
 		if (!this._notebook) return;
         let (page = new Gtk.Grid({	hexpand:			true,
 									halign:				Gtk.Align.FILL,
@@ -374,11 +393,19 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
             this._notebook.row = 0;
 			this._notebook.shift = 0;
             page.show();
+			if (bindSensitive && this._notebook.page) {
+				this._settings.bind((bindSensitive[0] == '!'	? bindSensitive.substring(1)
+																: bindSensitive),
+									this._notebook.page,
+									'sensitive',
+									(bindSensitive[0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
+																: Gio.SettingsBindFlags.DEFAULT));
+			}
         }
     },
 
 	// gtkWidget = Gtk.Widget or a string for Gtk.Label
-	// bindSensitive = either 'key' or '!key' or array of 'key''s or '!key''s
+	// bindSensitive = either '[@][!]key' or array of '[@][!]key''s
 	addWidget: function(gtkWidget, x, y, w, h, bindSensitive/* = null*/) {
 		if (!gtkWidget || !this._notebook || !this._notebook.page) return [];
 		if (!(gtkWidget instanceof Gtk.Widget)) {
@@ -394,8 +421,10 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 				gtkWidget.hide();
 			} // if (!w || w < 0 || !h || h < 0)
 			else {
-				let (bindBox = null) {
+				let (bindBox = null, bindVisibility = false) {
 					for (let j = 0; j < binds.length; ++j) {
+						bindVisibility = binds[j] && binds[j][0] == '@';
+						if (bindVisibility) binds[j] = binds[j].substring(1);
 						let (bindInverse = binds[j] && binds[j][0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
 																			: Gio.SettingsBindFlags.DEFAULT,
 							 bindKey = binds[j] && binds[j][0] == '!' ? binds[j].substring(1) : binds[j],
@@ -405,7 +434,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 							if (!bindBox) this._notebook.page.attach(bindBoxNew, x, y, w, h);
 							else bindBox.pack_end(bindBoxNew, /*expand =*/true, /*fill =*/true, /*padding =*/0);
 							bindBoxNew.show();
-							this._settings.bind(bindKey, bindBoxNew, 'sensitive', bindInverse);
+							this._settings.bind(bindKey, bindBoxNew, bindVisibility ? 'visible' : 'sensitive', bindInverse);
 							bindBox = bindBoxNew;
 						} // let (bindInverse, bindKey, bindBoxNew)
 					} // for (let j)
@@ -420,13 +449,17 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 
 	// gtkWidget = Gtk.Widget or a string for Gtk.Label
 	// gtkOthers = [ [ gtkWidget, width ] ]
-	// bindSensitive = either 'key' or '!key' or array of 'key''s or '!key''s
+	// bindSensitive = either '[@][!]key' or array of '[@][!]key''s
 	addRow: function(gtkWidget/* = null*/, gtkOthers/* = []*/, bindSensitive/* = null*/) {
 		if (!this._notebook || !this._notebook.page) return [];
-		if (gtkWidget && !(gtkWidget instanceof Gtk.Widget)) {
+		if (gtkWidget && !(gtkWidget instanceof Gtk.Widget) || gtkWidget === '') {
 			let (label = '' + gtkWidget) {
-				gtkWidget = new Gtk.Label({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER, hexpand: true });
-	            gtkWidget.set_markup(label);
+				gtkWidget = new Gtk.Label({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER,
+											xalign: 0.0, yalign: 0.5, hexpand: true });
+				if (gtkWidget) {
+					gtkWidget.set_markup(label);
+					gtkWidget.set_line_wrap(true);
+				}
 			}
 		}
 		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || [],
@@ -446,8 +479,10 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 						gtkOthers[i][0].hide();
 					} // if (!gtkOthers[i][1] || gtkOthers[i][1] < 0)
 					else {
-						let (bindBox = null) {
+						let (bindBox = null, bindVisibility = false) {
 							for (let j = 0; j < binds.length; ++j) {
+								bindVisibility = binds[j] && binds[j][0] == '@';
+								if (bindVisibility) binds[j] = binds[j].substring(1);
 								let (bindInverse = binds[j] && binds[j][0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
 																					: Gio.SettingsBindFlags.DEFAULT,
 									 bindKey = binds[j] && binds[j][0] == '!' ? binds[j].substring(1) : binds[j],
@@ -457,7 +492,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 									if (!bindBox) this._notebook.page.attach(bindBoxNew, x, this._notebook.row, gtkOthers[i][1], 1);
 									else bindBox.pack_end(bindBoxNew, /*expand =*/true, /*fill =*/true, /*padding =*/0);
 									bindBoxNew.show();
-									this._settings.bind(bindKey, bindBoxNew, 'sensitive', bindInverse);
+									this._settings.bind(bindKey, bindBoxNew, bindVisibility ? 'visible' : 'sensitive', bindInverse);
 									bindBox = bindBoxNew;
 								} // let (bindInverse, bindKey, bindBoxNew)
 							} // for (let j)
@@ -479,25 +514,21 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		return this.addRow(new Gtk.Separator({ hexpand: true }));
     },
 
-    addLabel: function(label, bindSensitive/* = null*/) {
-		return this.addRow(label, [], bindSensitive);
-    },
-
-    addImages: function(label, images, bindSensitive/* = null*/) {
-        let (rowImages = []) {
-            if (images) {
-                images.forEach(function (image) {
-                	rowImages.push([ Gtk.Image.new_from_file(Me.path + '/images/' + image, { halign: Gtk.Align.END, valign: Gtk.Align.CENTER }), 1 ]);
-                });
-            }
-    		return this.addRow(label, rowImages, bindSensitive);
-        } // let (rowImages)
+    addLabel: function(label, bindSensitive/* = null*/, markup/* = false*/, justify/* = 0*/, rightmargin/* = 0*/) {
+		let (widgets = this.addRow('', [ [ null, rightmargin || 0 ] ], bindSensitive)) {
+			if (widgets && widgets.length) {
+				if (justify) widgets[0].set_justify(justify);
+				if (markup) widgets[0].set_markup(label);
+				else widgets[0].set_text(label);
+			}
+			return widgets;
+		}
     },
 
     addCheckBox: function(label, settingsKey, bindSensitive/* = null*/) {
 		let (rowSwitch = new Gtk.Switch({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER })) {
 			this._settings.bind(settingsKey, rowSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-			return this.addRow(label, [ [ rowSwitch, 1 ], [ null, 3 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowSwitch, 1 ], [ null, this._notebook.widthRight - 1 ] ], bindSensitive);
         } // let (rowSwitch)
     },
 
@@ -508,7 +539,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     settingsbind = new dbFinSettingsBindEntryColorButton()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowColorButtonEntry, rowColorButton);
-			return this.addRow(label, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : 2 ], [ rowColorButton, 1 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : (this._notebook.widthRight - 2) ], [ rowColorButton, 1 ] ], bindSensitive);
         } // let (rowColorButtonEntry, rowColorButton, settingsbind)
     },
 
@@ -520,7 +551,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     settingsbind = new dbFinSettingsBindEntryScale()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowScaleEntry, rowScale);
-			return this.addRow(label, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, !showEntry ? 4 : 3 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowScaleEntry, !showEntry ? 0 : 1 ], [ rowScale, this._notebook.widthRight - (!showEntry ? 0 : 1) ] ], bindSensitive);
         } // let (rowScaleEntry, rowScale, settingsbind)
     },
 
@@ -538,7 +569,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			this._notebook.widget._settingsbinds.push(settingsbind2);
 			settingsbind1.bind(settingsKey1, rowScaleEntry1, rowScale1);
 			settingsbind2.bind(settingsKey2, rowScaleEntry2, rowScale2);
-			return this.addRow(label, [ [ rowScaleEntry1, !showEntry1 ? 0 : 1 ], [ rowScale1, !showEntry1 ? 2 : 1 ], [ rowScaleEntry2, !showEntry2 ? 0 : 1 ], [ rowScale2, !showEntry2 ? 2 : 1 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowScaleEntry1, !showEntry1 ? 0 : 1 ], [ rowScale1, (this._notebook.widthRight >> 1) - (!showEntry1 ? 0 : 1) ], [ null, this._notebook.widthRight & 1 ], [ rowScaleEntry2, !showEntry2 ? 0 : 1 ], [ rowScale2, (this._notebook.widthRight >> 1) - (!showEntry2 ? 0 : 1) ] ], bindSensitive);
         } // let (rowScaleEntry, rowScale, settingsbind)
     },
 
@@ -555,7 +586,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			this._notebook.widget._settingsbinds.push(settingsbindScale);
 			settingsbindColor.bind(settingsKeyColor, rowColorButtonEntry, rowColorButton);
 			settingsbindScale.bind(settingsKeyScale, rowScaleEntry, rowScale);
-			return this.addRow(label, [ [ rowColorButtonEntry, !showEntryColor ? 0 : 1 ], [ rowColorButton, 1 ], [ rowScaleEntry, !showEntryScale ? 0 : 1 ], [ rowScale, 3 - (!showEntryScale ? 0 : 1) - (!showEntryColor ? 0 : 1) ] ], bindSensitive);
+			return this.addRow(label, [ [ rowColorButtonEntry, !showEntryColor ? 0 : 1 ], [ rowColorButton, 1 ], [ rowScaleEntry, !showEntryScale ? 0 : 1 ], [ rowScale, this._notebook.widthRight - 1 - (!showEntryScale ? 0 : 1) - (!showEntryColor ? 0 : 1) ] ], bindSensitive);
         } // let (rowColorButtonEntry, rowColorButton, rowScaleEntry, rowScale, settingsbindColor, settingsbindScale)
     },
 
@@ -582,7 +613,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
             }
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowComboBoxTextEntry, rowComboBoxText);
-			return this.addRow(label, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, !showEntry ? 4 : 3 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowComboBoxTextEntry, !showEntry ? 0 : 1 ], [ rowComboBoxText, this._notebook.widthRight - (!showEntry ? 0 : 1) ] ], bindSensitive);
         } // let (rowComboBoxTextEntry, rowComboBoxText, settingsbind)
     }
 });

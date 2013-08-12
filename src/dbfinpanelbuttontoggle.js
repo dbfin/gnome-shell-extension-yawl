@@ -96,7 +96,15 @@ const dbFinPanelButtonToggle = new Lang.Class({
 				}
 				panel[panelid].splice(i, 1);
 				this._hiddenroles.set(role, panelid);
-				Main.panel._updatePanel();
+                if (Main.panel) {
+                    Main.panel._updatePanel();
+                    // this might be not enough, because when a role is removed from the list of roles,
+                    // GS just hides the button's container, and something else may (accidentally) unhide it
+                    if (Main.panel.statusArea && Main.panel.statusArea[role]
+							&& Main.panel.statusArea[role].actor) {
+						Main.panel.statusArea[role].actor.hide();
+                    }
+                }
 			} // let (i)
 		} // let (panel)
         _D('<');
@@ -125,7 +133,14 @@ const dbFinPanelButtonToggle = new Lang.Class({
 				}
 				if (position < panelRoles.length) panelRoles.splice(position, 0, role);
 				else panelRoles.push(role);
-				Main.panel._updatePanel();
+				if (Main.panel) {
+					Main.panel._updatePanel();
+					// we need to restore whatever additionally was hidden
+                    if (Main.panel.statusArea && Main.panel.statusArea[role]
+							&& Main.panel.statusArea[role].actor) {
+						Main.panel.statusArea[role].actor.show();
+                    }
+				}
 			} // let (panelRoles, savedRoles, position)
 		} // let (panelid)
         _D('<');

@@ -80,7 +80,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 		this._slicerBin = new St.Bin();
 		if (this._slicerBin) {
-			if (this._slicerContainer) this._slicerContainer.add_actor(this._slicerBin);
+			if (this._slicerContainer) this._slicerContainer.add_child(this._slicerBin);
 			this._slicerBin.set_child(this._clone);
 		}
 
@@ -88,11 +88,11 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 		this._slicerToolbar = new St.BoxLayout({ style_class: 'yawl-thumbnail-toolbar', vertical: false, x_align: Clutter.ActorAlign.END });
 		if (this._slicerToolbar) {
-			if (this._slicerContainer) this._slicerContainer.add_actor(this._slicerToolbar);
+			if (this._slicerContainer) this._slicerContainer.add_child(this._slicerToolbar);
 			dbFinConsts.arrayThumbnailButtons.forEach(Lang.bind(this, function (p) {
 				let (icon = new St.Icon({ icon_name: p[0] + '-symbolic', style_class: 'button-' + p[0], reactive: true, track_hover: true })) {
 					icon._do = p[1];
-					this._slicerToolbar.add_actor(icon);
+					this._slicerToolbar.add_child(icon);
 					this._signals.connectNoId({	emitter: icon, signal: 'enter-event',
 												callback: function (actor) { this._toolbarButtonHovered = actor; }, scope: this });
 					this._signals.connectNoId({	emitter: icon, signal: 'leave-event',
@@ -103,7 +103,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 
 		this._slicerActor = new dbFinSlicerActor.dbFinSlicerActor(this._slicerContainer, { y_align: St.Align.START });
         if (this._slicerActor) {
-			if (this.actor) this.actor.add_actor(this._slicerActor.container);
+			if (this.actor) this.actor.set_child(this._slicerActor.container);
 		}
 
         this._updatedWindowsThumbnailsWidth =
@@ -153,10 +153,6 @@ const dbFinWindowThumbnail = new Lang.Class({
 			this.actor.reactive = false;
             this.actor.hide();
 		}
-        if (this._slicerActor) {
-			this._slicerActor.destroy();
-			this._slicerActor = null;
-		}
 		if (this._slicerToolbar) {
 			this._slicerToolbar.destroy();
 			this._slicerToolbar = null;
@@ -166,9 +162,15 @@ const dbFinWindowThumbnail = new Lang.Class({
 			this._slicerBin.destroy();
 			this._slicerBin = null;
 		}
+/* destroyed by this._slicerActor
 		if (this._slicerContainer) {
 			this._slicerContainer.destroy();
 			this._slicerContainer = null;
+		}
+*/
+        if (this._slicerActor) {
+			this._slicerActor.destroy();
+			this._slicerActor = null;
 		}
 		if (this.actor) {
 			this.actor.destroy();
@@ -273,7 +275,10 @@ const dbFinWindowThumbnail = new Lang.Class({
     _updateClone: function() {
         _D('>' + this.__name__ + '._updateClone()');
 		if (this._clone) {
-			if (this._signals) this._signals.disconnectId('clone-resize');
+			if (this._signals) {
+                this._signals.disconnectId('window-destroy');
+			    this._signals.disconnectId('window-resize');
+            }
 			this._clone.set_source(null);
 			[ this._cloneWidth, this._cloneHeight ] = [ 0, 0 ];
 			this._compositor =	this.metaWindow
@@ -281,7 +286,13 @@ const dbFinWindowThumbnail = new Lang.Class({
                                 && this.metaWindow.get_compositor_private();
 			if (this._compositor) {
 				if (this._signals) {
-					this._signals.connectId('clone-resize', {	emitter: this._compositor, signal: 'size-changed',
+					this._signals.connectId('window-destroy', {	emitter: this._compositor, signal: 'destroy',
+																callback: function () {
+                                                                    this.hide(0);
+                                                                    this.metaWindow = null;
+                                                                    this._updateClone();
+                                                                }, scope: this });
+					this._signals.connectId('window-resize', {	emitter: this._compositor, signal: 'size-changed',
 																callback: this._updateCloneTexture, scope: this });
 				}
 			} // if (this._compositor)

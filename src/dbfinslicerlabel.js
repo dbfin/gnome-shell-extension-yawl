@@ -56,11 +56,6 @@ const dbFinSlicerLabel = new Lang.Class({
 
 	destroy: function() {
         _D('>' + this.__name__ + '.destroy()');
-        if (this.actor) {
-            if (this.container) this.container.set_child(null);
-            this.actor.destroy();
-            this.actor = null;
-        }
         this.parent();
         _D('<');
 	},
@@ -73,7 +68,7 @@ const dbFinSlicerLabel = new Lang.Class({
 
     setText: function(text) {
         _D('>' + this.__name__ + '.setText()');
-		if (this.actor) this.actor.set_text(text);
+		if (this.actor) this.actor.set_text('' + text || ' ');
         _D('<');
     }
 });

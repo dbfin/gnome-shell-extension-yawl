@@ -59,9 +59,6 @@ const dbFinSlicerIcon = new Lang.Class({
         _D('>' + this.__name__ + '.destroy()');
         if (this.actor) {
             this.actor.set_child(null);
-            if (this.container) this.container.set_child(null);
-            this.actor.destroy();
-            this.actor = null;
         }
 		this._icon = null;
         this.parent();

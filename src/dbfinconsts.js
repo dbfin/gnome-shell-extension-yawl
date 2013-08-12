@@ -32,6 +32,10 @@ const _ = Gettext.gettext;
 
 const arrayShellVersion = imports.misc.config.PACKAGE_VERSION.split('.').map(function (v) { return parseInt(v); });
 
+const arrayContributors = [
+	[	'Jonatan Zeidler',								_("German translation")			]
+];
+
 const arrayAnimationTransitions = [
     [   _("Linear"),									'linear'						],
     [	_("Slow at the end"),							'easeOutQuad'					],
@@ -74,12 +78,13 @@ const arrayWindowClickFunctions = [
     [   _("Minimize"),	                            	'minimizeWindow'                ],
     [   _("(Un)Maximize"),                            	'maximizeWindowToggle'          ],
 	[	_("Close"),										'closeWindow'					],
-	[	_("Preview on") + '/' + _("Thumbnail panel opacity"),	'previewWindowOn'		],
-	[	_("Preview off") + '/' + _("Thumbnail panel opacity"),	'previewWindowOff'		]
+	[	_("Preview on/Thumbnail panel opacity"),		'previewWindowOn'				],
+	[	_("Preview off/Thumbnail panel opacity"),		'previewWindowOff'				]
 ];
 
 const arrayAppMenuItems = [
-    [   _("New window"),            					'openNewWindowThisWorkspace'	],
+//    [   '',                         					null							],
+//    [   _("New window"),            					'openNewWindowThisWorkspace'	],
     [   '',                         					null							],
     [   _("Quit"),                  					'quitApplication'				]
 ];
@@ -91,6 +96,7 @@ const arrayThumbnailButtons = [
 const Settings = [
 	[ 'first-time', true, { }, null ],
 
+    [ 'icons-show-all', true, { }, 'panel' ],
     [ 'yawl-panel-position', 21, { min: 0, max: 50 }, 'panel' ],
     [ 'yawl-panel-width', 100, { min: 1, max: 100 }, 'panel' ],
     [ 'move-center', true, { }, 'panel' ],
@@ -103,9 +109,10 @@ const Settings = [
     [ 'panel-color', '#000000', { }, 'panel' ],
     [ 'panel-opacity', 75, { min: 0, max: 100 }, 'panel' ],
 
-    [ 'icons-size', 42, { min: 16, max: 128 }, 'icons' ],
+    [ 'icons-size', 24, { min: 16, max: 128 }, 'icons' ],
     [ 'icons-faded', false, { }, 'icons' ],
     [ 'icons-opacity', 84, { min: 50, max: 100 }, 'icons' ],
+    [ 'icons-opacity-inactive', 21, { min: 10, max: 100 }, 'icons' ],
     [ 'icons-clip-top', 2, { min: 0, max: 7 }, 'icons' ],
     [ 'icons-clip-bottom', 2, { min: 0, max: 7 }, 'icons' ],
     [ 'icons-align', 0, { min: 0, max: 100 }, 'icons' ],
@@ -120,6 +127,8 @@ const Settings = [
     [ 'icons-hover-animation-time', 33, { min: 0, max: 200 }, 'icons>animation' ],
     [ 'icons-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'icons>animation' ],
 
+    [ 'windows-show', true, { }, 'thumbnails>panel' ],
+    [ 'windows-show-interesting', false, { }, 'thumbnails>panel' ],
     [ 'windows-indicator-arrow', false, { }, 'thumbnails>panel' ],
     [ 'windows-theming', true, { }, 'thumbnails>panel' ],
     [ 'windows-background-panel', true, { }, 'thumbnails>panel' ],
@@ -127,10 +136,10 @@ const Settings = [
     [ 'windows-background-opacity', 75, { min: 0, max: 100 }, 'thumbnails>panel' ],
     [ 'windows-text-color', 'white', { }, 'thumbnails>panel' ],
     [ 'windows-text-size', 9, { min: 6, max: 36 }, 'thumbnails>panel' ],
-    [ 'windows-padding', 11, { min: 0, max: 20 }, 'thumbnails>panel' ],
     [ 'windows-border-color', '#d3d7cf', { }, 'thumbnails>panel' ],
     [ 'windows-border-width', 2, { min: 0, max: 3 }, 'thumbnails>panel' ],
     [ 'windows-border-radius', 5, { min: 0, max: 10 }, 'thumbnails>panel' ],
+    [ 'windows-padding', 11, { min: 0, max: 20 }, 'thumbnails>panel' ],
 
     [ 'windows-thumbnails-fit-height', false, { }, 'thumbnails' ],
     [ 'windows-thumbnails-width', 248, { min: 50, max: 500 }, 'thumbnails' ],
@@ -149,10 +158,12 @@ const Settings = [
     [ 'windows-hover-animation-time', 144, { min: 0, max: 200 }, 'thumbnails>animation' ],
     [ 'windows-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'thumbnails>animation' ],
 
+    [ 'icons-attention-blink', true, { }, 'addons>attention' ],
+    [ 'icons-attention-blink-rate', 39, { min: 15, max: 125 }, 'addons>attention' ],
 	[ 'windows-preview', false, { }, 'addons>preview' ],
 	[ 'windows-preview-dim-color', '#01234c', { }, 'addons>preview' ],
 	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'addons>preview' ],
-    [ 'windows-preview-panel-opacity', 33, { min: 25, max: 100 }, 'addons>preview' ],
+    [ 'windows-preview-panel-opacity', 25, { min: 5, max: 75 }, 'addons>preview' ],
     [ 'app-quicklists', true, { }, 'addons>quicklists' ],
 
     [ 'mouse-app-left', 2, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
@@ -165,6 +176,7 @@ const Settings = [
     [ 'mouse-app-middle-ctrl', 9, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-middle-shift', 7, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-middle-ctrl-shift', 3, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-scroll-workspace', true, { }, 'mouse' ],
     [ 'mouse-app-scroll', 4, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
 
     [ 'mouse-app-right', 10, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],

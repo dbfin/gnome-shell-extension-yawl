@@ -50,7 +50,7 @@ const dbFinSlicerActor = new Lang.Class({
 
     // params:
     //     animateheight: animate height to zero and back in hide() and show()
-    _init: function(actor, paramsContainer, params) { // actor must be destroyed by the descendant class
+    _init: function(actor, paramsContainer, params) { // actor will be destroyed by this class due to signal handling
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
 
@@ -115,7 +115,10 @@ const dbFinSlicerActor = new Lang.Class({
 			this.container.destroy();
 			this.container = null;
 		}
-		this.actor = null;
+        if (this.actor) {
+            if (typeof this.actor.destroy == 'function') this.actor.destroy();
+    		this.actor = null;
+        }
 		this.hovered = false;
 		this.hidden = true;
         this.hiding = false;

@@ -6,6 +6,11 @@
       <_summary>Whether the extension is run for the first time.</_summary>
       <_description>Whether the extension is run for the first time.</_description>
     </key>
+    <key name="icons-show-all" type="b">
+      <default>true</default>
+      <_summary>Whether to show icons from all workspaces.</_summary>
+      <_description>If true icons form all workspaces are shown.</_description>
+    </key>
     <key name="yawl-panel-position" type="s">
       <default>'21'</default>
       <_summary>YAWL-panel position in percentage.</_summary>
@@ -63,7 +68,7 @@
     </key>
 
     <key name="icons-size" type="s">
-      <default>'42'</default>
+      <default>'24'</default>
       <_summary>Size of application icons.</_summary>
       <_description>The size of application icons. The size is adjusted to be divisible by 8.</_description>
     </key>
@@ -76,6 +81,11 @@
       <default>'84'</default>
       <_summary>Default icons opacity.</_summary>
       <_description>Icon opacity when not hovered (and when hovered if not otherwise set).</_description>
+    </key>
+    <key name="icons-opacity-inactive" type="s">
+      <default>'21'</default>
+      <_summary>Opacity of app icons not on current workspace.</_summary>
+      <_description>Opacity of app icons not on current workspace.</_description>
     </key>
     <key name="icons-clip-top" type="s">
       <default>'2'</default>
@@ -139,6 +149,16 @@
       <_description>Icons animation effect when hovered.</_description>
     </key>
 
+    <key name="windows-show" type="b">
+      <default>true</default>
+      <_summary>Whether to show thumbnails.</_summary>
+      <_description>If true the thumbnails of an application are shown when the app icon is hovered over.</_description>
+    </key>
+    <key name="windows-show-interesting" type="b">
+      <default>false</default>
+      <_summary>Whether to show thumbnails of interesting windows only.</_summary>
+      <_description>If true only the thumbnails of so-called interesting windows are shown.</_description>
+    </key>
     <key name="windows-indicator-arrow" type="b">
       <default>false</default>
       <_summary>Whether to use arrow-style thumbnail application indicator.</_summary>
@@ -174,11 +194,6 @@
       <_summary>Window thumbnail panel text size (pt).</_summary>
       <_description>Window thumbnail panel text size in pt.</_description>
     </key>
-    <key name="windows-padding" type="s">
-      <default>'11'</default>
-      <_summary>Window thumbnail padding.</_summary>
-      <_description>Window thumbnail padding.</_description>
-    </key>
     <key name="windows-border-color" type="s">
       <default>'#d3d7cf'</default>
       <_summary>Window thumbnail border color.</_summary>
@@ -193,6 +208,11 @@
       <default>'5'</default>
       <_summary>Window thumbnail border radius.</_summary>
       <_description>Window thumbnail border radius.</_description>
+    </key>
+    <key name="windows-padding" type="s">
+      <default>'11'</default>
+      <_summary>Window thumbnail padding.</_summary>
+      <_description>Window thumbnail padding.</_description>
     </key>
 
     <key name="windows-thumbnails-fit-height" type="b">
@@ -272,6 +292,16 @@
       <_description>Window thumbnails animation effect when hovered.</_description>
     </key>
 
+    <key name="icons-attention-blink" type="b">
+      <default>true</default>
+      <_summary>Whether to blink on window attention.</_summary>
+      <_description>If true the app icon will blink if its window demands attention.</_description>
+    </key>
+    <key name="icons-attention-blink-rate" type="s">
+      <default>'39'</default>
+      <_summary>Blinking rate.</_summary>
+      <_description>Blinking rate (times per minute).</_description>
+    </key>
     <key name="windows-preview" type="b">
       <default>false</default>
       <_summary>Whether to preview a window when its thumbnail is hovered.</_summary>
@@ -288,7 +318,7 @@
       <_description>Dim the screen when a preview of a window is shown: opacity.</_description>
     </key>
     <key name="windows-preview-panel-opacity" type="s">
-      <default>'33'</default>
+      <default>'25'</default>
       <_summary>Makes thumbnail panel transparent when previews are on.</_summary>
       <_description>Makes thumbnail panel transparent when previews are on.</_description>
     </key>
@@ -343,6 +373,11 @@
       <default>'3'</default>
       <_summary>App ctrl-shift-middle click/double click function.</_summary>
       <_description>App ctrl-shift-middle click/double click function.</_description>
+    </key>
+    <key name="mouse-scroll-workspace" type="b">
+      <default>true</default>
+      <_summary>Mouse scroll to change workspace.</_summary>
+      <_description>Mouse scroll to change workspace.</_description>
     </key>
     <key name="mouse-app-scroll" type="s">
       <default>'4'</default>

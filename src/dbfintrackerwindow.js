@@ -47,12 +47,13 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinTrackerWindow = new Lang.Class({
 	Name: 'dbFin.TrackerWindow',
 
-    _init: function(metaWindow, tracker, metaApp) {
+    _init: function(metaWindow, tracker, metaApp, state) {
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
         this.metaWindow = metaWindow;
 		this._tracker = tracker;
         this.metaApp = metaApp;
+        this.state = state || 0;
 
         this.appName = '?';
 		if (this.metaApp && this.metaApp.get_name) {
@@ -87,6 +88,10 @@ const dbFinTrackerWindow = new Lang.Class({
 				this._signals.connectNoId({ emitter: this.windowThumbnail.actor, signal: 'leave-event',
 											callback: this._leaveEvent , scope: this });
 			}
+        }
+
+		if (this._tracker && this._tracker.hasAppWindowAttention(this.metaApp, this.metaWindow)) {
+            this.attention(true);
         }
         _D('<');
     },
@@ -137,24 +142,29 @@ const dbFinTrackerWindow = new Lang.Class({
 
 	_updateFocused: function() {
         _D('>' + this.__name__ + '._updateFocused()');
-        let (focusedWindow = global.display.focus_window) {
+        let (   focusedWindow = global.display.focus_window,
+                focused = this.focused) {
             this.focused = this.metaWindow && focusedWindow
                                 && (focusedWindow == this.metaWindow
-                                    || focusedWindow.get_transient_for() == this.metaWindow);
-			if (this.focused) this.windowThumbnail.actor.add_style_pseudo_class('active');
-			else this.windowThumbnail.actor.remove_style_pseudo_class('active');
+								||	global.yawl && global.yawl._windowsShowInteresting
+									&& focusedWindow.get_transient_for() == this.metaWindow
+								);
+            if (focused != this.focused) {
+                if (this.windowThumbnail && this.windowThumbnail.actor) {
+                    if (this.focused) this.windowThumbnail.actor.add_style_pseudo_class('active');
+                    else this.windowThumbnail.actor.remove_style_pseudo_class('active');
+                }
+                if (this._tracker) {
+                    this._tracker.windowEvent(this, 'focused');
+                }
+            }
         }
         _D('<');
 	},
 
     _focusedChanged: function() {
         _D('@' + this.__name__ + '._focusedChanged()');
-        let (focused = this.focused) {
-            this._updateFocused();
-            if (this._tracker && focused !== this.focused) {
-                this._tracker.windowEvent(this, 'focused');
-            }
-        }
+        this._updateFocused();
         _D('<');
     },
 
@@ -176,6 +186,13 @@ const dbFinTrackerWindow = new Lang.Class({
                 this._tracker.windowEvent(this, 'minimized');
             }
         }
+		if (this.metaWindow && this._tracker) {
+			this.metaWindow.foreach_transient(Lang.bind(this, function (metaWindow) {
+				let (trackerWindow = this._tracker.getTrackerWindow(metaWindow)) {
+					if (trackerWindow) trackerWindow._minimizedChanged();
+				}
+			}));
+		}
         _D('<');
 	},
 
@@ -193,15 +210,26 @@ const dbFinTrackerWindow = new Lang.Class({
         _D('<');
     },
 
+    attention: function(state) {
+        _D('>' + this.__name__ + '.attention()');
+        if (this.windowThumbnail && this.windowThumbnail.actor) {
+            if (state) this.windowThumbnail.actor.add_style_pseudo_class('attention');
+            else this.windowThumbnail.actor.remove_style_pseudo_class('attention');
+        }
+        _D('<');
+    },
+
     showWindow: function() {
         _D('>' + this.__name__ + '.showWindow()');
-        if (this.metaWindow && !this.focused) Main.activateWindow(this.metaWindow);
+        if (this.metaWindow && this._tracker) {
+            this._tracker.activateWindow(this.metaWindow);
+        }
         _D('<');
     },
 
     minimizeWindow: function() {
         _D('>' + this.__name__ + '.minimizeWindow()');
-        if (this.metaWindow) this.metaWindow.minimize();
+        if (this._tracker) this._tracker.minimizeWindow(this.metaWindow);
         _D('<');
     },
 
@@ -221,7 +249,7 @@ const dbFinTrackerWindow = new Lang.Class({
 
 	closeWindow: function() {
         _D('>' + this.__name__ + '.closeWindow()');
-        if (this.metaWindow) this.metaWindow.delete(global.get_current_time());
+        if (this.metaWindow) this.metaWindow.delete(global.get_current_time() || global.yawl && global.yawl._bugfixClickTime || null);
         _D('<');
 	},
 

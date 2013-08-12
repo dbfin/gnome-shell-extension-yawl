@@ -59,6 +59,9 @@ const dbFinAppButton = new Lang.Class({
         this.hiding = false;
 
 		// this.actor and this.container related stuff
+        if (this.container) {
+            this.container.add_style_class_name('panel-button-container');
+        }
         if (this.actor) {
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
             this.actor.reactive = true;
@@ -71,21 +74,24 @@ const dbFinAppButton = new Lang.Class({
                                   /*after = */true);
 
         this._clicked = null;
+        this._updatedMouseScrollWorkspace =
 		this._updatedMouseClickRelease =
                 this._updatedMouseLongClick = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
 				this._clicked = null;
 			}
-			this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*doubleClicks = */true,
-							/*scroll = */true, /*sendSingleClicksImmediately = */true,
-                            /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
+            if (global.yawl) {
+                this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*doubleClicks = */true,
+                                /*scroll = */!global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
+                                /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
+            }
 		};
 
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
         if (this._slicerIcon && this._slicerIcon.container) {
-            if (this.actor) this.actor.add_actor(this._slicerIcon.container);
+            if (this.actor) this.actor.add_child(this._slicerIcon.container);
             if (Main.panel && Main.panel.actor && Main.panel.actor.get_stage()) {
                 this._slicerIcon.container.min_height = Main.panel.actor.get_height();
             }
@@ -95,7 +101,6 @@ const dbFinAppButton = new Lang.Class({
 
         this._updatedIconsSize =
                 this._updatedIconsFaded = this._updateIcon;
-        this._updatedIconsOpacity = function () { if (this._slicerIcon) this._slicerIcon.setOpacity100(global.yawl._iconsOpacity); };
 		this._updatedIconsClipTop = function () { if (this._slicerIcon) this._slicerIcon.setClipTop(global.yawl._iconsClipTop); };
 		this._updatedIconsClipBottom = function () { if (this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom); };
 		this._updatedIconsDistance = function () { if (this._slicerIcon) this._slicerIcon.setPaddingH((global.yawl._iconsDistance + 1) >> 1); };
@@ -107,17 +112,6 @@ const dbFinAppButton = new Lang.Class({
 		this._updatedIconsHoverFit = function () { if (this._slicerIcon) this._slicerIcon.hoverFit = global.yawl._iconsHoverFit; };
 		this._updatedIconsHoverAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationTime = global.yawl._iconsHoverAnimationTime; };
 		this._updatedIconsHoverAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.hoverAnimationEffect = global.yawl._iconsHoverAnimationEffect; };
-        this._updatedAppQuicklists = function () { this._updateMenu(); }
-
-        // this and this.metaApp related stuff
-		this._menuManager = Main.panel && Main.panel.menuManager || null;
-		this._updateMenu();
-		if (this.metaApp) {
-			this._signals.connectNoId({	emitter: this.metaApp, signal: 'notify::menu',
-										callback: this._update, scope: this });
-			this._signals.connectNoId({	emitter: this.metaApp, signal: 'notify::action-group',
-										callback: this._update, scope: this });
-		}
 
         global.yawl.watch(this);
 
@@ -142,7 +136,7 @@ const dbFinAppButton = new Lang.Class({
 			this.actor.reactive = false;
 		}
         if (this._slicerIcon) {
-			if (this.actor) this.actor.remove_actor(this._slicerIcon.container);
+			if (this.actor) this.actor.remove_child(this._slicerIcon.container);
 			this._slicerIcon.destroy();
 			this._slicerIcon = null;
 		}
@@ -151,7 +145,6 @@ const dbFinAppButton = new Lang.Class({
 			this._icons.destroy();
 			this._icons = null;
 		}
-        this._menuManager = null;
 		this._bindReactiveId = null;
 		this.hidden = true;
 		this._trackerApp = null;
@@ -209,53 +202,6 @@ const dbFinAppButton = new Lang.Class({
         _D('<');
 	},
 
-	_update: function() {
-        _D('>' + this.__name__ + '._update()');
-		this._updateMenu();
-        _D('<');
-	},
-
-	// GNOMENEXT: ui/panel.js: class AppMenuButton
-	_updateMenu: function() {
-        _D('>' + this.__name__ + '._updateMenu()');
-        let (menu = global.yawl && global.yawl.menuBuilder
-                    && global.yawl.menuBuilder.build(this._trackerApp, this.actor) || null) {
-			if (menu) {
-				this._signals.disconnectId('menu-toggled');
-				this.setMenu(menu);
-                if (this.menu) {
-                    this._menuManager.addMenu(this.menu);
-                    // GNOMENEXT: ui/popupMenu.js: class PopupMenu
-                    this._signals.connectId('menu-toggled', {	emitter: this.menu, signal: 'open-state-changed',
-                                                                callback: this._menuToggled, scope: this });
-                }
-			}
-        }
-        _D('<');
-	},
-
-    menuToggle: function() {
-        _D('>' + this.__name__ + '.menuToggle()');
-        if (this.menu) {
-			this.menu.toggle();
-		}
-        _D('<');
-    },
-
-    _menuToggled: function(menu, state) {
-        _D('>' + this.__name__ + '._menuToggled()');
-		if (menu == this.menu) {
-            if (!state) {
-                // make sure we are still "active" if focused
-                if (this._trackerApp) this._trackerApp._updateFocused();
-            }
-            else {
-                if (this._trackerApp) this._trackerApp.hideWindowsGroup();
-            }
-		}
-        _D('<');
-    },
-
 	_styleChanged: function() {
         _D('@' + this.__name__ + '._styleChanged()');
 		this._minHPadding = 0;
@@ -285,6 +231,10 @@ const dbFinAppButton = new Lang.Class({
                         let (functionName = functionRow[state.clicks]) {
                             if (functionName != '' && this._trackerApp[functionName]) {
 								this._trackerApp.hideWindowsGroup();
+								if (this.menu && this.menu.isOpen && functionName !== 'openMenu') this.menu.close();
+                                if (this.menuWindows && this.menuWindows.isOpen
+                                    && functionName !== 'nextWindowNonMinimized'
+                                    && functionName !== 'nextWindow') this.menuWindows.close();
                                 Lang.bind(this._trackerApp, this._trackerApp[functionName])();
                             }
                         } // let (functionName)
