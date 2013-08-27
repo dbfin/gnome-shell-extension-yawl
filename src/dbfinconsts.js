@@ -69,7 +69,8 @@ const arrayAppClickFunctions = [
     [   _("(Un)Maximize top : all windows"),        	'maximizeTopWindow',            'maximizeAllWindows'            ],
     [   _("Open new window : none"),	            	'openNewWindowThisWorkspace',   ''                              ],
     [   _("Open new window (new workspace) : none"),	'openNewWindowNewWorkspace',    ''                              ],
-    [   _("Open menu : none"),                       	'openMenu',                     ''                              ]
+    [   _("Open menu : none"),                       	'openMenu',                     ''                              ],
+	[	_("Quit"),										'quitApplication',				''								]
 ];
 
 const arrayWindowClickFunctions = [
