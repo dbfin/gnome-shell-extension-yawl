@@ -63,7 +63,7 @@ const dbFinTracker = new Lang.Class({
 		this.windows = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaWindow, trackerWindow ] ]
 		this.state = 0; // when refreshing we increase the state to indicate apps and windows that are no longer there
         this.stateInfo = '';
-		this._refreshScheduled = false;
+        this._refreshTimeout = null;
 		this._refreshStateInfo = '';
 
         this._attentions = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, { signals:, metaWindows: [ metaWindow's ] } ] ]
@@ -105,6 +105,9 @@ const dbFinTracker = new Lang.Class({
 			this._signals.destroy();
 			this._signals = null;
 		}
+        if (this._refreshTimeout) {
+            this._cancelRefreshTimeout();
+        }
         if (this.preview) {
             this.preview.destroy();
             this.preview = null;
@@ -174,8 +177,8 @@ const dbFinTracker = new Lang.Class({
 
 	_refresh: function(metaWorkspace/* = global.screen.get_active_workspace()*/) {
         _D('@' + this.__name__ + '._refresh()');
+        this._cancelRefreshTimeout();
 		this.stateInfo = this._refreshStateInfo;
-		this._refreshScheduled = false;
 		this._refreshStateInfo = '';
 		if (!this.apps || !this.windows) {
 			_D(!this.apps ? 'this.apps == null' : 'this.windows == null');
@@ -241,6 +244,13 @@ const dbFinTracker = new Lang.Class({
 		} // let (appsIn, appsOut, windowsIn, windowsOut)
         _D('<');
 	},
+
+    _cancelRefreshTimeout: function() {
+        _D('@' + this.__name__ + '._cancelRefreshTimeout()');
+        Mainloop.source_remove(this._refreshTimeout);
+        this._refreshTimeout = null;
+        _D('<');
+    },
 
 	_clean: function() { // returns [ appsOut, windowsOut ]
         _D('>' + this.__name__ + '._clean()');
@@ -318,14 +328,14 @@ const dbFinTracker = new Lang.Class({
 	update: function(stateInfo/* = 'update() call with no additional info.'*/) {
         _D('>' + this.__name__ + '.update()');
         if (!stateInfo) stateInfo = 'update() call with no additional info.';
-		if (!this._refreshScheduled) {
+		if (!this._refreshTimeout) {
 			this._refreshStateInfo = '' + stateInfo;
-			this._refreshScheduled = true;
-			Mainloop.idle_add(Lang.bind(this, this._refresh));
 		}
 		else {
+            this._cancelRefreshTimeout();
 			this._refreshStateInfo += '\n' + stateInfo;
 		}
+        this._refreshTimeout = Mainloop.timeout_add(333, Lang.bind(this, this._refresh));
         _D('<');
 	},
 
