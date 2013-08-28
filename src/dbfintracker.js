@@ -63,6 +63,7 @@ const dbFinTracker = new Lang.Class({
 		this.windows = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaWindow, trackerWindow ] ]
 		this.state = 0; // when refreshing we increase the state to indicate apps and windows that are no longer there
         this.stateInfo = '';
+		this._refreshIdle = null;
         this._refreshTimeout = null;
 		this._refreshStateInfo = '';
 
@@ -105,7 +106,7 @@ const dbFinTracker = new Lang.Class({
 			this._signals.destroy();
 			this._signals = null;
 		}
-        if (this._refreshTimeout) {
+        if (this._refreshIdle || this._refreshTimeout) {
             this._cancelRefreshTimeout();
         }
         if (this.preview) {
@@ -249,6 +250,8 @@ const dbFinTracker = new Lang.Class({
         _D('@' + this.__name__ + '._cancelRefreshTimeout()');
         Mainloop.source_remove(this._refreshTimeout);
         this._refreshTimeout = null;
+		Mainloop.source_remove(this._refreshIdle);
+		this._refreshIdle = null;
         _D('<');
     },
 
@@ -325,17 +328,30 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	},
 
+	_refreshOnIdle: function() {
+		_D('>' + this.__name__ + '._refreshOnIdle()');
+		this._refresh();
+		_D('<');
+	},
+
+	_refreshOnTimeout: function() {
+		_D('>' + this.__name__ + '._refreshOnTimeout()');
+		this._refresh();
+		_D('<');
+	},
+
 	update: function(stateInfo/* = 'update() call with no additional info.'*/) {
         _D('>' + this.__name__ + '.update()');
         if (!stateInfo) stateInfo = 'update() call with no additional info.';
-		if (!this._refreshTimeout) {
+		if (!this._refreshIdle && !this._refreshTimeout) {
 			this._refreshStateInfo = '' + stateInfo;
 		}
 		else {
             this._cancelRefreshTimeout();
 			this._refreshStateInfo += '\n' + stateInfo;
 		}
-        this._refreshTimeout = Mainloop.timeout_add(333, Lang.bind(this, this._refresh));
+		this._refreshIdle = Mainloop.idle_add(Lang.bind(this, this._refreshOnIdle));
+        this._refreshTimeout = Mainloop.timeout_add(777, Lang.bind(this, this._refreshOnTimeout));
         _D('<');
 	},
 
