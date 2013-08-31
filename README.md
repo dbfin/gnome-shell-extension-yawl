@@ -42,6 +42,7 @@ If you want to keep up with the latest features that have not made it yet into a
 
     If it gives errors please make sure you have all necessary dev-libraries installed. These include:
 
-  - On ubuntu: sudo apt-get install autoconf autogen automake libglib2.0-dev
+  - On **ubuntu**: sudo apt-get install gnome-common autoconf autogen automake intltool libglib2.0-dev
+  - On **fedora**: sudo yum install gnome-common autoconf autogen automake intltool glib2-devel
   - On other OS: please find corresponding packages
 
