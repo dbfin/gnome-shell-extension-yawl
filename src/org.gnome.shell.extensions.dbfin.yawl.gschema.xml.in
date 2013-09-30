@@ -344,7 +344,7 @@
       <_description>App shift-left click/double click function.</_description>
     </key>
     <key name="mouse-app-left-ctrl-shift" type="s">
-      <default>'1'</default>
+      <default>'0'</default>
       <_summary>App ctrl-shift-left click/double click function.</_summary>
       <_description>App ctrl-shift-left click/double click function.</_description>
     </key>
@@ -370,7 +370,7 @@
       <_description>App shift-middle click/double click function.</_description>
     </key>
     <key name="mouse-app-middle-ctrl-shift" type="s">
-      <default>'3'</default>
+      <default>'0'</default>
       <_summary>App ctrl-shift-middle click/double click function.</_summary>
       <_description>App ctrl-shift-middle click/double click function.</_description>
     </key>
@@ -438,17 +438,17 @@
       <_description>If true mouse clicks are sent when mouse button is released rather than pressed.</_description>
     </key>
     <key name="mouse-clicks-time-single" type="s">
-      <default>'400'</default>
+      <default>'533'</default>
       <_summary>Single clicks time.</_summary>
       <_description>Single clicks time.</_description>
     </key>
     <key name="mouse-clicks-time-double" type="s">
-      <default>'250'</default>
+      <default>'300'</default>
       <_summary>Double clicks time.</_summary>
       <_description>Double clicks time.</_description>
     </key>
     <key name="mouse-clicks-time-threshold" type="s">
-      <default>'300'</default>
+      <default>'377'</default>
       <_summary>Mouse single/double clicks time threshold.</_summary>
       <_description>Mouse single/double clicks time threshold.</_description>
     </key>
