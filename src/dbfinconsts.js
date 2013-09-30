@@ -62,7 +62,7 @@ const arrayAppClickFunctions = [
     [   _("No action"),	                            	'',                             ''                              ],
     [   _("Show next : all non-minimized windows"), 	'nextWindowNonMinimized',       'showAllWindowsNonMinimized'    ],
     [   _("Show next : all windows"),	            	'nextWindow',                   'showAllWindows'                ],
-    [   _("Show non-minimized : all windows"),      	'showAllWindowsNonMinimized',   'showAllWindows'                ],
+    [   _("Show all/next non-minimized : all windows"),	'showAllNextNonMinimized',      'showAllWindows'                ],
     [   _("Rotate windows forward : backward"),     	'rotateWindowsForward',         'rotateWindowsBackward'         ],
     [   _("Rotate windows backward : forward"),     	'rotateWindowsBackward',        'rotateWindowsForward'          ],
     [   _("Minimize top : all windows"),	        	'minimizeTopWindow',            'minimizeAllWindows'            ],

@@ -612,7 +612,7 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-    _nextWindow: function(minimized/* = false*/) {
+    _nextWindow: function(minimized/* = false*/, showall/* = false*/) {
         _D('>' + this.__name__ + '._nextWindow()');
         if (this.appButton && this.appButton.menuWindows && this.appButton.menuWindows.isOpen) {
             this.appButton.menuWindows.close();
@@ -620,9 +620,10 @@ const dbFinTrackerApp = new Lang.Class({
             return;
         }
 		let (windows = this._listWindowsFresh(minimized, true)) {
-			if (windows.length && !windows[0].length) { // windows are all from the current workspace
+			if (windows.length && !windows[0].length) { // windows are from the current workspace
 				if (!this.focused) {
-					if (this._tracker) this._tracker.activateWindow(windows[0]);
+                    if (showall) this._showAllWindows(minimized);
+                    else if (this._tracker) this._tracker.activateWindow(windows[0]);
                     this._resetNextWindows();
 				} // if (!this.focused)
 				else {
@@ -634,14 +635,16 @@ const dbFinTrackerApp = new Lang.Class({
 						this._nextWindowsIndex = 0;
 					}
 					if (this._tracker) this._tracker.activateWindow(windows[Math.min(++this._nextWindowsIndex, this._nextWindowsLength - 1)]);
+                    if (showall) this._showAllWindows(minimized);
 					this._cancelNextWindowsTimeout();
 					this._nextWindowsTimeout = Mainloop.timeout_add(3333, Lang.bind(this, this._resetNextWindows));
 				} // if (!this.focused) else
 			}
 			else if (windows.length) { // windows are all not from the current workspace
-				// if all windows are from the same workspace, activate the first one
+				// if all windows are from the same workspace, activate all or the first one
 				if (windows[0][0] == windows[windows.length - 1][0]) {
 					if (this._tracker) this._tracker.activateWindow(windows[0][1]);
+                    if (showall) this._showAllWindows(minimized);
                     this._resetNextWindows();
 				}
 				else { // else bring up a menu listing all windows on different workspaces
@@ -687,6 +690,24 @@ const dbFinTrackerApp = new Lang.Class({
     showAllWindows: function() {
         _D('>' + this.__name__ + '.showAllWindows()');
 		this._showAllWindows(true);
+        _D('<');
+    },
+
+    _showAllNext: function(minimized/* = false*/) {
+        _D('>' + this.__name__ + '._showAllNext()');
+		this._nextWindow(minimized, true);
+        _D('<');
+    },
+
+    showAllNextNonMinimized: function() {
+        _D('>' + this.__name__ + '.showAllNextNonMinimized()');
+		this._showAllNext();
+        _D('<');
+    },
+
+    showAllNext: function() {
+        _D('>' + this.__name__ + '.showAllNext()');
+		this._showAllNext(true);
         _D('<');
     },
 
