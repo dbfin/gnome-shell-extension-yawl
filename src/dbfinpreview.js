@@ -81,7 +81,7 @@ const dbFinPreview = new Lang.Class({
 			if (this.container) this.container.add_child(this._background);
 			this._backgroundStyle = new dbFinStyle.dbFinStyle(this._background);
 		}
-		this._clone = new Clutter.Clone({ reactive: false, visible: true });
+		this._clone = new Clutter.Clone({ reactive: false, visible: true, opacity: 0 });
 		if (this._clone) {
 			if (this.container) this.container.add_child(this._clone);
 		}
