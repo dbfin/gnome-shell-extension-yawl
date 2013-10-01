@@ -159,14 +159,6 @@ const Settings = [
     [ 'windows-hover-animation-time', 144, { min: 0, max: 200 }, 'thumbnails>animation' ],
     [ 'windows-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'thumbnails>animation' ],
 
-    [ 'icons-attention-blink', true, { }, 'addons>attention' ],
-    [ 'icons-attention-blink-rate', 39, { min: 15, max: 125 }, 'addons>attention' ],
-	[ 'windows-preview', false, { }, 'addons>preview' ],
-	[ 'windows-preview-dim-color', '#01234c', { }, 'addons>preview' ],
-	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'addons>preview' ],
-    [ 'windows-preview-panel-opacity', 25, { min: 5, max: 75 }, 'addons>preview' ],
-    [ 'app-quicklists', true, { }, 'addons>quicklists' ],
-
     [ 'mouse-app-left', 2, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-left-ctrl', 8, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-left-shift', 6, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
@@ -177,7 +169,6 @@ const Settings = [
     [ 'mouse-app-middle-ctrl', 9, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-middle-shift', 7, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-middle-ctrl-shift', 3, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
-    [ 'mouse-scroll-workspace', true, { }, 'mouse' ],
     [ 'mouse-app-scroll', 4, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
 
     [ 'mouse-app-right', 10, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
@@ -199,5 +190,14 @@ const Settings = [
     [ 'debug', false, { }, 'debug' ],
     [ 'debug-bottom', false, { }, 'debug' ],
     [ 'debug-width', 33, { min: 10, max: 70 }, 'debug' ],
-    [ 'debug-force', false, { }, 'debug' ]
+    [ 'debug-force', false, { }, 'debug' ],
+
+    [ 'mouse-scroll-workspace', true, { }, 'addons>scrollworkspace' ],
+    [ 'icons-attention-blink', true, { }, 'addons>attention' ],
+    [ 'icons-attention-blink-rate', 39, { min: 15, max: 125 }, 'addons>attention' ],
+    [ 'app-quicklists', true, { }, 'addons>quicklists' ],
+	[ 'windows-preview', false, { }, 'addons>preview' ],
+	[ 'windows-preview-dim-color', '#01234c', { }, 'addons>preview' ],
+	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'addons>preview' ],
+    [ 'windows-preview-panel-opacity', 25, { min: 5, max: 75 }, 'addons>preview' ]
 ];

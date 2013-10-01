@@ -473,7 +473,7 @@ function buildPrefsWidget() {
 						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0);
 						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
 						builder.addSeparator();
-						builder.addCheckBox(_("Scroll over YAWL panel to change workspace"), 'mouse-scroll-workspace');
+	                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option ") + _("Add-ons") + ' > ' + _("Panel") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
 						builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0, '!mouse-scroll-workspace');
 
 					builder.addPage(_("Right button"), 'mouse-right.png');
@@ -574,20 +574,28 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("Add-ons"));
-            builder.addCheckBox('<b>' + _("Window demanding attention") + '</b>: ' + _("blink"), 'icons-attention-blink');
-            builder.shift();
-    			builder.addScale(_("Blinking rate (times per minute)"), 'icons-attention-blink-rate', 15, 125, 1, 'icons-attention-blink');
-            builder.unshift();
-			builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true);
-			builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), 'windows-show', true);
-            builder.shift();
-				builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview', 'windows-show');
-				builder.shift();
-					builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, [ 'windows-preview', 'windows-show' ]);
-					builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 5, 75, 1, [ 'windows-preview', 'windows-show' ]);
-				builder.unshift();
-            builder.unshift();
-			builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
+            builder.addNotebook(_("Panel"), 'panel.png');
+				builder.addCheckBox('<b>' + _("Scroll to change workspace") + '</b>: ' + _("Scroll over YAWL panel to change workspace"), 'mouse-scroll-workspace');
+
+            builder.addPage(_("Icons"), 'icon.png');
+                builder.addCheckBox('<b>' + _("Window demanding attention") + '</b>: ' + _("blink"), 'icons-attention-blink');
+                builder.shift();
+        			builder.addScale(_("Blinking rate (times per minute)"), 'icons-attention-blink-rate', 15, 125, 1, 'icons-attention-blink');
+                builder.unshift();
+			    builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
+
+            builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
+			    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + '</span>', [ 'windows-show', '@!windows-show' ], true);
+			    builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), 'windows-show', true);
+                builder.shift();
+				    builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview', 'windows-show');
+				    builder.shift();
+					    builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, [ 'windows-preview', 'windows-show' ]);
+					    builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 5, 75, 1, [ 'windows-preview', 'windows-show' ]);
+				    builder.unshift();
+                builder.unshift();
+
+            builder.closeNotebook();
 
 		builder.addPage(_("Export/Import"));
 			builder.addLabel(_("Back up, sync and share settings.")
