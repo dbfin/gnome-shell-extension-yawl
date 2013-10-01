@@ -435,7 +435,8 @@ const dbFinTracker = new Lang.Class({
 
 	_windowAttention: function(display, metaWindow) {
         _D('>' + this.__name__ + '._windowAttention()');
-        let (metaApp = metaWindow && this._tracker && this._tracker.get_window_app(metaWindow)) {
+        let (metaApp = metaWindow && this.isWindowInteresting(metaWindow)
+             && this._tracker && this._tracker.get_window_app(metaWindow)) {
             if (metaApp) this.addAppWindowAttention(metaApp, metaWindow);
 		}
         _D('<');
@@ -446,9 +447,7 @@ const dbFinTracker = new Lang.Class({
 		if (this._attentions && this._attentions.length) {
 			let (metaWindow = global.display.focus_window) {
 				let (metaApp = metaWindow && this._tracker && this._tracker.get_window_app(metaWindow)) {
-					if (metaApp && this._attentions.get(metaApp)) {
-						this.removeAppWindowAttention(metaApp, metaWindow);
-					}
+					this.removeAppWindowAttention(metaApp, metaWindow);
 				}
 			}
 		}
