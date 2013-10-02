@@ -277,6 +277,13 @@ const dbFinYAWL = new Lang.Class({
 							else if (direction === Clutter.ScrollDirection.DOWN) {
 								Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(1); }));
 							}
+                            else if (direction === Clutter.ScrollDirection.SMOOTH) {
+                                let (delta = event.get_scroll_delta && event.get_scroll_delta()) {
+                                    if (delta && delta.length && delta[1]) {
+                                        Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(delta[1] < 0 ? -1 : 1); }));
+                                    }
+                                }
+                            }
 						}
 					},
 					scope: this

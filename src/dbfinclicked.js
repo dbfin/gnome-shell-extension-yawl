@@ -135,14 +135,20 @@ const dbFinClicked = new Lang.Class({
 			return {};
 		}
 		let (state = {},
-		     direction = event.get_scroll_direction()) {
+		     direction = event.get_scroll_direction(),
+             delta = 0) {
+            if (direction === Clutter.ScrollDirection.SMOOTH) {
+                delta = event.get_scroll_delta && event.get_scroll_delta() || 0;
+                delta = delta && delta.length && delta[1] || 0;
+            }
 			if (direction === Clutter.ScrollDirection.UP
-					|| direction === Clutter.ScrollDirection.DOWN) {
+					|| direction === Clutter.ScrollDirection.DOWN
+                    || !!delta) {
 				state.left = false;
 				state.right = false;
 				state.middle = false;
 				state.scroll = true;
-				state.up = direction === Clutter.ScrollDirection.UP;
+				state.up = direction === Clutter.ScrollDirection.UP || delta < 0;
 			}
             _D('<');
             return state;
