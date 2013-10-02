@@ -66,6 +66,7 @@ const dbFinClicked = new Lang.Class({
 		this._stateTimeouts = new dbFinArrayHash.dbFinArrayHash();
         for (let stateNumber = 0; stateNumber < 16; ++stateNumber) this._stateTimeouts.set(stateNumber, null);
 		this._timeoutLongClick = null;
+        this._scrollTimeout = null;
 
         if (this._single) {
 		    this._signals.connectNoId({	emitter: this._emitter, signal: 'button-press-event',
@@ -92,6 +93,10 @@ const dbFinClicked = new Lang.Class({
 			Mainloop.source_remove(this._timeoutLongClick);
 			this._timeoutLongClick = null;
 		}
+        if (this._scrollTimeout) {
+            Mainloop.source_remove(this._scrollTimeout);
+            this._scrollTimeout = null;
+        }
 		if (this._stateTimeouts) {
 			this._stateTimeouts.forEach(function (stateNumber, timeout) {
 				if (timeout) Mainloop.source_remove(timeout);
@@ -140,7 +145,7 @@ const dbFinClicked = new Lang.Class({
 		let (state = {},
 		     direction = event.get_scroll_direction(),
              delta = 0) {
-            if (direction === Clutter.ScrollDirection.SMOOTH) {
+            if (Clutter.ScrollDirection.SMOOTH && direction === Clutter.ScrollDirection.SMOOTH) {
                 delta = event.get_scroll_delta && event.get_scroll_delta() || 0;
                 delta = delta && delta.length && delta[1] || 0;
             }
@@ -286,7 +291,18 @@ const dbFinClicked = new Lang.Class({
 	_scrollEvent: function(actor, event) {
         _D('>' + this.__name__ + '._scrollEvent()');
 		let (state = this._getStateScroll(event)) {
-			if (state.scroll) this._callBack(state);
+			if (state.scroll && !this._scrollTimeout) {
+                if (global.yawl && global.yawl._mouseScrollTimeout) {
+                    this._scrollTimeout = Mainloop.timeout_add(global.yawl._mouseScrollTimeout,
+                                                               Lang.bind(this, function() {
+                        if (this._scrollTimeout) {
+                            Mainloop.source_remove(this._scrollTimeout);
+                            this._scrollTimeout = null;
+                        }
+                    }));
+                }
+                this._callBack(state);
+            }
 		} // let (state)
         _D('<');
 	},

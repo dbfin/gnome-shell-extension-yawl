@@ -503,52 +503,60 @@ function buildPrefsWidget() {
 				builder.setWidthRight(4);
 
                 builder.addPage(_("Fine-tuning"), 'tuning.png');
-	                builder.addCheckBox(_("Register mouse events on button release"), 'mouse-click-release');
-					builder.shift();
-						builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', 'mouse-click-release');
-					builder.unshift();
-	                builder.addSeparator();
-                    let threshold = new dbFinClicksThreshold();
-                    builder.getWidget()._threshold = threshold;
-					builder.addLabel(_("This will measure the SHORTEST time between two consecutive SINGLE clicks."));
-					builder.shift();
-						widgets = builder.addRow(_("A fast series of SINGLE clicks"),
-									   [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
-											[ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
-											[ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
-										]);
-	                    if (widgets && widgets.length) {
-							widgets[1].hexpand = true;
-							widgets[1].xalign = 0.0;
-						}
-	                    widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
-	                    if (widgets && widgets.length) {
-							threshold.scaleSingle = widgets[widgets.length - 1];
-						}
-					builder.unshift();
-					builder.addLabel(_("This will measure the LONGEST time between the two clicks of one DOUBLE click."));
-					builder.shift();
-						widgets = builder.addRow(_("A series of DOUBLE clicks"),
-									   [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
-											[ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
-											[ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
-										]);
-	                    if (widgets && widgets.length) {
-							widgets[1].hexpand = true;
-							widgets[1].xalign = 0.0;
-						}
-	                    widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
-	                    if (widgets && widgets.length) {
-							threshold.scaleDouble = widgets[widgets.length - 1];
-						}
-					builder.unshift();
-					builder.addLabel(_("Based on the data provided above we set the following value (you can adjust it manually):"));
-					builder.shift();
-	                    widgets = builder.addScale(_("Single/Double clicks threshold:"), 'mouse-clicks-time-threshold', 150, 550, 1);
-						if (widgets && widgets.length) {
-							threshold.scaleThreshold = widgets[widgets.length - 1];
-						}
-					builder.unshift();
+    				builder.addNotebook(_("Mouse events"));
+	                    builder.addCheckBox(_("Register mouse events on button release"), 'mouse-click-release');
+					    builder.shift();
+						    builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', 'mouse-click-release');
+					    builder.unshift();
+                        builder.addLabel(_("Scroll timeout: the time after one scroll event during which other scroll events are rejected."));
+					    builder.shift();
+                            builder.addScale(_("Mouse scroll timeout"), 'mouse-scroll-timeout', 25, 1000, 25);
+					    builder.unshift();
+
+                    builder.addPage(_("Single vs Double clicks"));
+                        let threshold = new dbFinClicksThreshold();
+                        builder.getWidget()._threshold = threshold;
+					    builder.addLabel(_("This will measure the SHORTEST time between two consecutive SINGLE clicks."));
+					    builder.shift();
+						    widgets = builder.addRow(_("A fast series of SINGLE clicks"),
+									       [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
+											    [ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
+											    [ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
+										    ]);
+	                        if (widgets && widgets.length) {
+							    widgets[1].hexpand = true;
+							    widgets[1].xalign = 0.0;
+						    }
+	                        widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
+	                        if (widgets && widgets.length) {
+							    threshold.scaleSingle = widgets[widgets.length - 1];
+						    }
+					    builder.unshift();
+					    builder.addLabel(_("This will measure the LONGEST time between the two clicks of one DOUBLE click."));
+					    builder.shift();
+						    widgets = builder.addRow(_("A series of DOUBLE clicks"),
+									       [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
+											    [ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
+											    [ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
+										    ]);
+	                        if (widgets && widgets.length) {
+							    widgets[1].hexpand = true;
+							    widgets[1].xalign = 0.0;
+						    }
+	                        widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
+	                        if (widgets && widgets.length) {
+							    threshold.scaleDouble = widgets[widgets.length - 1];
+						    }
+					    builder.unshift();
+					    builder.addLabel(_("Based on the data provided above we set the following value (you can adjust it manually):"));
+					    builder.shift();
+	                        widgets = builder.addScale(_("Single/Double clicks threshold:"), 'mouse-clicks-time-threshold', 150, 550, 1);
+						    if (widgets && widgets.length) {
+							    threshold.scaleThreshold = widgets[widgets.length - 1];
+						    }
+					    builder.unshift();
+
+                    builder.closeNotebook();
 
                 builder.closeNotebook();
 

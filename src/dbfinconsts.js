@@ -163,7 +163,6 @@ const Settings = [
     [ 'mouse-app-left-ctrl', 8, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-left-shift', 6, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-left-ctrl-shift', 1, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
-    [ 'mouse-long-click', true, { }, 'mouse' ],
 
     [ 'mouse-app-middle', 9, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-middle-ctrl', 9, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
@@ -183,6 +182,8 @@ const Settings = [
     [ 'mouse-window-right', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
 
     [ 'mouse-click-release', false, { }, 'mouse' ],
+    [ 'mouse-long-click', true, { }, 'mouse' ],
+    [ 'mouse-scroll-timeout', 125, { min: 25, max: 1000 }, 'mouse' ],
     [ 'mouse-clicks-time-single', 400, { min: 250, max: 750 }, 'mouse' ],
     [ 'mouse-clicks-time-double', 250, { min: 100, max: 450 }, 'mouse' ],
     [ 'mouse-clicks-time-threshold', 300, { min: 150, max: 550 }, 'mouse' ],

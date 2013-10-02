@@ -312,11 +312,6 @@
       <_summary>App ctrl-shift-left click/double click function.</_summary>
       <_description>App ctrl-shift-left click/double click function.</_description>
     </key>
-    <key name="mouse-long-click" type="b">
-      <default>true</default>
-      <_summary>Whether to emulate right-click with long left-click.</_summary>
-      <_description>If true long mouse left button click emulates mouse right button click.</_description>
-    </key>
 
     <key name="mouse-app-middle" type="s">
       <default>'9'</default>
@@ -395,6 +390,16 @@
       <default>false</default>
       <_summary>Whether to send clicks on mouse release.</_summary>
       <_description>If true mouse clicks are sent when mouse button is released rather than pressed.</_description>
+    </key>
+    <key name="mouse-long-click" type="b">
+      <default>true</default>
+      <_summary>Whether to emulate right-click with long left-click.</_summary>
+      <_description>If true long mouse left button click emulates mouse right button click.</_description>
+    </key>
+    <key name="mouse-scroll-timeout" type="s">
+      <default>'125'</default>
+      <_summary>Mouse single scroll time.</_summary>
+      <_description>Mouse single scroll time (to prevent multiple scrolls).</_description>
     </key>
     <key name="mouse-clicks-time-single" type="s">
       <default>'533'</default>
