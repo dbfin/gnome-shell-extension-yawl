@@ -49,16 +49,17 @@ const dbFinClicked = new Lang.Class({
 	 *									variable is a string of the form
 	 *									'Left/Right/Middle[Ctrl][Shift]' or 'Scroll'
 	 */
-    _init: function(emitter, callback, scope, doubleClicks/* = false*/, scroll/* = false*/,
+    _init: function(emitter, callback, scope, clicks/* = true*/, doubleClicks/* = false*/, scroll/* = false*/,
                     sendSingleClicksImmediately/* = false*/, clickOnRelease/* = false*/, longClick/* = false*/) {
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
 		this._emitter = emitter;
 		this._callback = callback;
 		this._scope = scope;
-        this._scroll = !!scroll;
+        this._single = !!clicks || clicks === undefined;
 		this._double = !!doubleClicks;
-		this._single = !!sendSingleClicksImmediately;
+        this._scroll = !!scroll;
+		this._singleImmediate = !!sendSingleClicksImmediately;
 		this._release = !!clickOnRelease;
         this._longClick = this._release && !!longClick;
 		this._state = {};
@@ -66,12 +67,14 @@ const dbFinClicked = new Lang.Class({
         for (let stateNumber = 0; stateNumber < 16; ++stateNumber) this._stateTimeouts.set(stateNumber, null);
 		this._timeoutLongClick = null;
 
-		this._signals.connectNoId({	emitter: this._emitter, signal: 'button-press-event',
-								  	callback: this._buttonPressEvent, scope: this });
-		if (this._release) {
-			this._signals.connectNoId({	emitter: this._emitter, signal: 'button-release-event',
-									  	callback: this._buttonReleaseEvent, scope: this });
-		}
+        if (this._single) {
+		    this._signals.connectNoId({	emitter: this._emitter, signal: 'button-press-event',
+								        callback: this._buttonPressEvent, scope: this });
+		    if (this._release) {
+			    this._signals.connectNoId({	emitter: this._emitter, signal: 'button-release-event',
+									        callback: this._buttonReleaseEvent, scope: this });
+		    }
+        }
         if (this._scroll) {
             this._signals.connectNoId({	emitter: this._emitter, signal: 'scroll-event',
                                         callback: this._scrollEvent, scope: this });
@@ -294,12 +297,12 @@ const dbFinClicked = new Lang.Class({
 			if (stateNumber) {
 				let (timeout = this._stateTimeouts.get(stateNumber)) {
 					if (!timeout) { // first click
-						if (this._single || !this._double) { // if send first click immediately or if no double clicks
+						if (this._singleImmediate || !this._double) { // if send first click immediately or if no double clicks
 							this._onTimeout(stateNumber, 1);
 						}
 						if (this._double) { // if double clicks
 							timeout = Mainloop.timeout_add(global.yawl._mouseClicksTimeThreshold, Lang.bind(this, function() {
-								Lang.bind(this, this._onTimeout)(stateNumber, this._single ? 0 : 1);
+								Lang.bind(this, this._onTimeout)(stateNumber, this._singleImmediate ? 0 : 1);
 							}));
 							this._stateTimeouts.set(stateNumber, timeout);
 						}
@@ -322,15 +325,15 @@ const dbFinClicked = new Lang.Class({
             return false;
         }
 		// coming here should be:
-		// 	this._double	this._single	clicks	timeout
-		//	false			?				1		-
-		//	true			false			1		+
-		//									2		-
-		//					true			0		+
-		//									1		-
-		//									2		-
+		//  this._double    this._singleImmediate   clicks  timeout
+		//  false           ?                       1       -
+		//  true            false                   1       +
+		//                                          2       -
+		//                  true                    0       +
+		//                                          1       -
+		//                                          2       -
         let (timeout = this._stateTimeouts.get(stateNumber)) {
-			if (this._double && !this._single && clicks == 1 && !timeout) { // got called after receiving second click
+			if (this._double && !this._singleImmediate && clicks == 1 && !timeout) { // got called after receiving second click
 				_D('<');
 				return false;
 			}

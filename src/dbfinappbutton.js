@@ -82,7 +82,7 @@ const dbFinAppButton = new Lang.Class({
 				this._clicked = null;
 			}
             if (global.yawl) {
-                this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*doubleClicks = */true,
+                this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */true,
                                 /*scroll = */!global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
                                 /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
             }

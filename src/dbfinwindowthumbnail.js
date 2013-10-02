@@ -128,7 +128,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 				this._clicked.destroy();
 				this._clicked = null;
 			}
-			this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*doubleClicks = */false,
+			this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*clicks = */true, /*doubleClicks = */false,
 							/*scroll = */true, /*sendSingleClicksImmediately = */true,
                             /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
 		};
