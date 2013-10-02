@@ -384,7 +384,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Icon size"), 'icons-size', 16, 96, 8);
                 builder.addCheckBox(_("Faded icons"), 'icons-faded');
 				builder.addScale(_("Default icon opacity"), 'icons-opacity', 50, 100, 1);
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable app icons from all workspaces under Icons > Panel") + '</span>', '@!icons-show-all', true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', '@!icons-show-all', true);
 				builder.addScale(_("Icon opacity if app is not on current workspace"), 'icons-opacity-inactive', 10, 100, 1, 'icons-show-all');
                 builder.addSeparator();
                 builder.addScale(_("Clip icons: top (px)"), 'icons-clip-top', 0, 7, 1);
@@ -426,7 +426,7 @@ function buildPrefsWidget() {
                 builder.unshift();
 
 			builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + '</span>', [ 'windows-show', '@!windows-show' ], true);
                 builder.addCheckBox(_("Same height thumbnails"), 'windows-thumbnails-fit-height');
                 builder.addScale(_("Thumbnail maximum width"), 'windows-thumbnails-width', 50, 500, 25, '!windows-thumbnails-fit-height', true);
 				builder.addScale(_("Thumbnail maximum height"), 'windows-thumbnails-height', 40, 400, 20, null, true);
@@ -439,7 +439,7 @@ function buildPrefsWidget() {
                 builder.addScale(_("Thumbnail top padding (px)"), 'windows-thumbnails-padding-top', 0, 20, 1);
 
 			builder.addPage(_("Animation"), 'animation_thumbnail.png', 'windows-show');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + '</span>', [ 'windows-show', '@!windows-show' ], true);
                 builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);
                 builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 500, 1, null, true);
                 builder.addComboBoxText(_("Animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
@@ -482,7 +482,7 @@ function buildPrefsWidget() {
 					builder.closeNotebook();
 
                 builder.addPage(_("Thumbnails"), 'thumbnail_16.png', 'windows-show');
-		            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable thumbnails under Thumbnails > Panel") + '</span>', [ 'windows-show', '@!windows-show' ], true);
+		            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + '</span>', [ 'windows-show', '@!windows-show' ], true);
 					builder.addNotebook(_("Left button"), 'mouse-left.png');
 						builder.addComboBoxText(_("Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0);
 						builder.addComboBoxText(_("Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0);
