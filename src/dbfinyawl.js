@@ -38,10 +38,11 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinDebugView = Me.imports.dbfindebugview;
+const dbFinMenuBuilder = Me.imports.dbfinmenubuilder;
 const dbFinMoveCenter = Me.imports.dbfinmovecenter;
 const dbFinPanelEnhancements = Me.imports.dbfinpanelenhancements;
-const dbFinMenuBuilder = Me.imports.dbfinmenubuilder;
 const dbFinSettings = Me.imports.dbfinsettings;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinStyle = Me.imports.dbfinstyle;
@@ -152,6 +153,20 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedDebugWidth = function () { if (global._yawlDebugView) global._yawlDebugView.updatePosition(); };
 		this._updatedDebugBottom = function () { if (global._yawlDebugView) global._yawlDebugView.updatePosition(); };
 
+        this._updatedMouseScrollWorkspace =
+		this._updatedMouseClickRelease =
+                this._updatedMouseLongClick = function () {
+		    if (this._clicked) {
+			    this._clicked.destroy();
+			    this._clicked = null;
+		    }
+            if (global.yawl && global.yawl.panelApps) {
+                this._clicked = new dbFinClicked.dbFinClicked(global.yawl.panelApps.container, this._buttonClicked, this, /*clicks = */false, /*doubleClicks = */true,
+                                /*scroll = */global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
+                                /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
+            }
+		};
+
         global.yawl.watch(this);
         _D('<');
     },
@@ -260,38 +275,22 @@ const dbFinYAWL = new Lang.Class({
         _D('<');
    },
 
-    _updatedMouseScrollWorkspace: function () {
-        _D('>' + this.__name__ + '._updatedMouseScrollWorkspace()');
-        if (global.yawl && global.yawl._mouseScrollWorkspace) {
-			if (global.yawl.panelApps && global.yawl.panelApps.container) {
-				this._signals.connectId('panel-apps-scroll', {
-					emitter: global.yawl.panelApps.container,
-					signal: 'scroll-event',
-					callback: function (actor, event) {
-						let (direction = event && event.get_scroll_direction && event.get_scroll_direction(),
-						     time = global.get_current_time()) {
-							if (time) global.yawl._bugfixClickTime = time;
-							if (direction === Clutter.ScrollDirection.UP) {
-								Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(-1); }));
-							}
-							else if (direction === Clutter.ScrollDirection.DOWN) {
-								Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(1); }));
-							}
-                            else if (direction === Clutter.ScrollDirection.SMOOTH) {
-                                let (delta = event.get_scroll_delta && event.get_scroll_delta()) {
-                                    if (delta && delta.length && delta[1]) {
-                                        Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(delta[1] < 0 ? -1 : 1); }));
-                                    }
-                                }
-                            }
-						}
-					},
-					scope: this
-				});
-			}
+    _buttonClicked: function (state, name) {
+        _D('>' + this.__name__ + '._buttonClicked()');
+        if (!name || name == '' || (!state.scroll && (!state.clicks || state.clicks < 1))) {
+            _D('<');
+            return;
         }
-        else {
-            this._signals.disconnectId('panel-apps-scroll');
+        if (!state.scroll && state.clicks > 2) {
+            state.clicks = 2;
+        }
+        if (state.scroll) {
+            if (state.up) {
+				Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(-1); }));
+            }
+            else {
+				Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(1); }));
+            }
         }
         _D('<');
     },
