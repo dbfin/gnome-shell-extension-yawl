@@ -194,6 +194,7 @@ const Settings = [
     [ 'debug-force', false, { }, 'debug' ],
 
     [ 'mouse-scroll-workspace', true, { }, 'addons>scrollworkspace' ],
+    [ 'mouse-scroll-workspace-search', true, { }, 'addons>scrollworkspace' ],
     [ 'icons-attention-blink', true, { }, 'addons>attention' ],
     [ 'icons-attention-blink-rate', 39, { min: 15, max: 125 }, 'addons>attention' ],
     [ 'app-quicklists', true, { }, 'addons>quicklists' ],

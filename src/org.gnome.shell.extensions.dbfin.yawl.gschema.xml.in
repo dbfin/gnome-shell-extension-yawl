@@ -443,6 +443,11 @@
       <_summary>Mouse scroll to change workspace.</_summary>
       <_description>Mouse scroll to change workspace.</_description>
     </key>
+    <key name="mouse-scroll-workspace-search" type="b">
+      <default>true</default>
+      <_summary>Mouse scroll to find app's windows on other workspaces when thumbnails are shown.</_summary>
+      <_description>Mouse scroll to find app's windows on other workspaces when thumbnails are shown.</_description>
+    </key>
     <key name="icons-attention-blink" type="b">
       <default>true</default>
       <_summary>Whether to blink on window attention.</_summary>

@@ -584,6 +584,9 @@ function buildPrefsWidget() {
 		builder.addPage(_("Add-ons"));
             builder.addNotebook(_("Panel"), 'panel.png');
 				builder.addCheckBox('<b>' + _("Scroll to change workspace") + '</b>: ' + _("Scroll over YAWL panel to change workspace"), 'mouse-scroll-workspace');
+                builder.shift();
+                    builder.addCheckBox('<b>' + _("Scroll to find other windows") + '</b>: ' + _("find app's windows on other workspaces by scrolling over its icon when its thumbnails are shown"), 'mouse-scroll-workspace-search', 'mouse-scroll-workspace');
+                builder.unshift();
 
             builder.addPage(_("Icons"), 'icon.png');
                 builder.addCheckBox('<b>' + _("Window demanding attention") + '</b>: ' + _("blink"), 'icons-attention-blink');

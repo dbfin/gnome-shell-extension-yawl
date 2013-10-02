@@ -237,7 +237,8 @@ const dbFinYAWL = new Lang.Class({
 		}
 		let (workspaceIndexNow = global.screen.get_active_workspace_index(),
              workspaceIndex = 0,
-             hide = !global.yawl || !global.yawl._iconsShowAll,
+             hide = !global.yawl || !global.yawl._iconsShowAll
+                    || !global.yawl._mouseScrollWorkspaceSearch,
              trackerApp = global.yawl && global.yawl.panelWindows
                         && global.yawl.panelWindows._lastWindowsGroupTrackerApp) {
             hide = hide || !trackerApp
