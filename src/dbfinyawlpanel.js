@@ -73,10 +73,10 @@ const dbFinYAWLPanel = new Lang.Class({
 		this.container = this._panelName	? new Shell.GenericContainer({ name: this._panelName, reactive: true, visible: true })
         									: new Shell.GenericContainer({ reactive: true, visible: true });
         if (this.container) {
-            if (params.width) this.container.min_width = this.container.natural_width = params.width;
+            if (params.width !== undefined) this.container.min_width = this.container.natural_width = params.width;
             this._maxChildHeight = params.maxchildheight || 0;
-			if (params.x) this.container.x = params.x;
-			if (params.y) this.container.y = params.y;
+			if (params.x !== undefined) this.container.x = params.x;
+			if (params.y !== undefined) this.container.y = params.y;
             this._signals.connectNoId({ emitter: this.container, signal: 'get-preferred-width',
                                         callback: this._getPreferredWidth, scope: this });
             this._signals.connectNoId({ emitter: this.container, signal: 'get-preferred-height',
@@ -698,7 +698,7 @@ const dbFinYAWLPanel = new Lang.Class({
             this.updatePanel();
         }
     },
-    get width() { return this.container && this.container.width; },
+    get width() { return this.container && this.container.width || 0; },
     set width(width) {
         if (this.container && this.container.width !== width) {
             this.container.width = width;
