@@ -63,6 +63,7 @@ function animateToState(actor, state, callback, scope, time, transition) {
     // we do not schedule animation for actors not in stage
     if (actor.get_stage) { if (!actor.get_stage()) time = 0; }
     else if (actor.actor && actor.actor.get_stage) { if (!actor.actor.get_stage()) time = 0; }
+    else if (actor.container && actor.container.get_stage) { if (!actor.container.get_stage()) time = 0; }
     if (time > 0) {
         let (_state = {}, was = false) {
             for (let p in state) { // animate only those that are already defined and different
