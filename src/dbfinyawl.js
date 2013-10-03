@@ -29,6 +29,7 @@ const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
+const GLib = imports.gi.GLib;
 const Meta = imports.gi.Meta;
 
 const Util = imports.misc.util;
@@ -75,8 +76,6 @@ const dbFinYAWL = new Lang.Class({
 				if (settings) settings.set_boolean('first-time', false);
 			}
 		}
-
-        global.yawl._bugfixClickTime = global.get_current_time() || null;
 
         global.yawl.panelApps = new dbFinYAWLPanel.dbFinYAWLPanel({ panelname: 'panelYAWL',
                                                                     parent: Main.panel || null,
@@ -269,7 +268,7 @@ const dbFinYAWL = new Lang.Class({
 							}
 						});
 					}
-                    workspace.activate(global.get_current_time() || global.yawl && global.yawl._bugfixClickTime || null);
+                    workspace.activate(Math.round(GLib.get_monotonic_time() / 1000));
                 }
 			} // let (workspace)
 		} // let (workspaceIndexNow, workspaceIndex, hide, trackerApp)

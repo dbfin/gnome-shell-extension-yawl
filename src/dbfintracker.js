@@ -28,6 +28,7 @@ const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
+const GLib = imports.gi.GLib;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
@@ -655,7 +656,7 @@ const dbFinTracker = new Lang.Class({
     activateWindow: function (metaWindow) {
         _D('>' + this.__name__ + '.activateWindow()');
         if (metaWindow) {
-            Main.activateWindow(metaWindow, global.get_current_time() || global.yawl && global.yawl._bugfixClickTime || null);
+            Main.activateWindow(metaWindow, Math.round(GLib.get_monotonic_time() / 1000));
             metaWindow.foreach_transient(Lang.bind(this, function (metaWindow) { this.activateWindow(metaWindow); }));
         }
         _D('<');

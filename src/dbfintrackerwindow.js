@@ -27,6 +27,7 @@
 const Lang = imports.lang;
 const Signals = imports.signals;
 
+const GLib = imports.gi.GLib;
 const Meta = imports.gi.Meta;
 
 const Main = imports.ui.main;
@@ -249,7 +250,7 @@ const dbFinTrackerWindow = new Lang.Class({
 
 	closeWindow: function() {
         _D('>' + this.__name__ + '.closeWindow()');
-        if (this.metaWindow) this.metaWindow.delete(global.get_current_time() || global.yawl && global.yawl._bugfixClickTime || null);
+        if (this.metaWindow) this.metaWindow.delete(Math.round(GLib.get_monotonic_time() / 1000));
         _D('<');
 	},
 
