@@ -26,11 +26,14 @@
 
 const Lang = imports.lang;
 
+const GLib = imports.gi.GLib;
+
 const Tweener = imports.ui.tweener;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinConsts = Me.imports.dbfinconsts;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -47,6 +50,9 @@ const _ = Gettext.gettext;
  */
 function animateToState(actor, state, callback, scope, time, transition) {
     if (!actor || !state) return;
+    if (!global.yawl
+        || (!global.yawl.animationActors
+            && !(global.yawl.animationActors = new dbFinArrayHash.dbFinArrayHash()))) return;
     time = time || 0;
     let (transitionIndex = parseInt(transition)) {
         if (!isNaN(transitionIndex)) {
@@ -65,43 +71,68 @@ function animateToState(actor, state, callback, scope, time, transition) {
     else if (actor.actor && actor.actor.get_stage) { if (!actor.actor.get_stage()) time = 0; }
     else if (actor.container && actor.container.get_stage) { if (!actor.container.get_stage()) time = 0; }
     if (time > 0) {
-        let (_state = {}, was = false) {
+        let (timeCurrent = Math.ceil(GLib.get_monotonic_time() / 1000),
+             _state = {},
+             properties = global.yawl.animationActors.get(actor)
+                          || new dbFinArrayHash.dbFinArrayHash()) {
             for (let p in state) { // animate only those that are already defined and different
                 p = '' + p;
                 if (actor[p] !== undefined) {
                     Tweener.removeTweens(actor, p);
+                    // check if it is already being animated to the same value
                     if (actor[p] !== state[p]) {
                         _state[p] = state[p];
-                        was = true;
+                        let (st = properties && properties.get(p)) {
+                            if (st  && st.state === state[p]
+                                    && st.time > timeCurrent
+                                    && st.time < timeCurrent + time) {
+                                time = st.time - timeCurrent;
+                            }
+                        } // let (st)
+                    } // if (actor[p] !== state[p])
+                    else if (properties) {
+                        properties.set(p, { state: state[p], time: timeCurrent });
+                    } // if (actor[p] !== state[p]) else
+                } // if (actor[p] !== undefined)
+            } // for (let p)
+            if (Object.keys(_state).length) { // anything to animate?
+                if (properties) {
+                    for (let p in _state) {
+                        properties.set(p, { state: state[p], time: timeCurrent + time });
                     }
                 }
-            } // for (let p)
-            if (was) { // anything to animate?
                 _state.time = time / 1000.;
                 _state.transition = transition;
                 if (callback) _state.onComplete = callback;
                 if (scope) _state.onCompleteScope = scope;
                 Tweener.addTween(actor, _state);
-            } // if (was)
+            }
             else if (callback) {
                 if (scope) Lang.bind(scope, callback)();
                 else callback();
-            } // if (was) else
-        } // let (_state, was)
+            }
+            if (properties) global.yawl.animationActors.set(actor, properties);
+        } // let (timeCurrent, _state, properties)
     } // if (time > 0)
     else {
-        for (let p in state) {
-            p = '' + p;
-            if (actor[p] !== undefined) {
-                Tweener.removeTweens(actor, p);
-                if (actor[p] !== state[p]) {
-                    actor[p] = state[p];
-                }
+        let (timeCurrent = Math.ceil(GLib.get_monotonic_time() / 1000),
+             properties = global.yawl.animationActors.get(actor)
+                          || new dbFinArrayHash.dbFinArrayHash()) {
+            for (let p in state) { // animate only those that are already defined and different
+                p = '' + p;
+                if (actor[p] !== undefined) {
+                    Tweener.removeTweens(actor, p);
+                    if (actor[p] !== state[p]) {
+                        actor[p] = state[p];
+                    }
+                    if (properties) properties.set(p, { state: state[p], time: timeCurrent });
+                } // if (actor[p] !== undefined)
+            } // for (let p)
+            if (callback) {
+                if (scope) Lang.bind(scope, callback)();
+                else callback();
             }
-        } // for (let p)
-        if (callback) {
-            if (scope) Lang.bind(scope, callback)();
-            else callback();
-        }
+            if (properties) global.yawl.animationActors.set(actor, properties);
+        } // let (timeCurrent, properties)
     } // if (time > 0) else
 }
