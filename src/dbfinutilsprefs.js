@@ -421,13 +421,14 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 				gtkWidget.hide();
 			} // if (!w || w < 0 || !h || h < 0)
 			else {
-				let (bindBox = null, bindVisibility = false) {
+				let (bindBox = null, bind = '', bindVisibility = false) {
 					for (let j = 0; j < binds.length; ++j) {
-						bindVisibility = binds[j] && binds[j][0] == '@';
-						if (bindVisibility) binds[j] = binds[j].substring(1);
-						let (bindInverse = binds[j] && binds[j][0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
-																			: Gio.SettingsBindFlags.DEFAULT,
-							 bindKey = binds[j] && binds[j][0] == '!' ? binds[j].substring(1) : binds[j],
+                        bind = binds[j];
+						bindVisibility = bind && bind[0] == '@';
+						if (bindVisibility) bind = bind.substring(1);
+						let (bindInverse = bind && bind[0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
+																	: Gio.SettingsBindFlags.DEFAULT,
+							 bindKey = bind && bind[0] == '!' ? bind.substring(1) : bind,
 							 bindBoxNew = new Gtk.Box({	hexpand:	true,
 														halign:		Gtk.Align.FILL,
 														valign:		Gtk.Align.CENTER })) {
@@ -479,13 +480,14 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 						gtkOthers[i][0].hide();
 					} // if (!gtkOthers[i][1] || gtkOthers[i][1] < 0)
 					else {
-						let (bindBox = null, bindVisibility = false) {
+						let (bindBox = null, bind = '', bindVisibility = false) {
 							for (let j = 0; j < binds.length; ++j) {
-								bindVisibility = binds[j] && binds[j][0] == '@';
-								if (bindVisibility) binds[j] = binds[j].substring(1);
-								let (bindInverse = binds[j] && binds[j][0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
-																					: Gio.SettingsBindFlags.DEFAULT,
-									 bindKey = binds[j] && binds[j][0] == '!' ? binds[j].substring(1) : binds[j],
+                                bind = binds[j];
+								bindVisibility = bind && bind[0] == '@';
+								if (bindVisibility) bind = bind.substring(1);
+								let (bindInverse = bind && bind[0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
+																			: Gio.SettingsBindFlags.DEFAULT,
+									 bindKey = bind && bind[0] == '!' ? bind.substring(1) : bind,
 									 bindBoxNew = new Gtk.Box({	hexpand:	true,
 																halign:		Gtk.Align.FILL,
 																valign:		Gtk.Align.CENTER })) {
