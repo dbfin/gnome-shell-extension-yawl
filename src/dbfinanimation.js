@@ -25,6 +25,7 @@
  */
 
 const Lang = imports.lang;
+const Mainloop = imports.mainloop;
 
 const GLib = imports.gi.GLib;
 
@@ -141,36 +142,75 @@ function animateToState(actor, state, callback, scope, time, transition) {
 const dbFinAnimation = new Lang.Class({
     Name: 'dbFin.Animation',
 
+    // engine: a string or an object { engine:, ... } representing an engine
     _init: function(engine) {
         _D('>' + this.__name__ + '._init()');
         this.engine = 'tweener';
         this.engine = engine;
-        if (global.yawl) {
-            global.yawl.animationActors = new dbFinArrayHash.dbFinArrayHash();
-        }
+        this.engineStart();
         _D('<');
     },
 
     destroy: function() {
         _D('>' + this.__name__ + '.destroy()');
-        if (global.yawl) {
-            if (global.yawl.animationActors) {
-                global.yawl.animationActors.destroy();
-                global.yawl.animationActors = null;
-            }
+        this.engineStop();
+        this.engineDestroy();
+        _D('<');
+    },
+
+    engineStart: function() {
+        _D('>' + this.__name__ + '.engineStart()');
+        if (global.yawl && !global.yawl.animationActors) {
+            global.yawl.animationActors = new dbFinArrayHash.dbFinArrayHash();
         }
+        _D('<');
+    },
+
+    engineStop: function() {
+        _D('>' + this.__name__ + '.engineStop()');
+        if (global.yawl && global.yawl.animationActors) {
+            global.yawl.animationActors.destroy();
+            global.yawl.animationActors = null;
+        }
+        _D('<');
+    },
+
+    engineDestroy: function() {
+        _D('>' + this.__name__ + '.engineDestroy()');
+        if (!this._engine) {
+            _D('<');
+            return;
+        }
+        if (typeof this[this._engine + 'Destroy'] == 'function') {
+            this[this._engine + 'Destroy'].call(this);
+        }
+        this.remove = function() {};
+        this.animate = function() {};
+        this._engine = null;
         _D('<');
     },
 
     get engine() { return this._engine; },
     set engine(engine) {
-        if (!engine || !this[engine + '']
-                    || !this[engine + 'Remove']) return;
-        this._engine = engine + '';
-        this.animate = this[this._engine];
-        this.remove = this[this._engine + 'Remove'];
+        if (engine === null) {
+            this.engineDestroy();
+            return;
+        }
+        if (typeof engine == 'string') engine = { engine: engine };
+        else if (typeof engine != 'object') return;
+        if (!engine.engine || typeof this[engine.engine + ''] != 'function'
+                           || typeof this[engine.engine + 'Remove'] != 'function') return;
+        this.engineDestroy();
+        this.animate = Lang.bind(this, this[this._engine = engine.engine + '']);
+        this.remove = Lang.bind(this, this[this._engine + 'Remove']);
+        if (typeof this[this._engine + 'Init'] == 'function') {
+            this[this._engine + 'Init'].call(this, engine);
+        }
     },
 
+    // animation engines
+
+    // tweener
     tweener: function(actor, state) {
         _D('@' + this.__name__ + '.tweener()');
         Tweener.addTween(actor, state);
@@ -180,6 +220,179 @@ const dbFinAnimation = new Lang.Class({
     tweenerRemove: function(actor, property) {
         _D('@' + this.__name__ + '.tweenerRemove()');
         Tweener.removeTweens(actor, property);
+        _D('<');
+    },
+
+    // timeout
+    timeoutInit: function(engine) {
+        _D('>' + this.__name__ + '.timeoutInit()');
+        engine = engine || {};
+        if (engine.fps && !isNaN(engine.fps = parseInt(engine.fps)) && engine.fps > 0) {
+            this._fps = engine.fps;
+        }
+        else {
+            this._fps = 30;
+        }
+        this._tpf = Math.round(1000 / this._fps);
+        this._actors = new dbFinArrayHash.dbFinArrayHash();
+        this._callbacks = new dbFinArrayHash.dbFinArrayHash();
+        this._timeout = null;
+        this._lock = false;
+        _D('<');
+    },
+
+    timeoutDestroy: function() {
+        _D('>' + this.__name__ + '.timeoutDestroy()');
+        this._timeoutCancel();
+        this._timeoutRemoveAll(true, true);
+        if (this._callbacks) {
+            this._callbacks.destroy();
+            this._callbacks = null;
+        }
+        if (this._actors) {
+            this._actors.destroy();
+            this._actors = null;
+        }
+        _D('<');
+    },
+
+    _timeoutCancel: function() {
+        _D('>' + this.__name__ + '._timeoutCancel()');
+        if (this._timeout) {
+            Mainloop.source_remove(this._timeout);
+            this._timeout = null;
+        }
+        _D('<');
+    },
+
+    _timeoutRemove: function(actor, property, forceState, callCallback) {
+        _D('>' + this.__name__ + '._timeoutRemove()');
+        if (!this._actors || !this._callbacks) {
+            _D(!this._actors ? 'this._actors === null' : 'this._callbacks === null');
+            _D('<');
+            return;
+        }
+        this._lock = true;
+        let (properties = this._actors.get(actor)) {
+            let (st = properties && properties.remove(property)) {
+                if (st) {
+                    if (forceState) actor[property] = st.state;
+                    if (st.callback) {
+                        let (count = this._callbacks.get(st.callback)) {
+                            if (count) {
+                                --count;
+                                if (!count) {
+                                    this._callbacks.remove(st.callback);
+                                    if (callCallback) (st.callback)();
+                                }
+                                else {
+                                    this._callbacks.set(st.callback, count);
+                                }
+                            }
+                        }
+                    }
+                    if (!properties.length) {
+                        this._actors.remove(actor);
+                    }
+                    else {
+                        this._actors.set(actor, properties);
+                    }
+                } // if (st)
+            } // let (st)
+        } // let (properties)
+        this._lock = false;
+        _D('<');
+    },
+
+    _timeoutRemoveAll: function(forceState, callCallback) {
+        _D('>' + this.__name__ + '._timeoutRemoveAll()');
+        if (!this._actors || !this._callbacks) {
+            _D(!this._actors ? 'this._actors === null' : 'this._callbacks === null');
+            _D('<');
+            return;
+        }
+        this._actors.forEach(Lang.bind(this, function (actor, properties) {
+            if (properties) properties.forEach(Lang.bind(this, function (p, st) {
+                this._timeoutRemove(actor, p, forceState, callCallback);
+            }));
+        }));
+        _D('<');
+    },
+
+    _timeoutDo: function() {
+//        _D('@' + this.__name__ + '._timeoutDo()');
+        if (this._lock) {
+//            _D('Locked. Waiting...');
+//            _D('<');
+            return true;
+        }
+        let (time = Math.ceil(GLib.get_monotonic_time() / 1000)) {
+            this._actors.forEach(Lang.bind(this, function (actor, properties) {
+                if (properties) properties.forEach(Lang.bind(this, function (p, st) {
+                    let (timeLeft = st.time - time) {
+                        let (s = timeLeft <= 0
+                                 ? st.state
+                                 : (this._tpf * st.state + timeLeft * actor[p])
+                                    / (this._tpf + timeLeft)) {
+                            if (s == st.state) {
+                                this._timeoutRemove(actor, p, true, true);
+                            }
+                            else {
+                                actor[p] = s;
+                            }
+                        }
+                    }
+                }));
+            }));
+        }
+        if (this._actors.length) {
+//            _D('<');
+            return true;
+        }
+        this._timeoutCancel();
+//        _D('<');
+        return false;
+    },
+
+    timeout: function(actor, state) {
+        _D('@' + this.__name__ + '.timeout()');
+        if (!this._actors || !this._callbacks) {
+            _D(!this._actors ? 'this._actors === null' : 'this._callbacks === null');
+            _D('<');
+            return;
+        }
+        this._lock = true;
+        let (properties = this._actors.get(actor) || new dbFinArrayHash.dbFinArrayHash(),
+             time = Math.ceil(GLib.get_monotonic_time() / 1000 + state.time * 1000),
+             callback = !state.onComplete
+                        ?   null
+                        :   state.onCompleteScope
+                            ? Lang.bind(state.onCompleteScope, state.onComplete)
+                            : state.onComplete,
+             count = 0) {
+            for (let p in state) {
+                if (p == 'time' || p == 'transition'
+                    || p == 'onComplete' || p == 'onCompleteScope') continue;
+                ++count;
+                properties.set(p, { state: state[p],
+                                    time: time,
+                                    callback: callback });
+            }
+            if (count > 0) {
+                this._actors.set(actor, properties);
+                if (callback) this._callbacks.set(callback, count);
+            }
+        }
+        if (!this._timeout) {
+            this._timeout = Mainloop.timeout_add(this._tpf, Lang.bind(this, this._timeoutDo));
+        }
+        this._lock = false;
+        _D('<');
+    },
+
+    timeoutRemove: function(actor, property) {
+        _D('@' + this.__name__ + '.timeoutRemove()');
+        this._timeoutRemove(actor, property, false, false);
         _D('<');
     }
 });
