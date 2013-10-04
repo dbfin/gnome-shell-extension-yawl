@@ -78,7 +78,7 @@ function animateToState(actor, state, callback, scope, time, transition) {
             for (let p in state) { // animate only those that are already defined and different
                 p = '' + p;
                 if (actor[p] !== undefined) {
-                    Tweener.removeTweens(actor, p);
+                    global.yawl.animation.remove(actor, p);
                     // check if it is already being animated to the same value
                     if (actor[p] !== state[p]) {
                         _state[p] = state[p];
@@ -122,7 +122,7 @@ function animateToState(actor, state, callback, scope, time, transition) {
             for (let p in state) { // animate only those that are already defined and different
                 p = '' + p;
                 if (actor[p] !== undefined) {
-                    Tweener.removeTweens(actor, p);
+                    global.yawl.animation.remove(actor, p);
                     if (actor[p] !== state[p]) {
                         actor[p] = state[p];
                     }
@@ -143,7 +143,8 @@ const dbFinAnimation = new Lang.Class({
 
     _init: function(engine) {
         _D('>' + this.__name__ + '._init()');
-        this.engine = engine || 'tweener';
+        this.engine = 'tweener';
+        this.engine = engine;
         if (global.yawl) {
             global.yawl.animationActors = new dbFinArrayHash.dbFinArrayHash();
         }
@@ -161,17 +162,24 @@ const dbFinAnimation = new Lang.Class({
         _D('<');
     },
 
-    animate: function() {
-        _D('@' + this.__name__ + '.animate()');
-        if (this.engine && typeof this[this.engine] == 'function') {
-            this[this.engine].apply(this, arguments);
-        }
-        _D('<');
+    get engine() { return this._engine; },
+    set engine(engine) {
+        if (!engine || !this[engine + '']
+                    || !this[engine + 'Remove']) return;
+        this._engine = engine + '';
+        this.animate = this[this._engine];
+        this.remove = this[this._engine + 'Remove'];
     },
 
     tweener: function(actor, state) {
-        _D('>' + this.__name__ + '.tweener()');
+        _D('@' + this.__name__ + '.tweener()');
         Tweener.addTween(actor, state);
+        _D('<');
+    },
+
+    tweenerRemove: function(actor, property) {
+        _D('@' + this.__name__ + '.tweenerRemove()');
+        Tweener.removeTweens(actor, property);
         _D('<');
     }
 });
