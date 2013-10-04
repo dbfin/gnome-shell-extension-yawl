@@ -395,8 +395,9 @@ const dbFinYAWLPanel = new Lang.Class({
                 this._childrenObjects.set(childObject, signals);
             }
 			if (!this.hidden && !this.hiding && this._showHideChildren
-			    && (childObject.hidden || childObject.hiding)) {
-				this.showChild(childObject, false);
+			        && (childObject.hidden || childObject.hiding)
+                    && childObject.show) {
+				childObject.show(this.animationTime);
 			}
         }
         _D('<');
@@ -433,49 +434,6 @@ const dbFinYAWLPanel = new Lang.Class({
         return position;
     },
 
-    showChild: function(childObject, showSelf, time) {
-        _D('>' + this.__name__ + '.showChild()');
-        if (childObject && childObject.show && this._childrenObjects && this._childrenObjects.get(childObject) !== undefined) {
-            if (showSelf) this.show();
-            if (!this._showHideChildren || !showSelf) childObject.show(time === undefined || time === null ? this.animationTime : time);
-        }
-        _D('<');
-    },
-
-    hideChild: function(childObject, hideSelf, time) {
-        _D('>' + this.__name__ + '.hideChild()');
-        if (childObject && childObject.hide && this._childrenObjects && this._childrenObjects.get(childObject) !== undefined) {
-            hideSelf = hideSelf && !this._childrenObjects.some(function (c, s) {
-                return !!c && c != childObject && !c.hidden && !c.hiding;
-            });
-            if (!this._showHideChildren || !hideSelf) childObject.hide(time === undefined || time === null ? this.animationTime : time);
-            if (hideSelf) this.hide();
-        }
-        _D('<');
-    },
-
-    showChildren: function(showSelf, time) {
-        _D('>' + this.__name__ + '.showChildren()');
-		if (showSelf) this.show();
-        if (this._childrenObjects) {
-            this._childrenObjects.forEach(Lang.bind(this, function (childObject, signals) {
-                if (childObject && childObject.show) childObject.show(time === undefined || time === null ? this.animationTime : time);
-            }));
-        }
-        _D('<');
-    },
-
-    hideChildren: function(hideSelf, time) {
-        _D('>' + this.__name__ + '.hideChildren()');
-        if (this._childrenObjects) {
-            this._childrenObjects.forEach(Lang.bind(this, function (childObject, signals) {
-                if (childObject && childObject.hide) childObject.hide(time === undefined || time === null ? this.animationTime : time);
-            }));
-        }
-        if (hideSelf) this.hide();
-        _D('<');
-    },
-
 	updateLabel: function() {
 		_D('>' + this.__name__ + '.updateLabel()');
 		if (!this.label) {
@@ -509,55 +467,88 @@ const dbFinYAWLPanel = new Lang.Class({
 		_D('<');
 	},
 
-    show: function(time, callback, scope, transition) {
+    show: function(time, callback, scope, transition, childObject) {
         _D('>' + this.__name__ + '.show()');
-		if (this._closeinoverview && Main.overview && Main.overview.visible) {
-			_D('<');
-			return;
-		}
-        if (this.container) {
+		if (time === undefined || time === null) time = this.animationTime;
+		if (transition === undefined || transition === null) transition = this.animationEffect;
+        let showSelf = this.container
+                       && !(this._closeinoverview && Main.overview && Main.overview.visible);
+        if (showSelf) {
             this.container.show();
             this.container.reactive = true;
+            this.hidden = false;
+            this.hiding = false;
+	        this.showing = true;
+	    }
+        if (this._childrenObjects) {
+            let (childrenToShow =
+                    this._showHideChildren
+                    ?   this._childrenObjects.getKeys()
+                    :   this._childrenObjects.get(childObject)
+                        ? [ childObject ]
+                        : []) {
+                childrenToShow.forEach(Lang.bind(this, function (childObject) {
+                    if (childObject && childObject.show) childObject.show(time);
+                }));
+            }
         }
-        this.hidden = false;
-        this.hiding = false;
-		this.showing = true;
         if (this._showHideChildren) {
-			this.showChildren(false, time);
-			if (this.labelTitle) this.labelTitle.show(time === undefined || time === null ? this.animationTime : time);
-			if (this.label) this.label.show(time === undefined || time === null ? this.animationTime : time);
+			if (this.labelTitle) this.labelTitle.show(time);
+			if (this.label) this.label.show(time);
 		}
-		if (time === undefined || time === null) time = this.animationTime;
-		if (transition === undefined || transition === null) {
-			transition = this.animationEffect;
-		}
-		this.animateToState({ opacity: 255 },
-		                    function() {
-								this.showing = false;
-								if (callback) (scope ? Lang.bind(scope, callback) : callback)();
-							}, this, (time >> 1) + time, dbFinAnimationEquations.delay(transition, 0.33));
+        if (showSelf) {
+		    this.animateToState({ opacity: 255 },
+		                        function() {
+								    this.showing = false;
+								    if (callback) (scope ? Lang.bind(scope, callback) : callback)();
+							    }, this, (time >> 1) + time, dbFinAnimationEquations.delay(transition, 0.33));
+        }
         _D('<');
     },
 
-    hide: function(time, callback, scope, transition) {
+    hide: function(time, callback, scope, transition, autoHide, childObject) {
         _D('>' + this.__name__ + '.hide()');
-        this.hiding = true;
-		this.showing = false;
+		if (time === undefined || time === null) time = this.animationTime;
+		if (transition === undefined || transition === null) transition = this.animationEffect;
+        let hideSelf = this.container
+                       && (!autoHide
+                           || this._showHideChildren
+                           || !this._childrenObjects
+                           || !this._childrenObjects.some(function (c, s) {
+                               return !!c && c !== childObject && !c.hidden && !c.hiding;
+                           }));
+        if (hideSelf) {
+            this.hiding = true;
+		    this.showing = false;
+        }
+        if (this._childrenObjects) {
+            let (childrenToHide =
+                    this._showHideChildren
+                    ?   this._childrenObjects.getKeys()
+                    :   this._childrenObjects.get(childObject)
+                        ? [ childObject ]
+                        : []) {
+                childrenToHide.forEach(Lang.bind(this, function (childObject) {
+                    if (childObject && childObject.hide) childObject.hide(time);
+                }));
+            }
+        }
         if (this._showHideChildren) {
-			this.hideChildren(false, time);
-			if (this.labelTitle) this.labelTitle.hide(time === undefined || time === null ? this.animationTime : time);
-			if (this.label) this.label.hide(time === undefined || time === null ? this.animationTime : time);
+			if (this.labelTitle) this.labelTitle.hide(time);
+			if (this.label) this.label.hide(time);
 		}
-		this.animateToState({ opacity: 0 },
-                            function() {
-                                if (this.container) {
-                                    this.container.reactive = false;
-                                    this.container.hide();
-                                }
-                                this.hidden = true;
-                                this.hiding = false;
-								if (callback) (scope ? Lang.bind(scope, callback) : callback)();
-                            }, this, time, transition);
+        if (hideSelf) {
+		    this.animateToState({ opacity: 0 },
+                                function() {
+                                    if (this.container) {
+                                        this.container.reactive = false;
+                                        this.container.hide();
+                                    }
+                                    this.hidden = true;
+                                    this.hiding = false;
+								    if (callback) (scope ? Lang.bind(scope, callback) : callback)();
+                                }, this, time, transition);
+        }
         _D('<');
     },
 

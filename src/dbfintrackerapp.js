@@ -534,7 +534,7 @@ const dbFinTrackerApp = new Lang.Class({
                                 }
                             }
 						}
-                        global.yawl.panelWindows.showChild(this.yawlPanelWindowsGroup, true);
+                        global.yawl.panelWindows.show(null, null, null, null, this.yawlPanelWindowsGroup);
                         global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;
                     })
             );
@@ -550,7 +550,7 @@ const dbFinTrackerApp = new Lang.Class({
 			        77,
 			        Lang.bind(this, function() {
 						this._cancelShowThumbnailsTimeout();
-						global.yawl.panelWindows.hideChild(this.yawlPanelWindowsGroup, true);
+						global.yawl.panelWindows.hide(null, null, null, null, true, this.yawlPanelWindowsGroup);
 					})
 			);
 		} // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
