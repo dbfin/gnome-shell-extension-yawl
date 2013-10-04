@@ -53,7 +53,7 @@ const _D = Me.imports.dbfindebug._D;
 function animateToState(actor, state, callback, scope, time, transition) {
     if (!actor || !state || !global.yawl || !global.yawl.animation) return;
     //  no animation if global.yawl.animationActors is not initialized
-    if (!global.yawl.animationActors || !((time = parseInt(time)) > 0)) time = 0;
+    if (!((time = parseInt(time)) > 0) || !global.yawl.animationActors) time = 0;
     let (transitionIndex = parseInt(transition)) {
         if (!isNaN(transitionIndex)) {
             if (transitionIndex >= dbFinConsts.arrayAnimationTransitions.length) {
