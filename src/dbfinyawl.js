@@ -126,6 +126,23 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedWindowsAnimationTime = function () { if (global.yawl.panelWindows) global.yawl.panelWindows.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (global.yawl.panelWindows) global.yawl.panelWindows.animationEffect = global.yawl._windowsAnimationEffect; };
         // this._updatedMouseScrollWorkspace: below
+        this._updatedAnimationDisable = function () {
+            if (global.yawl.animation) {
+                if (global.yawl._animationDisable) global.yawl.animation.engineStop();
+                else global.yawl.animation.engineStart();
+            }
+        }
+        this._updatedAnimationAlternative =
+                this._updatedAnimationAlternativeFps = function () {
+            if (global.yawl.animation) {
+                if (global.yawl._animationAlternative) {
+                    global.yawl.animation.engine = { engine: 'timeout', fps: global.yawl._animationAlternativeFps };
+                }
+                else {
+                    global.yawl.animation.engine = 'tweener';
+                }
+            }
+        }
 
 		if (Main.panel && Main.panel.actor) {
 			this._signals.connectNoId({	emitter: Main.panel.actor, signal: 'style-changed',

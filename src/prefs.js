@@ -560,6 +560,14 @@ function buildPrefsWidget() {
 
                 builder.closeNotebook();
 
+            builder.addPage(_("Animation"), 'animation_engine.png');
+                builder.addCheckBox(_("Disable all animation"), 'animation-disable');
+                builder.addCheckBox(_("Use alternative animation engine (experimental)"), 'animation-alternative', '!animation-disable');
+                builder.shift();
+                    builder.addLabel('\u26a0 ' + _("Still in development") + ': ' + _("does not support transition effects"), [ '!animation-disable', 'animation-alternative' ]);
+                    builder.addScale(_("Frames per second"), 'animation-alternative-fps', 10, 50, 1, [ '!animation-disable', 'animation-alternative' ]);
+                builder.unshift();
+
 			builder.addPage(_("Debug"), 'debug.png');
 				builder.addLabel(_("These options are for developers only."));
 				builder.addSeparator();

@@ -19,7 +19,8 @@ images = \
 	yawl.png \
 	gplv3.png \
 	thumbnail_16.png \
-	icon_16.png
+	icon_16.png \
+	animation_engine.png
 
 imagedir = $(extensiondir)/images
 dist_image_DATA = $(images)
