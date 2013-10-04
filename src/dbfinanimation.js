@@ -39,6 +39,8 @@ const dbFinConsts = Me.imports.dbfinconsts;
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
+const _D = Me.imports.dbfindebug._D;
+
 /* function animateToState(actor, state, callback, scope, time, transition): animate actor to state
  *          Parameters:
  *              actor       the actor to animate
@@ -49,11 +51,9 @@ const _ = Gettext.gettext;
  *              transition  can be an index in the array dbFinConsts.arrayAnimationTransitions or a string, or a function
  */
 function animateToState(actor, state, callback, scope, time, transition) {
-    if (!actor || !state) return;
-    if (!global.yawl
-        || (!global.yawl.animationActors
-            && !(global.yawl.animationActors = new dbFinArrayHash.dbFinArrayHash()))) return;
-    time = time || 0;
+    if (!actor || !state || !global.yawl || !global.yawl.animation) return;
+    //  no animation if global.yawl.animationActors is not initialized
+    if (!global.yawl.animationActors || !((time = parseInt(time)) > 0)) time = 0;
     let (transitionIndex = parseInt(transition)) {
         if (!isNaN(transitionIndex)) {
             if (transitionIndex >= dbFinConsts.arrayAnimationTransitions.length) {
@@ -105,7 +105,7 @@ function animateToState(actor, state, callback, scope, time, transition) {
                 _state.transition = transition;
                 if (callback) _state.onComplete = callback;
                 if (scope) _state.onCompleteScope = scope;
-                Tweener.addTween(actor, _state);
+                global.yawl.animation.animate(actor, _state);
             }
             else if (callback) {
                 if (scope) Lang.bind(scope, callback)();
@@ -116,8 +116,9 @@ function animateToState(actor, state, callback, scope, time, transition) {
     } // if (time > 0)
     else {
         let (timeCurrent = Math.ceil(GLib.get_monotonic_time() / 1000),
-             properties = global.yawl.animationActors.get(actor)
-                          || new dbFinArrayHash.dbFinArrayHash()) {
+             properties = global.yawl.animationActors
+                          && (global.yawl.animationActors.get(actor)
+                              || new dbFinArrayHash.dbFinArrayHash())) {
             for (let p in state) { // animate only those that are already defined and different
                 p = '' + p;
                 if (actor[p] !== undefined) {
@@ -136,3 +137,41 @@ function animateToState(actor, state, callback, scope, time, transition) {
         } // let (timeCurrent, properties)
     } // if (time > 0) else
 }
+
+const dbFinAnimation = new Lang.Class({
+    Name: 'dbFin.Animation',
+
+    _init: function(engine) {
+        _D('>' + this.__name__ + '._init()');
+        this.engine = engine || 'tweener';
+        if (global.yawl) {
+            global.yawl.animationActors = new dbFinArrayHash.dbFinArrayHash();
+        }
+        _D('<');
+    },
+
+    destroy: function() {
+        _D('>' + this.__name__ + '.destroy()');
+        if (global.yawl) {
+            if (global.yawl.animationActors) {
+                global.yawl.animationActors.destroy();
+                global.yawl.animationActors = null;
+            }
+        }
+        _D('<');
+    },
+
+    animate: function() {
+        _D('@' + this.__name__ + '.animate()');
+        if (this.engine && typeof this[this.engine] == 'function') {
+            this[this.engine].apply(this, arguments);
+        }
+        _D('<');
+    },
+
+    tweener: function(actor, state) {
+        _D('>' + this.__name__ + '.tweener()');
+        Tweener.addTween(actor, state);
+        _D('<');
+    }
+});

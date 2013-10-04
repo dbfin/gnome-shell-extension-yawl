@@ -39,6 +39,7 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinDebugView = Me.imports.dbfindebugview;
 const dbFinMenuBuilder = Me.imports.dbfinmenubuilder;
@@ -76,6 +77,8 @@ const dbFinYAWL = new Lang.Class({
 				if (settings) settings.set_boolean('first-time', false);
 			}
 		}
+
+        global.yawl.animation = new dbFinAnimation.dbFinAnimation();
 
         global.yawl.panelApps = new dbFinYAWLPanel.dbFinYAWLPanel({ panelname: 'panelYAWL',
                                                                     parent: Main.panel || null,
@@ -203,6 +206,10 @@ const dbFinYAWL = new Lang.Class({
         if (global.yawl.panelApps) {
             global.yawl.panelApps.destroy();
             global.yawl.panelApps = null;
+        }
+        if (global.yawl.animation) {
+            global.yawl.animation.destroy();
+            global.yawl.animation = null;
         }
         if (global.yawl) { // must be destroyed last
             global.yawl.destroy();
