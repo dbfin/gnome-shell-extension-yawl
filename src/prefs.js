@@ -570,7 +570,7 @@ function buildPrefsWidget() {
 
                 builder.closeNotebook();
 
-            builder.addPage(_("Animation"), 'animation_engine.png');
+            builder.addPage(_("Animation") + ' <span color="red">*</span>', 'animation_engine.png', '@advanced');
                 builder.addCheckBox(_("Disable all animation"), 'animation-disable');
                 builder.addCheckBox(_("Use alternative animation engine (experimental)"), 'animation-alternative', '!animation-disable');
                 builder.shift();
