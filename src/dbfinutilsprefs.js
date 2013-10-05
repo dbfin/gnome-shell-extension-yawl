@@ -391,11 +391,12 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 									row_spacing:		7,
 									column_spacing:		7,
 									column_homogeneous:	true }),
-             pageLabel = new Gtk.Label({ label: label }),
+             pageLabel = new Gtk.Label(),
              pageLabelBox = (this._notebooksPagesCircle
                              ? (this._notebooks.length & 1 ? new Gtk.HBox() : new Gtk.VBox())
                              : (this._notebooks.length != 2 ? new Gtk.HBox() : new Gtk.VBox())),
              [ bindBoxTop, bindBox ] = this.getBindBox(bindSensitive)) {
+            pageLabel.set_markup(label);
 			pageLabelBox.margin = this._notebooksPagesCircle
 							? (this._notebooks.length & 1 ? 3 : 7)
 							: (this._notebooks.length != 2 ? 3 : 7);
