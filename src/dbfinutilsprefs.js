@@ -381,6 +381,20 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		}
 	},
 
+    addActions: function(packStart/* = false*/) {
+		if (!this._notebook || !(this._notebooks.length & 1)) return;
+        let (page = new Gtk.Grid({	margin:				5,
+									row_spacing:		5,
+									column_spacing:		5,
+									column_homogeneous: false })) {
+			this._notebook.widget.set_action_widget(page, packStart ? Gtk.PackType.START : Gtk.PackType.END);
+            this._notebook.page = page;
+            this._notebook.row = 0;
+			this._notebook.shift = 0;
+            page.show();
+        }
+    },
+
 	// bindSensitive = '[!]key'
 	addPage: function(label, iconfile/* = null*/, bindSensitive/* = null*/) {
 		if (!this._notebook) return;
