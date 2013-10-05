@@ -299,7 +299,15 @@ function buildPrefsWidget() {
     let (builder = new dbFinUtilsPrefs.dbFinSettingsWidgetBuilder(),
          widgets = null) {
 
-        builder.addNotebook(_("Welcome"));
+        builder.addNotebook();
+
+        builder.addActions();
+            widgets = builder.addCheckBox(_("Advanced settings") + ' <span color="red">*</span>', 'advanced');
+            if (widgets && widgets.length) {
+                widgets[0].set_line_wrap(false);
+            }
+
+        builder.addPage(_("Welcome"));
 			widgets = builder.addWidget(Gtk.Image.new_from_file(Me.path + '/images/yawl.png'), 0, 0, 3, 7);
 			if (widgets && widgets.length) {
 				widgets[0].hexpand = true;
@@ -457,10 +465,11 @@ function buildPrefsWidget() {
 
         builder.addPage(_("Behavior"));
             builder.addNotebook(_("Mouse"), 'mouse.png');
-				builder.addNotebook(_("Icons"), 'icon_16.png');
+				builder.addNotebook();
 
 				builder.setWidthRight(5);
 
+                builder.addPage(_("Icons"), 'icon_16.png');
 					builder.addNotebook(_("Left button"), 'mouse-left.png');
 						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-left', dbFinConsts.arrayAppClickFunctions, 0);
 						builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-left-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
