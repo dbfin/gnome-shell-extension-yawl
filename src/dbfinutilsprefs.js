@@ -55,7 +55,7 @@
  * 			addPage(label, iconfile?, bindSensitive?)
  * 			addWidget(gtkWidget, x, y, w, h, bindSensitive?)
  * 			addRow(gtkWidget?, [gtkOthers], bindSensitive?)
- *          addSeparator()
+ *          addSeparator(bindSensitive?)
  *          addLabel(label, bindSensitive?, markup?, justify=0, rightmargin=0)
  *          addCheckBox(label, settingsKey, bindSensitive?)
  *          addColorButton(label, settingsKey, titleColorChooser, bindSensitive?, showEntry?)
@@ -317,7 +317,34 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
         }
 	},
 
-	// bindSensitive = '[!]key'
+	// bindSensitive = either '[@][!]key' or array of '[@][!]key''s
+    getBindBox: function(bindSensitive/* = null*/) {
+		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || [],
+             bind = '',
+             bindBox = null,
+             bindBoxTop = null,
+             bindVisibility = false) {
+			for (let j = 0; j < binds.length; ++j) {
+                bind = binds[j];
+				bindVisibility = bind && bind[0] == '@';
+				if (bindVisibility) bind = bind.substring(1);
+				let (bindInverse = bind && bind[0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
+															: Gio.SettingsBindFlags.DEFAULT,
+					 bindKey = bind && bind[0] == '!' ? bind.substring(1) : bind,
+					 bindBoxNew = new Gtk.Box({	hexpand:	true,
+												halign:		Gtk.Align.FILL,
+												valign:		Gtk.Align.FILL })) {
+					if (bindBox) bindBox.pack_end(bindBoxNew, /*expand =*/true, /*fill =*/true, /*padding =*/0);
+                    else bindBoxTop = bindBoxNew;
+					this._settings.bind(bindKey, bindBoxNew, bindVisibility ? 'visible' : 'sensitive', bindInverse);
+					bindBoxNew.show();
+					bindBox = bindBoxNew;
+				} // let (bindInverse, bindKey, bindBoxNew)
+			} // for (let j)
+            return [ bindBoxTop, bindBox ];
+        } // let (binds, bind, bindBox, bindBoxTop, bindVisibility)
+    },
+
 	addNotebook: function(label/* = null*/, iconfile/* = null*/, bindSensitive/* = null*/) {
         let (notebook = new Gtk.Notebook({  hexpand:	true,
 											vexpand:	true,
@@ -344,15 +371,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		this._notebook.page = null;
 		this._notebook.row = 0;
 		this._notebook.shift = 0;
-        if (label) this.addPage(label, iconfile);
-		if (bindSensitive && this._notebook) {
-			this._settings.bind((bindSensitive[0] == '!'	? bindSensitive.substring(1)
-															: bindSensitive),
-								this._notebook,
-								'sensitive',
-								(bindSensitive[0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
-															: Gio.SettingsBindFlags.DEFAULT));
-		}
+        if (label) this.addPage(label, iconfile, bindSensitive);
 	},
 
 	closeNotebook: function() {
@@ -361,6 +380,20 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			this._notebook = this._notebooks[this._notebooks.length - 1];
 		}
 	},
+
+    addActions: function(packStart/* = false*/) {
+		if (!this._notebook || !(this._notebooks.length & 1)) return;
+        let (page = new Gtk.Grid({	margin:				5,
+									row_spacing:		5,
+									column_spacing:		5,
+									column_homogeneous: false })) {
+			this._notebook.widget.set_action_widget(page, packStart ? Gtk.PackType.START : Gtk.PackType.END);
+            this._notebook.page = page;
+            this._notebook.row = 0;
+			this._notebook.shift = 0;
+            page.show();
+        }
+    },
 
 	// bindSensitive = '[!]key'
 	addPage: function(label, iconfile/* = null*/, bindSensitive/* = null*/) {
@@ -372,10 +405,12 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 									row_spacing:		7,
 									column_spacing:		7,
 									column_homogeneous:	true }),
-             pageLabel = new Gtk.Label({ label: label }),
+             pageLabel = new Gtk.Label(),
              pageLabelBox = (this._notebooksPagesCircle
                              ? (this._notebooks.length & 1 ? new Gtk.HBox() : new Gtk.VBox())
-                             : (this._notebooks.length != 2 ? new Gtk.HBox() : new Gtk.VBox()))) {
+                             : (this._notebooks.length != 2 ? new Gtk.HBox() : new Gtk.VBox())),
+             [ bindBoxTop, bindBox ] = this.getBindBox(bindSensitive)) {
+            pageLabel.set_markup(label);
 			pageLabelBox.margin = this._notebooksPagesCircle
 							? (this._notebooks.length & 1 ? 3 : 7)
 							: (this._notebooks.length != 2 ? 3 : 7);
@@ -388,24 +423,21 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 				}
 			}
 			pageLabelBox.show_all();
-			this._notebook.widget.append_page(/*child = */page, /*tab_label = */pageLabelBox);
+            if (!bindBox) {
+			    this._notebook.widget.append_page(/*child = */page, /*tab_label = */pageLabelBox);
+            }
+            else {
+			    this._notebook.widget.append_page(/*child = */bindBoxTop, /*tab_label = */pageLabelBox);
+                bindBox.pack_end(page, /*expand =*/true, /*fill =*/true, /*padding =*/0);
+            }
             this._notebook.page = page;
             this._notebook.row = 0;
 			this._notebook.shift = 0;
             page.show();
-			if (bindSensitive && this._notebook.page) {
-				this._settings.bind((bindSensitive[0] == '!'	? bindSensitive.substring(1)
-																: bindSensitive),
-									this._notebook.page,
-									'sensitive',
-									(bindSensitive[0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
-																: Gio.SettingsBindFlags.DEFAULT));
-			}
         }
     },
 
 	// gtkWidget = Gtk.Widget or a string for Gtk.Label
-	// bindSensitive = either '[@][!]key' or array of '[@][!]key''s
 	addWidget: function(gtkWidget, x, y, w, h, bindSensitive/* = null*/) {
 		if (!gtkWidget || !this._notebook || !this._notebook.page) return [];
 		if (!(gtkWidget instanceof Gtk.Widget)) {
@@ -414,42 +446,28 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 				gtkWidget.set_markup(label);
 			}
 		}
-		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || []) {
-			if (!w || w < 0 || !h || h < 0) {
-				this._notebook.page.attach(gtkWidget, x, y, 1, 1);
-				gtkWidget.sensitive = false;
-				gtkWidget.hide();
-			} // if (!w || w < 0 || !h || h < 0)
-			else {
-				let (bindBox = null, bindVisibility = false) {
-					for (let j = 0; j < binds.length; ++j) {
-						bindVisibility = binds[j] && binds[j][0] == '@';
-						if (bindVisibility) binds[j] = binds[j].substring(1);
-						let (bindInverse = binds[j] && binds[j][0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
-																			: Gio.SettingsBindFlags.DEFAULT,
-							 bindKey = binds[j] && binds[j][0] == '!' ? binds[j].substring(1) : binds[j],
-							 bindBoxNew = new Gtk.Box({	hexpand:	true,
-														halign:		Gtk.Align.FILL,
-														valign:		Gtk.Align.CENTER })) {
-							if (!bindBox) this._notebook.page.attach(bindBoxNew, x, y, w, h);
-							else bindBox.pack_end(bindBoxNew, /*expand =*/true, /*fill =*/true, /*padding =*/0);
-							bindBoxNew.show();
-							this._settings.bind(bindKey, bindBoxNew, bindVisibility ? 'visible' : 'sensitive', bindInverse);
-							bindBox = bindBoxNew;
-						} // let (bindInverse, bindKey, bindBoxNew)
-					} // for (let j)
-					if (!bindBox) this._notebook.page.attach(gtkWidget, x, y, w, h);
-					else bindBox.pack_end(gtkWidget, /*expand =*/true, /*fill =*/true, /*padding =*/0);
-					gtkWidget.show();
-				} // let (bindBox)
-			} // if (!w || w < 0 || !h || h < 0) else
-		} // let (binds)
+		if (!w || w < 0 || !h || h < 0) {
+			this._notebook.page.attach(gtkWidget, x, y, 1, 1);
+			gtkWidget.sensitive = false;
+			gtkWidget.hide();
+		} // if (!w || w < 0 || !h || h < 0)
+		else {
+			let ([ bindBoxTop, bindBox ] = this.getBindBox(bindSensitive)) {
+				if (!bindBox) {
+                    this._notebook.page.attach(gtkWidget, x, y, w, h);
+                }
+				else {
+                    this._notebook.page.attach(bindBoxTop, x, y, w, h);
+                    bindBox.pack_end(gtkWidget, /*expand =*/true, /*fill =*/true, /*padding =*/0);
+                }
+				gtkWidget.show();
+			} // let (bindBox)
+		} // if (!w || w < 0 || !h || h < 0) else
 		return [ gtkWidget ];
 	},
 
 	// gtkWidget = Gtk.Widget or a string for Gtk.Label
 	// gtkOthers = [ [ gtkWidget, width ] ]
-	// bindSensitive = either '[@][!]key' or array of '[@][!]key''s
 	addRow: function(gtkWidget/* = null*/, gtkOthers/* = []*/, bindSensitive/* = null*/) {
 		if (!this._notebook || !this._notebook.page) return [];
 		if (gtkWidget && !(gtkWidget instanceof Gtk.Widget) || gtkWidget === '') {
@@ -462,8 +480,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 				}
 			}
 		}
-		let (binds = bindSensitive && typeof bindSensitive == 'string' ? [ bindSensitive ] : bindSensitive || [],
-		     x = this._notebook.shift,
+		let (x = this._notebook.shift,
 		     widgets = []) {
 			gtkOthers = gtkOthers || [];
 			let (w = this._notebook.width - x) {
@@ -479,26 +496,15 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 						gtkOthers[i][0].hide();
 					} // if (!gtkOthers[i][1] || gtkOthers[i][1] < 0)
 					else {
-						let (bindBox = null, bindVisibility = false) {
-							for (let j = 0; j < binds.length; ++j) {
-								bindVisibility = binds[j] && binds[j][0] == '@';
-								if (bindVisibility) binds[j] = binds[j].substring(1);
-								let (bindInverse = binds[j] && binds[j][0] == '!'	? Gio.SettingsBindFlags.INVERT_BOOLEAN
-																					: Gio.SettingsBindFlags.DEFAULT,
-									 bindKey = binds[j] && binds[j][0] == '!' ? binds[j].substring(1) : binds[j],
-									 bindBoxNew = new Gtk.Box({	hexpand:	true,
-																halign:		Gtk.Align.FILL,
-																valign:		Gtk.Align.CENTER })) {
-									if (!bindBox) this._notebook.page.attach(bindBoxNew, x, this._notebook.row, gtkOthers[i][1], 1);
-									else bindBox.pack_end(bindBoxNew, /*expand =*/true, /*fill =*/true, /*padding =*/0);
-									bindBoxNew.show();
-									this._settings.bind(bindKey, bindBoxNew, bindVisibility ? 'visible' : 'sensitive', bindInverse);
-									bindBox = bindBoxNew;
-								} // let (bindInverse, bindKey, bindBoxNew)
-							} // for (let j)
-							if (!bindBox) this._notebook.page.attach(gtkOthers[i][0], x, this._notebook.row, gtkOthers[i][1], 1);
-							else bindBox.pack_end(gtkOthers[i][0], /*expand =*/true, /*fill =*/true, /*padding =*/0);
-							gtkOthers[i][0].show();
+						let ([ bindBoxTop, bindBox ] = this.getBindBox(bindSensitive)) {
+							if (!bindBox) {
+                                this._notebook.page.attach(gtkOthers[i][0], x, this._notebook.row, gtkOthers[i][1], 1);
+                            }
+							else {
+                                this._notebook.page.attach(bindBoxTop, x, this._notebook.row, gtkOthers[i][1], 1);
+                                bindBox.pack_end(gtkOthers[i][0], /*expand =*/true, /*fill =*/true, /*padding =*/0);
+                            }
+						    gtkOthers[i][0].show();
 						} // let (bindBox)
 					} // if (!gtkOthers[i][1] || gtkOthers[i][1] < 0) else
 				} // if (gtkOthers[i][0])
@@ -506,12 +512,12 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			} // for (let i)
 			this._notebook.row++; // whether something was added or not
 			return widgets;
-		} // let (binds, x, widgets)
+		} // let (x, widgets)
 	},
 
-    addSeparator: function() {
+    addSeparator: function(bindSensitive/* = null*/) {
 		if (!this._notebook) return [];
-		return this.addRow(new Gtk.Separator({ hexpand: true }));
+		return this.addRow(new Gtk.Separator({ hexpand: true }), null, bindSensitive);
     },
 
     addLabel: function(label, bindSensitive/* = null*/, markup/* = false*/, justify/* = 0*/, rightmargin/* = 0*/) {

@@ -189,11 +189,15 @@ const dbFinAppButton = new Lang.Class({
 			_D('<');
 			return;
 		}
-        global.yawl._iconsSize = global.yawl._iconsSize ? Math.floor((global.yawl._iconsSize + 4) / 8) * 8 : 48; // sizes are 16, 24, ..., 128
+        global.yawl._iconsSize = global.yawl._iconsSize ? Math.floor((global.yawl._iconsSize + 4) / 8) * 8 : 24; // sizes are 16, 24, ..., 128
 		let (   icon = this._slicerIcon.getIcon(),
                 iconnew = this._icons ? this._icons.get(global.yawl._iconsFaded ? -global.yawl._iconsSize : global.yawl._iconsSize) : null) {
             if (!iconnew) {
-                if (global.yawl._iconsFaded) iconnew = this.metaApp.get_faded_icon(global.yawl._iconsSize); // returns NULL sometimes
+                if (global.yawl._iconsFaded) {
+                    // returns NULL sometimes
+                    iconnew = this.metaApp.get_faded_icon(global.yawl._iconsSize,
+                            Main.panel && Main.panel.actor && Main.panel.actor.text_direction || 0);
+                }
                 if (!iconnew) iconnew = this.metaApp.create_icon_texture(global.yawl._iconsSize);
                 if (iconnew) this._icons.set(global.yawl._iconsFaded ? -global.yawl._iconsSize : global.yawl._iconsSize, iconnew);
             }
