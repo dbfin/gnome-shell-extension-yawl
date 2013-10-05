@@ -391,9 +391,9 @@ function buildPrefsWidget() {
             builder.addPage(_("Icons"), 'icon.png');
                 builder.addScale(_("Icon size"), 'icons-size', 16, 96, 8);
                 builder.addCheckBox(_("Faded icons"), 'icons-faded');
-				builder.addScale(_("Default icon opacity"), 'icons-opacity', 50, 100, 1);
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', '@!icons-show-all', true);
-				builder.addScale(_("Icon opacity if app is not on current workspace"), 'icons-opacity-inactive', 10, 100, 1, 'icons-show-all');
+				builder.addScale(_("Default icon opacity") + ' <span color="red">*</span>', 'icons-opacity', 50, 100, 1, '@advanced');
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ '@advanced', '@!icons-show-all' ], true);
+				builder.addScale(_("Icon opacity if app is not on current workspace") + ' <span color="red">*</span>', 'icons-opacity-inactive', 10, 100, 1, [ '@advanced', 'icons-show-all' ]);
                 builder.addSeparator();
                 builder.addScale(_("Clip icons: top (px)"), 'icons-clip-top', 0, 7, 1);
                 builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);
@@ -402,63 +402,64 @@ function buildPrefsWidget() {
                 builder.addScale(_("Distance between icons") + '\n(' + _("% of icon size") + ')', 'icons-distance', 0, 100, 1);
 
             builder.addPage(_("Animation"), 'animation.png');
-                builder.addScale(_("Animation time in ms (0: no animation)"), 'icons-animation-time', 0, 1000, 1, null, true);
-                builder.addComboBoxText(_("Animation effect"), 'icons-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
-                builder.addSeparator();
+                builder.addScale(_("Animation time in ms (0: no animation)") + ' <span color="red">*</span>', 'icons-animation-time', 0, 1000, 1, '@advanced', true);
+                builder.addComboBoxText(_("Animation effect") + ' <span color="red">*</span>', 'icons-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, '@advanced');
+                builder.addSeparator('@advanced');
 				builder.addCheckBox(_("Animate icons on mouse over"), 'icons-hover-animation');
 				builder.shift();
 					builder.addScale(_("Change size (%)"), 'icons-hover-size', 100, 200, 1, 'icons-hover-animation');
 					builder.addScale(_("Change opacity"), 'icons-hover-opacity', 50, 100, 1, 'icons-hover-animation');
-					builder.addCheckBox(_("Show full width if partially hidden"), 'icons-hover-fit', 'icons-hover-animation');
-	                builder.addSeparator();
-	                builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')', 'icons-hover-animation-time', 0, 200, 1, 'icons-hover-animation');
-                    builder.addComboBoxText(_("Mouse over animation effect"), 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, 'icons-hover-animation');
+					builder.addCheckBox(_("Show full width if partially hidden") + ' <span color="red">*</span>', 'icons-hover-fit', [ '@advanced', 'icons-hover-animation' ]);
+	                builder.addSeparator('@advanced');
+	                builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')' + ' <span color="red">*</span>', 'icons-hover-animation-time', 0, 200, 1, [ '@advanced', 'icons-hover-animation' ]);
+                    builder.addComboBoxText(_("Mouse over animation effect") + ' <span color="red">*</span>', 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, [ '@advanced', 'icons-hover-animation' ]);
 				builder.unshift();
 
             builder.closeNotebook();
 
 		builder.addPage(_("Thumbnails"));
 			builder.addNotebook(_("Panel"), 'panel_thumbnail.png');
-                builder.addCheckBox(_("Show thumbnails when app icon is hovered"), 'windows-show');
-				builder.addCheckBox(_("Show thumbnails of 'interesting' windows only"), 'windows-show-interesting', 'windows-show');
-                builder.addSeparator();
-                builder.addCheckBox(_("Use arrow-style thumbnails app indicator"), 'windows-indicator-arrow', 'windows-show');
-                builder.addSeparator();
+                builder.addCheckBox(_("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>', 'windows-show', '@advanced');
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show', '@!advanced' ], true);
+				builder.addCheckBox(_("Show thumbnails of 'interesting' windows only") + ' <span color="red">*</span>', 'windows-show-interesting', [ '@advanced', 'windows-show' ]);
+                builder.addSeparator('@advanced');
+                builder.addCheckBox(_("Use arrow-style thumbnails app indicator") + ' <span color="red">*</span>', 'windows-indicator-arrow', [ '@advanced', 'windows-show' ]);
+                builder.addSeparator('@advanced');
                 builder.addCheckBox(_("Customize thumbnail panel theme"), 'windows-theming', 'windows-show');
                 builder.shift();
                     builder.addCheckBox(_("Match main panel background"), 'windows-background-panel', [ 'windows-show', 'windows-theming' ]);
 					builder.addColorButtonScale(_("Background color and opacity"), 'windows-background-color', 'windows-background-opacity', _("Choose thumbnail panel background color"), 0, 100, 1, [ 'windows-show', 'windows-theming', '!windows-background-panel' ]);
 					builder.addColorButtonScale(_("Text color and size"), 'windows-text-color', 'windows-text-size', _("Choose thumbnail panel text color"), 6, 36, 1, [ 'windows-show', 'windows-theming' ]);
                     builder.addColorButtonScale(_("Border color and width"), 'windows-border-color', 'windows-border-width', _("Choose thumbnail panel border color"), 0, 3, 1, [ 'windows-show', 'windows-theming' ]);
-                    builder.addScaleScale(_("Border radius") + ' ' + _("and") + ' ' + _("Padding"), 'windows-border-radius', 'windows-padding', 0, 10, 1, 0, 20, 1, [ 'windows-show', 'windows-theming' ]);
+                    builder.addScaleScale(_("Border radius") + ' ' + _("and") + ' ' + _("Padding") + ' <span color="red">*</span>', 'windows-border-radius', 'windows-padding', 0, 10, 1, 0, 20, 1, [ '@advanced', 'windows-show', 'windows-theming' ]);
                 builder.unshift();
 
 			builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + '</span>', [ 'windows-show', '@!windows-show' ], true);
-                builder.addCheckBox(_("Same height thumbnails"), 'windows-thumbnails-fit-height');
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
+                builder.addCheckBox(_("Same height thumbnails") + ' <span color="red">*</span>', 'windows-thumbnails-fit-height', [ '@advanced' ]);
                 builder.addScale(_("Thumbnail maximum width"), 'windows-thumbnails-width', 50, 500, 25, '!windows-thumbnails-fit-height', true);
 				builder.addScale(_("Thumbnail maximum height"), 'windows-thumbnails-height', 40, 400, 20, null, true);
                 builder.addScale(_("Thumbnail maximum visible height"), 'windows-thumbnails-height-visible', 40, 400, 20, null, true);
                 builder.addSeparator();
-				builder.addScale(_("Default thumbnail opacity"), 'windows-thumbnails-opacity', 50, 100, 1);
-				builder.addScale(_("Minimized thumbnail opacity"), 'windows-thumbnails-minimized-opacity', 10, 100, 1);
-                builder.addSeparator();
+				builder.addScale(_("Default thumbnail opacity") + ' <span color="red">*</span>', 'windows-thumbnails-opacity', 50, 100, 1, '@advanced');
+				builder.addScale(_("Minimized thumbnail opacity") + ' <span color="red">*</span>', 'windows-thumbnails-minimized-opacity', 10, 100, 1, '@advanced');
+                builder.addSeparator('@advanced');
                 builder.addScale(_("Distance between thumbnails") + '\n(' + _("% of thumbnail size") + ')', 'windows-thumbnails-distance', 0, 50, 1);
-                builder.addScale(_("Thumbnail top padding (px)"), 'windows-thumbnails-padding-top', 0, 20, 1);
+                builder.addScale(_("Thumbnail top padding (px)") + ' <span color="red">*</span>', 'windows-thumbnails-padding-top', 0, 20, 1, '@advanced');
 
 			builder.addPage(_("Animation"), 'animation_thumbnail.png', 'windows-show');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + '</span>', [ 'windows-show', '@!windows-show' ], true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
                 builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);
-                builder.addScale(_("Animation time in ms (0: no animation)"), 'windows-animation-time', 0, 500, 1, null, true);
-                builder.addComboBoxText(_("Animation effect"), 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
+                builder.addScale(_("Animation time in ms (0: no animation)") + ' <span color="red">*</span>', 'windows-animation-time', 0, 500, 1, '@advanced', true);
+                builder.addComboBoxText(_("Animation effect") + ' <span color="red">*</span>', 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, '@advanced');
                 builder.addSeparator();
 				builder.addLabel(_("Animate thumbnails on mouse over"));
                 builder.shift();
 					builder.addScale(_("Change opacity"), 'windows-hover-opacity', 50, 100, 1);
-					builder.addCheckBox(_("Show full width if partially hidden"), 'windows-hover-fit');
-	                builder.addSeparator();
-	                builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')', 'windows-hover-animation-time', 0, 200, 1);
-                    builder.addComboBoxText(_("Mouse over animation effect"), 'windows-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0);
+					builder.addCheckBox(_("Show full width if partially hidden") + ' <span color="red">*</span>', 'windows-hover-fit', '@advanced');
+	                builder.addSeparator('@advanced');
+	                builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')' + ' <span color="red">*</span>', 'windows-hover-animation-time', 0, 200, 1, '@advanced');
+                    builder.addComboBoxText(_("Mouse over animation effect") + ' <span color="red">*</span>', 'windows-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, '@advanced');
                 builder.unshift();
 
             builder.closeNotebook();
@@ -491,7 +492,7 @@ function buildPrefsWidget() {
 					builder.closeNotebook();
 
                 builder.addPage(_("Thumbnails"), 'thumbnail_16.png', 'windows-show');
-		            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + '</span>', [ 'windows-show', '@!windows-show' ], true);
+		            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
 					builder.addNotebook(_("Left button"), 'mouse-left.png');
 						builder.addComboBoxText(_("Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0);
 						builder.addComboBoxText(_("Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0);
@@ -511,7 +512,7 @@ function buildPrefsWidget() {
 
 				builder.setWidthRight(4);
 
-                builder.addPage(_("Fine-tuning"), 'tuning.png');
+                builder.addPage(_("Fine-tuning") + ' <span color="red">*</span>', 'tuning.png', '@advanced');
     				builder.addNotebook(_("Mouse events"));
 	                    builder.addCheckBox(_("Register mouse events on button release"), 'mouse-click-release');
 					    builder.shift();
@@ -569,7 +570,7 @@ function buildPrefsWidget() {
 
                 builder.closeNotebook();
 
-			builder.addPage(_("Debug"), 'debug.png');
+			builder.addPage(_("Debug") + ' <span color="red">*</span>', 'debug.png', '@advanced');
 				builder.addLabel(_("These options are for developers only."));
 				builder.addSeparator();
 				builder.addLabel(_("Debugging panel shows a hierarchical structure of internal function calls."));
@@ -605,14 +606,12 @@ function buildPrefsWidget() {
 			    builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
 
             builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
-			    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + '</span>', [ 'windows-show', '@!windows-show' ], true);
+			    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
 			    builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), 'windows-show', true);
                 builder.shift();
-				    builder.addCheckBox(_("Preview window when its thumbnail is hovered"), 'windows-preview', 'windows-show');
-				    builder.shift();
-					    builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, [ 'windows-preview', 'windows-show' ]);
-					    builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 5, 75, 1, [ 'windows-preview', 'windows-show' ]);
-				    builder.unshift();
+				    builder.addCheckBox(_("Preview window when its thumbnail is hovered") + ' <span color="red">*</span>', 'windows-preview', [ '@advanced', 'windows-show' ]);
+				    builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, [ 'windows-preview', 'windows-show' ]);
+				    builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 5, 75, 1, [ 'windows-preview', 'windows-show' ]);
                 builder.unshift();
 
             builder.closeNotebook();
