@@ -336,8 +336,8 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 												valign:		Gtk.Align.FILL })) {
 					if (bindBox) bindBox.pack_end(bindBoxNew, /*expand =*/true, /*fill =*/true, /*padding =*/0);
                     else bindBoxTop = bindBoxNew;
-					this._settings.bind(bindKey, bindBoxNew, bindVisibility ? 'visible' : 'sensitive', bindInverse);
 					bindBoxNew.show();
+					this._settings.bind(bindKey, bindBoxNew, bindVisibility ? 'visible' : 'sensitive', bindInverse);
 					bindBox = bindBoxNew;
 				} // let (bindInverse, bindKey, bindBoxNew)
 			} // for (let j)
@@ -408,6 +408,10 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 				}
 			}
 			pageLabelBox.show_all();
+            this._notebook.page = page;
+            this._notebook.row = 0;
+			this._notebook.shift = 0;
+            page.show();
             if (!bindBox) {
 			    this._notebook.widget.append_page(/*child = */page, /*tab_label = */pageLabelBox);
             }
@@ -415,10 +419,6 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			    this._notebook.widget.append_page(/*child = */bindBoxTop, /*tab_label = */pageLabelBox);
                 bindBox.pack_end(page, /*expand =*/true, /*fill =*/true, /*padding =*/0);
             }
-            this._notebook.page = page;
-            this._notebook.row = 0;
-			this._notebook.shift = 0;
-            page.show();
         }
     },
 
@@ -438,6 +438,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		} // if (!w || w < 0 || !h || h < 0)
 		else {
 			let ([ bindBoxTop, bindBox ] = this.getBindBox(bindSensitive)) {
+				gtkWidget.show();
 				if (!bindBox) {
                     this._notebook.page.attach(gtkWidget, x, y, w, h);
                 }
@@ -445,7 +446,6 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
                     this._notebook.page.attach(bindBoxTop, x, y, w, h);
                     bindBox.pack_end(gtkWidget, /*expand =*/true, /*fill =*/true, /*padding =*/0);
                 }
-				gtkWidget.show();
 			} // let (bindBox)
 		} // if (!w || w < 0 || !h || h < 0) else
 		return [ gtkWidget ];
@@ -482,6 +482,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 					} // if (!gtkOthers[i][1] || gtkOthers[i][1] < 0)
 					else {
 						let ([ bindBoxTop, bindBox ] = this.getBindBox(bindSensitive)) {
+						    gtkOthers[i][0].show();
 							if (!bindBox) {
                                 this._notebook.page.attach(gtkOthers[i][0], x, this._notebook.row, gtkOthers[i][1], 1);
                             }
@@ -489,7 +490,6 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
                                 this._notebook.page.attach(bindBoxTop, x, this._notebook.row, gtkOthers[i][1], 1);
                                 bindBox.pack_end(gtkOthers[i][0], /*expand =*/true, /*fill =*/true, /*padding =*/0);
                             }
-						    gtkOthers[i][0].show();
 						} // let (bindBox)
 					} // if (!gtkOthers[i][1] || gtkOthers[i][1] < 0) else
 				} // if (gtkOthers[i][0])
