@@ -433,7 +433,7 @@
       <_description>Whether to use alternative animation engine.</_description>
     </key>
     <key name="animation-alternative-fps" type="s">
-      <default>'30'</default>
+      <default>'33'</default>
       <_summary>Alternative animation engine fps.</_summary>
       <_description>Alternative animation engine fps.</_description>
     </key>

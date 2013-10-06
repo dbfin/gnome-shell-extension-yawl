@@ -190,7 +190,7 @@ const Settings = [
 
     [ 'animation-disable', false, { }, 'animation' ],
     [ 'animation-alternative', false, { }, 'animation' ],
-    [ 'animation-alternative-fps', 30, { min: 10, max: 50 }, 'animation' ],
+    [ 'animation-alternative-fps', 33, { min: 10, max: 50 }, 'animation' ],
 
     [ 'debug', false, { }, 'debug' ],
     [ 'debug-bottom', false, { }, 'debug' ],

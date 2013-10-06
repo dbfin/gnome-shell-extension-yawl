@@ -231,7 +231,7 @@ const dbFinAnimation = new Lang.Class({
             this._fps = engine.fps;
         }
         else {
-            this._fps = 30;
+            this._fps = 33;
         }
         this._tpf = Math.round(1000 / this._fps);
         this._actors = new dbFinArrayHash.dbFinArrayHash();
