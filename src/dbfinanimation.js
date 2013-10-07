@@ -243,20 +243,17 @@ const dbFinAnimation = new Lang.Class({
         }
         this._tpf = Math.round(1000 / this._fps);
         this._actors = new dbFinArrayHash.dbFinArrayHash();
-        this._callbacks = new dbFinArrayHash.dbFinArrayHash();
+        this._propertiesCount = 0;
+        this._callbacks = [];
         this._timeout = null;
-        this._lock = false;
+        this._lock = 0;
         _D('<');
     },
 
     timeoutDestroy: function() {
         _D('>' + this.__name__ + '.timeoutDestroy()');
         this._timeoutCancel();
-        this._timeoutRemoveAll(true, true);
-        if (this._callbacks) {
-            this._callbacks.destroy();
-            this._callbacks = null;
-        }
+        this._timeoutFinalize();
         if (this._actors) {
             this._actors.destroy();
             this._actors = null;
@@ -273,57 +270,42 @@ const dbFinAnimation = new Lang.Class({
         _D('<');
     },
 
-    _timeoutRemove: function(actor, property, forceState, callCallback) {
-        _D('>' + this.__name__ + '._timeoutRemove()');
+    _timeoutFinalize: function() {
+        _D('>' + this.__name__ + '._timeoutFinalize()');
         if (!this._actors || !this._callbacks) {
             _D(!this._actors ? 'this._actors === null' : 'this._callbacks === null');
             _D('<');
             return;
         }
-        this._lock = true;
-        let (properties = this._actors.get(actor)) {
-            let (st = properties && properties.remove(property)) {
-                if (st) {
-                    if (forceState) actor[property] = st.state;
-                    if (st.callback) {
-                        let (count = this._callbacks.get(st.callback)) {
-                            if (count) {
-                                --count;
-                                if (!count) {
-                                    this._callbacks.remove(st.callback);
-                                    if (callCallback) (st.callback)();
-                                }
-                                else {
-                                    this._callbacks.set(st.callback, count);
+        this._lock++;
+        this._timeoutCancel();
+        for (let actorIndex = 0; actorIndex < this._actors.length; ++actorIndex) {
+            let (actor = this._actors._keys[actorIndex],
+                 properties = this._actors._values[actorIndex]) {
+                if (actor && properties) {
+                    for (let j = 0; j < properties.length; ++j) {
+                        let (st = properties._values[j]) {
+                            if (!st || !st.time) continue; // removed property
+                            st.time = 0; // just in case
+                            actor[properties._keys[j]] = st.state;
+                            let (callback = st.callbackIndex !== undefined
+                                            && this._callbacks[st.callbackIndex]) {
+                                if (callback && callback.count) {
+                                    --callback.count;
+                                    if (!callback.count) (callback.callback)();
                                 }
                             }
-                        }
-                    }
-                    if (!properties.length) {
-                        this._actors.remove(actor);
-                    }
-                    else {
-                        this._actors.set(actor, properties);
-                    }
-                } // if (st)
-            } // let (st)
-        } // let (properties)
-        this._lock = false;
-        _D('<');
-    },
-
-    _timeoutRemoveAll: function(forceState, callCallback) {
-        _D('>' + this.__name__ + '._timeoutRemoveAll()');
-        if (!this._actors || !this._callbacks) {
-            _D(!this._actors ? 'this._actors === null' : 'this._callbacks === null');
-            _D('<');
-            return;
-        }
-        this._actors.forEach(Lang.bind(this, function (actor, properties) {
-            if (properties) properties.forEach(Lang.bind(this, function (p, st) {
-                this._timeoutRemove(actor, p, forceState, callCallback);
-            }));
-        }));
+                            //--this._propertiesCount; // not needed as we zero it below
+                        } // let (st)
+                    } // for (let j)
+                    properties.destroy();
+                } // if (actor && properties)
+            } // let (actor, properties)
+        } // for (let actorIndex)
+        this._actors.removeAll();
+        this._callbacks = [];
+        this._propertiesCount = 0;
+        this._lock--;
         _D('<');
     },
 
@@ -335,29 +317,63 @@ const dbFinAnimation = new Lang.Class({
             return true;
         }
         let (time = Math.ceil(GLib.get_monotonic_time() / 1000)) {
-            this._actors.forEach(Lang.bind(this, function (actor, properties) {
-                if (properties) properties.forEach(Lang.bind(this, function (p, st) {
-                    let (timeLeft = st.time - time) {
-                        let (s = timeLeft <= 0
-                                 ? st.state
-                                 : (this._tpf * st.state + timeLeft * actor[p])
-                                    / (this._tpf + timeLeft)) {
-                            if (s == st.state) {
-                                this._timeoutRemove(actor, p, true, true);
-                            }
-                            else {
-                                actor[p] = s;
-                            }
-                        }
+            let (lengthA = this._actors.length,
+                 keysA = this._actors._keys,
+                 valuesA = this._actors._values,
+                 tpf = this._tpf) {
+                for (let actorIndex = 0; actorIndex < lengthA; ++actorIndex) {
+                    let (actor = keysA[actorIndex],
+                         properties = valuesA[actorIndex]) {
+                        let (lengthP = actor && properties && properties.length) {
+                            if (lengthP) {
+                                let (keysP = properties._keys,
+                                     valuesP = properties._values) {
+                                    for (let j = 0; j < lengthP; ++j) {
+                                        let (st = valuesP[j]) {
+                                            if (!st || !st.time) continue; // removed property
+                                            let (p = keysP[j],
+                                                 timeLeft = st.time - time) {
+                                                if (timeLeft > 0) {
+                                                    actor[p] = (tpf * st.state + timeLeft * actor[p])
+                                                                / (tpf + timeLeft);
+                                                } // if (timeLeft > 0)
+                                                else {
+                                                    st.time = 0; // remove property
+                                                    actor[p] = st.state; // force final value
+                                                    // call callback if needed
+                                                    let (callback = st.callbackIndex !== undefined
+                                                                    && this._callbacks[st.callbackIndex]) {
+                                                        if (callback && callback.count) {
+                                                            --callback.count;
+                                                            if (!callback.count) (callback.callback)();
+                                                        }
+                                                    }
+                                                    --this._propertiesCount;
+                                                } // if (timeLeft > 0) else
+                                            } // let (p, timeLeft)
+                                        } // let (st)
+                                    } // for (let j)
+                                } // let (keysP, valuesP)
+                            } // if (lengthP)
+                        } // let (lengthP)
+                    } // let (actor, properties)
+                } // for (let actorIndex)
+
+                if (this._propertiesCount) {
+//                    _D('<');
+                    return true;
+                }
+
+                this._timeoutCancel();
+                for (let actorIndex = 0; actorIndex < lengthA; ++actorIndex) {
+                    let (properties = valuesA[actorIndex]) {
+                        if (properties) properties.destroy();
                     }
-                }));
-            }));
-        }
-        if (this._actors.length) {
-//            _D('<');
-            return true;
-        }
-        this._timeoutCancel();
+                }
+            } // let (lengthA, keysA, valuesA, tpf)
+        } // let (time)
+        this._actors.removeAll();
+        this._callbacks = [];
 //        _D('<');
         return false;
     },
@@ -369,32 +385,85 @@ const dbFinAnimation = new Lang.Class({
             _D('<');
             return;
         }
-        this._lock = true;
-        let (properties = this._actors.get(actor) || new dbFinArrayHash.dbFinArrayHash(),
+        this._lock++;
+        let (properties = this._actors.get(actor),
+             newActor = false,
              time = Math.ceil(GLib.get_monotonic_time() / 1000 + state.time * 1000),
+             callback = state.onComplete ? { callback: state.onComplete } : null,
+             callbackIndex = undefined,
              count = 0) {
+            if (!properties) {
+                newActor = true;
+                properties = new dbFinArrayHash.dbFinArrayHash();
+            }
+            if (callback) {
+                callbackIndex = this._callbacks.length;
+            }
             for (let p in state) {
                 if (p == 'time' || p == 'transition' || p == 'onComplete') continue;
                 ++count;
+                ++this._propertiesCount;
                 properties.set(p, { state: state[p],
                                     time: time,
-                                    callback: state.onComplete });
+                                    callbackIndex: callbackIndex });
             }
             if (count > 0) {
-                this._actors.set(actor, properties);
-                if (state.onComplete) this._callbacks.set(state.onComplete, count);
+                if (newActor) {
+                    this._actors._keys.push(actor);
+                    this._actors._values.push(properties);
+                    this._actors.length++;
+                }
+                if (callback) {
+                    callback.count = count;
+                    this._callbacks.push(callback);
+                }
             }
         }
         if (!this._timeout) {
             this._timeout = Mainloop.timeout_add(this._tpf, Lang.bind(this, this._timeoutDo));
         }
-        this._lock = false;
+        this._lock--;
         _D('<');
     },
 
     timeoutRemove: function(actor, property) {
         _D('@' + this.__name__ + '.timeoutRemove()');
-        this._timeoutRemove(actor, property, false, false);
+        if (!this._actors || !this._callbacks) {
+            _D(!this._actors ? 'this._actors === null' : 'this._callbacks === null');
+            _D('<');
+            return;
+        }
+        this._lock++;
+        let (actorIndex = this._actors._keys.indexOf(actor)) {
+            let (properties = actorIndex != -1 && this._actors._values[actorIndex]) {
+                if (properties) {
+                    let (j = properties._keys.indexOf(property)) {
+                        let (st = j != -1 && properties._values[j]) {
+                            if (st && st.time) {
+                                st.time = 0;
+                                if (st.callbackIndex !== undefined) {
+                                    let (callback = this._callbacks[st.callbackIndex]) {
+                                        if (callback && callback.count) --callback.count;
+                                    }
+                                }
+                                --this._propertiesCount;
+                            } // if (st && st.time)
+                        } // let (st)
+                    } // let (j)
+                } // if (properties)
+            } // let (properties)
+        } // let (actorIndex)
+        if (!this._propertiesCount) {
+            this._timeoutCancel();
+            for (let actorIndex = 0; actorIndex < this._actors.length; ++actorIndex) {
+                let (properties = this._actors._values[actorIndex]) {
+                    if (properties) properties.destroy();
+                }
+            }
+            this._actors.removeAll();
+            this._callbacks = [];
+        }
+        this._lock--;
         _D('<');
     }
 });
