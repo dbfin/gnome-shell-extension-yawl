@@ -227,7 +227,7 @@ const dbFinAnimation = new Lang.Class({
     timeoutInit: function(engine) {
         _D('>' + this.__name__ + '.timeoutInit()');
         engine = engine || {};
-        if (engine.fps && !isNaN(engine.fps = parseInt(engine.fps)) && engine.fps > 0) {
+        if (!isNaN(engine.fps = parseInt(engine.fps)) && engine.fps > 0) {
             this._fps = engine.fps;
         }
         else {
