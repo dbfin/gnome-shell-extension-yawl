@@ -67,6 +67,15 @@ function animateToState(actor, state, callback, scope, time, transition) {
         }
     }
     transition = transition || 'linear';
+	if (typeof transition == 'string') {
+		if (typeof imports.tweener.equations[transition] == 'function') {
+			transition = imports.tweener.equations[transition];
+		}
+		else if (typeof Me.imports.dbfinanimationequations[transition] == 'function') {
+			transition = Me.imports.dbfinanimationequations[transition];
+		}
+	}
+    if (typeof transition != 'function') return;
     // we do not schedule animation for actors not in stage
     if (actor.get_stage) { if (!actor.get_stage()) time = 0; }
     else if (actor.actor && actor.actor.get_stage) { if (!actor.actor.get_stage()) time = 0; }
@@ -104,8 +113,7 @@ function animateToState(actor, state, callback, scope, time, transition) {
                 }
                 _state.time = time / 1000.;
                 _state.transition = transition;
-                if (callback) _state.onComplete = callback;
-                if (scope) _state.onCompleteScope = scope;
+                if (callback) _state.onComplete = scope ? Lang.bind(scope, callback) : callback;
                 global.yawl.animation.animate(actor, _state);
             }
             else if (callback) {
@@ -364,23 +372,17 @@ const dbFinAnimation = new Lang.Class({
         this._lock = true;
         let (properties = this._actors.get(actor) || new dbFinArrayHash.dbFinArrayHash(),
              time = Math.ceil(GLib.get_monotonic_time() / 1000 + state.time * 1000),
-             callback = !state.onComplete
-                        ?   null
-                        :   state.onCompleteScope
-                            ? Lang.bind(state.onCompleteScope, state.onComplete)
-                            : state.onComplete,
              count = 0) {
             for (let p in state) {
-                if (p == 'time' || p == 'transition'
-                    || p == 'onComplete' || p == 'onCompleteScope') continue;
+                if (p == 'time' || p == 'transition' || p == 'onComplete') continue;
                 ++count;
                 properties.set(p, { state: state[p],
                                     time: time,
-                                    callback: callback });
+                                    callback: state.onComplete });
             }
             if (count > 0) {
                 this._actors.set(actor, properties);
-                if (callback) this._callbacks.set(callback, count);
+                if (state.onComplete) this._callbacks.set(state.onComplete, count);
             }
         }
         if (!this._timeout) {
