@@ -574,7 +574,7 @@ function buildPrefsWidget() {
                 builder.addCheckBox(_("Disable all animation"), 'animation-disable');
                 builder.addCheckBox(_("Use alternative animation engine (experimental)"), 'animation-alternative', '!animation-disable');
                 builder.shift();
-                    builder.addLabel('\u26a0 ' + _("Still in development") + ': ' + _("does not support transition effects."), [ '!animation-disable', 'animation-alternative' ]);
+                    builder.addLabel(_("Lower FPS = better responsiveness, higher FPS = smoother animation"), [ '!animation-disable', 'animation-alternative' ]);
                     builder.addScale(_("Frames per second"), 'animation-alternative-fps', 10, 50, 1, [ '!animation-disable', 'animation-alternative' ]);
                 builder.unshift();
 

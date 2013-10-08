@@ -287,7 +287,7 @@ const dbFinAnimation = new Lang.Class({
                         let (st = properties._values[j]) {
                             if (!st || !st.time) continue; // removed property
                             st.time = 0; // just in case
-                            actor[properties._keys[j]] = st.state;
+                            actor[properties._keys[j]] = st.end;
                             let (callback = st.callbackIndex !== undefined
                                             && this._callbacks[st.callbackIndex]) {
                                 if (callback && callback.count) {
@@ -332,14 +332,18 @@ const dbFinAnimation = new Lang.Class({
                                         let (st = valuesP[j]) {
                                             if (!st || !st.time) continue; // removed property
                                             let (p = keysP[j],
-                                                 timeLeft = st.time - time) {
-                                                if (timeLeft > 0) {
-                                                    actor[p] = (tpf * st.state + timeLeft * actor[p])
-                                                                / (tpf + timeLeft);
+                                                 timeFrame = time - st.time) {
+                                                if (timeFrame < st.duration) {
+                                                    actor[p] = st.transition(
+                                                        timeFrame,
+                                                        st.begin,
+                                                        st.change,
+                                                        st.duration
+                                                    );
                                                 } // if (timeLeft > 0)
                                                 else {
                                                     st.time = 0; // remove property
-                                                    actor[p] = st.state; // force final value
+                                                    actor[p] = st.end; // force final value
                                                     // call callback if needed
                                                     let (callback = st.callbackIndex !== undefined
                                                                     && this._callbacks[st.callbackIndex]) {
@@ -388,9 +392,9 @@ const dbFinAnimation = new Lang.Class({
         this._lock++;
         let (properties = this._actors.get(actor),
              newActor = false,
-             time = Math.ceil(GLib.get_monotonic_time() / 1000 + state.time * 1000),
              callback = state.onComplete ? { callback: state.onComplete } : null,
              callbackIndex = undefined,
+             timeCurrent = Math.ceil(GLib.get_monotonic_time() / 1000),
              count = 0) {
             if (!properties) {
                 newActor = true;
@@ -403,8 +407,12 @@ const dbFinAnimation = new Lang.Class({
                 if (p == 'time' || p == 'transition' || p == 'onComplete') continue;
                 ++count;
                 ++this._propertiesCount;
-                properties.set(p, { state: state[p],
-                                    time: time,
+                properties.set(p, { begin: actor[p],
+                                    change: state[p] - actor[p],
+                                    end: state[p],
+                                    time: timeCurrent,
+                                    duration: Math.ceil(state.time * 1000),
+                                    transition: state.transition,
                                     callbackIndex: callbackIndex });
             }
             if (count > 0) {
