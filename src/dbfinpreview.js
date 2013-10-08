@@ -205,10 +205,10 @@ const dbFinPreview = new Lang.Class({
                     this._clone.show();
 					this.hidden = false;
 					this.hiding = false;
-					dbFinAnimation.animateToState(this._clone, { opacity: 255 }, null, null, time + (time >> 1),
-                                                  dbFinAnimationEquations.delay('linear', 1 / 3));
-					dbFinAnimation.animateToState(this._background, { opacity: 255 }, null, null, time << 1,
-					                              dbFinAnimationEquations.delay('linear', 3 / 4));
+					dbFinAnimation.animateToState(this._clone, { opacity: 255 }, null, null, time * 2,
+                                                  dbFinAnimationEquations.delay('linear', 1 / 2));
+					dbFinAnimation.animateToState(this._background, { opacity: 255 }, null, null, time * 3,
+					                              dbFinAnimationEquations.delay('linear', 2 / 3));
 					this.updateWindowsPanelOpacity(time + (time >> 1));
 				}
 				else {

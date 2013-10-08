@@ -160,10 +160,11 @@ const dbFinArrayHash = new Lang.Class({
 
 	removeAll: function() {
         _D('>' + this.__name__ + '.removeAll()');
+/* Do I really need this?
 		for (let i = this.length - 1; i >= 0; --i) {
 			this._keys[i] = null;
 			this._values[i] = null;
-		}
+		}*/
 		this._keys = [];
 		this._values = [];
 		this.length = 0;

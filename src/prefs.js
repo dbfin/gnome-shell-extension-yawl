@@ -570,6 +570,14 @@ function buildPrefsWidget() {
 
                 builder.closeNotebook();
 
+            builder.addPage(_("Animation") + ' <span color="red">*</span>', 'animation_engine.png', '@advanced');
+                builder.addCheckBox(_("Disable all animation"), 'animation-disable');
+                builder.addCheckBox(_("Use alternative animation engine (experimental)"), 'animation-alternative-test', '!animation-disable');
+                builder.shift();
+                    builder.addLabel(_("Lower FPS = better responsiveness, higher FPS = smoother animation"), [ '!animation-disable', 'animation-alternative-test' ]);
+                    builder.addScale(_("Frames per second"), 'animation-alternative-fps', 10, 50, 1, [ '!animation-disable', 'animation-alternative-test' ]);
+                builder.unshift();
+
 			builder.addPage(_("Debug") + ' <span color="red">*</span>', 'debug.png', '@advanced');
 				builder.addLabel(_("These options are for developers only."));
 				builder.addSeparator();
@@ -607,7 +615,7 @@ function buildPrefsWidget() {
 
             builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
 			    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
-			    builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing"), 'windows-show', true);
+			    builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing") + '.', 'windows-show', true);
                 builder.shift();
 				    builder.addCheckBox(_("Preview window when its thumbnail is hovered") + ' <span color="red">*</span>', 'windows-preview', [ '@advanced', 'windows-show' ]);
 				    builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, [ 'windows-preview', 'windows-show' ]);
@@ -619,7 +627,7 @@ function buildPrefsWidget() {
 		builder.addPage(_("Export/Import"));
 			builder.addLabel(_("Back up, sync and share settings.")
 			                 + ' ' + _("To download default and other settings please visit")
-			                 + ': <a href="http://dbfin.com/yawl"><span color="#000000" underline="none">http://dbfin.com/yawl</span></a>', null, true, 3);
+			                 + ': <a href="http://dbfin.com/yawl"><span color="#000000" underline="none">http://dbfin.com/yawl</span></a>.', null, true, 3);
 			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,
@@ -669,7 +677,7 @@ function buildPrefsWidget() {
 								 + ' ' + _("Most of the extension's functionality (such as cycling through windows) is also active-workspace-oriented.")
 								 + ' ' + _("For quick access to favorites")
 								 + ' ' + _("please consider installing in addition this highly recommended extension:")
-								 + ' ' + '<b>Dash to Dock</b> (' + _("author") + ': <b>michele_g</b>)'
+								 + ' ' + '<b>Dash to Dock</b> (' + _("author") + ': <b>michele_g</b>).'
 								 + '</span>', null, true, 3);
 			builder.unshift();
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
@@ -679,7 +687,7 @@ function buildPrefsWidget() {
 								 _("It is embedded into the panel right where there is space for it not claimed by anything else, and uses panel theme by default.")
 								 + ' ' + _("It further allows you to hide some unnecessary buttons on the left and shift the central panel to the right to give itself more space.")
 								 + ' ' + _("You can tweak the panel even more by installing some of the following recommended extensions:")
-								 + ' ' + '<b>Frippery Move Clock</b> (' + _("author") + ': <b>rmyorston</b>), <b>Status Area Horizontal Spacing</b> (' + _("author") + ': <b>mathematical.coffee</b>), <b>User Themes</b> (' + _("author") + ': <b>gcampax</b>)'
+								 + ' ' + '<b>Frippery Move Clock</b> (' + _("author") + ': <b>rmyorston</b>), <b>Status Area Horizontal Spacing</b> (' + _("author") + ': <b>mathematical.coffee</b>), <b>User Themes</b> (' + _("author") + ': <b>gcampax</b>).'
 								 + '</span>', null, true, 3);
 			builder.unshift();
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'

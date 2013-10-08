@@ -188,6 +188,10 @@ const Settings = [
     [ 'mouse-clicks-time-double', 250, { min: 100, max: 450 }, 'mouse' ],
     [ 'mouse-clicks-time-threshold', 300, { min: 150, max: 550 }, 'mouse' ],
 
+    [ 'animation-disable', false, { }, 'animation' ],
+    [ 'animation-alternative-test', false, { }, 'animation' ],
+    [ 'animation-alternative-fps', 33, { min: 10, max: 50 }, 'animation' ],
+
     [ 'debug', false, { }, 'debug' ],
     [ 'debug-bottom', false, { }, 'debug' ],
     [ 'debug-width', 33, { min: 10, max: 70 }, 'debug' ],

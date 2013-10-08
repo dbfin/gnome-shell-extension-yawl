@@ -422,6 +422,22 @@
       <_description>Mouse single/double clicks time threshold.</_description>
     </key>
 
+    <key name="animation-disable" type="b">
+      <default>false</default>
+      <_summary>Whether to disable all animation.</_summary>
+      <_description>Whether to disable all animation.</_description>
+    </key>
+    <key name="animation-alternative-test" type="b">
+      <default>false</default>
+      <_summary>Whether to use alternative animation engine.</_summary>
+      <_description>Whether to use alternative animation engine.</_description>
+    </key>
+    <key name="animation-alternative-fps" type="s">
+      <default>'33'</default>
+      <_summary>Alternative animation engine fps.</_summary>
+      <_description>Alternative animation engine fps.</_description>
+    </key>
+
     <key name="debug" type="b">
       <default>false</default>
       <_summary>Whether to open debug window.</_summary>
