@@ -427,7 +427,7 @@
       <_summary>Whether to disable all animation.</_summary>
       <_description>Whether to disable all animation.</_description>
     </key>
-    <key name="animation-alternative" type="b">
+    <key name="animation-alternative-test" type="b">
       <default>false</default>
       <_summary>Whether to use alternative animation engine.</_summary>
       <_description>Whether to use alternative animation engine.</_description>

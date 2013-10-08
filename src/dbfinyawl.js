@@ -132,10 +132,10 @@ const dbFinYAWL = new Lang.Class({
                 else global.yawl.animation.engineStart();
             }
         }
-        this._updatedAnimationAlternative =
+        this._updatedAnimationAlternativeTest =
                 this._updatedAnimationAlternativeFps = function () {
             if (global.yawl.animation) {
-                if (global.yawl._animationAlternative) {
+                if (global.yawl._animationAlternativeTest) {
                     global.yawl.animation.engine = { engine: 'timeout', fps: global.yawl._animationAlternativeFps };
                 }
                 else {

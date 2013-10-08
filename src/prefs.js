@@ -572,10 +572,10 @@ function buildPrefsWidget() {
 
             builder.addPage(_("Animation") + ' <span color="red">*</span>', 'animation_engine.png', '@advanced');
                 builder.addCheckBox(_("Disable all animation"), 'animation-disable');
-                builder.addCheckBox(_("Use alternative animation engine (experimental)"), 'animation-alternative', '!animation-disable');
+                builder.addCheckBox(_("Use alternative animation engine (experimental)"), 'animation-alternative-test', '!animation-disable');
                 builder.shift();
-                    builder.addLabel(_("Lower FPS = better responsiveness, higher FPS = smoother animation"), [ '!animation-disable', 'animation-alternative' ]);
-                    builder.addScale(_("Frames per second"), 'animation-alternative-fps', 10, 50, 1, [ '!animation-disable', 'animation-alternative' ]);
+                    builder.addLabel(_("Lower FPS = better responsiveness, higher FPS = smoother animation"), [ '!animation-disable', 'animation-alternative-test' ]);
+                    builder.addScale(_("Frames per second"), 'animation-alternative-fps', 10, 50, 1, [ '!animation-disable', 'animation-alternative-test' ]);
                 builder.unshift();
 
 			builder.addPage(_("Debug") + ' <span color="red">*</span>', 'debug.png', '@advanced');
