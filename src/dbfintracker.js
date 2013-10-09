@@ -436,7 +436,8 @@ const dbFinTracker = new Lang.Class({
 
 	_windowAttention: function(display, metaWindow) {
         _D('>' + this.__name__ + '._windowAttention()');
-        let (metaApp = metaWindow && this.isWindowInteresting(metaWindow)
+        let (metaApp = metaWindow && metaWindow !== (global.display && global.display.focus_window)
+             && this.isWindowInteresting(metaWindow)
              && this._tracker && this._tracker.get_window_app(metaWindow)) {
             if (metaApp) this.addAppWindowAttention(metaApp, metaWindow);
 		}
