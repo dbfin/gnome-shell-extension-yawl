@@ -547,7 +547,7 @@ const dbFinYAWLPanel = new Lang.Class({
                                     this.hidden = true;
                                     this.hiding = false;
 								    if (callback) (scope ? Lang.bind(scope, callback) : callback)();
-                                }, this, time, transition);
+                                }, this, time * 2 / 3, transition);
         }
         _D('<');
     },
