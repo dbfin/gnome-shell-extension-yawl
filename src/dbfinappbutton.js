@@ -250,8 +250,6 @@ const dbFinAppButton = new Lang.Class({
 	},
 
 	_onButtonPress: function() {
-        _D('>' + this.__name__ + '._onButtonPress()');
 		// nothing to do here
-		_D('<');
 	}
 });
