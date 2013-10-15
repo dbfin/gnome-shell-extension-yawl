@@ -36,6 +36,7 @@
  *						setMap([k], map:k->v)   	    	sets/adds values using mapping function
  *						remove(k)					    	removes a pair by key and returns its value or undefined
  *						removeAll()					    	removes all pairs
+ *                      indexOf(k)->p                       returns index of a key or undefined
  *                      move(k, p)->p                       moves [k, v] to position p and returns new position or undefined
  *						sort(compare:[k1,v1],[k2,v2]->int)	sorts using compare function
  *						sortK(compare:k1,k2->int)	    	sorts by keys using compare function
@@ -170,6 +171,14 @@ const dbFinArrayHash = new Lang.Class({
 		this.length = 0;
         _D('<');
 	},
+
+    indexOf: function(k) {
+        _D('>' + this.__name__ + '.indexOf()');
+        let (i = this._keys.indexOf(k)) {
+            _D('<');
+            return i == -1 ? undefined : i;
+        }
+    },
 
     move: function(k, p) {
         _D('>' + this.__name__ + '.move()');
