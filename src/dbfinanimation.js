@@ -310,10 +310,10 @@ const dbFinAnimation = new Lang.Class({
     },
 
     _timeoutDo: function() {
-//        _D('@' + this.__name__ + '._timeoutDo()');
+        _D('@' + this.__name__ + '._timeoutDo()');
         if (this._lock) {
-//            _D('Locked. Waiting...');
-//            _D('<');
+            _D('Locked. Waiting...');
+            _D('<');
             return true;
         }
         let (time = Math.ceil(GLib.get_monotonic_time() / 1000)) {
@@ -364,7 +364,7 @@ const dbFinAnimation = new Lang.Class({
                 } // for (let actorIndex)
 
                 if (this._propertiesCount) {
-//                    _D('<');
+                    _D('<');
                     return true;
                 }
 
@@ -378,7 +378,7 @@ const dbFinAnimation = new Lang.Class({
         } // let (time)
         this._actors.removeAll();
         this._callbacks = [];
-//        _D('<');
+        _D('<');
         return false;
     },
 
