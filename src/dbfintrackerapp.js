@@ -464,6 +464,16 @@ const dbFinTrackerApp = new Lang.Class({
 		} // let (index)
 	},
 
+    getPosition: function() {
+        _D('>' + this.__name__ + '.getPosition()');
+        if (this.appButton && global.yawl.panelApps) {
+            _D('<');
+            return global.yawl.panelApps.getChildPosition(this.appButton);
+        }
+        _D('<');
+        return undefined;
+    },
+
     moveToPosition: function(position) {
         _D('>' + this.__name__ + '.moveToPosition()');
         if ((position || position === 0)
