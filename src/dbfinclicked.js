@@ -267,9 +267,12 @@ const dbFinClicked = new Lang.Class({
 						);
 					} // if (state.left && this._longClick)
 				} // if (!this._release) else
+                _D('<');
+                return true;
 			} // if (state.left || state.right || state.middle)
 		} // let (state)
         _D('<');
+        return false;
 	},
 
     _buttonReleaseEvent: function(actor, event) {
@@ -283,9 +286,12 @@ const dbFinClicked = new Lang.Class({
 			    	&& state.right == this._state.right && state.middle == this._state.middle) {
 				this._registerClick(state);
 				this._state = {};
+                _D('<');
+                return true;
 			}
 		} // let (state)
         _D('<');
+        return false;
 	},
 
 	_scrollEvent: function(actor, event) {
@@ -302,9 +308,12 @@ const dbFinClicked = new Lang.Class({
                     }));
                 }
                 this._callBack(state);
+                _D('<');
+                return true;
             }
 		} // let (state)
         _D('<');
+        return false;
 	},
 
 	_registerClick: function(state) {
