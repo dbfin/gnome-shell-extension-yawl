@@ -239,7 +239,7 @@ const dbFinClicked = new Lang.Class({
 				}
 				if (!this._release) {
 					this._registerClick(state);
-				}
+				} // if (!this._release)
 				else {
 					// do not care about modifiers so far
 					this._state = {};
