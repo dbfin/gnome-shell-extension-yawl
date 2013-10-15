@@ -480,7 +480,9 @@ const dbFinTrackerApp = new Lang.Class({
             	&& this.appButton && this.yawlPanelWindowsGroup
                 && global.yawl.panelApps && global.yawl.panelWindows) {
             position = global.yawl.panelApps.moveChild(this.appButton, position);
-            global.yawl.panelWindows.moveChild(this.yawlPanelWindowsGroup, position);
+            if (position !== undefined) {
+                global.yawl.panelWindows.moveChild(this.yawlPanelWindowsGroup, position);
+            }
         }
         _D('<');
     },
