@@ -34,12 +34,14 @@ const Meta = imports.gi.Meta;
 
 const Util = imports.misc.util;
 
+const DND = imports.ui.dnd;
 const Main = imports.ui.main;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAnimation = Me.imports.dbfinanimation;
+const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinDebugView = Me.imports.dbfindebugview;
 const dbFinMenuBuilder = Me.imports.dbfinmenubuilder;
@@ -84,6 +86,10 @@ const dbFinYAWL = new Lang.Class({
                                                                     parent: Main.panel || null,
                                                                     parentproperty: '_yawlPanel',
                                                                     hideinoverview: true });
+        if (global.yawl.panelApps) {
+            global.yawl.panelApps.handleDragOver = Lang.bind(this, this._handleDragOverApps);
+        }
+
         global.yawl.panelWindows = new dbFinYAWLPanel.dbFinYAWLPanel({  panelname: 'panelYAWLWindows',
                                                                         parent: Main.uiGroup || null,
                                                                         parentproperty: '_yawlWindowsPanel',
@@ -173,6 +179,7 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedDebugBottom = function () { if (global._yawlDebugView) global._yawlDebugView.updatePosition(); };
 
         this._updatedMouseScrollWorkspace =
+        this._updatedMouseDragAndDrop =
 		this._updatedMouseClickRelease =
                 this._updatedMouseLongClick = function () {
 		    if (this._clicked) {
@@ -182,7 +189,9 @@ const dbFinYAWL = new Lang.Class({
             if (global.yawl && global.yawl.panelApps) {
                 this._clicked = new dbFinClicked.dbFinClicked(global.yawl.panelApps.container, this._buttonClicked, this, /*clicks = */false, /*doubleClicks = */true,
                                 /*scroll = */global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
-                                /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
+                                /*dragAndDrop = */false,
+                                /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
+                                /*longClick = */global.yawl._mouseLongClick);
             }
 		};
 
@@ -406,6 +415,36 @@ const dbFinYAWL = new Lang.Class({
 			this._style.set(style);
 		} // let (style)
         _D('<');
-	}
+	},
+
+    _handleDragOverApps: function(source, actor, x, y, time) {
+        _D('@' + this.__name__ + '._handleDragOverApps()');
+        if (!source || !global.yawl || !global.yawl.panelApps) {
+            _D('<');
+            return DND.DragMotionResult.CONTINUE;
+        }
+        let (trackerApp =   source instanceof dbFinAppButton.dbFinAppButton
+                            && source._trackerApp,
+             container =    source.container) {
+            if (trackerApp && container) {
+                let (position = trackerApp.getPosition(source)) {
+                    if (x < container.x) {
+                        while (position && x < container.x) {
+                            position = trackerApp.moveToPosition(position - 1);
+                        }
+                    }
+                    else if (x >= container.x + container.width) {
+                        while (position !== undefined
+                               && position < global.yawl.panelApps.getChildrenNumber() - 1
+                               && x >= container.x + container.width) {
+                            position = trackerApp.moveToPosition(position + 1);
+                        }
+                    }
+                } // let (position)
+            } // if (trackerApp && container)
+        } // let (trackerApp, container)
+        _D('<');
+        return DND.DragMotionResult.CONTINUE;
+    }
 });
 Signals.addSignalMethods(dbFinYAWL.prototype);

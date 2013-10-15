@@ -391,6 +391,11 @@
       <_description>Window right click function.</_description>
     </key>
 
+    <key name="mouse-drag-and-drop" type="b">
+      <default>true</default>
+      <_summary>Whether to use drag-and-drop.</_summary>
+      <_description>If true mouse drag-and-drop events will be send as well.</_description>
+    </key>
     <key name="mouse-click-release" type="b">
       <default>false</default>
       <_summary>Whether to send clicks on mouse release.</_summary>

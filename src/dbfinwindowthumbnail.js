@@ -122,6 +122,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 		this._updatedWindowsHoverAnimationEffect = function () { if (this._slicerActor) this._slicerActor.hoverAnimationEffect = global.yawl._windowsHoverAnimationEffect; };
 
         this._clicked = null;
+        this._updatedMouseDragAndDrop =
 		this._updatedMouseClickRelease =
                 this._updatedMouseLongClick = function () {
 			if (this._clicked) {
@@ -130,7 +131,9 @@ const dbFinWindowThumbnail = new Lang.Class({
 			}
 			this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*clicks = */true, /*doubleClicks = */false,
 							/*scroll = */true, /*sendSingleClicksImmediately = */true,
-                            /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
+                            /*dragAndDrop = */false,
+                            /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
+                            /*longClick = */global.yawl._mouseLongClick);
 		};
 
         global.yawl.watch(this);

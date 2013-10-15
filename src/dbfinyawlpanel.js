@@ -88,6 +88,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		this.actor = new St.BoxLayout({ vertical: true, reactive: true, visible: true });
 		if (this.actor) {
             if (this.container) this.container.add_child(this.actor);
+            this.actor._delegate = this;
             this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
                                         callback: this._styleChanged, scope: this });
         }
@@ -388,6 +389,12 @@ const dbFinYAWLPanel = new Lang.Class({
         _D('<');
 	},
 
+    getChildrenNumber: function() {
+        _D('>' + this.__name__ + '.getChildrenNumber()');
+        _D('<');
+        return this._childrenObjects ? this._childrenObjects.length : 0;
+    },
+
     addChild: function(childObject) {
         _D('>' + this.__name__ + '.addChild()');
         if (childObject && this._childrenObjects
@@ -423,6 +430,12 @@ const dbFinYAWLPanel = new Lang.Class({
             }
         }
         _D('<');
+    },
+
+    getChildPosition: function(childObject) {
+        _D('>' + this.__name__ + '.getChildPosition()');
+        _D('<');
+        return this._childrenObjects ? this._childrenObjects.indexOf(childObject) : undefined;
     },
 
     moveChild: function(childObject, position) {

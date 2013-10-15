@@ -514,10 +514,13 @@ function buildPrefsWidget() {
 
                 builder.addPage(_("Fine-tuning") + ' <span color="red">*</span>', 'tuning.png', '@advanced');
     				builder.addNotebook(_("Mouse events"));
-	                    builder.addCheckBox(_("Register mouse events on button release"), 'mouse-click-release');
+	                    builder.addCheckBox(_("Use mouse drag-and-drop (for moving icons etc.)"), 'mouse-drag-and-drop');
+	                    builder.addCheckBox(_("Register mouse events on button release"), 'mouse-click-release', '!mouse-drag-and-drop');
 					    builder.shift();
-						    builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', 'mouse-click-release');
+						    builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', [ '@mouse-drag-and-drop' ]);
+						    builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', [ '@!mouse-drag-and-drop', 'mouse-click-release' ]);
 					    builder.unshift();
+	                    builder.addSeparator();
                         builder.addLabel(_("Scroll timeout: the time after one scroll event during which other scroll events are rejected."));
 					    builder.shift();
                             builder.addScale(_("Mouse scroll timeout"), 'mouse-scroll-timeout', 25, 1000, 25);

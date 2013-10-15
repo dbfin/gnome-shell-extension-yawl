@@ -181,6 +181,7 @@ const Settings = [
     [ 'mouse-window-scroll-down', 6, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-window-right', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
 
+    [ 'mouse-drag-and-drop', true, { }, 'mouse' ],
     [ 'mouse-click-release', false, { }, 'mouse' ],
     [ 'mouse-long-click', true, { }, 'mouse' ],
     [ 'mouse-scroll-timeout', 125, { min: 25, max: 1000 }, 'mouse' ],

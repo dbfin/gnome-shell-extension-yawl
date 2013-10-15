@@ -29,6 +29,8 @@ const Mainloop = imports.mainloop;
 
 const Clutter = imports.gi.Clutter;
 
+const DND = imports.ui.dnd;
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
@@ -43,14 +45,16 @@ const _D = Me.imports.dbfindebug._D;
 const dbFinClicked = new Lang.Class({
 	Name: 'dbFin.Clicked',
 
-	/* callback(state, variable):       state == { left:, right:, middle:, ctrl:, shift:, clicks:, scroll:, up: }
+	/* callback(state, variable):       state == { left:, right:, middle:, ctrl:, shift:, clicks:, scroll:, up:, dnd: }
 	 *	 					            where left, right, middle, ctrl, shift, scroll, up are either true or false
 	 * 									clicks is the number of clicks
+     *                                  dnd is 1/2/3 for drag'n'drop begin/cancelled/end
 	 *									variable is a string of the form
-	 *									'Left/Right/Middle[Ctrl][Shift]' or 'Scroll'
+	 *									'(Left|Right|Middle)(Ctrl)?(Shift)?' or 'Scroll' or 'DND'
 	 */
-    _init: function(emitter, callback, scope, clicks/* = true*/, doubleClicks/* = false*/, scroll/* = false*/,
-                    sendSingleClicksImmediately/* = false*/, clickOnRelease/* = false*/, longClick/* = false*/) {
+    _init: function(emitter, callback, scope, clicks/* = true*/, doubleClicks/* = false*/,
+                    scroll/* = false*/, sendSingleClicksImmediately/* = false*/,
+                    dragAndDrop/* = false*/, clickOnRelease/* = false*/, longClick/* = false*/) {
         _D('>' + this.__name__ + '._init()');
         this._signals = new dbFinSignals.dbFinSignals();
 		this._emitter = emitter;
@@ -60,7 +64,8 @@ const dbFinClicked = new Lang.Class({
 		this._double = !!doubleClicks;
         this._scroll = !!scroll;
 		this._singleImmediate = !!sendSingleClicksImmediately;
-		this._release = !!clickOnRelease;
+        this._dnd = !!dragAndDrop && DND.makeDraggable(emitter, { manualMode: true });
+		this._release = !!this._dnd || !!clickOnRelease;
         this._longClick = this._release && !!longClick;
 		this._state = {};
 		this._stateTimeouts = new dbFinArrayHash.dbFinArrayHash();
@@ -79,6 +84,14 @@ const dbFinClicked = new Lang.Class({
         if (this._scroll) {
             this._signals.connectNoId({	emitter: this._emitter, signal: 'scroll-event',
                                         callback: this._scrollEvent, scope: this });
+        }
+        if (this._dnd) {
+            this._signals.connectNoId({ emitter: this._dnd, signal: 'drag-begin',
+                                        callback: this._dndDrag, scope: this });
+            this._signals.connectNoId({ emitter: this._dnd, signal: 'drag-cancelled',
+                                        callback: this._dndCancelled, scope: this });
+            this._signals.connectNoId({ emitter: this._dnd, signal: 'drag-end',
+                                        callback: this._dndDrop, scope: this });
         }
         _D('<');
     },
@@ -202,10 +215,13 @@ const dbFinClicked = new Lang.Class({
 				else key = 'middle';
 				if (state.ctrl) key += '-ctrl';
 				if (state.shift) key += '-shift';
-			} // if (state.left || state.right || state.middle)
+			}
 			else if (state.scroll) {
 				key = 'scroll';
-			} // if (state.left || state.right || state.middle) else if (state.scroll)
+			}
+            else if (state.dnd) {
+                key = 'dnd';
+            }
 			_D('<');
 			return key;
 		} // let (key)
@@ -220,10 +236,13 @@ const dbFinClicked = new Lang.Class({
 				else name = 'Middle';
 				if (state.ctrl) name += 'Ctrl';
 				if (state.shift) name += 'Shift';
-			} // if (state.left || state.right || state.middle)
+			}
 			else if (state.scroll) {
 				name = 'Scroll';
-			} // if (state.left || state.right || state.middle) else if (state.scroll)
+			}
+            else if (state.dnd) {
+                name = 'DND';
+            }
 			_D('<');
 			return name;
 		} // let (name)
@@ -266,6 +285,9 @@ const dbFinClicked = new Lang.Class({
 								})
 						);
 					} // if (state.left && this._longClick)
+                    if (this._dnd && this._dnd._onButtonPress) {
+                        this._dnd._onButtonPress(actor, event);
+                    }
 				} // if (!this._release) else
                 _D('<');
                 return true;
@@ -320,6 +342,45 @@ const dbFinClicked = new Lang.Class({
         _D('<');
         return false;
 	},
+
+    _dndDrag: function() {
+        _D('>' + this.__name__ + '._dndDrag()');
+        let (state = { dnd: 1 }) {
+			if (this._timeoutLongClick) {
+				Mainloop.source_remove(this._timeoutLongClick);
+				this._timeoutLongClick = null;
+			}
+            this._state = {};
+            this._callBack(state);
+        } // let (state)
+        _D('<');
+    },
+
+    _dndCancelled: function() {
+        _D('>' + this.__name__ + '._dndCancelled()');
+        let (state = { dnd: 2 }) {
+			if (this._timeoutLongClick) {
+				Mainloop.source_remove(this._timeoutLongClick);
+				this._timeoutLongClick = null;
+			}
+            this._state = {};
+            this._callBack(state);
+        } // let (state)
+        _D('<');
+    },
+
+    _dndDrop: function() {
+        _D('>' + this.__name__ + '._dndDrop()');
+        let (state = { dnd: 3 }) {
+			if (this._timeoutLongClick) {
+				Mainloop.source_remove(this._timeoutLongClick);
+				this._timeoutLongClick = null;
+			}
+            this._state = {};
+            this._callBack(state);
+        } // let (state)
+        _D('<');
+    },
 
 	_registerClick: function(state) {
         _D('>' + this.__name__ + '._registerClick()');

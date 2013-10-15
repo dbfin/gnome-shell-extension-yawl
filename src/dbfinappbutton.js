@@ -73,31 +73,35 @@ const dbFinAppButton = new Lang.Class({
                                     callback: this._styleChanged, scope: this },
                                   /*after = */true);
 
-        this._clicked = null;
-        this._updatedMouseScrollWorkspace =
-		this._updatedMouseClickRelease =
-                this._updatedMouseLongClick = function () {
-			if (this._clicked) {
-				this._clicked.destroy();
-				this._clicked = null;
-			}
-            if (global.yawl) {
-                this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */true,
-                                /*scroll = */!global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
-                                /*clickOnRelease = */global.yawl._mouseClickRelease, /*longClick = */global.yawl._mouseLongClick);
-            }
-		};
-
 		// this._slicerIcon related stuff
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
         if (this._slicerIcon && this._slicerIcon.container) {
             if (this.actor) this.actor.add_child(this._slicerIcon.container);
+            if (this._slicerIcon.actor) this._slicerIcon.actor._delegate = this;
             if (Main.panel && Main.panel.actor && Main.panel.actor.get_stage()) {
                 this._slicerIcon.container.min_height = Main.panel.actor.get_height();
             }
         }
 
 		this._icons = new dbFinArrayHash.dbFinArrayHash();
+
+        this._clicked = null;
+        this._updatedMouseScrollWorkspace =
+        this._updatedMouseDragAndDrop =
+		this._updatedMouseClickRelease =
+                this._updatedMouseLongClick = function () {
+			if (this._clicked) {
+				this._clicked.destroy();
+				this._clicked = null;
+			}
+            if (global.yawl && this._slicerIcon && this._slicerIcon.actor) {
+                this._clicked = new dbFinClicked.dbFinClicked(this._slicerIcon.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */true,
+                                /*scroll = */!global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
+                                /*dragAndDrop = */global.yawl._mouseDragAndDrop,
+                                /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
+                                /*longClick = */global.yawl._mouseLongClick);
+            }
+		};
 
         this._updatedIconsSize =
                 this._updatedIconsFaded = this._updateIcon;
@@ -220,7 +224,26 @@ const dbFinAppButton = new Lang.Class({
             _D('<');
             return;
         }
-        if (!name || name == '' || (!state.scroll && (!state.clicks || state.clicks < 1))) {
+        if (!name || name == '' || (!state.scroll && !state.dnd && (!state.clicks || state.clicks < 1))) {
+            _D('<');
+            return;
+        }
+        if (state.dnd) {
+            if (this._trackerApp) {
+                switch (state.dnd) {
+                    case 1: // drag
+				        if (this.menu && this.menu.isOpen) this.menu.close();
+                        if (this.menuWindows && this.menuWindows.isOpen) this.menuWindows.close();
+                        break;
+                    case 2: // cancelled or drop
+                    case 3:
+				        this._trackerApp.hideWindowsGroup(0);
+                        this._trackerApp.updateVisibility();
+                        break;
+                    default:
+                        break;
+                }
+            }
             _D('<');
             return;
         }
