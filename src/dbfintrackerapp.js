@@ -515,7 +515,7 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
 	},
 
-    showWindowsGroup: function() {
+    showWindowsGroup: function(time) {
         _D('>' + this.__name__ + '.showWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
         if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen
@@ -525,7 +525,7 @@ const dbFinTrackerApp = new Lang.Class({
         }
 		if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows) {
 			this._showThumbnailsTimeout = Mainloop.timeout_add(
-                    Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
+                    time === 0 ? 0 : Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
                     Lang.bind(this, function() {
                         this._cancelShowThumbnailsTimeout();
                         if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen) return;
@@ -546,7 +546,7 @@ const dbFinTrackerApp = new Lang.Class({
                                 }
                             }
 						}
-                        global.yawl.panelWindows.show(null, null, null, null, this.yawlPanelWindowsGroup);
+                        global.yawl.panelWindows.show(time, null, null, null, this.yawlPanelWindowsGroup);
                         global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;
                     })
             );
@@ -554,15 +554,15 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-    hideWindowsGroup: function() {
+    hideWindowsGroup: function(time) {
         _D('>' + this.__name__ + '.hideWindowsGroup()');
 		this._cancelShowThumbnailsTimeout();
 		if (this.yawlPanelWindowsGroup && global.yawl.panelWindows) {
 			this._showThumbnailsTimeout = Mainloop.timeout_add(
-			        77,
+			        time === 0 ? 0 : 77,
 			        Lang.bind(this, function() {
 						this._cancelShowThumbnailsTimeout();
-						global.yawl.panelWindows.hide(null, null, null, null, true, this.yawlPanelWindowsGroup);
+						global.yawl.panelWindows.hide(time, null, null, null, true, this.yawlPanelWindowsGroup);
 					})
 			);
 		} // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
