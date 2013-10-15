@@ -298,6 +298,11 @@ const dbFinClicked = new Lang.Class({
         _D('>' + this.__name__ + '._scrollEvent()');
 		let (state = this._getStateScroll(event)) {
 			if (state.scroll && !this._scrollTimeout) {
+				if (this._timeoutLongClick) {
+					Mainloop.source_remove(this._timeoutLongClick);
+					this._timeoutLongClick = null;
+				}
+                this._state = {};
                 if (global.yawl && global.yawl._mouseScrollTimeout) {
                     this._scrollTimeout = Mainloop.timeout_add(global.yawl._mouseScrollTimeout,
                                                                Lang.bind(this, function() {
