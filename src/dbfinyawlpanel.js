@@ -166,10 +166,16 @@ const dbFinYAWLPanel = new Lang.Class({
 				else if (Main.layoutManager._trackActor) {
 					Main.uiGroup.add_child(this.container);
 					Main.layoutManager._trackActor(this.actor);
+                    // it works without this, but just in case
+                    this._signals.connectNoId({ emitter: this.container, signal: 'notify::allocation',
+                                                callback: Main.layoutManager._queueUpdateRegions, scope: Main.layoutManager});
 				}
 				else if (Main.layoutManager._chrome && Main.layoutManager._chrome._trackActor) {
 					Main.uiGroup.add_child(this.container);
 					Main.layoutManager._chrome._trackActor(this.actor);
+                    // it works without this, but just in case
+                    this._signals.connectNoId({ emitter: this.container, signal: 'notify::allocation',
+                                                callback: Main.layoutManager._queueUpdateRegions, scope: Main.layoutManager});
 				}
 				else {
 					_D('Main.layoutManager does not support either affectsInputRegion or _trackActor!');
