@@ -170,12 +170,16 @@ const dbFinYAWLPanel = new Lang.Class({
                     // it works without this, but just in case
                     this._signals.connectNoId({ emitter: this.container, signal: 'notify::allocation',
                                                 callback: Main.layoutManager._queueUpdateRegions, scope: Main.layoutManager});
+                    this._signals.connectNoId({ emitter: this.container, signal: 'notify::visible',
+                                                callback: Main.layoutManager._queueUpdateRegions, scope: Main.layoutManager});
 				}
 				else if (Main.layoutManager._chrome && Main.layoutManager._chrome._trackActor) {
 					Main.uiGroup.add_child(this.container);
 					Main.layoutManager._chrome._trackActor(this.actor);
                     // it works without this, but just in case
                     this._signals.connectNoId({ emitter: this.container, signal: 'notify::allocation',
+                                                callback: Main.layoutManager._queueUpdateRegions, scope: Main.layoutManager});
+                    this._signals.connectNoId({ emitter: this.container, signal: 'notify::visible',
                                                 callback: Main.layoutManager._queueUpdateRegions, scope: Main.layoutManager});
 				}
 				else {
@@ -216,8 +220,13 @@ const dbFinYAWLPanel = new Lang.Class({
                         parent[this._parentProperty] = null;
                     }
                     if (parent == Main.uiGroup && Main.layoutManager) {
-						if (this.actor) Main.layoutManager.untrackChrome(this.actor);
-                        Main.layoutManager.removeChrome(this.container);
+				        if (Layout.defaultParams && Layout.defaultParams.affectsInputRegion !== undefined) {
+					        if (this.actor) Main.layoutManager.untrackChrome(this.actor);
+					        Main.layoutManager.removeChrome(this.container);
+				        }
+                        else {
+                            Main.uiGroup.remove_child(this.container);
+                        }
                     }
                     else if (parent.remove_actor) {
                         parent.remove_actor(this.container);
