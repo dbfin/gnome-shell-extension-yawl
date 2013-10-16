@@ -37,7 +37,6 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.convenience2;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinPreview = Me.imports.dbfinpreview;
 const dbFinSignals = Me.imports.dbfinsignals;
@@ -56,7 +55,6 @@ const dbFinTracker = new Lang.Class({
 
     _init: function() {
         _D('>' + this.__name__ + '._init()');
-		this._settings = Convenience.getSettings();
 		this._signals = new dbFinSignals.dbFinSignals();
         this._tracker = Shell.WindowTracker.get_default();
         this._appSystem = Shell.AppSystem.get_default();
@@ -142,7 +140,6 @@ const dbFinTracker = new Lang.Class({
 		}
         this._appSystem = null;
         this._tracker = null;
-		this._settings = null;
         this.emit('destroy');
         _D('<');
 	},
@@ -636,19 +633,23 @@ const dbFinTracker = new Lang.Class({
 		else if (event === 'focused') {
         }
 		else if (event === 'preview-on') {
-			if (global.yawl && global.yawl._windowsPreview) {
-				if (this.preview) this.preview.panelTransparent = true;
-			}
-			else {
-				if (this._settings) this._settings.set_boolean('windows-preview', true);
-			}
+            if (global.yawl) {
+			    if (global.yawl._windowsPreview) {
+				    if (this.preview) this.preview.panelTransparent = true;
+			    }
+			    else {
+                    global.yawl.set('windows-preview', true);
+			    }
+            }
 			if (this.preview) this.preview.show(trackerWindow);
 		}
 		else if (event === 'preview-off') {
             if (global.yawl && global.yawl._windowsPreview) {
 				if (this.preview && this.preview.panelTransparent) this.preview.panelTransparent = false;
-                else if (this._settings) this._settings.set_boolean('windows-preview', false);
-                else if (this.preview) this.preview.hide();
+                else global.yawl.set('windows-preview', false);
+            }
+            else {
+                if (this.preview) this.preview.hide();
             }
 		}
         _D('<');

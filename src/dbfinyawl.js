@@ -75,9 +75,7 @@ const dbFinYAWL = new Lang.Class({
 
 		if (global.yawl._firstTime) {
 			Util.trySpawn([ 'gnome-shell-extension-prefs', 'yawl@dbfin.com' ]);
-			let (settings = Me.imports.convenience2 && Me.imports.convenience2.getSettings()) {
-				if (settings) settings.set_boolean('first-time', false);
-			}
+            global.yawl.set('first-time', false);
 		}
 
         global.yawl.animation = new dbFinAnimation.dbFinAnimation();

@@ -69,6 +69,15 @@ const dbFinSettings = new Lang.Class({
         _D('<');
 	},
 
+    set: function(k, v, s) {
+        if (s === undefined || s === null) s = Convenience.getSettings();
+        if (!s || !s.list_keys || !k) return;
+        if (s.list_keys().indexOf(k) == -1) return;
+        if (typeof v == 'boolean') s.set_boolean(k, v);
+        else if (typeof v == 'string') s.set_string(k, v);
+        else if (typeof v == 'number') s.set_int(k, parseInt('' + v));
+    },
+
     /* parseInt(k, d, p, s): returns a number parsed from settings key:string
      * Parameters:
      *      k               the key
