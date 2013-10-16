@@ -395,7 +395,6 @@ function buildPrefsWidget() {
 	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ '@advanced', '@!icons-show-all' ], true);
 				builder.addScale(_("Icon opacity if app is not on current workspace") + ' <span color="red">*</span>', 'icons-opacity-inactive', 10, 100, 1, [ '@advanced', 'icons-show-all' ]);
                 builder.addSeparator();
-                builder.addScale(_("Clip icons: top (px)"), 'icons-clip-top', 0, 7, 1);
                 builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);
                 builder.addSeparator();
                 builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);

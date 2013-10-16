@@ -82,7 +82,6 @@ const dbFinSlicerActor = new Lang.Class({
 
 		this._style = new dbFinStyle.dbFinStyle(this.actor);
 
-		this._clipTop = 0; // px
 		this._clipBottom = 0; // px
 		this._paddingH = 0; // %
         this._paddingTop = 0; // px
@@ -162,15 +161,6 @@ const dbFinSlicerActor = new Lang.Class({
 		}
         _D('<');
     },
-
-	setClipTop: function(clip) {
-        _D('>' + this.__name__ + '.setClipTop()');
-		if (clip !== undefined && this._clipTop != clip) {
-			this._clipTop = clip;
-			this._updateAllocation();
-		}
-        _D('<');
-	},
 
 	setClipBottom: function(clip) {
         _D('>' + this.__name__ + '.setClipBottom()');
@@ -279,10 +269,10 @@ const dbFinSlicerActor = new Lang.Class({
 	_updateAllocation: function() {
         _D('>' + this.__name__ + '._updateAllocation()');
         let (allocation = this.container.allocation) {
-			if (this._clipTop > 0 || this._clipBottom > 0) {
-				this.container.set_clip(0, Math.min(allocation.y2 - allocation.y1, this._clipTop),
-				                       allocation.x2 - allocation.x1,
-				                       Math.max(0, allocation.y2 - allocation.y1 - this._clipTop - this._clipBottom));
+			if (this._clipBottom > 0) {
+				this.container.set_clip(0, 0,
+				                        allocation.x2 - allocation.x1,
+				                        Math.max(0, allocation.y2 - allocation.y1 - this._clipBottom));
 			}
 			else {
 				this.container.remove_clip();

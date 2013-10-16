@@ -92,11 +92,6 @@
       <_summary>Opacity of app icons not on current workspace.</_summary>
       <_description>Opacity of app icons not on current workspace.</_description>
     </key>
-    <key name="icons-clip-top" type="s">
-      <default>'2'</default>
-      <_summary>Clip icons: top (px).</_summary>
-      <_description>Clip icons on top (in pixels).</_description>
-    </key>
     <key name="icons-clip-bottom" type="s">
       <default>'2'</default>
       <_summary>Clip icons: bottom (px).</_summary>

@@ -105,7 +105,6 @@ const dbFinAppButton = new Lang.Class({
 
         this._updatedIconsSize =
                 this._updatedIconsFaded = this._updateIcon;
-		this._updatedIconsClipTop = function () { if (this._slicerIcon) this._slicerIcon.setClipTop(global.yawl._iconsClipTop); };
 		this._updatedIconsClipBottom = function () { if (this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom); };
 		this._updatedIconsDistance = function () { if (this._slicerIcon) this._slicerIcon.setPaddingH((global.yawl._iconsDistance + 1) >> 1); };
 		this._updatedIconsAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.animationTime = global.yawl._iconsAnimationTime; };

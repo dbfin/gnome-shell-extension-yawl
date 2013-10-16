@@ -114,7 +114,6 @@ const Settings = [
     [ 'icons-faded', false, { }, 'icons' ],
     [ 'icons-opacity', 84, { min: 50, max: 100 }, 'icons' ],
     [ 'icons-opacity-inactive', 21, { min: 10, max: 100 }, 'icons' ],
-    [ 'icons-clip-top', 2, { min: 0, max: 7 }, 'icons' ],
     [ 'icons-clip-bottom', 2, { min: 0, max: 7 }, 'icons' ],
     [ 'icons-align', 0, { min: 0, max: 100 }, 'icons' ],
     [ 'icons-distance', 11, { min: 0, max: 100 }, 'icons' ],
