@@ -233,11 +233,15 @@ const dbFinAppButton = new Lang.Class({
                     case 1: // drag
 				        if (this.menu && this.menu.isOpen) this.menu.close();
                         if (this.menuWindows && this.menuWindows.isOpen) this.menuWindows.close();
+                        this._dragging = true;
                         break;
                     case 2: // cancelled or drop
                     case 3:
-				        this._trackerApp.hideWindowsGroup(0);
-                        this._trackerApp.updateVisibility();
+                        if (this._dragging) {
+                            this._dragging = false;
+				            this._trackerApp.hideWindowsGroup(0);
+                            this._trackerApp.updateVisibility();
+                        }
                         break;
                     default:
                         break;
