@@ -96,6 +96,7 @@ const arrayThumbnailButtons = [
 
 const Settings = [
 	[ 'first-time', true, { }, null ],
+    [ 'icons-sequence', '[]', { }, null ],
 
     [ 'icons-show-all', true, { }, 'panel' ],
     [ 'yawl-panel-position', 21, { min: 0, max: 50 }, 'panel' ],

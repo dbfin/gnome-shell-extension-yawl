@@ -120,17 +120,7 @@ const dbFinTrackerApp = new Lang.Class({
 			}
         }
 
-        if (this._tracker && this._tracker.apps) {
-            let (index = this.getStableSequence()) {
-                if (index !== Infinity) {
-                    let (position = this._tracker.apps.getKeys().filter(function (metaApp) {
-                                        return metaApp.stable_sequence < index;
-                                    }).length) {
-                        this.moveToPosition(position);
-                    }
-                }
-            }
-        }
+        this._moveToStablePosition();
 
 		this._menuManager = Main.panel && Main.panel.menuManager || null;
 		this.updateMenu();
@@ -446,22 +436,27 @@ const dbFinTrackerApp = new Lang.Class({
 
 	getStableSequence: function() {
         _D('>' + this.__name__ + '.getStableSequence()');
-		let (index = undefined) {
-			if (this.metaApp) {
-				if (this.metaApp.stable_sequence && this.metaApp.stable_sequence !== Infinity
-						|| this.metaApp.stable_sequence === 0) {
-					index = this.metaApp.stable_sequence;
-				}
-				else {
-					index = Math.min.apply(Math, this.metaApp.get_windows().map(function (metaWindow) {
-								return metaWindow.get_stable_sequence();
-							}));
-					this.metaApp.stable_sequence = index;
-				}
+		let (sequence = undefined) {
+			if (global.yawl && global.yawl._iconsSequence) {
+                try { sequence = JSON.parse(global.yawl._iconsSequence); } catch (e) { }
 			}
+            if (!sequence
+                || Object.prototype.toString.call(sequence) != '[object Array]'
+                || !sequence.length) sequence = [];
             _D('<');
-			return index;
-		} // let (index)
+            return sequence;
+		}
+	},
+
+	setStableSequence: function(sequence) {
+        _D('>' + this.__name__ + '.setStableSequence()');
+        if (global.yawl && sequence && Object.prototype.toString.call(sequence) == '[object Array]') {
+            let (json = undefined) {
+                try { json = JSON.stringify(sequence); } catch (e) { }
+                if (json) global.yawl.set('icons-sequence', json);
+            }
+        }
+        _D('<');
 	},
 
     getPosition: function() {
@@ -474,16 +469,106 @@ const dbFinTrackerApp = new Lang.Class({
         return undefined;
     },
 
-    moveToPosition: function(position) {
+    moveToPosition: function(position, updateStableSequence/* = true*/) {
         _D('>' + this.__name__ + '.moveToPosition()');
-        if ((position || position === 0)
-            	&& this.appButton && this.yawlPanelWindowsGroup
-                && global.yawl.panelApps && global.yawl.panelWindows) {
-            position = global.yawl.panelApps.moveChild(this.appButton, position);
-            if (position !== undefined) {
-                global.yawl.panelWindows.moveChild(this.yawlPanelWindowsGroup, position);
-            }
+        if (!position && position !== 0
+            || !this.metaApp
+            || !this.appButton
+            || !this.yawlPanelWindowsGroup
+            || !global.yawl
+            || !global.yawl.panelApps
+            || !global.yawl.panelApps._childrenObjects
+            || !global.yawl.panelApps._childrenObjects._keys
+            || !global.yawl.panelWindows) {
+            _D('<');
+            return;
         }
+        if (updateStableSequence === undefined) updateStableSequence = true;
+        else updateStableSequence = !!updateStableSequence;
+        updateStableSequence = updateStableSequence && global.yawl._mouseDragAndDrop;
+        let (position_ = this.getPosition()) {
+            if (position_ !== undefined && position !== position_) {
+                position = global.yawl.panelApps.moveChild(this.appButton, position);
+                if (position !== undefined && position !== position_) {
+                    global.yawl.panelWindows.moveChild(this.yawlPanelWindowsGroup, position);
+                    if (updateStableSequence) {
+                        let (sequence = this.getStableSequence(),
+                             id = this.metaApp.get_id()) {
+                            let (index = sequence && id ? sequence.indexOf(id) : -1,
+                                 nextIndex = -1,
+                                 keys = global.yawl.panelApps._childrenObjects._keys) {
+                                if (index != -1) {
+                                    (position < position_
+                                     ? keys.slice(position + 1)
+                                     : keys.slice(0, position).reverse())
+                                    .some(function (appButton) {
+                                        let (metaApp =  appButton && !appButton.hidden
+                                                        && !appButton.hiding && appButton.metaApp) {
+                                            let (id = metaApp && metaApp.get_id()) {
+                                                let (index = id ? sequence.indexOf(id) : -1) {
+                                                    return  index != -1
+                                                            ? (nextIndex = index, true)
+                                                            : false;
+                                                }
+                                            }
+                                        }
+                                    });
+                                    if (nextIndex != -1) {
+                                        sequence.splice(index, 1);
+                                        sequence.splice(nextIndex, 0, id);
+                                        this.setStableSequence(sequence);
+                                    }
+                                } // if (index != -1)
+                            } // let (index, nextIndex, keys)
+                        } // let (sequence, id)
+                    } // if (updateStableSequence)
+                } // if (position !== undefined && position !== position_)
+            } // if (position_ !== undefined && position !== position_)
+        } // let (position_)
+        _D('<');
+    },
+
+    _moveToStablePosition: function() {
+        _D('>' + this.__name__ + '._moveToStablePosition()');
+        if (!this.metaApp
+            || this.metaApp.is_window_backed()
+            || !global.yawl
+            || !global.yawl._mouseDragAndDrop
+            || !global.yawl.panelApps
+            || !global.yawl.panelApps._childrenObjects
+            || !global.yawl.panelApps._childrenObjects._keys) {
+            _D('<');
+            return;
+        }
+        let (position = 0,
+             sequence = this.getStableSequence(),
+             id = this.metaApp.get_id()) {
+            if (sequence && id) {
+                let (index = sequence.indexOf(id)) {
+                    if (index !== -1) {
+                        global.yawl.panelApps._childrenObjects._keys
+                        .every(function (appButton, position_) {
+                            let (metaApp = appButton && appButton.metaApp) {
+                                let (id = metaApp && metaApp.get_id()) {
+                                    let (index_ = id ? sequence.indexOf(id) : -1) {
+                                        if (index_ < index) {
+                                            if (index_ != -1) position = position_ + 1;
+                                            return true;
+                                        }
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                        this.moveToPosition(position, false);
+                    }
+                    else {
+                        sequence.push(id);
+                        this.setStableSequence(sequence);
+                    }
+                } // let(index)
+            } // if (sequence && id)
+        } // let (position, sequence, id)
         _D('<');
     },
 
