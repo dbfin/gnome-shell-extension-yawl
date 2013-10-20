@@ -198,6 +198,7 @@ const Settings = [
     [ 'debug-width', 33, { min: 10, max: 70 }, 'debug' ],
     [ 'debug-force', false, { }, 'debug' ],
 
+    [ 'icons-drag-and-drop', true, { }, 'addons>icons' ],
     [ 'mouse-scroll-workspace', true, { }, 'addons>scrollworkspace' ],
     [ 'mouse-scroll-workspace-search', true, { }, 'addons>scrollworkspace' ],
     [ 'icons-attention-blink', true, { }, 'addons>attention' ],

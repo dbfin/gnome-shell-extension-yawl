@@ -179,7 +179,8 @@ const dbFinYAWL = new Lang.Class({
         this._updatedMouseScrollWorkspace =
         this._updatedMouseDragAndDrop =
 		this._updatedMouseClickRelease =
-                this._updatedMouseLongClick = function () {
+        this._updatedMouseLongClick =
+                this._updatedIconsDragAndDrop = function () {
 		    if (this._clicked) {
 			    this._clicked.destroy();
 			    this._clicked = null;
@@ -190,6 +191,13 @@ const dbFinYAWL = new Lang.Class({
                                 /*dragAndDrop = */false,
                                 /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
                                 /*longClick = */global.yawl._mouseLongClick);
+                if (global.yawl._mouseDragAndDrop && global.yawl._iconsDragAndDrop) {
+                    global.yawl.panelApps._childrenObjects.forEach(function (appButton, signals) {
+                        if (appButton && appButton._trackerApp) {
+                            appButton._trackerApp._moveToStablePosition();
+                        }
+                    });
+                }
             }
 		};
 

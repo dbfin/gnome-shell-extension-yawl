@@ -464,6 +464,11 @@
       <_description>Whether to force all debug messages.</_description>
     </key>
 
+    <key name="icons-drag-and-drop" type="b">
+      <default>true</default>
+      <_summary>Rearrange icons using mouse.</_summary>
+      <_description>Rearrange icons on the panel using mouse.</_description>
+    </key>
     <key name="mouse-scroll-workspace" type="b">
       <default>true</default>
       <_summary>Mouse scroll to change workspace.</_summary>

@@ -485,7 +485,9 @@ const dbFinTrackerApp = new Lang.Class({
         }
         if (updateStableSequence === undefined) updateStableSequence = true;
         else updateStableSequence = !!updateStableSequence;
-        updateStableSequence = updateStableSequence && global.yawl._mouseDragAndDrop;
+        updateStableSequence =  updateStableSequence
+                                && global.yawl._mouseDragAndDrop
+                                && global.yawl._iconsDragAndDrop;
         let (position_ = this.getPosition()) {
             if (position_ !== undefined && position !== position_) {
                 position = global.yawl.panelApps.moveChild(this.appButton, position);
@@ -534,6 +536,7 @@ const dbFinTrackerApp = new Lang.Class({
             || this.metaApp.is_window_backed()
             || !global.yawl
             || !global.yawl._mouseDragAndDrop
+            || !global.yawl._iconsDragAndDrop
             || !global.yawl.panelApps
             || !global.yawl.panelApps._childrenObjects
             || !global.yawl.panelApps._childrenObjects._keys) {
