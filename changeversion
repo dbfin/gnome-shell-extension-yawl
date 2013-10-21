@@ -50,7 +50,7 @@ sed -i "s|\(^\s*extensionversion\s*=\s*\)$v|\1$vn|" $f && echo 'Done.' || echo -
 
 f='configure.ac'
 echo "Modifying $f..."
-sed -i "s|\(^\s*AC_INIT\s*(\s*\[\s*gnome-shell-extension-yawl\s*\]\s*,\s*\[\s*\)$v\(\s*\][^)]*)\)|\1$vn\2|" $f && echo 'Done.' || echo -e "Cannot modify \e[0;31m$f\e[0m: refer to changeversion.log for details"
+sed -i "s|\(^\s*AC_INIT\s*(\s*\[\s*gnome-shell-extension-yawl\s*\]\s*,\s*\)$v\([^)]*)\)|\1$vn\2|" $f && echo 'Done.' || echo -e "Cannot modify \e[0;31m$f\e[0m: refer to changeversion.log for details"
 
 f='pos'
 echo "Modifying $f..."
