@@ -26,10 +26,8 @@ POTFILES
 *.gschema.valid
 *.pot
 
-*anjuta*
 stamp-*
 
-.anjuta/
 .git/
 /commit
 *.svg
