@@ -281,20 +281,27 @@ const dbFinTrackerApp = new Lang.Class({
 	_createMenu: function() {
 		_D('>' + this.__name__ + '._createMenu()');
 		this._cancelCreateMenuTimeout();
-        let (menu = this.appButton && global.yawl && global.yawl.menuBuilder
-                    && global.yawl.menuBuilder.build(this, this.appButton.actor)
-                    || null) {
+        if (!this.appButton || !global.yawl || !global.yawl.menuBuilder) {
+            _D('<');
+            return;
+        }
+        let (menu = this.appButton.menu,
+             open = this.appButton.menu && this.appButton.menu.isOpen) {
+            this._signals.disconnectId('menu-toggled');
+            if (menu) {
+                menu.close();
+                menu = null;
+                this.appButton.setMenu(null); // destroy old menu and set this.appButton.menu = null
+            }
+            menu = global.yawl.menuBuilder.build(this, this.appButton.actor);
 			if (menu) {
-				this._signals.disconnectId('menu-toggled');
-                if (this.appButton.menu) {
-                    if (this._menuManager) this._menuManager.removeMenu(this.appButton.menu);
-                }
 				this.appButton.setMenu(menu);
                 if (this.appButton.menu) {
                     if (this._menuManager) this._menuManager.addMenu(this.appButton.menu);
                     this._signals.connectId('menu-toggled', {	emitter: this.appButton.menu, signal: 'open-state-changed',
                                                                 callback: this._menuToggled, scope: this });
                 }
+                if (open) menu.open();
 			}
         }
         _D('<');
