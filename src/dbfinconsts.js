@@ -83,11 +83,14 @@ const arrayWindowClickFunctions = [
 	[	_("Preview off/Thumbnail panel opacity"),		'previewWindowOff'				]
 ];
 
+// the first parameter: a menu item text, 'addons' or anything else for separator
+// the second parameter: a method of dbFinTrackerApp, or null for addons and separators
+// the third parameter: 1 = when not running, 2 = when running, 3 = in both cases
 const arrayAppMenuItems = [
-//    [   '',                         					null							],
-//    [   _("New window"),            					'openNewWindowThisWorkspace'	],
-    [   '',                         					null							],
-    [   _("Quit"),                  					'quitApplication'				]
+    [   _("Open"),                  					'openNewWindowThisWorkspace',	1	],
+    [   'addons',                   					null,						    3	],
+    [   '-',                        					null,						    2	],
+    [   _("Quit"),                  					'quitApplication',			    2	]
 ];
 
 const arrayThumbnailButtons = [

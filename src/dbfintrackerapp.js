@@ -59,6 +59,7 @@ const dbFinTrackerApp = new Lang.Class({
 		this._tracker = tracker;
         this.state = state || 0;
         this.windows = [];
+        this.pin = false;
 
         this.appName = '?';
 		if (this.metaApp && this.metaApp.get_name) {
@@ -190,6 +191,7 @@ const dbFinTrackerApp = new Lang.Class({
 		this.focused = false;
 		this.hovered = false;
 		this.appName = '?';
+        this.pin = false;
         this.windows = [];
 		this._tracker = null;
 		this.metaApp = null;
@@ -215,8 +217,9 @@ const dbFinTrackerApp = new Lang.Class({
 			return;
 		}
 		if (!this.metaApp || !this.state || !this.windows || !this._tracker
-                || this.metaApp.state == Shell.AppState.STOPPED
-                || this.state < this._tracker.state
+                || ( this.metaApp.state == Shell.AppState.STOPPED
+                    || this.state < this._tracker.state )
+                    && !this.pin
 				|| !this.windows.length && !(global.yawl && global.yawl._iconsShowAll)) {
 			this.appButton.hide();
 			this.hideWindowsGroup();

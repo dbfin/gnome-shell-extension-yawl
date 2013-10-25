@@ -32,6 +32,7 @@ const GLib = imports.gi.GLib;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
+const AppFavorites = imports.ui.appFavorites;
 const Main = imports.ui.main;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -210,6 +211,23 @@ const dbFinTracker = new Lang.Class({
 					}
 				} // let (trackerApp)
 			})); // this._appSystem.get_running().forEach(metaApp)
+            let (idApps = AppFavorites.getAppFavorites().getFavoriteMap()) {
+                for (let id in idApps) {
+                    let (metaApp = idApps.hasOwnProperty(id) && idApps[id]) {
+                        if (!metaApp) continue;
+                        let (trackerApp = this.apps.get(metaApp)) {
+                            if (!trackerApp) { // new app
+                                appsIn.push(metaApp);
+                                this.apps.set(metaApp, trackerApp = new dbFinTrackerApp.dbFinTrackerApp(metaApp, this, this.state));
+                            }
+                            else {
+                                trackerApp.state = this.state;
+                            }
+                            trackerApp.pin = true;
+                        } // let (trackerApp)
+                    } // let (metaApp)
+                } // for (let id)
+            } // let (idApps)
 			metaWorkspace.list_windows().reverse().forEach(Lang.bind(this, function(metaWindow) {
 				if (!metaWindow || !this.isWindowInteresting(metaWindow)) return;
 				let (metaApp = this._tracker.get_window_app(metaWindow)) {
@@ -377,15 +395,16 @@ const dbFinTracker = new Lang.Class({
             _D('<');
             return;
         } // if (!global.yawl.panelApps || !global.yawl.panelWindows)
-/*        if (appsIn && appsIn.forEach) {
+        if (appsIn && appsIn.forEach) {
             appsIn.forEach(Lang.bind(this, function(metaApp) {
                 let (trackerApp = this.getTrackerApp(metaApp)) {
                     if (trackerApp) {
+                        trackerApp.updateVisibility();
                     }
                 }
             }));
         }
-		if (windowsIn && windowsIn.forEach) {
+/*		if (windowsIn && windowsIn.forEach) {
             windowsIn.forEach(Lang.bind(this, function(metaWindow) {
                 let (trackerWindow = this.getTrackerWindow(metaWindow)) {
                     if (trackerWindow) {

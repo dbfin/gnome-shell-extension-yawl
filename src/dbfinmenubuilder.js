@@ -96,12 +96,14 @@ const dbFinMenuBuilder = new Lang.Class({
         _D('<');
 	},
 
-    _menuSetProperties: function(menu, metaApp, trackerApp, updateAddons/* = false*/) {
+    _menuSetProperties: function(menu, metaApp, trackerApp) {
         _D('>' + this.__name__ + '._menuSetProperties()');
         if (menu) {
             menu._app = metaApp;
             menu._tracker = trackerApp && trackerApp._tracker || null;
-			if (updateAddons) menu._menuUpdateAddons = Lang.bind(this, this._menuUpdateAddons);
+			if (menu._addonsPosition !== undefined) {
+                menu._menuUpdateAddons = Lang.bind(this, this._menuUpdateAddons);
+            }
             if (!menu._openWas) {
                 menu._openWas = menu.open;
                 menu.open = this.open;
@@ -113,7 +115,11 @@ const dbFinMenuBuilder = new Lang.Class({
     _menuUpdateAddons: function(menu, metaApp) {
         _D('>' + this.__name__ + '._menuUpdateAddons()');
         // menu add-ons
-        if (menu && metaApp) {
+        if (!menu || !metaApp || menu._addonsPosition === undefined) {
+            _D('<');
+            return;
+        }
+        let (position = menu._addonsPosition >= 0 ? menu._addonsPosition : undefined) {
             if (global.yawl._appQuicklists && !menu._menuQuicklists) {
                 let (mf = this._getMenuFunction('quicklists', 'setQuicklist')) {
                     if (mf) {
@@ -125,10 +131,10 @@ const dbFinMenuBuilder = new Lang.Class({
                                 menu._menuQuicklists = null;
                             }
                             else {
-                                menu.addMenuItem(menu._menuQuicklists, 0);
+                                menu.addMenuItem(menu._menuQuicklists, position);
                                 menu._menuQuicklistsSeparator = new PopupMenu.PopupSeparatorMenuItem();
                                 if (menu._menuQuicklistsSeparator) {
-                                    menu.addMenuItem(menu._menuQuicklistsSeparator, 0);
+                                    menu.addMenuItem(menu._menuQuicklistsSeparator, position);
                                 }
                             }
                         }
@@ -140,12 +146,10 @@ const dbFinMenuBuilder = new Lang.Class({
                     menu._menuQuicklistsSeparator.destroy();
                     menu._menuQuicklistsSeparator = null;
                 }
-                if (menu._menuQuicklists) {
-                    menu._menuQuicklists.destroy();
-                    menu._menuQuicklists = null;
-                }
+                menu._menuQuicklists.destroy();
+                menu._menuQuicklists = null;
             }
-        } // if (menu && metaApp)
+        }
         _D('<');
     },
 
@@ -156,6 +160,7 @@ const dbFinMenuBuilder = new Lang.Class({
             return null;
 		}
         let (metaApp = trackerApp.metaApp,
+             state = trackerApp.metaApp && trackerApp.metaApp.state == Shell.AppState.RUNNING ? 2 : 1,
              menu = null) {
             if (!metaApp) {
                 _D('<');
@@ -167,10 +172,6 @@ const dbFinMenuBuilder = new Lang.Class({
                 _D('<');
                 return menu;
             }
-            if (metaApp.state != Shell.AppState.RUNNING) {
-                _D('<');
-                return null;
-            }
             // remote menu
 			if (metaApp.action_group && metaApp.menu) {
 				menu = new PopupMenu.RemoteMenu(actor, metaApp.menu, metaApp.action_group);
@@ -179,7 +180,8 @@ const dbFinMenuBuilder = new Lang.Class({
 					menu = null;
 				}
                 if (menu) {
-                    this._menuSetProperties(menu, metaApp, trackerApp, true);
+                    menu._addonsPosition = 0;
+                    this._menuSetProperties(menu, metaApp, trackerApp);
                     _D('<');
                     return menu;
                 }
@@ -191,18 +193,25 @@ const dbFinMenuBuilder = new Lang.Class({
                 return null;
             }
             // set up menu
-            for (let i = 0; i < dbFinConsts.arrayAppMenuItems.length; ++i) {
+            for (let i = 0, p = 0; i < dbFinConsts.arrayAppMenuItems.length; ++i) {
                 let (   text = _(dbFinConsts.arrayAppMenuItems[i][0]),
-                        functionName = dbFinConsts.arrayAppMenuItems[i][1]) {
-                    if (text && text != '' && trackerApp[functionName]) {
+                        functionName = dbFinConsts.arrayAppMenuItems[i][1],
+                        inState = dbFinConsts.arrayAppMenuItems[i][2]) {
+                    if (!text || !(state & inState)) continue;
+                    if (text === 'addons') {
+                        menu._addonsPosition = p;
+                    }
+                    else if (functionName && trackerApp[functionName]) {
                         menu.addAction(text, Lang.bind(trackerApp, trackerApp[functionName]));
+                        ++p;
                     }
                     else {
                         menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+                        ++p;
                     }
-                } // let (text, functionName)
+                } // let (text, functionName, inState)
             } // for (let i)
-            this._menuSetProperties(menu, metaApp, trackerApp, true);
+            this._menuSetProperties(menu, metaApp, trackerApp);
             _D('<');
             return menu;
         } // let (metaApp, menu)
