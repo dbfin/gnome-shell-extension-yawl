@@ -764,6 +764,9 @@ const dbFinTrackerApp = new Lang.Class({
 					}
 				}
 			}
+            else { // no windows at all? open a new window
+                this.openNewWindowThisWorkspace();
+            }
 		} // let (windows)
         _D('<');
     },
