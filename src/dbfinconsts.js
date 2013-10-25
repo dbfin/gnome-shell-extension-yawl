@@ -205,7 +205,7 @@ const Settings = [
     [ 'mouse-scroll-workspace', true, { }, 'addons>scrollworkspace' ],
     [ 'mouse-scroll-workspace-search', true, { }, 'addons>scrollworkspace' ],
     [ 'icons-attention-blink', true, { }, 'addons>attention' ],
-    [ 'icons-attention-blink-rate', 39, { min: 15, max: 125 }, 'addons>attention' ],
+    [ 'icons-attention-blink-rate', 60, { min: 15, max: 125 }, 'addons>attention' ],
     [ 'app-quicklists', true, { }, 'addons>quicklists' ],
 	[ 'windows-preview', false, { }, 'addons>preview' ],
 	[ 'windows-preview-dim-color', '#01234c', { }, 'addons>preview' ],
