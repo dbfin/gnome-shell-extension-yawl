@@ -78,7 +78,7 @@
     </key>
 
     <key name="icons-size" type="s">
-      <default>'24'</default>
+      <default>'32'</default>
       <_summary>Size of application icons.</_summary>
       <_description>The size of application icons. The size is adjusted to be divisible by 8.</_description>
     </key>

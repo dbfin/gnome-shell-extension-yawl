@@ -114,7 +114,7 @@ const Settings = [
     [ 'panel-color', '#000000', { }, 'panel' ],
     [ 'panel-opacity', 75, { min: 0, max: 100 }, 'panel' ],
 
-    [ 'icons-size', 24, { min: 16, max: 128 }, 'icons' ],
+    [ 'icons-size', 32, { min: 16, max: 128 }, 'icons' ],
     [ 'icons-faded', false, { }, 'icons' ],
     [ 'icons-opacity', 84, { min: 50, max: 100 }, 'icons' ],
     [ 'icons-opacity-inactive', 21, { min: 10, max: 100 }, 'icons' ],
