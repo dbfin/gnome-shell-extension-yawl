@@ -150,8 +150,9 @@ const dbFinTrackerApp = new Lang.Class({
 		this.attention(!!(this._tracker && this._tracker.hasAppAttention(this.metaApp)));
 
 		this._updatedIconsShowAll =
+            this._updatedIconsOpacity =
 			this._updatedIconsOpacityInactive =
-			this._updatedIconsOpacity = function () { this.updateVisibility(); };
+            this._updatedIconsFavorites = function () { this.updateVisibility(); };
         this._updatedWindowsShow = function () { if (global.yawl && !global.yawl._windowsShow) this.hideWindowsGroup(); }
         this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = global.yawl._windowsAnimationEffect; };
@@ -216,11 +217,27 @@ const dbFinTrackerApp = new Lang.Class({
 			_D('<');
 			return;
 		}
-		if (!this.metaApp || !this.state || !this.windows || !this._tracker
-                || ( this.metaApp.state == Shell.AppState.STOPPED
-                    || this.state < this._tracker.state )
-                    && !this.pin
-				|| !this.windows.length && !(global.yawl && global.yawl._iconsShowAll)) {
+        // if   ( something wrong )
+        //      || ( app is stopped
+        //           || not running
+        //           || on other workspaces
+        //              && we do not show all icons
+        //         )
+        //         &&
+        //         ( app is not pinned
+        //           || we do not show favorites
+        //         )
+		if (    !this.metaApp || !this.state || !this.windows || !this._tracker || !global.yawl
+                || (    this.metaApp.state == Shell.AppState.STOPPED
+                        || this.state < this._tracker.state
+                        || !this.windows.length
+                           && !global.yawl._iconsShowAll
+                   )
+                   &&
+                   (    !this.pin
+                        || !global.yawl._iconsFavorites
+                   )
+           ) {
 			this.appButton.hide();
 			this.hideWindowsGroup();
 		}
@@ -233,6 +250,10 @@ const dbFinTrackerApp = new Lang.Class({
 				this.hideWindowsGroup();
 				if (this.appButton.actor) {
 	                this.appButton.actor.add_style_pseudo_class('inactive');
+                    if (this.metaApp.state == Shell.AppState.STOPPED
+                        || this.state < this._tracker.state) {
+                        this.appButton.actor.add_style_pseudo_class('not-running');
+                    }
 				}
 			}
             else {
@@ -241,6 +262,7 @@ const dbFinTrackerApp = new Lang.Class({
                 }
 				if (this.appButton.actor) {
 	                this.appButton.actor.remove_style_pseudo_class('inactive');
+	                this.appButton.actor.remove_style_pseudo_class('not-running');
 				}
             }
 		}

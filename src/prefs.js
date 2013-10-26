@@ -616,6 +616,7 @@ function buildPrefsWidget() {
         			builder.addScale(_("Blinking rate (times per minute)"), 'icons-attention-blink-rate', 15, 125, 1, 'icons-attention-blink');
                 builder.unshift();
 			    builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
+			    builder.addCheckBox('<b>' + _("Favorite apps") + '</b>: ' + _("always show"), 'icons-favorites');
 
             builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
 			    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);

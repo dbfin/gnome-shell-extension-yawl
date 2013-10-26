@@ -494,6 +494,11 @@
       <_summary>Whether to use quicklists in menus.</_summary>
       <_description>If true and Quicklists extension is enabled then use quicklists in menus.</_description>
     </key>
+    <key name="icons-favorites" type="b">
+      <default>true</default>
+      <_summary>Whether to always show icons of favorite apps.</_summary>
+      <_description>If true icons of favorite apps are always shown.</_description>
+    </key>
     <key name="windows-preview" type="b">
       <default>false</default>
       <_summary>Whether to preview a window when its thumbnail is hovered.</_summary>
