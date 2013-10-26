@@ -87,6 +87,7 @@ const arrayWindowClickFunctions = [
 // the second parameter: a method of dbFinTrackerApp, or null for addons and separators
 // the third parameter: 1 = when not running, 2 = when running, 3 = in both cases
 const arrayAppMenuItems = [
+    [   '-',                        					null,						    1	],
     [   _("Open"),                  					'openNewWindowThisWorkspace',	1	],
     [   'addons',                   					null,						    3	],
     [   '-',                        					null,						    2	],

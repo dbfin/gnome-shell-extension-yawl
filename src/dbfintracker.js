@@ -91,6 +91,8 @@ const dbFinTracker = new Lang.Class({
 									callback: this._windowAttention, scope: this });
         this._signals.connectNoId({ emitter: global.display, signal: 'notify::focus-window',
                                     callback: this._focusWindow, scope: this });
+        this._signals.connectNoId({ emitter: AppFavorites.getAppFavorites(), signal: 'changed',
+                                    callback: function () { this.update('Favorites changed.'); }, scope: this });
 		// it seems to work just fine without this but just in case:
 		this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
 									callback: function () { this.update('Overview hiding.'); }, scope: this });
@@ -208,6 +210,7 @@ const dbFinTracker = new Lang.Class({
 					}
 					else {
                         trackerApp.state = this.state;
+                        trackerApp.pin = false;
 					}
 				} // let (trackerApp)
 			})); // this._appSystem.get_running().forEach(metaApp)
@@ -285,8 +288,12 @@ const dbFinTracker = new Lang.Class({
 						trackerApp.windows.forEach(Lang.bind(this, function (metaWindow) { windowsOut.push(metaWindow); }));
 					}
 					appsOut.push(metaApp);
+                    if (trackerApp) trackerApp.pin = false;
 					this._removeApp(metaApp);
 				}
+                else {
+                    trackerApp.updateVisibility();
+                }
 			})); // this.apps.forEach(metaApp, trackerApp)
 			this.windows.forEach(Lang.bind(this, function (metaWindow, trackerWindow) {
 				if (!trackerWindow || !trackerWindow.state || trackerWindow.state < this.state) {
@@ -314,6 +321,9 @@ const dbFinTracker = new Lang.Class({
 				trackerApp.destroy();
 				trackerApp = null;
 				this.apps.remove(metaApp);
+            }
+            if (trackerApp) {
+                trackerApp.updateVisibility();
             }
 		} // let (trackerApp)
         _D('<');
@@ -395,16 +405,15 @@ const dbFinTracker = new Lang.Class({
             _D('<');
             return;
         } // if (!global.yawl.panelApps || !global.yawl.panelWindows)
-        if (appsIn && appsIn.forEach) {
+/*        if (appsIn && appsIn.forEach) {
             appsIn.forEach(Lang.bind(this, function(metaApp) {
                 let (trackerApp = this.getTrackerApp(metaApp)) {
                     if (trackerApp) {
-                        trackerApp.updateVisibility();
                     }
                 }
             }));
         }
-/*		if (windowsIn && windowsIn.forEach) {
+		if (windowsIn && windowsIn.forEach) {
             windowsIn.forEach(Lang.bind(this, function(metaWindow) {
                 let (trackerWindow = this.getTrackerWindow(metaWindow)) {
                     if (trackerWindow) {
