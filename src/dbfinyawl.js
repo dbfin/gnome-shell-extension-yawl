@@ -425,30 +425,45 @@ const dbFinYAWL = new Lang.Class({
 
     _handleDragOverApps: function(source, actor, x, y, time) {
         _D('@' + this.__name__ + '._handleDragOverApps()');
-        if (!source || !global.yawl || !global.yawl.panelApps) {
+        if (!source || !global.yawl || !global.yawl.panelApps
+            || !global.yawl.panelApps._childrenObjects) {
             _D('<');
             return DND.DragMotionResult.CONTINUE;
         }
         let (trackerApp =   source instanceof dbFinAppButton.dbFinAppButton
                             && source._trackerApp,
-             container =    source.container) {
-            if (trackerApp && container) {
-                let (position = trackerApp.getPosition(source)) {
-                    if (x < container.x) {
-                        while (position && x < container.x) {
-                            position = trackerApp.moveToPosition(position - 1);
+             container =    source.container,
+             appButtons = global.yawl.panelApps._childrenObjects.getKeys()) {
+            if (!trackerApp || !container || !appButtons) {
+                _D('<');
+                return DND.DragMotionResult.CONTINUE;
+            }
+            let (position = trackerApp.getPosition(source)) {
+                if (position === undefined) {
+                    _D('<');
+                    return DND.DragMotionResult.CONTINUE;
+                }
+                let (position_ = position) {
+                    if (x < container.get_x()
+                        && position > 0) {
+                        while (--position_ > 0) {
+                            if (appButtons[position_] && appButtons[position_].container
+                                && appButtons[position_].container.get_x() <= x) break;
                         }
+                        trackerApp.moveToPosition(position_);
                     }
-                    else if (x >= container.x + container.width) {
-                        while (position !== undefined
-                               && position < global.yawl.panelApps.getChildrenNumber() - 1
-                               && x >= container.x + container.width) {
-                            position = trackerApp.moveToPosition(position + 1);
+                    else if (x >= container.get_x() + container.get_width()
+                             && position < appButtons.length - 1) {
+                        while (++position_ < appButtons.length - 1) {
+                            if (appButtons[position_] && appButtons[position_].container
+                                && appButtons[position_].container.get_x()
+                                + appButtons[position_].container.get_width() > x) break;
                         }
+                        trackerApp.moveToPosition(position_);
                     }
-                } // let (position)
-            } // if (trackerApp && container)
-        } // let (trackerApp, container)
+                } // let(position_)
+            } // let (position)
+        } // let (trackerApp, container, appButtons)
         _D('<');
         return DND.DragMotionResult.CONTINUE;
     }
