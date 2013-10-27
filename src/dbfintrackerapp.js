@@ -135,8 +135,6 @@ const dbFinTrackerApp = new Lang.Class({
                                         0.0625 * (2 * i + 4), 1.0,
                                         0, -2);
             }
-            this._signals.connectId('appbutton-destroy', {  emitter: this.appButton, signal: 'destroy',
-                                                            callback: this._appButtonDestroy, scope: this });
         } // if (this.appButton)
 
         this._moveToStablePosition();
@@ -219,14 +217,6 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
 	},
 
-    _appButtonDestroy: function() {
-        _D('>' + this.__name__ + '._appButtonDestroy()');
-        this._signals.disconnectId('appbutton-destroy');
-        this.appButton = null;
-        this._destroyBadges();
-        _D('<');
-    },
-
     _destroyBadges: function() {
         _D('>' + this.__name__ + '._destroyBadges()');
         if (this._badgesWindows) {
@@ -249,6 +239,7 @@ const dbFinTrackerApp = new Lang.Class({
 			this._signals.disconnectId('menu-toggled');
 		}
         this.appButton = null;
+        this._destroyBadges();
         _D('<');
     },
 
