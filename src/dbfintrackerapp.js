@@ -477,7 +477,7 @@ const dbFinTrackerApp = new Lang.Class({
                 }
             }
 			this._resetNextWindows();
-            if (this.windows.length == 1) this.updateVisibility();
+            this.updateVisibility();
 		}
         _D('<');
     },
@@ -489,7 +489,7 @@ const dbFinTrackerApp = new Lang.Class({
                 if (i != -1) {
 					this.windows.splice(i, 1);
 					this._resetNextWindows();
-					if (!this.windows.length) this.updateVisibility();
+					this.updateVisibility();
 				}
             }
         }
