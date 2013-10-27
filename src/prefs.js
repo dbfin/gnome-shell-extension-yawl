@@ -617,6 +617,10 @@ function buildPrefsWidget() {
                 builder.unshift();
 			    builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
 			    builder.addCheckBox('<b>' + _("Favorite apps") + '</b>: ' + _("always show"), 'icons-favorites');
+                builder.addComboBoxText('<b>' + _("Windows indicators") + '</b>', 'icons-windows-indicator', dbFinConsts.arrayWindowsIndicatorTypes, 0);
+                builder.shift();
+				    builder.addColorButton(_("Choose windows indicator color"), 'icons-windows-indicator-color', _("Choose windows indicator color"));
+                builder.unshift();
 
             builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
 			    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);

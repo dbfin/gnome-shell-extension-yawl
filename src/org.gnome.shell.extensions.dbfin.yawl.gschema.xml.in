@@ -499,6 +499,16 @@
       <_summary>Whether to always show icons of favorite apps.</_summary>
       <_description>If true icons of favorite apps are always shown.</_description>
     </key>
+    <key name="icons-windows-indicator" type="s">
+      <default>'1'</default>
+      <_summary>The type of app icon windows indicator.</_summary>
+      <_description>The type of app icon windows indicator.</_description>
+    </key>
+    <key name="icons-windows-indicator-color" type="s">
+      <default>'#ffffff'</default>
+      <_summary>The color used for app icon windows indicator.</_summary>
+      <_description>The color used for app icon windows indicator.</_description>
+    </key>
     <key name="windows-preview" type="b">
       <default>false</default>
       <_summary>Whether to preview a window when its thumbnail is hovered.</_summary>

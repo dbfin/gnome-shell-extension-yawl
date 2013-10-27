@@ -44,6 +44,7 @@ const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerLabel = Me.imports.dbfinslicerlabel;
+const dbFinUtils = Me.imports.dbfinutils;
 const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -123,11 +124,11 @@ const dbFinTrackerApp = new Lang.Class({
 				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
 											callback: this._leaveEvent, scope: this });
 			}
-            this._badgeWindows = new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' },
+            this._badgesWindowsNumber = new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' },
                                                                        { style_class: 'badge-icon-windows-number' });
-            if (this._badgeWindows && this._badgeWindows.container) {
+            if (this._badgesWindowsNumber && this._badgesWindowsNumber.container) {
                 this.appButton.badgeAdd('window-indicator-number',
-                                        this._badgeWindows.container,
+                                        this._badgesWindowsNumber.container,
                                         0.25, 0.75,
                                         0, 0);
             }
@@ -184,6 +185,8 @@ const dbFinTrackerApp = new Lang.Class({
         this._updatedIconsAttentionBlink =
             this._updatedIconsAttentionBlinkRate = function () { this.attention(this._attention); }
         this._updatedAppQuicklists = function () { this.updateMenu(); }
+        this._updatedIconsWindowsIndicator = function () { this.updateVisibility(); }
+        this._updatedIconsWindowsIndicatorColor = function () { this._repaintWindowIndicators(); }
 
         global.yawl.watch(this);
         _D('<');
@@ -238,9 +241,9 @@ const dbFinTrackerApp = new Lang.Class({
             }
             this._badgesWindows = [];
         }
-        if (this._badgeWindows) {
-            this._badgeWindows.destroy();
-            this._badgeWindows = null;
+        if (this._badgesWindowsNumber) {
+            this._badgesWindowsNumber.destroy();
+            this._badgesWindowsNumber = null;
         }
         _D('<');
     },
@@ -278,9 +281,15 @@ const dbFinTrackerApp = new Lang.Class({
                         cr.moveTo(w / 2, h / 2);
                         cr.arc(w / 2, h / 2, r, 0, 2. * Math.PI);
                         cr.setLineWidth(1);
+                        if (global.yawl && global.yawl._iconsWindowsIndicatorColor) {
+                            rgba = dbFinUtils.stringColorToRGBA(global.yawl._iconsWindowsIndicatorColor);
+                        }
+                        rgba.red /= 255;
+                        rgba.green /= 255;
+                        rgba.blue /= 255;
 						let (gradient = new Cairo.RadialGradient(w / 2, h / 2, 0, w / 2, h / 2, r)) {
-							gradient.addColorStopRGBA(0.0, 1.0, 1.0, 1.0, 1.0);
-							gradient.addColorStopRGBA(1.0, 1.0, 1.0, 1.0, 0.0);
+							gradient.addColorStopRGBA(0.0, rgba.red, rgba.green, rgba.blue, 1.0);
+							gradient.addColorStopRGBA(1.0, rgba.red, rgba.green, rgba.blue, 0.0);
 							cr.setSource(gradient);
 						}
                         cr.fill();
@@ -288,6 +297,21 @@ const dbFinTrackerApp = new Lang.Class({
 				} // let (cr, rgba, r)
 			} // if (w >= 1 && h >= 1)
 		} // let ([w, h])
+        _D('<');
+    },
+
+    _repaintWindowIndicators: function() {
+        _D('>' + this.__name__ + '._repaintWindowIndicators()');
+        if (this._badgesWindowsNumber && this._badgesWindowsNumber.actor
+            && global.yawl && global.yawl._iconsWindowsIndicatorColor) {
+            this._badgesWindowsNumber.actor.set_style('color: ' + global.yawl._iconsWindowsIndicatorColor);
+        }
+        if (this._badgesWindows) {
+            for (let i = this._badgesWindows.length; i--;) {
+                this._badgesWindows[i].queue_repaint();
+            }
+        }
+        this.updateVisibility(); // just in case
         _D('<');
     },
 
@@ -308,6 +332,9 @@ const dbFinTrackerApp = new Lang.Class({
         //         ( app is not pinned
         //           || we do not show favorites
         //         )
+        for (let i = 0; i < 5; ++i) {
+            this.appButton.badgeHide('window-indicator-' + i);
+        }
 		if (    !this.metaApp || !this.state || !this.windows || !this._tracker || !global.yawl
                 || (    this.metaApp.state == Shell.AppState.STOPPED
                         || this.state < this._tracker.state
@@ -321,11 +348,9 @@ const dbFinTrackerApp = new Lang.Class({
            ) {
 			this.appButton.hide();
 			this.hideWindowsGroup();
+            this.appButton.badgeHide('window-indicator-number');
 		}
-		else {
-            for (let i = 0; i < 5; ++i) {
-                this.appButton.badgeHide('window-indicator-' + i);
-            }
+		else let (indicatorType = global.yawl._iconsWindowsIndicator || 0) {
 			this.appButton.show();
 			if (!this.windows.length) {
                 if (this.appButton._slicerIcon) {
@@ -339,7 +364,6 @@ const dbFinTrackerApp = new Lang.Class({
                         this.appButton.actor.add_style_pseudo_class('not-running');
                     }
 				}
-                this._badgeWindows.setText('0');
                 this.appButton.badgeHide('window-indicator-number');
 			}
             else {
@@ -350,19 +374,26 @@ const dbFinTrackerApp = new Lang.Class({
 	                this.appButton.actor.remove_style_pseudo_class('inactive');
 	                this.appButton.actor.remove_style_pseudo_class('not-running');
 				}
-                this._badgeWindows.setText('' + this.windows.length);
-                this.appButton.badgeShow('window-indicator-number');
-                switch (this.windows.length) {
-                    case 2:
-                        this.appButton.badgeShow('window-indicator-1');
-                        this.appButton.badgeShow('window-indicator-3');
-                        break;
-                    case 3:
-                    default:
-                        this.appButton.badgeShow('window-indicator-0');
-                        this.appButton.badgeShow('window-indicator-4');
-                    case 1:
-                        this.appButton.badgeShow('window-indicator-2');
+                if (indicatorType == 2) {
+                    this._badgesWindowsNumber.setText('' + this.windows.length);
+                    this.appButton.badgeShow('window-indicator-number');
+                }
+                else {
+                    this.appButton.badgeHide('window-indicator-number');
+                    if (indicatorType == 1) {
+                        switch (this.windows.length) {
+                            case 2:
+                                this.appButton.badgeShow('window-indicator-1');
+                                this.appButton.badgeShow('window-indicator-3');
+                                break;
+                            case 3:
+                            default:
+                                this.appButton.badgeShow('window-indicator-0');
+                                this.appButton.badgeShow('window-indicator-4');
+                            case 1:
+                                this.appButton.badgeShow('window-indicator-2');
+                        }
+                    }
                 }
             }
 		}

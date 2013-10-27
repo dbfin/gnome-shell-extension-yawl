@@ -98,6 +98,12 @@ const arrayThumbnailButtons = [
 	[	'window-close',									'closeWindow'					]
 ];
 
+const arrayWindowsIndicatorTypes = [
+    [   _("No indicators")              ],
+    [   _("Dots")                       ],
+    [   _("Actual number of windows")   ]
+];
+
 const Settings = [
 	[ 'first-time', true, { }, null ],
     [ 'icons-sequence', '[]', { }, null ],
@@ -209,6 +215,8 @@ const Settings = [
     [ 'icons-attention-blink-rate', 60, { min: 15, max: 125 }, 'addons>attention' ],
     [ 'app-quicklists', true, { }, 'addons>quicklists' ],
     [ 'icons-favorites', true, { }, 'addons>favorites' ],
+    [ 'icons-windows-indicator', 1, { min: 0, max: arrayWindowsIndicatorTypes - 1 }, 'addons>indicators' ],
+    [ 'icons-windows-indicator-color', '#ffffff', { }, 'addons>indicators' ],
 	[ 'windows-preview', false, { }, 'addons>preview' ],
 	[ 'windows-preview-dim-color', '#01234c', { }, 'addons>preview' ],
 	[ 'windows-preview-dim-opacity', 25, { min: 0, max: 75 }, 'addons>preview' ],
