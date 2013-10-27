@@ -129,8 +129,9 @@ const dbFinTrackerApp = new Lang.Class({
             if (this._badgesWindowsNumber && this._badgesWindowsNumber.container) {
                 this.appButton.badgeAdd('window-indicator-number',
                                         this._badgesWindowsNumber.container,
-                                        0.25, 0.75,
-                                        0, 0);
+                                        12,
+                                        undefined, undefined,
+                                        2, 3);
             }
             this._badgesWindows = [];
             for (let i = 0, indicator = null;
@@ -142,6 +143,7 @@ const dbFinTrackerApp = new Lang.Class({
                 this._badgesWindows.push(indicator);
                 this.appButton.badgeAdd('window-indicator-' + i,
                                         indicator,
+                                        undefined,
                                         0.0625 * (2 * i + 4), 1.0,
                                         0, -2);
             }

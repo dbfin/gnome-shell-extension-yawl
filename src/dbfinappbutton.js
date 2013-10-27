@@ -178,13 +178,33 @@ const dbFinAppButton = new Lang.Class({
                 this._badges.forEach(Lang.bind(this, function (name, actor) {
                     if (!actor) return;
                     let ([ wm, wn ] = actor.get_preferred_width(-1),
-                         [ hm, hn ] = actor.get_preferred_height(-1)) {
-                        let (x = Math.floor(box.x1 + w * actor._badgePositionX + actor._badgeShiftX - wn / 2),
-                             y = Math.floor(box.y1 + h * actor._badgePositionY + actor._badgeShiftY - hn / 2)) {
+                         [ hm, hn ] = actor.get_preferred_height(-1),
+                         align = actor._align || 0) {
+                        let (x, y) {
+                            if (!(align & 5)) {
+                                y = Math.floor(box.y1 + h * actor._badgePositionY + actor._badgeShiftY - hn / 2);
+                            }
+                            else if (align & 1) {
+                                y = box.y1 + actor._badgeShiftY;
+                                if (align & 4) hn = h;
+                            }
+                            else {
+                                y = box.y2 - hn + actor._badgeShiftY;
+                            }
+                            if (!(align & 10)) {
+                                x = Math.floor(box.x1 + w * actor._badgePositionX + actor._badgeShiftX - wn / 2);
+                            }
+                            else if (align & 8) {
+                                x = box.x1 + actor._badgeShiftX;
+                                if (align & 2) wn = w;
+                            }
+                            else {
+                                x = box.x2 - wn + actor._badgeShiftX;
+                            }
                             dbFinUtils.setBox(boxChild, x, y, x + wn, y + hn);
                             actor.allocate(boxChild, flags);
                         } // let (x, y)
-                    } // let ([ wm, wn ], [ hm, hn ])
+                    } // let ([ wm, wn ], [ hm, hn ], align)
                 })); // this._badges.forEach(name, actor)
             } // let (w, h, boxChild)
         } // if (this._badges)
@@ -313,7 +333,13 @@ const dbFinAppButton = new Lang.Class({
 		// nothing to do here
 	},
 
-    badgeAdd: function(name, actor, positionX, positionY, shiftX, shiftY) {
+    // Parameters:
+    //      name: a string or a number
+    //      actor: Clutter.Actor
+    //      align: bits from right-to-left == top, right, bottom, left
+    //      positionX, positionY: if not aligned, x- and y- positions from 0.0 to 1.0
+    //      shiftX, shiftY: x-, y- shift
+    badgeAdd: function(name, actor, align, positionX, positionY, shiftX, shiftY) {
         _D('>' + this.__name__ + '.badgeAdd()');
         if (!name && name !== 0 || typeof name != 'string' && typeof name != 'number'
             || !(actor instanceof Clutter.Actor)
@@ -321,6 +347,7 @@ const dbFinAppButton = new Lang.Class({
             _D('<');
             return;
         }
+        actor._align = dbFinUtils.inRange(parseInt(align), undefined, undefined, undefined);
         actor._badgePositionX = dbFinUtils.inRange(parseFloat(positionX), undefined, undefined, 0.0);
         actor._badgePositionY = dbFinUtils.inRange(parseFloat(positionY), undefined, undefined, 0.0);
         actor._badgeShiftX = dbFinUtils.inRange(parseFloat(shiftX), undefined, undefined, 0.0);
