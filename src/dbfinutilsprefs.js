@@ -545,7 +545,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 		     settingsbind = new dbFinSettingsBindEntryColorButton()) {
 			this._notebook.widget._settingsbinds.push(settingsbind);
 			settingsbind.bind(settingsKey, rowColorButtonEntry, rowColorButton);
-			return this.addRow(label, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : (this._notebook.widthRight - 2) ], [ rowColorButton, 1 ] ], bindSensitive);
+			return this.addRow(label, [ [ rowColorButtonEntry, !showEntry ? 0 : 1 ], [ null, !showEntry ? 0 : (this._notebook.widthRight - 2) ], [ rowColorButton, 1 ], [ null, !showEntry ? (this._notebook.widthRight - 1) : 0 ] ], bindSensitive);
         } // let (rowColorButtonEntry, rowColorButton, settingsbind)
     },
 
