@@ -43,6 +43,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinSlicerLabel = Me.imports.dbfinslicerlabel;
 const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -122,9 +123,17 @@ const dbFinTrackerApp = new Lang.Class({
 				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
 											callback: this._leaveEvent, scope: this });
 			}
+            this._badgeWindows = new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' },
+                                                                       { style_class: 'badge-icon-windows-number' });
+            if (this._badgeWindows && this._badgeWindows.container) {
+                this.appButton.badgeAdd('window-indicator-number',
+                                        this._badgeWindows.container,
+                                        0.25, 0.75,
+                                        0, 0);
+            }
             this._badgesWindows = [];
             for (let i = 0, indicator = null;
-                 i < 5 && (indicator = new St.DrawingArea({ style_class: 'badge-icon-window' }));
+                 i < 5 && (indicator = new St.DrawingArea({ style_class: 'badge-icon-windows' }));
                  ++i) {
                 indicator.width = indicator.height = 9;
                 this._signals.connectId('window-indicator-' + i, {  emitter: indicator, signal: 'repaint',
@@ -229,6 +238,10 @@ const dbFinTrackerApp = new Lang.Class({
             }
             this._badgesWindows = [];
         }
+        if (this._badgeWindows) {
+            this._badgeWindows.destroy();
+            this._badgeWindows = null;
+        }
         _D('<');
     },
 
@@ -326,6 +339,8 @@ const dbFinTrackerApp = new Lang.Class({
                         this.appButton.actor.add_style_pseudo_class('not-running');
                     }
 				}
+                this._badgeWindows.setText('0');
+                this.appButton.badgeHide('window-indicator-number');
 			}
             else {
                 if (this.appButton._slicerIcon) {
@@ -335,6 +350,8 @@ const dbFinTrackerApp = new Lang.Class({
 	                this.appButton.actor.remove_style_pseudo_class('inactive');
 	                this.appButton.actor.remove_style_pseudo_class('not-running');
 				}
+                this._badgeWindows.setText('' + this.windows.length);
+                this.appButton.badgeShow('window-indicator-number');
                 switch (this.windows.length) {
                     case 2:
                         this.appButton.badgeShow('window-indicator-1');
