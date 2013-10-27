@@ -24,13 +24,16 @@
  *
  */
 
+const Cairo = imports.cairo;
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
+const Clutter = imports.gi.Clutter;
 const GLib = imports.gi.GLib;
 const Meta = imports.gi.Meta;
 const Shell = imports.gi.Shell;
+const St = imports.gi.St;
 
 const Main = imports.ui.main;
 
@@ -119,7 +122,22 @@ const dbFinTrackerApp = new Lang.Class({
 				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
 											callback: this._leaveEvent, scope: this });
 			}
-        }
+            this._badgesWindows = [];
+            for (let i = 0, indicator = null;
+                 i < 5 && (indicator = new St.DrawingArea({ style_class: 'badge-icon-window' }));
+                 ++i) {
+                indicator.width = indicator.height = 9;
+                this._signals.connectId('window-indicator-' + i, {  emitter: indicator, signal: 'repaint',
+                                                                    callback: this._paintWindowIndicator, scope: this });
+                this._badgesWindows.push(indicator);
+                this.appButton.badgeAdd('window-indicator-' + i,
+                                        indicator,
+                                        0.0625 * (2 * i + 4), 1.0,
+                                        0, -2);
+            }
+            this._signals.connectId('appbutton-destroy', {  emitter: this.appButton, signal: 'destroy',
+                                                            callback: this._appButtonDestroy, scope: this });
+        } // if (this.appButton)
 
         this._moveToStablePosition();
 
@@ -184,6 +202,7 @@ const dbFinTrackerApp = new Lang.Class({
             this.appButton.destroy();
             this.appButton = null;
         }
+        this._destroyBadges(); // just in case they were not destroyed for some reason
         if (this.yawlPanelWindowsGroup) {
             this.yawlPanelWindowsGroup.destroy();
             this.yawlPanelWindowsGroup = null;
@@ -200,6 +219,29 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
 	},
 
+    _appButtonDestroy: function() {
+        _D('>' + this.__name__ + '._appButtonDestroy()');
+        this._signals.disconnectId('appbutton-destroy');
+        this.appButton = null;
+        this._destroyBadges();
+        _D('<');
+    },
+
+    _destroyBadges: function() {
+        _D('>' + this.__name__ + '._destroyBadges()');
+        if (this._badgesWindows) {
+            for (let i = this._badgesWindows.length; i--;) {
+                if (this._signals) this._signals.disconnectId('window-indicator-' + i);
+                if (this._badgesWindows[i]) {
+                    this._badgesWindows[i].destroy();
+                    this._badgesWindows[i] = null;
+                }
+            }
+            this._badgesWindows = [];
+        }
+        _D('<');
+    },
+
     _onAppButtonDestroy: function() {
         _D('>' + this.__name__ + '._onAppButtonDestroy()');
 		if (this._signals) {
@@ -210,7 +252,42 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-	updateVisibility: function () {
+    _paintWindowIndicator: function(area) {
+        _D('@' + this.__name__ + '._paintWindowIndicator()');
+		if (!area || !area.get_stage()) {
+			_D('<');
+			return;
+		}
+		let ([ w, h ] = area.get_surface_size()) {
+			if (w >= 1 && h >= 1) {
+				let (cr = area.get_context(),
+                     rgba = new Clutter.Color(),
+                     r = (Math.min(w, h) - 1) / 2) {
+                    cr.moveTo(w / 2, h / 2);
+                    cr.arc(w / 2, h / 2, r / 3, 0, 2. * Math.PI);
+                    cr.setLineWidth(1);
+                    rgba.red = rgba.green = rgba.blue = 255;
+                    rgba.alpha = 255;
+                    Clutter.cairo_set_source_color(cr, rgba);
+                    cr.fill();
+                    if (Cairo.RadialGradient) {
+                        cr.moveTo(w / 2, h / 2);
+                        cr.arc(w / 2, h / 2, r, 0, 2. * Math.PI);
+                        cr.setLineWidth(1);
+						let (gradient = new Cairo.RadialGradient(w / 2, h / 2, 0, w / 2, h / 2, r)) {
+							gradient.addColorStopRGBA(0.0, 1.0, 1.0, 1.0, 1.0);
+							gradient.addColorStopRGBA(1.0, 1.0, 1.0, 1.0, 0.0);
+							cr.setSource(gradient);
+						}
+                        cr.fill();
+                    }
+				} // let (cr, rgba, r)
+			} // if (w >= 1 && h >= 1)
+		} // let ([w, h])
+        _D('<');
+    },
+
+	updateVisibility: function() {
         _D('>' + this.__name__ + '.updateVisibility()');
 		if (!this.appButton) {
 			_D('this.appButton === null');
@@ -242,6 +319,9 @@ const dbFinTrackerApp = new Lang.Class({
 			this.hideWindowsGroup();
 		}
 		else {
+            for (let i = 0; i < 5; ++i) {
+                this.appButton.badgeHide('window-indicator-' + i);
+            }
 			this.appButton.show();
 			if (!this.windows.length) {
                 if (this.appButton._slicerIcon) {
@@ -264,6 +344,18 @@ const dbFinTrackerApp = new Lang.Class({
 	                this.appButton.actor.remove_style_pseudo_class('inactive');
 	                this.appButton.actor.remove_style_pseudo_class('not-running');
 				}
+                switch (this.windows.length) {
+                    case 2:
+                        this.appButton.badgeShow('window-indicator-1');
+                        this.appButton.badgeShow('window-indicator-3');
+                        break;
+                    case 3:
+                    default:
+                        this.appButton.badgeShow('window-indicator-0');
+                        this.appButton.badgeShow('window-indicator-4');
+                    case 1:
+                        this.appButton.badgeShow('window-indicator-2');
+                }
             }
 		}
         _D('<');

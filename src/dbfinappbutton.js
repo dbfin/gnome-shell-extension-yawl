@@ -26,6 +26,8 @@
 
 const Lang = imports.lang;
 
+const Clutter = imports.gi.Clutter;
+
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 
@@ -37,6 +39,7 @@ const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerIcon = Me.imports.dbfinslicericon;
+const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -104,6 +107,8 @@ const dbFinAppButton = new Lang.Class({
             }
 		};
 
+        this._badges = new dbFinArrayHash.dbFinArrayHash();
+
         this._updatedIconsSize =
                 this._updatedIconsFaded = this._updateIcon;
 		this._updatedIconsClipBottom = function () { if (this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom); };
@@ -149,6 +154,11 @@ const dbFinAppButton = new Lang.Class({
 			this._icons.destroy();
 			this._icons = null;
 		}
+        if (this._badges) {
+            this._badges.forEach(Lang.bind(this, function(name, actor) { if (name) this.badgeRemove(name); }));
+            this._badges.destroy();
+            this._badges = null;
+        }
 		this._bindReactiveId = null;
 		this.hidden = true;
 		this._trackerApp = null;
@@ -157,6 +167,29 @@ const dbFinAppButton = new Lang.Class({
         this.emit('destroy');
         _D('<');
 	},
+
+    _allocate: function(actor, box, flags) {
+        _D('@' + this.__name__ + '._allocate()');
+        this.parent(actor, box, flags);
+        if (this._badges) {
+            let (w = box.x2 - box.x1,
+                 h = box.y2 - box.y1,
+                 boxChild = new Clutter.ActorBox()) {
+                this._badges.forEach(Lang.bind(this, function (name, actor) {
+                    if (!actor) return;
+                    let ([ wm, wn ] = actor.get_preferred_width(-1),
+                         [ hm, hn ] = actor.get_preferred_height(-1)) {
+                        let (x = Math.floor(box.x1 + w * actor._badgePositionX + actor._badgeShiftX - wn / 2),
+                             y = Math.floor(box.y1 + h * actor._badgePositionY + actor._badgeShiftY - hn / 2)) {
+                            dbFinUtils.setBox(boxChild, x, y, x + wn, y + hn);
+                            actor.allocate(boxChild, flags);
+                        } // let (x, y)
+                    } // let ([ wm, wn ], [ hm, hn ])
+                })); // this._badges.forEach(name, actor)
+            } // let (w, h, boxChild)
+        } // if (this._badges)
+        _D('<');
+    },
 
     show: function(time) {
         _D('>' + this.__name__ + '.show()');
@@ -278,5 +311,62 @@ const dbFinAppButton = new Lang.Class({
 
 	_onButtonPress: function() {
 		// nothing to do here
-	}
+	},
+
+    badgeAdd: function(name, actor, positionX, positionY, shiftX, shiftY) {
+        _D('>' + this.__name__ + '.badgeAdd()');
+        if (!name && name !== 0 || typeof name != 'string' && typeof name != 'number'
+            || !(actor instanceof Clutter.Actor)
+            || !this._badges) {
+            _D('<');
+            return;
+        }
+        actor._badgePositionX = dbFinUtils.inRange(parseFloat(positionX), undefined, undefined, 0.0);
+        actor._badgePositionY = dbFinUtils.inRange(parseFloat(positionY), undefined, undefined, 0.0);
+        actor._badgeShiftX = dbFinUtils.inRange(parseFloat(shiftX), undefined, undefined, 0.0);
+        actor._badgeShiftY = dbFinUtils.inRange(parseFloat(shiftY), undefined, undefined, 0.0);
+        this._badges.set(name, actor);
+        if (this.actor) this.actor.add_child(actor);
+        actor.hide();
+        _D('<');
+    },
+
+    badgeRemove: function(name) {
+        _D('>' + this.__name__ + '.badgeRemove()');
+        let (actor = ( name || name === 0 )
+                     && this._badges
+                     && this._badges.remove(name)
+                     || undefined) {
+            if (actor) {
+                if (this.actor) this.actor.remove_child(actor);
+            }
+        }
+        _D('<');
+    },
+
+    badgeShow: function(name) {
+        _D('>' + this.__name__ + '.badgeShow()');
+        let (actor = ( name || name === 0 )
+                     && this._badges
+                     && this._badges.get(name)
+                     || undefined) {
+            if (actor) {
+                actor.show();
+            }
+        }
+        _D('<');
+    },
+
+    badgeHide: function(name) {
+        _D('>' + this.__name__ + '.badgeHide()');
+        let (actor = ( name || name === 0 )
+                     && this._badges
+                     && this._badges.get(name)
+                     || undefined) {
+            if (actor) {
+                actor.hide();
+            }
+        }
+        _D('<');
+    }
 });
