@@ -137,7 +137,7 @@ const dbFinTrackerApp = new Lang.Class({
             for (let i = 0, indicator = null;
                  i < 5 && (indicator = new St.DrawingArea({ style_class: 'badge-icon-windows' }));
                  ++i) {
-                indicator.width = indicator.height = 9;
+                indicator.width = indicator.height = 22;
                 this._signals.connectId('window-indicator-' + i, {  emitter: indicator, signal: 'repaint',
                                                                     callback: this._paintWindowIndicator, scope: this });
                 this._badgesWindows.push(indicator);
@@ -274,10 +274,10 @@ const dbFinTrackerApp = new Lang.Class({
                      rgba = new Clutter.Color(),
                      r = (Math.min(w, h) - 1) / 2) {
                     cr.moveTo(w / 2, h / 2);
-                    cr.arc(w / 2, h / 2, r / 3, 0, 2. * Math.PI);
+                    cr.arc(w / 2, h / 2, 1, 0, 2. * Math.PI);
                     cr.setLineWidth(1);
                     rgba.red = rgba.green = rgba.blue = 255;
-                    rgba.alpha = 255;
+                    rgba.alpha = Math.floor(255 * 0.3);
                     Clutter.cairo_set_source_color(cr, rgba);
                     cr.fill();
                     if (Cairo.RadialGradient) {
@@ -290,8 +290,10 @@ const dbFinTrackerApp = new Lang.Class({
                         rgba.red /= 255;
                         rgba.green /= 255;
                         rgba.blue /= 255;
-						let (gradient = new Cairo.RadialGradient(w / 2, h / 2, 0, w / 2, h / 2, r)) {
-							gradient.addColorStopRGBA(0.0, rgba.red, rgba.green, rgba.blue, 1.0);
+						let (gradient = new Cairo.RadialGradient(w / 2, h / 2, 0, w / 2, h / 2, r),
+                             effect = 1 / 3) {
+							gradient.addColorStopRGBA(0.0, rgba.red, rgba.green, rgba.blue, 2 / 3);
+							gradient.addColorStopRGBA(effect, rgba.red, rgba.green, rgba.blue, effect);
 							gradient.addColorStopRGBA(1.0, rgba.red, rgba.green, rgba.blue, 0.0);
 							cr.setSource(gradient);
 						}
