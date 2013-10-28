@@ -393,7 +393,9 @@ function buildPrefsWidget() {
                 builder.addCheckBox(_("Faded icons"), 'icons-faded');
 				builder.addScale(_("Default icon opacity") + ' <span color="red">*</span>', 'icons-opacity', 50, 100, 1, '@advanced');
 	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ '@advanced', '@!icons-show-all' ], true);
-				builder.addScale(_("Icon opacity if app is not on current workspace") + ' <span color="red">*</span>', 'icons-opacity-inactive', 10, 100, 1, [ '@advanced', 'icons-show-all' ]);
+				builder.addScale(_("Icon opacity if app is not on current workspace") + ' <span color="red">*</span>', 'icons-opacity-other', 10, 100, 1, [ '@advanced', 'icons-show-all' ]);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Add-ons") + ' > ' + _("Icons") + ' > ' + _("Favorite apps") + '</span>', [ '@advanced', '@!icons-favorites' ], true);
+				builder.addScale(_("Icon opacity if app is not running") + ' <span color="red">*</span>', 'icons-opacity-inactive', 10, 100, 1, [ '@advanced', 'icons-favorites' ]);
                 builder.addSeparator();
                 builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);
                 builder.addSeparator();

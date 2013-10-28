@@ -179,6 +179,7 @@ const dbFinTrackerApp = new Lang.Class({
 
 		this._updatedIconsShowAll =
             this._updatedIconsOpacity =
+            this._updatedIconsOpacityOther =
 			this._updatedIconsOpacityInactive =
             this._updatedIconsFavorites = function () { this.updateVisibility(); };
         this._updatedWindowsShow = function () { if (global.yawl && !global.yawl._windowsShow) this.hideWindowsGroup(); }
@@ -352,19 +353,20 @@ const dbFinTrackerApp = new Lang.Class({
 			this.hideWindowsGroup();
             this.appButton.badgeHide('window-indicator-number');
 		}
-		else let (indicatorType = global.yawl._iconsWindowsIndicator || 0) {
+		else let (indicatorType = global.yawl._iconsWindowsIndicator || 0,
+                  stopped = this.metaApp.state == Shell.AppState.STOPPED
+                            || this.state < this._tracker.state) {
 			this.appButton.show();
 			if (!this.windows.length) {
                 if (this.appButton._slicerIcon) {
-                    this.appButton._slicerIcon.setOpacity100(global.yawl._iconsOpacityInactive);
+                    this.appButton._slicerIcon.setOpacity100(
+                            stopped ? global.yawl._iconsOpacityInactive
+                                    : global.yawl._iconsOpacityOther
+                    );
                 }
 				this.hideWindowsGroup();
 				if (this.appButton.actor) {
-	                this.appButton.actor.add_style_pseudo_class('inactive');
-                    if (this.metaApp.state == Shell.AppState.STOPPED
-                        || this.state < this._tracker.state) {
-                        this.appButton.actor.add_style_pseudo_class('not-running');
-                    }
+	                this.appButton.actor.add_style_pseudo_class(stopped ? 'inactive' : 'other');
 				}
                 this.appButton.badgeHide('window-indicator-number');
 			}
@@ -373,8 +375,8 @@ const dbFinTrackerApp = new Lang.Class({
                     this.appButton._slicerIcon.setOpacity100(global.yawl._iconsOpacity);
                 }
 				if (this.appButton.actor) {
+	                this.appButton.actor.remove_style_pseudo_class('other');
 	                this.appButton.actor.remove_style_pseudo_class('inactive');
-	                this.appButton.actor.remove_style_pseudo_class('not-running');
 				}
                 if (indicatorType == 2) {
                     this._badgesWindowsNumber.setText('' + this.windows.length);

@@ -92,10 +92,15 @@
       <_summary>Default icons opacity.</_summary>
       <_description>Icon opacity when not hovered (and when hovered if not otherwise set).</_description>
     </key>
-    <key name="icons-opacity-inactive" type="s">
-      <default>'21'</default>
+    <key name="icons-opacity-other" type="s">
+      <default>'56'</default>
       <_summary>Opacity of app icons not on current workspace.</_summary>
       <_description>Opacity of app icons not on current workspace.</_description>
+    </key>
+    <key name="icons-opacity-inactive" type="s">
+      <default>'21'</default>
+      <_summary>Opacity of not running favorite app icons.</_summary>
+      <_description>Opacity of not running favorite app icons.</_description>
     </key>
     <key name="icons-clip-bottom" type="s">
       <default>'2'</default>
