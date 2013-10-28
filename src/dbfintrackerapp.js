@@ -131,7 +131,7 @@ const dbFinTrackerApp = new Lang.Class({
                                         this._badgesWindowsNumber.container,
                                         12,
                                         undefined, undefined,
-                                        2, 3);
+                                        2, -1);
             }
             this._badgesWindows = [];
             for (let i = 0, indicator = null;
