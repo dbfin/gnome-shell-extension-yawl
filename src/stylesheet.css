@@ -26,6 +26,21 @@
 
 /* Apps */
 
+#panelYAWL .panel-button-container {
+}
+
+#panelYAWL .panel-button {
+}
+
+#panelYAWL .panel-button:other {
+}
+
+#panelYAWL .panel-button:inactive {
+}
+
+#panelYAWL .badge-icon-windows StLabel {
+}
+
 #panelYAWL .badge-icon-windows-number StLabel {
     text-shadow: black 1px 2px 2px;
 }
@@ -39,9 +54,13 @@
 }
 
 /* Thumbnails */
+
 #panelYAWLWindows .yawl-panel-label-title {
 	font-size: 106.25%;
 	font-weight: bold;
+}
+
+#panelYAWLWindows .yawl-panel-label {
 }
 
 #panelYAWLWindows .yawl-thumbnail {
