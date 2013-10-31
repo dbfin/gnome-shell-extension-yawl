@@ -24,6 +24,8 @@
  *
  */
 
+const Params = imports.misc.params;
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
@@ -69,6 +71,41 @@ function delay(transition, delay/* = 0.0*/) {
         else return (function (t, b, c, d, p) {
 			if (t < d) return b;
 			else return b + c; // it is assumed that all transitions come to b+c
+        });
+    }
+    else {
+        return (function () {});
+    }
+}
+
+/* withParams:	animate the given animation transition with params
+ */
+function withParams(transition, params/* = 0.0*/) {
+	if (!transition) return (function () {});
+	if (!isNaN(parseInt(transition))) {
+        transition = dbFinConsts.arrayAnimationTransitions[
+            dbFinUtils.inRange(parseInt(transition),
+            0, dbFinConsts.arrayAnimationTransitions.length - 1, 0)
+        ][1];
+	}
+	if (typeof transition == 'string') {
+		if (typeof imports.tweener.equations[transition] == 'function') {
+			transition = imports.tweener.equations[transition];
+		}
+		else if (typeof Me.imports.dbfinanimationequations[transition] == 'function') {
+			transition = Me.imports.dbfinanimationequations[transition];
+		}
+	}
+    if (typeof transition == 'function') {
+        if (!(params instanceof Object)) return transition;
+        return (function (t, b, c, d, p) {
+            if (!p) {
+                return transition(t, b, c, d, params);
+            }
+            else {
+                Params.parse(p, params);
+                return transition(t, b, c, d, p);
+            }
         });
     }
     else {
