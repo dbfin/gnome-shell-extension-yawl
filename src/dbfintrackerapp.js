@@ -40,6 +40,7 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinAnimationEquations = Me.imports.dbfinanimationequations;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerLabel = Me.imports.dbfinslicerlabel;
@@ -354,10 +355,27 @@ const dbFinTrackerApp = new Lang.Class({
 			this.appButton.show();
 			if (!this.windows.length) {
                 if (this.appButton._slicerIcon) {
-                    this.appButton._slicerIcon.setOpacity100(
-                            stopped ? global.yawl._iconsOpacityInactive
-                                    : global.yawl._iconsOpacityOther
-                    );
+                    if (stopped) {
+                        this.appButton._slicerIcon.setOpacity100(global.yawl._iconsOpacityInactive);
+                        this.appButton._slicerIcon.setZoom(
+                                global.yawl && global.yawl._iconsSize
+                                ? Math.min(0.5 + 4 / global.yawl._iconsSize,
+                                           24 / global.yawl._iconsSize)
+                                : 0.625
+                        );
+                    }
+                    else {
+                        this.appButton._slicerIcon.setOpacity100(global.yawl._iconsOpacityOther);
+                        // https://www.wolframalpha.com/input/?i=real+roots+of+-8%2F27s^3%2F%28s%2B1%29^2%2B4%2F9s^3%2F%28s%2B1%29^2-0.5
+                        this.appButton._slicerIcon.setZoom(
+                                1,
+                                (this.appButton._slicerIcon.animationTime || 0) * 2,
+                                dbFinAnimationEquations.withParams(
+                                        'easeInOutBack',
+                                        { overshoot: 4.8948595225811 }
+                                )
+                        );
+                    }
                 }
 				this.hideWindowsGroup();
 				if (this.appButton.actor) {
@@ -367,6 +385,14 @@ const dbFinTrackerApp = new Lang.Class({
             else {
                 if (this.appButton._slicerIcon) {
                     this.appButton._slicerIcon.setOpacity100(global.yawl._iconsOpacity);
+                    this.appButton._slicerIcon.setZoom(
+                            1,
+                            (this.appButton._slicerIcon.animationTime || 0) * 2,
+                            dbFinAnimationEquations.withParams(
+                                    'easeInOutBack',
+                                    { overshoot: 4.8948595225811 }
+                            )
+                    );
                 }
 				if (this.appButton.actor) {
 	                this.appButton.actor.remove_style_pseudo_class('other');
@@ -381,7 +407,7 @@ const dbFinTrackerApp = new Lang.Class({
                                                     this._badgesWindowsNumber.container,
                                                     12,
                                                     undefined, undefined,
-                                                    2, -1);
+                                                    3, -global.yawl._iconsClipBottom || 0);
                         }
                     }
                     this._badgesWindowsNumber.setText('' + this.windows.length);
@@ -401,7 +427,7 @@ const dbFinTrackerApp = new Lang.Class({
                                                     indicator,
                                                     undefined,
                                                     0.0625 * (2 * i + 4), 1.0,
-                                                    0, -1.5);
+                                                    0, (-global.yawl._iconsClipBottom || 0) / 2);
                         }
                     }
                     switch (this.windows.length) {
@@ -418,6 +444,24 @@ const dbFinTrackerApp = new Lang.Class({
                 } // if (indicatorType == 2) else if (indicatorType == 1)
             } // if (!this.windows.length) else
 		} // if ("app icon should be hidden") else let (indicatorType, stopped)
+        _D('<');
+	},
+
+	updateBadges: function() {
+        _D('>' + this.__name__ + '.updateBadges()');
+		if (!this.appButton || !global.yawl) {
+			_D(!this.appButton ? 'this.appButton === null' : 'global.yawl === null');
+			_D('<');
+			return;
+		}
+        if (this._badgesWindowsNumber) {
+            this.appButton.badgeShift('window-indicator-number', 3, -global.yawl._iconsClipBottom || 0);
+        }
+        if (this._badgesWindows && this._badgesWindows.length) {
+            for (let i = 0; i < this._badgesWindows.length; ++i) {
+                this.appButton.badgeShift('window-indicator-' + i, 0, (-global.yawl._iconsClipBottom || 0) / 2);
+            }
+        }
         _D('<');
 	},
 

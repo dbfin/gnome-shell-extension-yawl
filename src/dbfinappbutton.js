@@ -112,7 +112,11 @@ const dbFinAppButton = new Lang.Class({
 
         this._updatedIconsSize =
                 this._updatedIconsFaded = this._updateIcon;
-		this._updatedIconsClipBottom = function () { if (this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom); };
+		this._updatedIconsClipBottom = function () {
+            if (this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom);
+            this._updatePivotPoint();
+            if (this._trackerApp) this._trackerApp.updateBadges();
+        };
 		this._updatedIconsDistance = function () { if (this._slicerIcon) this._slicerIcon.setPaddingH((global.yawl._iconsDistance + 1) >> 1); };
 		this._updatedIconsAnimationTime = function () { if (this._slicerIcon) this._slicerIcon.animationTime = global.yawl._iconsAnimationTime; };
 		this._updatedIconsAnimationEffect = function () { if (this._slicerIcon) this._slicerIcon.animationEffect = global.yawl._iconsAnimationEffect; };
@@ -240,6 +244,21 @@ const dbFinAppButton = new Lang.Class({
         _D('<');
     },
 
+    _updatePivotPoint: function() {
+        _D('>' + this.__name__ + '._updatePivotPoint()');
+        if (this._slicerIcon && this._slicerIcon.actor) {
+            this._slicerIcon.actor.set_pivot_point(
+                    0.5,
+                    global.yawl
+                        && global.yawl._iconsSize
+                        && global.yawl._iconsClipBottom
+                    ? 0.5 * (1 - global.yawl._iconsClipBottom / global.yawl._iconsSize)
+                    : 0.5
+            );
+        }
+        _D('<');
+    },
+
 	_updateIcon: function() {
         _D('>' + this.__name__ + '._updateIcon()');
 		if (!this.metaApp || !this._slicerIcon) {
@@ -259,7 +278,11 @@ const dbFinAppButton = new Lang.Class({
                 if (!iconnew) iconnew = this.metaApp.create_icon_texture(global.yawl._iconsSize);
                 if (iconnew) this._icons.set(global.yawl._iconsFaded ? -global.yawl._iconsSize : global.yawl._iconsSize, iconnew);
             }
-            if (iconnew && iconnew != icon) this._slicerIcon.setIcon(iconnew);
+            if (iconnew && iconnew != icon) {
+                this._slicerIcon.setIcon(iconnew);
+                this._updatePivotPoint();
+                if (this._trackerApp) this._trackerApp.updateVisibility();
+            }
 		} // let (icon, iconnew)
         _D('<');
 	},
@@ -402,6 +425,21 @@ const dbFinAppButton = new Lang.Class({
                                               !isNaN(time = parseFloat(time))
                                               ? time
                                               : this._slicerIcon && this._slicerIcon.animationTime || 0);
+            }
+        }
+        _D('<');
+    },
+
+    badgeShift: function(name, shiftX, shiftY) {
+        _D('>' + this.__name__ + '.badgeShift()');
+        let (actor = ( name || name === 0 )
+                     && this._badges
+                     && this._badges.get(name)
+                     || undefined) {
+            if (actor) {
+                if (shiftX !== undefined) actor._badgeShiftX = dbFinUtils.inRange(parseFloat(shiftX), undefined, undefined, 0.0);
+                if (shiftY !== undefined) actor._badgeShiftY = dbFinUtils.inRange(parseFloat(shiftY), undefined, undefined, 0.0);
+                actor.queue_relayout();
             }
         }
         _D('<');
