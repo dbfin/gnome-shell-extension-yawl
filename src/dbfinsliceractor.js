@@ -290,7 +290,9 @@ const dbFinSlicerActor = new Lang.Class({
 				if (this.hoverScale) state.scale_x = state.scale_y = this.hoverScale;
 				if (this.hoverFit) state.min_width = this.getNaturalWidth();
 				this.animateToState(state, null, null, time, this.hoverAnimationEffect);
-                this.animateActorToState({ opacity: this._hoverOpacity }, null, null, time, this.hoverAnimationEffect);
+                this.animateActorToState({ opacity: this._hoverOpacity }, function () {
+                    if (this.actor) this.actor.queue_relayout();
+                }, this, time, this.hoverAnimationEffect);
 			}
 		}
         _D('<');
@@ -304,7 +306,9 @@ const dbFinSlicerActor = new Lang.Class({
             state.scale_x = state.scale_y = 1.;
             state.min_width = 0;
             this.animateToState(state, null, null, time, this.hoverAnimationEffect);
-            this.animateActorToState({ opacity: this._opacity }, null, null, time, this.hoverAnimationEffect);
+            this.animateActorToState({ opacity: this._opacity }, function () {
+                if (this.actor) this.actor.queue_relayout();
+            }, this, time, this.hoverAnimationEffect);
         }
         _D('<');
 	},
