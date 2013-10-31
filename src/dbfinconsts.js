@@ -100,7 +100,7 @@ const arrayThumbnailButtons = [
 
 const arrayWindowsIndicatorTypes = [
     [   _("No indicators")              ],
-    [   _("Dots")                       ],
+    [   _("Point lights")               ],
     [   _("Actual number of windows")   ]
 ];
 

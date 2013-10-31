@@ -40,7 +40,6 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerLabel = Me.imports.dbfinslicerlabel;
@@ -137,7 +136,7 @@ const dbFinTrackerApp = new Lang.Class({
             for (let i = 0, indicator = null;
                  i < 5 && (indicator = new St.DrawingArea({ style_class: 'badge-icon-windows' }));
                  ++i) {
-                indicator.width = indicator.height = 22;
+                indicator.width = indicator.height = 32;
                 this._signals.connectId('window-indicator-' + i, {  emitter: indicator, signal: 'repaint',
                                                                     callback: this._paintWindowIndicator, scope: this });
                 this._badgesWindows.push(indicator);
@@ -145,7 +144,7 @@ const dbFinTrackerApp = new Lang.Class({
                                         indicator,
                                         undefined,
                                         0.0625 * (2 * i + 4), 1.0,
-                                        0, -2);
+                                        0, -1.5);
             }
         } // if (this.appButton)
 
@@ -271,35 +270,50 @@ const dbFinTrackerApp = new Lang.Class({
 		let ([ w, h ] = area.get_surface_size()) {
 			if (w >= 1 && h >= 1) {
 				let (cr = area.get_context(),
-                     rgba = new Clutter.Color(),
-                     r = (Math.min(w, h) - 1) / 2) {
-                    cr.moveTo(w / 2, h / 2);
-                    cr.arc(w / 2, h / 2, 1, 0, 2. * Math.PI);
-                    cr.setLineWidth(1);
-                    rgba.red = rgba.green = rgba.blue = 255;
-                    rgba.alpha = Math.floor(255 * 0.3);
-                    Clutter.cairo_set_source_color(cr, rgba);
-                    cr.fill();
-                    if (Cairo.RadialGradient) {
-                        cr.moveTo(w / 2, h / 2);
-                        cr.arc(w / 2, h / 2, r, 0, 2. * Math.PI);
-                        cr.setLineWidth(1);
-                        if (global.yawl && global.yawl._iconsWindowsIndicatorColor) {
-                            rgba = dbFinUtils.stringColorToRGBA(global.yawl._iconsWindowsIndicatorColor);
+                     red = 255,
+                     green = 255,
+                     blue = 255,
+                     rs = [ 1.5, (Math.min(w, h) - 1) / 2 ],
+                     os = [ 0.77, 0.5 ],
+                     effect = 1 / 5) {
+                    if (global.yawl && global.yawl._iconsWindowsIndicatorColor) {
+                        let (rgba_ = dbFinUtils.stringColorToRGBA(global.yawl._iconsWindowsIndicatorColor)) {
+                            red = rgba_.red;
+                            green = rgba_.green;
+                            blue = rgba_.blue;
                         }
-                        rgba.red /= 255;
-                        rgba.green /= 255;
-                        rgba.blue /= 255;
-						let (gradient = new Cairo.RadialGradient(w / 2, h / 2, 0, w / 2, h / 2, r),
-                             effect = 1 / 3) {
-							gradient.addColorStopRGBA(0.0, rgba.red, rgba.green, rgba.blue, 2 / 3);
-							gradient.addColorStopRGBA(effect, rgba.red, rgba.green, rgba.blue, effect);
-							gradient.addColorStopRGBA(1.0, rgba.red, rgba.green, rgba.blue, 0.0);
-							cr.setSource(gradient);
-						}
+                    }
+                    if (!Cairo.RadialGradient) {
+                        cr.moveTo(w / 2, h / 2);
+                        cr.arc(w / 2, h / 2, rs[0], 0, 2. * Math.PI);
+                        cr.setLineWidth(1);
+                        let (rgba = new Clutter.Color()) {
+                            rgba.red = red;
+                            rgba.green = green;
+                            rgba.blue = blue;
+                            rgba.alpha = Math.floor(255 * os[0]);
+                            Clutter.cairo_set_source_color(cr, rgba);
+                        }
                         cr.fill();
                     }
-				} // let (cr, rgba, r)
+                    else {
+                        red /= 255;
+                        green /= 255;
+                        blue /= 255;
+                        for (let i = 0; i < rs.length; ++i) {
+                            cr.moveTo(w / 2, h / 2);
+                            cr.arc(w / 2, h / 2, rs[i], 0, 2. * Math.PI);
+                            cr.setLineWidth(1);
+                            let (gradient = new Cairo.RadialGradient(w / 2, h / 2, 0, w / 2, h / 2, rs[i])) {
+                                gradient.addColorStopRGBA(0.0, 1, 1, 1, os[i]);
+                                gradient.addColorStopRGBA(effect, 1 - effect * (1 - red), 1 - effect * (1 - green), 1 - effect * (1 - blue), Math.min(os[i], effect));
+                                gradient.addColorStopRGBA(1.0, red, green, blue, 0.0);
+                                cr.setSource(gradient);
+                            }
+                            cr.fill();
+                        }
+                    }
+				} // let (cr, red, green, blue, rs, os, effect)
 			} // if (w >= 1 && h >= 1)
 		} // let ([w, h])
         _D('<');
@@ -392,7 +406,6 @@ const dbFinTrackerApp = new Lang.Class({
                                 this.appButton.badgeShow('window-indicator-1');
                                 this.appButton.badgeShow('window-indicator-3');
                                 break;
-                            case 3:
                             default:
                                 this.appButton.badgeShow('window-indicator-0');
                                 this.appButton.badgeShow('window-indicator-4');

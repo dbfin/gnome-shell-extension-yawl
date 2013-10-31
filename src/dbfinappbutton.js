@@ -34,6 +34,7 @@ const PanelMenu = imports.ui.panelMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinConsts = Me.imports.dbfinconsts;
@@ -354,7 +355,7 @@ const dbFinAppButton = new Lang.Class({
         actor._badgeShiftY = dbFinUtils.inRange(parseFloat(shiftY), undefined, undefined, 0.0);
         this._badges.set(name, actor);
         if (this.actor) this.actor.add_child(actor);
-        actor.hide();
+        this.badgeHide(name, 0);
         _D('<');
     },
 
@@ -371,7 +372,7 @@ const dbFinAppButton = new Lang.Class({
         _D('<');
     },
 
-    badgeShow: function(name) {
+    badgeShow: function(name, time) {
         _D('>' + this.__name__ + '.badgeShow()');
         let (actor = ( name || name === 0 )
                      && this._badges
@@ -379,19 +380,28 @@ const dbFinAppButton = new Lang.Class({
                      || undefined) {
             if (actor) {
                 actor.show();
+                dbFinAnimation.animateToState(actor, { opacity: 255 }, null, null,
+                                              !isNaN(time = parseFloat(time))
+                                              ? time
+                                              : this._slicerIcon && this._slicerIcon.animationTime || 0);
             }
         }
         _D('<');
     },
 
-    badgeHide: function(name) {
+    badgeHide: function(name, time) {
         _D('>' + this.__name__ + '.badgeHide()');
         let (actor = ( name || name === 0 )
                      && this._badges
                      && this._badges.get(name)
                      || undefined) {
             if (actor) {
-                actor.hide();
+                dbFinAnimation.animateToState(actor, { opacity: 0 }, function () {
+                                                  actor.hide();
+                                              }, this,
+                                              !isNaN(time = parseFloat(time))
+                                              ? time
+                                              : this._slicerIcon && this._slicerIcon.animationTime || 0);
             }
         }
         _D('<');
