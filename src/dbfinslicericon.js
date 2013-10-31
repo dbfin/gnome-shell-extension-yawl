@@ -26,6 +26,7 @@
 
 const Lang = imports.lang;
 
+const Clutter = imports.gi.Clutter;
 const St = imports.gi.St;
 
 const Params = imports.misc.params;
@@ -49,9 +50,13 @@ const dbFinSlicerIcon = new Lang.Class({
         paramsBin = paramsBin || {};
 		paramsContainer = paramsContainer || {};
         params = params || {};
-        paramsBin = Params.parse(paramsBin, { reactive: true, track_hover: true, visible: true }, true);
+        paramsBin = Params.parse(paramsBin, { reactive: true,
+                                              track_hover: true,
+                                              pivot_point: new Clutter.Point({ x: 0.5, y: 0.5 }),
+                                              visible: true }, true);
         this.parent(new St.Bin(paramsBin), paramsContainer, params);
         this._icon = null; // icons are never destroyed when new are assigned
+        this._zoom = 1.0;
         _D('<');
     },
 
@@ -77,6 +82,21 @@ const dbFinSlicerIcon = new Lang.Class({
 			this._icon = icon;
             if (this.actor) this.actor.set_child(icon);
 			this.restoreNaturalSize();
+		}
+        _D('<');
+	},
+
+	getZoom: function() {
+        _D('>' + this.__name__ + '.getZoom()');
+        _D('<');
+        return this._zoom;
+	},
+
+	setZoom: function(zoom, time, transition) {
+        _D('>' + this.__name__ + '.setZoom()');
+		if (!isNaN(zoom = parseFloat(zoom)) && this._zoom != zoom) {
+			this._zoom = zoom;
+            this.animateActorToState({  scale_x: zoom, scale_y: zoom }, null, null, time, transition);
 		}
         _D('<');
 	}
