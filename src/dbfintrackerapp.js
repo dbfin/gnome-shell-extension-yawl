@@ -123,29 +123,8 @@ const dbFinTrackerApp = new Lang.Class({
 				this._signals.connectNoId({ emitter: this.appButton.actor, signal: 'leave-event',
 											callback: this._leaveEvent, scope: this });
 			}
-            this._badgesWindowsNumber = new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' },
-                                                                       { style_class: 'badge-icon-windows-number' });
-            if (this._badgesWindowsNumber && this._badgesWindowsNumber.container) {
-                this.appButton.badgeAdd('window-indicator-number',
-                                        this._badgesWindowsNumber.container,
-                                        12,
-                                        undefined, undefined,
-                                        2, -1);
-            }
+            this._badgesWindowsNumber = null;
             this._badgesWindows = [];
-            for (let i = 0, indicator = null;
-                 i < 5 && (indicator = new St.DrawingArea({ style_class: 'badge-icon-windows' }));
-                 ++i) {
-                indicator.width = indicator.height = 32;
-                this._signals.connectId('window-indicator-' + i, {  emitter: indicator, signal: 'repaint',
-                                                                    callback: this._paintWindowIndicator, scope: this });
-                this._badgesWindows.push(indicator);
-                this.appButton.badgeAdd('window-indicator-' + i,
-                                        indicator,
-                                        undefined,
-                                        0.0625 * (2 * i + 4), 1.0,
-                                        0, -1.5);
-            }
         } // if (this.appButton)
 
         this._moveToStablePosition();
@@ -351,6 +330,7 @@ const dbFinTrackerApp = new Lang.Class({
         //         ( app is not pinned
         //           || we do not show favorites
         //         )
+        this.appButton.badgeHide('window-indicator-number');
         for (let i = 0; i < 5; ++i) {
             this.appButton.badgeHide('window-indicator-' + i);
         }
@@ -367,8 +347,7 @@ const dbFinTrackerApp = new Lang.Class({
            ) {
 			this.appButton.hide();
 			this.hideWindowsGroup();
-            this.appButton.badgeHide('window-indicator-number');
-		}
+		} // if ("app icon should be hidden")
 		else let (indicatorType = global.yawl._iconsWindowsIndicator || 0,
                   stopped = this.metaApp.state == Shell.AppState.STOPPED
                             || this.state < this._tracker.state) {
@@ -384,8 +363,7 @@ const dbFinTrackerApp = new Lang.Class({
 				if (this.appButton.actor) {
 	                this.appButton.actor.add_style_pseudo_class(stopped ? 'inactive' : 'other');
 				}
-                this.appButton.badgeHide('window-indicator-number');
-			}
+			} // if (!this.windows.length)
             else {
                 if (this.appButton._slicerIcon) {
                     this.appButton._slicerIcon.setOpacity100(global.yawl._iconsOpacity);
@@ -395,27 +373,51 @@ const dbFinTrackerApp = new Lang.Class({
 	                this.appButton.actor.remove_style_pseudo_class('inactive');
 				}
                 if (indicatorType == 2) {
-                    this._badgesWindowsNumber.setText('' + this.windows.length);
-                    this.appButton.badgeShow('window-indicator-number');
-                }
-                else {
-                    this.appButton.badgeHide('window-indicator-number');
-                    if (indicatorType == 1) {
-                        switch (this.windows.length) {
-                            case 2:
-                                this.appButton.badgeShow('window-indicator-1');
-                                this.appButton.badgeShow('window-indicator-3');
-                                break;
-                            default:
-                                this.appButton.badgeShow('window-indicator-0');
-                                this.appButton.badgeShow('window-indicator-4');
-                            case 1:
-                                this.appButton.badgeShow('window-indicator-2');
+                    if (!this._badgesWindowsNumber) {
+                        this._badgesWindowsNumber = new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' },
+                                                        { style_class: 'badge-icon-windows-number' });
+                        if (this._badgesWindowsNumber && this._badgesWindowsNumber.container) {
+                            this.appButton.badgeAdd('window-indicator-number',
+                                                    this._badgesWindowsNumber.container,
+                                                    12,
+                                                    undefined, undefined,
+                                                    2, -1);
                         }
                     }
-                }
-            }
-		}
+                    this._badgesWindowsNumber.setText('' + this.windows.length);
+                    this.appButton.badgeShow('window-indicator-number');
+                } // if (indicatorType == 2)
+                else if (indicatorType == 1) {
+                    if (!this._badgesWindows || !this._badgesWindows.length) {
+                        this._badgesWindows = [];
+                        for (let i = 0, indicator = null;
+                             i < 5 && (indicator = new St.DrawingArea({ style_class: 'badge-icon-windows' }));
+                             ++i) {
+                            indicator.width = indicator.height = 32;
+                            this._signals.connectId('window-indicator-' + i, {  emitter: indicator, signal: 'repaint',
+                                                                                callback: this._paintWindowIndicator, scope: this });
+                            this._badgesWindows.push(indicator);
+                            this.appButton.badgeAdd('window-indicator-' + i,
+                                                    indicator,
+                                                    undefined,
+                                                    0.0625 * (2 * i + 4), 1.0,
+                                                    0, -1.5);
+                        }
+                    }
+                    switch (this.windows.length) {
+                        case 2:
+                            this.appButton.badgeShow('window-indicator-1');
+                            this.appButton.badgeShow('window-indicator-3');
+                            break;
+                        default:
+                            this.appButton.badgeShow('window-indicator-0');
+                            this.appButton.badgeShow('window-indicator-4');
+                        case 1:
+                            this.appButton.badgeShow('window-indicator-2');
+                    }
+                } // if (indicatorType == 2) else if (indicatorType == 1)
+            } // if (!this.windows.length) else
+		} // if ("app icon should be hidden") else let (indicatorType, stopped)
         _D('<');
 	},
 
