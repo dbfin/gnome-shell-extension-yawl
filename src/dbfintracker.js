@@ -71,6 +71,7 @@ const dbFinTracker = new Lang.Class({
 
 		this.preview = new dbFinPreview.dbFinPreview();
 
+        this._updatedIconsOrder = function () { if (this.apps) this.apps.forEach(function (metaApp, trackerApp) { if (trackerApp) trackerApp._moveToStablePosition(); }); }
         this._updatedWindowsShowInteresting = function () { this.update('Tracker: updated windows-show-interesting.'); }
 		this._updatedWindowsPreview = function () { if (this.preview && !global.yawl._windowsPreview) this.preview.hide(); }
 		this._updatedWindowsPreviewDimColor = function () { if (this.preview) this.preview.dimColor = global.yawl._windowsPreviewDimColor; }

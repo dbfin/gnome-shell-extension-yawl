@@ -668,8 +668,8 @@ const dbFinTrackerApp = new Lang.Class({
 	getStableSequence: function() {
         _D('>' + this.__name__ + '.getStableSequence()');
 		let (sequence = undefined) {
-			if (global.yawl && global.yawl._iconsSequence) {
-                try { sequence = JSON.parse(global.yawl._iconsSequence); } catch (e) { }
+			if (global.yawl && global.yawl._iconsOrder) {
+                try { sequence = JSON.parse(global.yawl._iconsOrder); } catch (e) { }
 			}
             if (!sequence
                 || Object.prototype.toString.call(sequence) != '[object Array]'
@@ -684,7 +684,7 @@ const dbFinTrackerApp = new Lang.Class({
         if (global.yawl && sequence && Object.prototype.toString.call(sequence) == '[object Array]') {
             let (json = undefined) {
                 try { json = JSON.stringify(sequence); } catch (e) { }
-                if (json) global.yawl.set('icons-sequence', json);
+                if (json) global.yawl.set('icons-order', json);
             }
         }
         _D('<');

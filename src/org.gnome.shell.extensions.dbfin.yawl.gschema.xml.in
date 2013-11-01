@@ -11,7 +11,7 @@
       <_summary>Whether to show advanced preferences.</_summary>
       <_description>Whether to show advanced preferences.</_description>
     </key>
-    <key name="icons-sequence" type="s">
+    <key name="icons-order" type="s">
       <default>'[]'</default>
       <_summary>YAWL-panel icons stable sequence.</_summary>
       <_description>New icons are shown according to this sequence or at the end.</_description>
