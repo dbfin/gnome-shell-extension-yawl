@@ -361,9 +361,9 @@ const dbFinTrackerApp = new Lang.Class({
                         this.appButton._slicerIcon.setZoom(
                                 global.yawl && global.yawl._iconsFavoritesSmaller
                                 ?   global.yawl._iconsSize
-                                    ? Math.min(0.5 + 4 / global.yawl._iconsSize,
-                                               24 / global.yawl._iconsSize)
-                                    : 0.625
+                                    ?   dbFinUtils.inRange(global.yawl._iconsSize - 8, 12, 24, 24)
+                                        / global.yawl._iconsSize
+                                    :   0.625
                                 :   1
                         );
                     }
