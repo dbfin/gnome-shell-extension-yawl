@@ -504,6 +504,11 @@
       <_summary>Whether to always show icons of favorite apps.</_summary>
       <_description>If true icons of favorite apps are always shown.</_description>
     </key>
+    <key name="icons-favorites-smaller" type="b">
+      <default>true</default>
+      <_summary>Whether to make icons of not running favorite apps smaller.</_summary>
+      <_description>If true icons of not running favorite apps are smaller.</_description>
+    </key>
     <key name="icons-windows-indicator" type="s">
       <default>'1'</default>
       <_summary>The type of app icon windows indicator.</_summary>

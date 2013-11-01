@@ -216,6 +216,7 @@ const Settings = [
     [ 'icons-attention-blink-rate', 60, { min: 15, max: 125 }, 'addons>attention' ],
     [ 'app-quicklists', true, { }, 'addons>quicklists' ],
     [ 'icons-favorites', true, { }, 'addons>favorites' ],
+    [ 'icons-favorites-smaller', true, { }, 'addons>favorites' ],
     [ 'icons-windows-indicator', 1, { min: 0, max: arrayWindowsIndicatorTypes - 1 }, 'addons>indicators' ],
     [ 'icons-windows-indicator-color', '#ffffff', { }, 'addons>indicators' ],
 	[ 'windows-preview', false, { }, 'addons>preview' ],

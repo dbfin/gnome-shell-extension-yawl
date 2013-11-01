@@ -96,7 +96,9 @@ const dbFinSlicerIcon = new Lang.Class({
         _D('>' + this.__name__ + '.setZoom()');
 		if (!isNaN(zoom = parseFloat(zoom)) && this._zoom != zoom) {
 			this._zoom = zoom;
-            this.animateActorToState({  scale_x: zoom, scale_y: zoom }, null, null, time, transition);
+            this.animateActorToState({  scale_x: zoom, scale_y: zoom }, function () {
+                if (this.actor) this.actor.queue_relayout();
+            }, this, time, transition);
 		}
         _D('<');
 	}

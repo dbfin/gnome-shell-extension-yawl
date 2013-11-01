@@ -619,6 +619,9 @@ function buildPrefsWidget() {
                 builder.unshift();
 			    builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
 			    builder.addCheckBox('<b>' + _("Favorite apps") + '</b>: ' + _("always show"), 'icons-favorites');
+                builder.shift();
+                    builder.addCheckBox(_("Use smaller icons if not running"), 'icons-favorites-smaller', 'icons-favorites');
+                builder.unshift();
                 builder.addComboBoxText('<b>' + _("Windows indicators") + '</b>', 'icons-windows-indicator', dbFinConsts.arrayWindowsIndicatorTypes, 0);
                 builder.shift();
 				    builder.addColorButton(_("Choose windows indicator color"), 'icons-windows-indicator-color', _("Choose windows indicator color"));
