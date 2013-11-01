@@ -74,9 +74,11 @@ const dbFinYAWL = new Lang.Class({
         this._signals = new dbFinSignals.dbFinSignals();
 
 		if (global.yawl._firstTime) {
-			Util.trySpawn([ 'gnome-shell-extension-prefs', 'yawl@dbfin.com' ]);
+			try { Util.trySpawn([ 'gnome-shell-extension-prefs', 'yawl@dbfin.com' ]); }
+            catch (e) { _D('!YAWL: could not launch preference dialog on first run.'); }
             global.yawl.set('first-time', false);
 		}
+        this._updatedFirstTime = function () { if (global.yawl && global.yawl._firstTime) global.yawl.set('first-time', false); }
 
         global.yawl.animation = new dbFinAnimation.dbFinAnimation();
 
