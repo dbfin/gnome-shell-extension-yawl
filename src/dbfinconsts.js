@@ -130,7 +130,7 @@ const Settings = [
     [ 'icons-align', 0, { min: 0, max: 100 }, 'icons' ],
     [ 'icons-distance', 11, { min: 0, max: 100 }, 'icons' ],
 
-    [ 'icons-animation-time', 490, { min: 0, max: 1000 }, 'icons>animation' ],
+    [ 'icons-animation-time', 333, { min: 0, max: 1000 }, 'icons>animation' ],
     [ 'icons-animation-effect', 1, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'icons>animation' ],
     [ 'icons-hover-animation', true, { }, 'icons>animation' ],
     [ 'icons-hover-size', 100, { min: 100, max: 200 }, 'icons>animation' ],
@@ -163,7 +163,7 @@ const Settings = [
     [ 'windows-thumbnails-padding-top', 7, { min: 0, max: 20 }, 'thumbnails' ],
 
     [ 'windows-show-delay', 400, { min: 0, max: 1000 }, 'thumbnails>animation' ],
-    [ 'windows-animation-time', 300, { min: 0, max: 500 }, 'thumbnails>animation' ],
+    [ 'windows-animation-time', 333, { min: 0, max: 500 }, 'thumbnails>animation' ],
     [ 'windows-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'thumbnails>animation' ],
     [ 'windows-hover-opacity', 100, { min: 50, max: 100 }, 'thumbnails>animation' ],
     [ 'windows-hover-fit', true, { }, 'thumbnails>animation' ],
@@ -193,7 +193,7 @@ const Settings = [
     [ 'mouse-window-right', 2, { min: 0, max: arrayWindowClickFunctions.length - 1 }, 'mouse' ],
 
     [ 'mouse-drag-and-drop', true, { }, 'mouse' ],
-    [ 'mouse-click-release', false, { }, 'mouse' ],
+    [ 'mouse-click-release', true, { }, 'mouse' ],
     [ 'mouse-long-click', true, { }, 'mouse' ],
     [ 'mouse-scroll-timeout', 125, { min: 25, max: 1000 }, 'mouse' ],
     [ 'mouse-clicks-time-single', 400, { min: 250, max: 750 }, 'mouse' ],
