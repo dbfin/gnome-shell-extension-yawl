@@ -28,6 +28,7 @@ const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 
 const Gio = imports.gi.Gio;
+const GLib = imports.gi.GLib;
 const Gtk = imports.gi.Gtk;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -148,13 +149,18 @@ const dbFinClicksThreshold = new Lang.Class({
     }
 });
 
-const dbFinSettingsExportImport = new Lang.Class({
-	Name: 'dbFin.SettingsExportImport',
+const dbFinSettingsResetExportImport = new Lang.Class({
+	Name: 'dbFin.SettingsResetExportImport',
 
-	_init: function(gtkButtonExport, gtkButtonImport, gtkFileChooser, gtkLabelStatus) {
+	_init: function(gtkButtonReset, gtkButtonExport, gtkButtonImport, gtkFileChooser, gtkLabelStatus) {
         this._signals = new dbFinSignals.dbFinSignals();
 		this._settings = Convenience.getSettings();
 
+		if (gtkButtonReset) {
+			this._gtkButtonReset = gtkButtonReset;
+			this._signals.connectNoId({	emitter: gtkButtonReset, signal: 'clicked',
+                                        callback: this.doReset, scope: this });
+		}
 		if (gtkButtonExport) {
 			this._gtkButtonExport = gtkButtonExport;
 			this._signals.connectNoId({	emitter: gtkButtonExport, signal: 'clicked',
@@ -181,12 +187,33 @@ const dbFinSettingsExportImport = new Lang.Class({
             this._signals = null;
         }
 		this._cancelTimeoutStatus();
+        this._gtkButtonReset = null;
 		this._gtkButtonExport = null;
 		this._gtkButtonImport = null;
 		this._gtkFileChooser = null;
 		this._gtkLabelStatus = null;
         this._settings = null;
 	},
+
+    doReset: function() {
+        try {
+            let ([ ok, pid ] = GLib.spawn_async(
+                    /*working_directory = */null,
+                    /*argv = */[ 'dconf', 'reset', '-f', '/org/gnome/shell/extensions/dbfin/yawl/' ],
+                    /*envp = */null,
+                    /*GSpawnFlags = */GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+                    /*GSpawnChildSetupFunc = */null
+            )) {
+                if (ok) this._updateStatus(_("Settings were reset successfully!"), '#dfa');
+                else this._updateStatus('Something went wrong.', '#faa');
+                if (pid) GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, function () {}, null);
+            }
+        }
+        catch (e) {
+            if (e.message) this._updateStatus(e.message, '#faa');
+            else this._updateStatus('' + e, '#faa');
+        }
+    },
 
 	doExport: function() {
 		if (!this._gtkFileChooser || !this._settings) return;
@@ -639,21 +666,34 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("Export/Import"));
-			builder.addLabel(_("Back up, sync and share settings.")
-			                 + ' ' + _("To download default and other settings please visit")
-			                 + ': <a href="http://dbfin.com/yawl"><span color="#000000" underline="none">http://dbfin.com/yawl</span></a>.', null, true, 3);
-			let fcw = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
+            widgets = builder.addLabel(_("To reset all settings please enable Advanced settings") + ' <span color="red">*</span>', '@!advanced', true, 1);
+			if (widgets && widgets.length) {
+                widgets[0].halign = Gtk.Align.END;
+			}
+            widgets = builder.addLabel('<span size="small">' + '\u26a0 ' + _("This will overwrite all current settings") + '</span>' + ' <span color="red">*</span>', '@advanced', true, 1, 2);
+			if (widgets && widgets.length) {
+                widgets[0].halign = Gtk.Align.END;
+			}
+            widgets = builder.addWidget(new Gtk.Button({ label: '\u26a0 ' + _("Reset settings"), halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true }), 8, 1, 2, 1, '@advanced');
+			if (widgets && widgets.length) {
+                builder.getWidget()._bsr = widgets[0];
+			}
+			builder.addWidget(new Gtk.Label({ label: _("Back up, sync and share settings."), halign: Gtk.Align.START, valign: Gtk.Align.START }), 0, 0, 3, 1, '@!advanced');
+			builder.addWidget(new Gtk.Label({ label: _("Back up, sync and share settings."), halign: Gtk.Align.START, valign: Gtk.Align.START }), 0, 1, 3, 1, '@advanced');
+			widgets = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,
 																	halign: Gtk.Align.FILL, valign: Gtk.Align.FILL }));
-			if (fcw && fcw.length) {
-				fcw = fcw[0];
-				fcw.set_current_folder('~');
-				fcw.set_show_hidden(true);
-				fcw.set_current_name('all.yawl.settings');
+			if (widgets && widgets.length) {
+				widgets[0].set_current_folder('~');
+				widgets[0].set_show_hidden(true);
+				widgets[0].set_current_name('all.yawl.settings');
+                builder.getWidget()._fcw = widgets[0];
 			}
-			let status = builder.addRow(_("Status:"), [ [ new Gtk.Label({ label: '', halign: Gtk.Align.FILL }), 9 ] ]);
-			status = status && status.length && status[1] || null;
+			widgets = builder.addRow(_("Status:"), [ [ new Gtk.Label({ label: '', halign: Gtk.Align.FILL }), 9 ] ]);
+			if (widgets && widgets.length) {
+                builder.getWidget()._ls = widgets[1];
+			}
 			widgets = builder.addRow(null, [
 									[ new Gtk.Label({ justify: 1, halign: Gtk.Align.END, hexpand: true }), 2 ],
 									[ new Gtk.Button({ label: _("Export"), halign: Gtk.Align.FILL, hexpand: true }), 2 ],
@@ -663,12 +703,19 @@ function buildPrefsWidget() {
 			                     ]);
 			if (widgets && widgets.length) {
 				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup('<span size="small">' + _("This will overwrite the file with settings") + '</span>');
+				widgets[0].set_markup('<span size="small">' + '\u26a0 ' + _("This will overwrite the file with settings") + '</span>');
+                builder.getWidget()._bse = widgets[1];
 				widgets[2].set_line_wrap(true);
-				widgets[2].set_markup('<span size="small">' + _("This will overwrite all current settings") + '</span>');
-				let sei = new dbFinSettingsExportImport(widgets[1], widgets[3], fcw, status);
-				builder.getWidget()._sei = sei;
+				widgets[2].set_markup('<span size="small">' + '\u26a0 ' + _("This will overwrite all current settings") + '</span>');
+                builder.getWidget()._bsi = widgets[3];
 			}
+            builder.getWidget()._sei = new dbFinSettingsResetExportImport(
+                    builder.getWidget()._bsr,
+                    builder.getWidget()._bse,
+                    builder.getWidget()._bsi,
+                    builder.getWidget()._fcw,
+                    builder.getWidget()._ls
+            );
 
 		builder.addPage(_("Did you know?"));
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
