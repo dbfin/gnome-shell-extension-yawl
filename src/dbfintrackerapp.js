@@ -413,8 +413,10 @@ const dbFinTrackerApp = new Lang.Class({
                                                     3, -global.yawl._iconsClipBottom || 0);
                         }
                     }
-                    this._badgesWindowsNumber.setText('' + this.windows.length);
-                    this.appButton.badgeShow('window-indicator-number');
+                    if (this._badgesWindowsNumber) {
+                        this._badgesWindowsNumber.setText('' + this.windows.length);
+                        this.appButton.badgeShow('window-indicator-number');
+                    }
                 } // if (indicatorType == 2)
                 else if (indicatorType == 1) {
                     if (!this._badgesWindows || !this._badgesWindows.length) {
