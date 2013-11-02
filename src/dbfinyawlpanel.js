@@ -85,7 +85,7 @@ const dbFinYAWLPanel = new Lang.Class({
                                         callback: this._allocate, scope: this });
         }
 
-		this.actor = new St.BoxLayout({ vertical: true, reactive: true, visible: true });
+		this.actor = new St.BoxLayout({ vertical: true, y_align: Clutter.ActorAlign.CENTER, reactive: true, visible: true });
 		if (this.actor) {
             if (this.container) this.container.add_child(this.actor);
             this.actor._delegate = this;
@@ -324,7 +324,7 @@ const dbFinYAWLPanel = new Lang.Class({
                 if (wn < w) x = dbFinUtils.inRange(gx - (wn >> 1), box.x1, box.x2 - wn);
                 else wn = w;
                 let (x2 = x + wn,
-                     y2 = Math.min(box.y2, y + hn)) {
+                     y2 = box.y2) {
                     dbFinUtils.setBox(boxChild, x, y, x2, y2);
                     this.actor.allocate(boxChild, flags);
                     if (this._gravityIndicator) {

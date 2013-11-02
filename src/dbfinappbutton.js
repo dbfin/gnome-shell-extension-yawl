@@ -82,9 +82,9 @@ const dbFinAppButton = new Lang.Class({
         if (this._slicerIcon && this._slicerIcon.container) {
             if (this.actor) this.actor.add_child(this._slicerIcon.container);
             if (this._slicerIcon.actor) this._slicerIcon.actor._delegate = this;
-            if (Main.panel && Main.panel.actor && Main.panel.actor.get_stage()) {
+/*            if (Main.panel && Main.panel.actor && Main.panel.actor.get_stage()) {
                 this._slicerIcon.container.min_height = Main.panel.actor.get_height();
-            }
+            }*/
         }
 
 		this._icons = new dbFinArrayHash.dbFinArrayHash();
