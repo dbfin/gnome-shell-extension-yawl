@@ -404,7 +404,13 @@ const dbFinYAWL = new Lang.Class({
 						}
                     }
 				} // let (colorRGB, color)
-				style['color'] = global.yawl._windowsTextColor;
+                if (!global.yawl._windowsTextColor) {
+                    if (global.yawl.panelWindows._light) global.yawl.set('windows-text-color', style['color'] = 'black');
+                    else global.yawl.set('windows-text-color', style['color'] = 'white');
+                }
+                else {
+                    style['color'] = global.yawl._windowsTextColor;
+                }
 				style['font-size'] = global.yawl._windowsTextSize + 'pt';
 				style['padding'] = global.yawl._windowsPadding + 'px';
 				style['border'] = global.yawl._windowsBorderWidth + 'px solid ' + global.yawl._windowsBorderColor;

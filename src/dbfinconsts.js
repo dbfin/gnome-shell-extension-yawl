@@ -147,7 +147,7 @@ const Settings = [
     [ 'windows-background-panel', true, { }, 'thumbnails>panel' ],
     [ 'windows-background-color', '#2e3436', { }, 'thumbnails>panel' ],
     [ 'windows-background-opacity', 75, { min: 0, max: 100 }, 'thumbnails>panel' ],
-    [ 'windows-text-color', 'white', { }, 'thumbnails>panel' ],
+    [ 'windows-text-color', '', { }, 'thumbnails>panel' ],
     [ 'windows-text-size', 9, { min: 6, max: 36 }, 'thumbnails>panel' ],
     [ 'windows-border-color', '#d3d7cf', { }, 'thumbnails>panel' ],
     [ 'windows-border-width', 2, { min: 0, max: 3 }, 'thumbnails>panel' ],

@@ -195,7 +195,7 @@
       <_description>Window thumbnail panel background background opacity.</_description>
     </key>
     <key name="windows-text-color" type="s">
-      <default>'white'</default>
+      <default>''</default>
       <_summary>Window thumbnail panel text color.</_summary>
       <_description>Window thumbnail panel text color.</_description>
     </key>
