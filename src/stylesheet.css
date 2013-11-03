@@ -41,9 +41,16 @@
 #panelYAWL .badge-icon-windows StLabel {
 }
 
+#panelYAWL .badge-icon-windows-number {
+    background-gradient-start: rgba(255, 255, 255, 0.0);
+    background-gradient-end: rgba(0, 0, 0, 0.333);
+    background-gradient-direction: vertical;
+}
+
 #panelYAWL .badge-icon-windows-number StLabel {
     font-size: smaller;
-    text-shadow: black 1px 2px 2px;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 /* attention: this is the not-blinking background of the icon */

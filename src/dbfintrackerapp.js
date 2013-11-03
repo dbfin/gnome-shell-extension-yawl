@@ -404,13 +404,15 @@ const dbFinTrackerApp = new Lang.Class({
                 if (indicatorType == 2) {
                     if (!this._badgesWindowsNumber) {
                         this._badgesWindowsNumber = new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' },
-                                                        { style_class: 'badge-icon-windows-number' });
+                                                        { style_class: 'badge-icon-windows-number',
+                                                          x_align: St.Align.START,
+                                                          y_align: St.Align.END });
                         if (this._badgesWindowsNumber && this._badgesWindowsNumber.container) {
                             this.appButton.badgeAdd('window-indicator-number',
                                                     this._badgesWindowsNumber.container,
-                                                    12,
+                                                    15,
                                                     undefined, undefined,
-                                                    3, -global.yawl._iconsClipBottom || 0);
+                                                    0, -global.yawl._iconsClipBottom || 0);
                         }
                     }
                     if (this._badgesWindowsNumber) {
@@ -460,7 +462,7 @@ const dbFinTrackerApp = new Lang.Class({
 			return;
 		}
         if (this._badgesWindowsNumber) {
-            this.appButton.badgeShift('window-indicator-number', 3, -global.yawl._iconsClipBottom || 0);
+            this.appButton.badgeShift('window-indicator-number', 0, -global.yawl._iconsClipBottom || 0);
         }
         if (this._badgesWindows && this._badgesWindows.length) {
             for (let i = 0; i < this._badgesWindows.length; ++i) {
