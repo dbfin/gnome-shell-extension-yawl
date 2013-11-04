@@ -71,7 +71,7 @@ const arrayAppClickFunctions = [
     [   _("Open new window (new workspace) : none"),	'openNewWindowNewWorkspace',    ''                              ],
     [   _("Open menu : none"),                       	'openMenu',                     ''                              ],
 	[	_("Quit : none"),								'quitApplication',				''								],
-    [   _("Show next/minimize single : all windows"),   'nextWindowMinimize',           'showAllWindows'                ]
+    [   _("Show next (minimize if single) : all windows"),  'nextWindowMinimize',       'showAllWindows'                ]
 ];
 
 const arrayWindowClickFunctions = [
@@ -100,7 +100,7 @@ const arrayThumbnailButtons = [
 ];
 
 const arrayWindowsIndicatorTypes = [
-    [   _("No indicators")              ],
+    [   _("Hide window indicators")     ],
     [   _("Point lights")               ],
     [   _("Actual number of windows")   ]
 ];
