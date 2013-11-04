@@ -634,6 +634,7 @@ function buildPrefsWidget() {
             builder.addNotebook(_("Panel"), 'panel.png');
 	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable option") + ' ' + _("Behavior") + ' > ' + _("Mouse") + ' > ' + _("Fine-tuning") + ' <span color="red">*</span>' + ' > ' + _("Mouse events") + ' > ' +_("Use mouse drag-and-drop") + '</span>', '@!mouse-drag-and-drop', true);
 				builder.addCheckBox('<b>' + _("Rearrange icons on the panel using mouse") + '</b>', 'icons-drag-and-drop', 'mouse-drag-and-drop');
+                builder.addSeparator();
 				builder.addCheckBox('<b>' + _("Scroll to change workspace") + '</b>: ' + _("Scroll over YAWL panel to change workspace"), 'mouse-scroll-workspace');
                 builder.shift();
                     builder.addCheckBox('<b>' + _("Scroll to find other windows") + '</b>: ' + _("find app's windows on other workspaces by scrolling over its icon when its thumbnails are shown"), 'mouse-scroll-workspace-search', 'mouse-scroll-workspace');
@@ -644,11 +645,14 @@ function buildPrefsWidget() {
                 builder.shift();
         			builder.addScale(_("Blinking rate (times per minute)"), 'icons-attention-blink-rate', 15, 125, 1, 'icons-attention-blink');
                 builder.unshift();
+                builder.addSeparator();
 			    builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
+                builder.addSeparator();
 			    builder.addCheckBox('<b>' + _("Favorite apps") + '</b>: ' + _("always show"), 'icons-favorites');
                 builder.shift();
                     builder.addCheckBox(_("Use smaller icons if not running"), 'icons-favorites-smaller', 'icons-favorites');
                 builder.unshift();
+                builder.addSeparator();
                 builder.addComboBoxText('<b>' + _("Windows indicators") + '</b>', 'icons-windows-indicator', dbFinConsts.arrayWindowsIndicatorTypes, 0);
                 builder.shift();
 				    builder.addColorButton(_("Choose windows indicator color"), 'icons-windows-indicator-color', _("Choose windows indicator color"));
@@ -666,20 +670,28 @@ function buildPrefsWidget() {
             builder.closeNotebook();
 
 		builder.addPage(_("Export/Import"));
-            widgets = builder.addLabel(_("To reset all settings please enable Advanced settings") + ' <span color="red">*</span>', '@!advanced', true, 1);
-			if (widgets && widgets.length) {
-                widgets[0].halign = Gtk.Align.END;
-			}
-            widgets = builder.addLabel('<span size="small">' + '\u26a0 ' + _("This will overwrite all current settings") + '</span>' + ' <span color="red">*</span>', '@advanced', true, 1, 2);
-			if (widgets && widgets.length) {
-                widgets[0].halign = Gtk.Align.END;
-			}
-            widgets = builder.addWidget(new Gtk.Button({ label: '\u26a0 ' + _("Reset settings"), halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true }), 8, 1, 2, 1, '@advanced');
-			if (widgets && widgets.length) {
-                builder.getWidget()._bsr = widgets[0];
-			}
-			builder.addWidget(new Gtk.Label({ label: _("Back up, sync and share settings."), halign: Gtk.Align.START, valign: Gtk.Align.START }), 0, 0, 3, 1, '@!advanced');
-			builder.addWidget(new Gtk.Label({ label: _("Back up, sync and share settings."), halign: Gtk.Align.START, valign: Gtk.Align.START }), 0, 1, 3, 1, '@advanced');
+            widgets = builder.addRow(null, [
+                [ new Gtk.Label({ label: _("Back up, sync and share settings."), halign: Gtk.Align.START, valign: Gtk.Align.START }), 4 ],
+                [ null, 1 ],
+                [ new Gtk.Label({ halign: Gtk.Align.END, valign: Gtk.Align.START }), 5 ]
+            ], '@!advanced');
+            if (widgets && widgets.length) {
+                widgets[0].set_line_wrap(true);
+                widgets[1].set_line_wrap(true);
+                widgets[1].set_markup(_("To reset all settings please enable") + ' ' + _("Advanced settings") + ' <span color="red">*</span>');
+            }
+            widgets = builder.addRow(null, [
+                [ new Gtk.Label({ label: _("Back up, sync and share settings."), halign: Gtk.Align.START, valign: Gtk.Align.START }), 4 ],
+                [ null, 1 ],
+                [ new Gtk.Label({ halign: Gtk.Align.END, valign: Gtk.Align.START }), 2 ],
+                [ new Gtk.Button({ label: '\u26a0 ' + _("Reset settings"), halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true }), 3 ]
+            ], '@advanced');
+            if (widgets && widgets.length) {
+                widgets[0].set_line_wrap(true);
+                widgets[1].set_line_wrap(true);
+                widgets[1].set_markup('<span size="small">' + '\u26a0 ' + _("This will overwrite all current settings") + '</span>' + ' <span color="red">*</span>');
+                builder.getWidget()._bsr = widgets[2];
+            }
 			widgets = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
 																	do_overwrite_confirmation: false, select_multiple: false,
 																	show_hidden: false, hexpand: true, vexpand: true,
