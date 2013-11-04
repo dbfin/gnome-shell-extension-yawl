@@ -32,7 +32,7 @@ while read l; do
              -e 's|YEAR THE PACKAGE'"'"'S COPYRIGHT HOLDER|'"$(date +%Y)"' Vadim Cherepanov @ dbFin.com|' \
              -e 's|the PACKAGE package|dbFin YAWL Gnome-Shell Extension|' \
              -e 's|FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.|Vadim Cherepanov @ dbFin <vadim@dbfin.com>, '"$(date +%Y)"'|' \
-             -e 's|PACKAGE VERSION|YAWL 11|' \
+             -e 's|PACKAGE VERSION|YAWL 12|' \
              -e 's|YEAR-MO-DA HO:MI+ZONE|'"$(date +%Y-%m-%d\ %H:%M%z)"'|' \
              -e 's|FULL NAME <EMAIL@ADDRESS>|Vadim Cherepanov @ dbFin <vadim@dbfin.com>|' \
              -e 's|LANGUAGE <LL@li.org>|dbFin|' \

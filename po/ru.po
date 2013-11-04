@@ -4,7 +4,7 @@
 # Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
 #
 msgid ""
-msgstr "Project-Id-Version: YAWL 11\n"
+msgstr "Project-Id-Version: YAWL 12\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-03 23:31-0600\n"
 "PO-Revision-Date: 2013-11-03 23:31-0600\n"

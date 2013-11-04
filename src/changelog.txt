@@ -45,3 +45,16 @@ v11	2013-08-09
     	- Search app's windows on other workspaces: scroll over app's icon while its thumbnails are shown.
     	- Option to show thumbnails of interesting windows only: if off it will show all windows including modal dialogs.
     	- Compatibility with other extensions that might accidentally unhide hidden panel icons.
+v12	2013-11-04
+		- Favorite apps are always shown
+		- App menu options to add to/remove from Favorites
+		- Reorder icons + the icon order is kept across reboots
+		- Window indicators: point lights or the number of windows
+		- New click options: quit, show all app windows/next window with single click, minimize window if there is only one
+		- Much improved animation and responsiveness
+		- Zoom effects
+		- Settings are split into advanced/basic
+		- Settings button to reset all settings
+		- Alternative experimental animation engine
+		- Updated German and Russian translations
+		- Under the hood: prevent large refresh delays, no attention for non-interesting or focused windows, prevent multiple mouse scrolls, support for smooth scrolling, initial thumbnail panel text color is either black or white depending on the panel background
