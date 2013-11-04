@@ -10,9 +10,19 @@ License: GNU GPL v3, please read src/license.txt
  
 ### Description
  
-YAWL is a Gnome-Shell extension that is similar to Window 7 taskbar. It aims to provide maximum convenience and consistency when manipulating windows in Gnome-Shell.
+YAWL is a Gnome-Shell window list extension (taskbar) that provides many features of a typical dock being integrated into Gnome-Shell. It aims to be simple to use and provide maximum convenience and consistency while supporting many advanced features and customizations.
 
-**Main features include**: task bar with thumbnails, "window peeking" to preview window by hovering its thumbnail, app-specific menus, Quicklists, window attention indicators, scrolling over panel to change workspace, "smart scroll" to search app's windows on other workspaces and others.
+**Main features include**:
+
+1.  task bar with thumbnails;
+1.  "window peeking" to preview window by hovering its thumbnail;
+1.  advanced menus including list of windows on all workspaces, app-specific menus, and Quicklists;
+1.  favorite apps;
+1.  icon reordering preserved across reboots;
+1.  window attention indicators;
+1.  scrolling over panel to change workspace + "smart scroll" to search app's windows on other workspaces;
+
+and many more.
 
 The extension works out of the box but provides numerous settings to adjust its look and behavior to your liking.
 
