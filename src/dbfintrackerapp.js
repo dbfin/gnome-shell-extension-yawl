@@ -668,8 +668,8 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
 	},
 
-	getStableSequence: function() {
-        _D('>' + this.__name__ + '.getStableSequence()');
+	_getStableSequence: function() {
+        _D('>' + this.__name__ + '._getStableSequence()');
 		let (sequence = undefined) {
 			if (global.yawl && global.yawl._iconsOrder) {
                 try { sequence = JSON.parse(global.yawl._iconsOrder); } catch (e) { }
@@ -682,8 +682,8 @@ const dbFinTrackerApp = new Lang.Class({
 		}
 	},
 
-	setStableSequence: function(sequence) {
-        _D('>' + this.__name__ + '.setStableSequence()');
+	_setStableSequence: function(sequence) {
+        _D('>' + this.__name__ + '._setStableSequence()');
         if (global.yawl && sequence && Object.prototype.toString.call(sequence) == '[object Array]') {
             let (json = undefined) {
                 try { json = JSON.stringify(sequence); } catch (e) { }
@@ -728,7 +728,7 @@ const dbFinTrackerApp = new Lang.Class({
                 if (position !== undefined && position !== position_) {
                     global.yawl.panelWindows.moveChild(this.yawlPanelWindowsGroup, position);
                     if (updateStableSequence) {
-                        let (sequence = this.getStableSequence(),
+                        let (sequence = this._getStableSequence(),
                              id = this.metaApp.get_id()) {
                             let (index = sequence && id ? sequence.indexOf(id) : -1,
                                  nextIndex = -1,
@@ -752,7 +752,7 @@ const dbFinTrackerApp = new Lang.Class({
                                     if (nextIndex != -1) {
                                         sequence.splice(index, 1);
                                         sequence.splice(nextIndex, 0, id);
-                                        this.setStableSequence(sequence);
+                                        this._setStableSequence(sequence);
                                     }
                                 } // if (index != -1)
                             } // let (index, nextIndex, keys)
@@ -778,7 +778,7 @@ const dbFinTrackerApp = new Lang.Class({
             return;
         }
         let (position = 0,
-             sequence = this.getStableSequence(),
+             sequence = this._getStableSequence(),
              id = this.metaApp.get_id()) {
             if (sequence && id) {
                 let (index = sequence.indexOf(id)) {
@@ -798,11 +798,11 @@ const dbFinTrackerApp = new Lang.Class({
                             }
                         });
                         this.moveToPosition(position, false);
-                    }
+                    } // if (index !== -1)
                     else {
                         sequence.push(id);
-                        this.setStableSequence(sequence);
-                    }
+                        this._setStableSequence(sequence);
+                    } // if (index !== -1) else
                 } // let(index)
             } // if (sequence && id)
         } // let (position, sequence, id)
