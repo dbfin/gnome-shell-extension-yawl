@@ -693,6 +693,12 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
 	},
 
+    _isStable: function() {
+        _D('>' + this.__name__ + '._isStable()');
+        _D('<');
+        return this.metaApp && !this.metaApp.is_window_backed() || false;
+    },
+
     getPosition: function() {
         _D('>' + this.__name__ + '.getPosition()');
         if (this.appButton && global.yawl.panelApps) {
@@ -767,7 +773,7 @@ const dbFinTrackerApp = new Lang.Class({
     _moveToStablePosition: function() {
         _D('>' + this.__name__ + '._moveToStablePosition()');
         if (!this.metaApp
-            || this.metaApp.is_window_backed()
+            || !this._isStable()
             || !global.yawl
             || !global.yawl._mouseDragAndDrop
             || !global.yawl._iconsDragAndDrop

@@ -271,7 +271,7 @@ const dbFinMenuBuilder = new Lang.Class({
 					} // if (windows.length)
 				} // let (windows, tracker)
                 // add pin menu
-                if (!this._app.is_window_backed()) {
+                if (this._trackerApp && this._trackerApp._isStable()) {
                     if (!this._menuWindows) {
                         this._menuWindows = new PopupMenu.PopupMenuSection();
                     }
