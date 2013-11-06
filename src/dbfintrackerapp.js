@@ -129,7 +129,7 @@ const dbFinTrackerApp = new Lang.Class({
             if (this.appButton._slicerIcon) this.appButton._slicerIcon.setZoom(0.0, 0);
         } // if (this.appButton)
 
-        this._moveToStablePosition();
+        this._moveToStablePosition(true);
 
 		this._menuManager = Main.panel && Main.panel.menuManager || null;
 		this.updateMenu();
@@ -701,9 +701,33 @@ const dbFinTrackerApp = new Lang.Class({
 
     getPosition: function() {
         _D('>' + this.__name__ + '.getPosition()');
-        if (this.appButton && global.yawl.panelApps) {
+        if (this.appButton && global.yawl && global.yawl.panelApps) {
             _D('<');
             return global.yawl.panelApps.getChildPosition(this.appButton);
+        }
+        _D('<');
+        return undefined;
+    },
+
+    // get position not counting backed windows
+    _getPositionStable: function() {
+        _D('>' + this.__name__ + '._getPositionStable()');
+        if (this.appButton && global.yawl && global.yawl.panelApps) {
+            let (position = global.yawl.panelApps.getChildPosition(this.appButton),
+                 keys = global.yawl.panelApps._childrenObjects
+                        && global.yawl.panelApps._childrenObjects._keys) {
+                if (!position || !keys) { // position === undefined || position === 0
+                    _D('<');
+                    return position;
+                }
+                for (let i = position, trackerApp = null; i--;) {
+                    if (!(trackerApp = keys[i] && keys[i]._trackerApp) || !trackerApp._isStable()) {
+                        --position;
+                    }
+                }
+                _D('<');
+                return position;
+            }
         }
         _D('<');
         return undefined;
@@ -726,27 +750,38 @@ const dbFinTrackerApp = new Lang.Class({
         if (updateStableSequence === undefined) updateStableSequence = true;
         else updateStableSequence = !!updateStableSequence;
         updateStableSequence =  updateStableSequence
+                                && this._isStable()
                                 && global.yawl._mouseDragAndDrop
                                 && global.yawl._iconsDragAndDrop;
-        let (position_ = this.getPosition()) {
+        let (position_ = this.getPosition(),
+             positionStable_ = this._getPositionStable()) {
             if (position_ !== undefined && position !== position_) {
                 position = global.yawl.panelApps.moveChild(this.appButton, position);
                 if (position !== undefined && position !== position_) {
                     global.yawl.panelWindows.moveChild(this.yawlPanelWindowsGroup, position);
-                    if (updateStableSequence) {
+                    if (!updateStableSequence || positionStable_ === undefined) {
+                        _D('<');
+                        return;
+                    }
+                    let (positionStable = this._getPositionStable()) {
+                        if (positionStable === undefined || positionStable == positionStable_) {
+                            _D('<');
+                            return;
+                        }
                         let (sequence = this._getStableSequence(),
                              id = this.metaApp.get_id()) {
                             let (index = sequence && id ? sequence.indexOf(id) : -1,
                                  nextIndex = -1,
                                  keys = global.yawl.panelApps._childrenObjects._keys) {
                                 if (index != -1) {
-                                    (position < position_
+                                    (positionStable < positionStable_
                                      ? keys.slice(position + 1)
                                      : keys.slice(0, position).reverse())
                                     .some(function (appButton) {
-                                        let (metaApp =  appButton && !appButton.hidden
-                                                        && !appButton.hiding && appButton.metaApp) {
-                                            let (id = metaApp && metaApp.get_id()) {
+                                        let (metaApp = appButton && appButton._trackerApp
+                                                                 && appButton.metaApp) {
+                                            let (id = metaApp && appButton._trackerApp._isStable()
+                                                              && metaApp.get_id()) {
                                                 let (index = id ? sequence.indexOf(id) : -1) {
                                                     return  index != -1
                                                             ? (nextIndex = index, true)
@@ -763,14 +798,14 @@ const dbFinTrackerApp = new Lang.Class({
                                 } // if (index != -1)
                             } // let (index, nextIndex, keys)
                         } // let (sequence, id)
-                    } // if (updateStableSequence)
+                    } // let (positionStable)
                 } // if (position !== undefined && position !== position_)
             } // if (position_ !== undefined && position !== position_)
-        } // let (position_)
+        } // let (position_, positionStable_)
         _D('<');
     },
 
-    _moveToStablePosition: function() {
+    _moveToStablePosition: function(forceBeforeUnstable/* = false*/) {
         _D('>' + this.__name__ + '._moveToStablePosition()');
         if (!this.metaApp
             || !this._isStable()
@@ -791,11 +826,16 @@ const dbFinTrackerApp = new Lang.Class({
                     if (index !== -1) {
                         global.yawl.panelApps._childrenObjects._keys
                         .every(function (appButton, position_) {
-                            let (metaApp = appButton && appButton.metaApp) {
-                                let (id = metaApp && metaApp.get_id()) {
+                            let (metaApp = appButton && appButton.metaApp,
+                                 trackerApp = appButton && appButton._trackerApp) {
+                                let (id = metaApp && trackerApp
+                                          && trackerApp._isStable()
+                                          && metaApp.get_id()) {
                                     let (index_ = id ? sequence.indexOf(id) : -1) {
                                         if (index_ < index) {
-                                            if (index_ != -1) position = position_ + 1;
+                                            if (index_ != -1 || !forceBeforeUnstable) {
+                                                position = position_ + 1;
+                                            }
                                             return true;
                                         }
                                         return false;
@@ -806,6 +846,16 @@ const dbFinTrackerApp = new Lang.Class({
                         this.moveToPosition(position, false);
                     } // if (index !== -1)
                     else {
+                        position = global.yawl.panelApps.getChildrenNumber() - 1;
+                        if (forceBeforeUnstable) {
+                            for (; position >= 0; --position) {
+                                let (appButton = global.yawl.panelApps._childrenObjects._keys[position]) {
+                                    if (appButton && appButton._trackerApp
+                                        && appButton._trackerApp._isStable()) break;
+                                }
+                            }
+                        }
+                        this.moveToPosition(++position, false);
                         sequence.push(id);
                         this._setStableSequence(sequence);
                     } // if (index !== -1) else
