@@ -41,9 +41,11 @@
  *						sort(compare:[k1,v1],[k2,v2]->int)	sorts using compare function
  *						sortK(compare:k1,k2->int)	    	sorts by keys using compare function
  *						sortV(compare:v1,v2->int)	    	sorts by values using compare function
- *						forEach(callback:k,v)		    	calls callback on each pair
- * 						some(callback:k,v->boolean)			calls callback on each pair until it returns true
+ *						forEach(callback:k,v,i)		    	calls callback on each pair
+ * 						some(callback:k,v,i->boolean)		calls callback on each pair until it returns true
  * 															returns true iff some callback returned true
+ * 						every(callback:k,v,i->boolean)		calls callback on each pair until it returns false
+ * 															returns true iff every callback returned true
  *						toArray()					    	returns array of pairs [[ki, vi]]
  *						toString()					    	returns string represenating the array of pairs
  *
@@ -235,7 +237,7 @@ const dbFinArrayHash = new Lang.Class({
 	forEach: function(callback) { // this is a very delicate function: what if something changes this in callback?
         _D('>' + this.__name__ + '.forEach()');
         let (ks = this._keys.slice(), vs = this._values.slice(), l = this.length) {
-    		for (let i = 0; i < l; ++i) callback(ks[i], vs[i]);
+			for (let i = 0; i < l; ++i) callback(ks[i], vs[i], i);
         }
         _D('<');
 	},
@@ -243,10 +245,19 @@ const dbFinArrayHash = new Lang.Class({
 	some: function(callback) { // this is a very delicate function: what if something changes this in callback?
         _D('>' + this.__name__ + '.some()');
         let (ks = this._keys.slice(), vs = this._values.slice(), l = this.length) {
-    		for (let i = 0; i < l; ++i) if (callback(ks[i], vs[i])) { _D('<'); return true; }
+			for (let i = 0; i < l; ++i) if (callback(ks[i], vs[i], i)) { _D('<'); return true; }
         }
         _D('<');
 		return false;
+	},
+
+	every: function(callback) { // this is a very delicate function: what if something changes this in callback?
+        _D('>' + this.__name__ + '.every()');
+        let (ks = this._keys.slice(), vs = this._values.slice(), l = this.length) {
+			for (let i = 0; i < l; ++i) if (!callback(ks[i], vs[i], i)) { _D('<'); return false; }
+        }
+        _D('<');
+		return true;
 	},
 
 	toArray: function() {
