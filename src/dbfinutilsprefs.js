@@ -467,7 +467,7 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 	},
 
 	// gtkWidget = Gtk.Widget or a string for Gtk.Label
-	// gtkOthers = [ [ gtkWidget, width ] ]
+	// gtkOthers = [ [ gtkWidget, width, ?bindSensitive ] ]
 	addRow: function(gtkWidget/* = null*/, gtkOthers/* = []*/, bindSensitive/* = null*/) {
 		if (!this._notebook || !this._notebook.page) return [];
 		if (gtkWidget && !(gtkWidget instanceof Gtk.Widget) || gtkWidget === '') {
@@ -496,7 +496,9 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 						gtkOthers[i][0].hide();
 					} // if (!gtkOthers[i][1] || gtkOthers[i][1] < 0)
 					else {
-						let ([ bindBoxTop, bindBox ] = this.getBindBox(bindSensitive)) {
+						let ([ bindBoxTop, bindBox ] = this.getBindBox(gtkOthers[i][2] === undefined
+                                                                       ? bindSensitive
+                                                                       : gtkOthers[i][2])) {
 						    gtkOthers[i][0].show();
 							if (!bindBox) {
                                 this._notebook.page.attach(gtkOthers[i][0], x, this._notebook.row, gtkOthers[i][1], 1);
