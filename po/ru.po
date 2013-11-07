@@ -6,8 +6,8 @@
 msgid ""
 msgstr "Project-Id-Version: YAWL 12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-03 23:31-0600\n"
-"PO-Revision-Date: 2013-11-03 23:31-0600\n"
+"POT-Creation-Date: 2013-11-06 19:06-0600\n"
+"PO-Revision-Date: 2013-11-06 19:06-0600\n"
 "Last-Translator: Vadim Cherepanov @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -147,7 +147,7 @@ msgstr "Выйти : ничего"
 msgid "Show next (minimize if single) : all windows"
 msgstr "Cледующее (свернуть если одно) : все окна"
 
-#: src/dbfinconsts.js:79
+#: src/dbfinconsts.js:79 src/dbfinconsts.js:85
 msgid "Show and focus"
 msgstr "Показать и фокусировать"
 
@@ -171,23 +171,27 @@ msgstr "Включить предпросмотр/Прозрачность ми�
 msgid "Preview off/Thumbnail panel opacity"
 msgstr "Выключить предпросмотр/Прозрачность миниатюр"
 
-#: src/dbfinconsts.js:92
+#: src/dbfinconsts.js:85
+msgid "close thumbnails"
+msgstr "закрыть миниатюры"
+
+#: src/dbfinconsts.js:93
 msgid "Open"
 msgstr "Открыть"
 
-#: src/dbfinconsts.js:95
+#: src/dbfinconsts.js:96
 msgid "Quit"
 msgstr "Выйти"
 
-#: src/dbfinconsts.js:103
+#: src/dbfinconsts.js:104
 msgid "Hide window indicators"
 msgstr "Скрыть индикаторы окон"
 
-#: src/dbfinconsts.js:104
+#: src/dbfinconsts.js:105
 msgid "Point lights"
 msgstr "Световые точки"
 
-#: src/dbfinconsts.js:105
+#: src/dbfinconsts.js:106
 msgid "Actual number of windows"
 msgstr "Количество окон"
 
