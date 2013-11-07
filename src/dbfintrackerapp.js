@@ -162,7 +162,8 @@ const dbFinTrackerApp = new Lang.Class({
             this._updatedIconsOpacityOther =
 			this._updatedIconsOpacityInactive =
             this._updatedIconsFavorites =
-            this._updatedIconsFavoritesSmaller = function () { this.updateVisibility(); };
+            this._updatedIconsFavoritesSmaller =
+            this._updatedIconsFavoritesSize = function () { this.updateVisibility(); };
         this._updatedWindowsShow = function () { if (global.yawl && !global.yawl._windowsShow) this.hideWindowsGroup(); }
         this._updatedWindowsAnimationTime = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationTime = global.yawl._windowsAnimationTime; };
 		this._updatedWindowsAnimationEffect = function () { if (this.yawlPanelWindowsGroup) this.yawlPanelWindowsGroup.animationEffect = global.yawl._windowsAnimationEffect; };
@@ -379,8 +380,10 @@ const dbFinTrackerApp = new Lang.Class({
                 );
                 this.appButton._slicerIcon.setZoom(
                     pinned  ?   global.yawl && global.yawl._iconsFavoritesSmaller
-                                ?   global.yawl._iconsSize
-                                    ?   dbFinUtils.inRange((global.yawl._iconsSize >> 1) + 4, 12, 24, 24)
+                                ?   global.yawl._iconsSize && global.yawl._iconsFavoritesSize
+                                    ?   dbFinUtils.inRange((global.yawl._iconsSize >> 1)
+                                                           + 4 * (global.yawl._iconsFavoritesSize - 1),
+                                                           undefined, 24, 24)
                                         / global.yawl._iconsSize
                                     :   0.625
                                 :   1.0

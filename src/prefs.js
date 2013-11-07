@@ -650,7 +650,7 @@ function buildPrefsWidget() {
                 builder.addSeparator();
 			    builder.addCheckBox('<b>' + _("Favorite apps") + '</b>: ' + _("always show"), 'icons-favorites');
                 builder.shift();
-                    builder.addCheckBox(_("Use smaller icons if not running"), 'icons-favorites-smaller', 'icons-favorites');
+                    builder.addCheckBoxScale(_("Use smaller icons if not running"), 'icons-favorites-smaller', 'icons-favorites-size', 1, 3, 1, 'icons-favorites', false, true);
                 builder.unshift();
                 builder.addSeparator();
                 builder.addComboBoxText('<b>' + _("Windows indicators") + '</b>', 'icons-windows-indicator', dbFinConsts.arrayWindowsIndicatorTypes, 0);

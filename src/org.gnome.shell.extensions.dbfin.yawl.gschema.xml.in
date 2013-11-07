@@ -509,6 +509,11 @@
       <_summary>Whether to make icons of not running favorite apps smaller.</_summary>
       <_description>If true icons of not running favorite apps are smaller.</_description>
     </key>
+    <key name="icons-favorites-size" type="s">
+      <default>'2'</default>
+      <_summary>The size of icons of not running favorite apps.</_summary>
+      <_description>The size of icons of not running favorite apps.</_description>
+    </key>
     <key name="icons-windows-indicator" type="s">
       <default>'1'</default>
       <_summary>The type of app icon windows indicator.</_summary>
