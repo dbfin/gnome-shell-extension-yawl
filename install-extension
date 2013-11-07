@@ -1,4 +1,5 @@
 #!/bin/bash --
+make distclean 2>/dev/null
 echo 'Creating Build directory...'
 [ ! -d ./Build/ ] || rm -rf ./Build/
 mkdir -p ./Build/
@@ -8,6 +9,7 @@ if [ -d ./Build/ ]; then
   echo 'Running autogen...'
   [ ! -d ./zip/ ] || rm -rf ./zip/
   if [ -f ../autogen.sh ]; then
+    make distclean 2>/dev/null
     ../autogen.sh --prefix="$(readlink -f ~/.local)/" && make && make zip-file && make distclean
     if [ -d ./zip/ ]; then
       d="$(readlink -f ~/.local)/share/gnome-shell/extensions/yawl@dbfin.com/"
