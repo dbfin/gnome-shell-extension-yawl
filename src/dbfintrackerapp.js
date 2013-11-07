@@ -544,7 +544,7 @@ const dbFinTrackerApp = new Lang.Class({
 			this._updateFocused();
 		}
 		else {
-			this.hideWindowsGroup();
+			this.hideWindowsGroup(0);
 		}
         _D('<');
     },
