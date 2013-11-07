@@ -61,6 +61,7 @@
  *          addColorButton(label, settingsKey, titleColorChooser, bindSensitive?, showEntry?)
  *          addScale(label, settingsKey, min, max, step, bindSensitive?, showEntry?)
  * 			addScaleScale(label, settingsKey1, settingsKey2, min1, max1, step1, min2, max2, step2, bindSensitive?, showEntry1?, showEntry2?)
+ *          addCheckBoxScale(label, settingsKey1, settingsKey2, min, max, step, bindSensitive?, showEntry?, bindScale?)
  * 			addColorButtonScale(label, settingsKeyColor, settingsKeyScale, titleColorChooser, min, max, step, bindSensitive?, showEntryColor?, showEntryScale?)
  *          addComboBoxText(label, settingsKey, arrayLabels, subIndex, bindSensitive?, showEntry?)
  *
@@ -578,7 +579,25 @@ const dbFinSettingsWidgetBuilder = new Lang.Class({
 			settingsbind1.bind(settingsKey1, rowScaleEntry1, rowScale1);
 			settingsbind2.bind(settingsKey2, rowScaleEntry2, rowScale2);
 			return this.addRow(label, [ [ rowScaleEntry1, !showEntry1 ? 0 : 1 ], [ rowScale1, (this._notebook.widthRight >> 1) - (!showEntry1 ? 0 : 1) ], [ null, this._notebook.widthRight & 1 ], [ rowScaleEntry2, !showEntry2 ? 0 : 1 ], [ rowScale2, (this._notebook.widthRight >> 1) - (!showEntry2 ? 0 : 1) ] ], bindSensitive);
-        } // let (rowScaleEntry, rowScale, settingsbind)
+        } // let (rowScaleEntry1, rowScale1, rowScaleEntry2, rowScale2, settingsbind1, settingsbind2)
+    },
+
+    addCheckBoxScale: function(label, settingsKey1, settingsKey2, min, max, step, bindSensitive/* = null*/, showEntry/* = false*/, bindScale/* = false*/) {
+		if (!this._notebook) return [];
+		let (rowSwitch = new Gtk.Switch({ halign: Gtk.Align.START, valign: Gtk.Align.CENTER }),
+             rowScaleEntry = new Gtk.Entry({ text: '', halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, width_chars: 5 }),
+             rowScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min, max, step,
+                                                 { halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true, digits: 0, draw_value: false, has_origin: true }),
+		     settingsbind = new dbFinSettingsBindEntryScale()) {
+			this._settings.bind(settingsKey1, rowSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+			this._notebook.widget._settingsbinds.push(settingsbind);
+			settingsbind.bind(settingsKey2, rowScaleEntry, rowScale);
+			return this.addRow(label, [
+                   [ rowSwitch, 1 ],
+                   [ rowScaleEntry, !showEntry ? 0 : 1, bindScale ? [ settingsKey1 ].concat(bindSensitive) : undefined ],
+                   [ rowScale, this._notebook.widthRight - 1 - (!showEntry ? 0 : 1), bindScale ? [ settingsKey1 ].concat(bindSensitive) : undefined ]
+            ], bindSensitive);
+        } // let (rowSwitch, rowScaleEntry, rowScale, settingsbind)
     },
 
     addColorButtonScale: function(label, settingsKeyColor, settingsKeyScale, titleColorChooser, min, max, step, bindSensitive/* = null*/, showEntryColor/* = false*/, showEntryScale/* = false*/) {
