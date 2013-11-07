@@ -79,7 +79,8 @@ if [ -f src/changelog.txt ]; then
     if [[ "$yn" =~ ^[yY]$ ]]; then
 		echo -e "v$vn\t$(date +%Y-%m-%d)" >>src/changelog.txt
     	while read l; do
-    		echo -e "    \t- $l" >>src/changelog.txt
+			if [ -z "$l" ]; then break; fi
+			echo -e "\t\t- $l" >>src/changelog.txt
     	done
     fi
   fi
