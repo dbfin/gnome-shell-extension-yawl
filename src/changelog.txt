@@ -58,3 +58,7 @@ v12	2013-11-04
 		- Alternative experimental animation engine
 		- Updated German and Russian translations
 		- Under the hood: prevent large refresh delays, no attention for non-interesting or focused windows, prevent multiple mouse scrolls, support for smooth scrolling, initial thumbnail panel text color is either black or white depending on the panel background
+v13	2013-11-06
+		- Adjustable smaller icons size
+		- Option to close thumbnails once a thumbnail is clicked to show its window
+		- Fix reordering of icons when backed-window apps are present
