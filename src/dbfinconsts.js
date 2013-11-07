@@ -81,7 +81,8 @@ const arrayWindowClickFunctions = [
     [   _("(Un)Maximize"),                            	'maximizeWindowToggle'          ],
 	[	_("Close"),										'closeWindow'					],
 	[	_("Preview on/Thumbnail panel opacity"),		'previewWindowOn'				],
-	[	_("Preview off/Thumbnail panel opacity"),		'previewWindowOff'				]
+	[	_("Preview off/Thumbnail panel opacity"),		'previewWindowOff'				],
+    [   _("Show and focus") + ': ' + _("close thumbnails"),	'showWindowCloseThumbnails' ]
 ];
 
 // the first parameter: a menu item text, 'addons' or anything else for separator

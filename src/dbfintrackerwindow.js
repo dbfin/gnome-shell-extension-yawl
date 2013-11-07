@@ -228,6 +228,18 @@ const dbFinTrackerWindow = new Lang.Class({
         _D('<');
     },
 
+    showWindowCloseThumbnails: function() {
+        _D('>' + this.__name__ + '.showWindowCloseThumbnails()');
+        if (this.metaWindow && this._tracker) {
+            this._tracker.activateWindow(this.metaWindow);
+            if (global.yawl && global.yawl.panelWindows
+                && global.yawl.panelWindows._lastWindowsGroupTrackerApp) {
+                global.yawl.panelWindows._lastWindowsGroupTrackerApp.hideWindowsGroup();
+            }
+        }
+        _D('<');
+    },
+
     minimizeWindow: function() {
         _D('>' + this.__name__ + '.minimizeWindow()');
         if (this._tracker) this._tracker.minimizeWindow(this.metaWindow);
