@@ -97,12 +97,13 @@ const dbFinMenuBuilder = new Lang.Class({
         _D('<');
 	},
 
-    _menuSetProperties: function(menu, metaApp, trackerApp) {
+    _menuSetProperties: function(menu, metaApp, trackerApp, createPinMenu/* = true*/) {
         _D('>' + this.__name__ + '._menuSetProperties()');
         if (menu) {
             menu._app = metaApp;
             menu._trackerApp = trackerApp;
             menu._tracker = trackerApp && trackerApp._tracker || null;
+            if (createPinMenu === undefined || createPinMenu) menu._createPinMenu = true;
 			if (menu._addonsPosition !== undefined) {
                 menu._menuUpdateAddons = Lang.bind(this, this._menuUpdateAddons);
             }
@@ -170,7 +171,7 @@ const dbFinMenuBuilder = new Lang.Class({
             }
             if (empty) {
                 menu = new PopupMenu.PopupMenu(actor, 0.0, St.Side.TOP, 0);
-                this._menuSetProperties(menu, metaApp, trackerApp);
+                this._menuSetProperties(menu, metaApp, trackerApp, false);
                 _D('<');
                 return menu;
             }
@@ -271,7 +272,7 @@ const dbFinMenuBuilder = new Lang.Class({
 					} // if (windows.length)
 				} // let (windows, tracker)
                 // add pin menu
-                if (this._trackerApp && this._trackerApp._isStable()) {
+                if (this._createPinMenu && this._trackerApp && this._trackerApp._isStable()) {
                     if (!this._menuWindows) {
                         this._menuWindows = new PopupMenu.PopupMenuSection();
                     }
