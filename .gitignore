@@ -1,21 +1,21 @@
 autom4te.cache/
 Build/
-/x/
+zzz/
 staging/
 zip/
 
 aclocal.m4
 config\.*
 configure
-/COPYING
-/install-sh
+COPYING
+install-sh
 libtool
-/ltmain.sh
+ltmain.sh
 Makefile
 Makefile.in
 Makefile.in.in
 metadata.json
-/missing
+missing
 /pos.log
 /changeversion.log
 POTFILES
