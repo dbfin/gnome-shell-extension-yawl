@@ -1,37 +1,21 @@
 #!/bin/bash --
+
+function ok() { echo -e "\e[32m$1\e[0m"; exit 0; }
+function error() { echo -e "Error \e[31m$1\e[0m at step $2"; exit $2; }
+
+[ $# -gt 0 ] && [ -f "./$1/autogen.sh" ] || error "usage: $BASH_SOURCE extension_name" 1
+cd "./$1/"
+
+echo 'Running autogen and make zip-file...'
 make distclean 2>/dev/null
-echo 'Creating Build directory...'
-[ ! -d ./Build/ ] || rm -rf ./Build/
-mkdir -p ./Build/
-e=0
-if [ -d ./Build/ ]; then
-  cd ./Build/
-  echo 'Running autogen...'
-  [ ! -d ./zip/ ] || rm -rf ./zip/
-  if [ -f ../autogen.sh ]; then
-    make distclean 2>/dev/null
-    ../autogen.sh --prefix="$(readlink -f ~/.local)/" && make && make zip-file && make distclean
-    if [ -d ./zip/ ]; then
-      d="$(readlink -f ~/.local)/share/gnome-shell/extensions/yawl@dbfin.com/"
-      [ ! -d "$d" ] || rm -rf "$d"
-      mkdir -p "$d"
-      if [ -d "$d" ]; then
-        unzip -q './zip/yawl@dbfin.com.shell-extension.zip' -d "$d" || e=5
-      else
-        e=4
-      fi
-    else
-      e=3
-    fi
-  else
-    e=2
-  fi
-  cd ..
-else
-  e=1
-fi
-if [ $e -eq 0 ]; then
-  echo 'Everything seems OK.'
-else
-  echo "Step $e went wrong..."
-fi
+[ ! -d ./zip/ ] || rm -rf ./zip/
+./autogen.sh --prefix="$HOME/.local/" && make && make zip-file && make distclean
+[ -d ./zip/ ] && [ -f "./zip/$1@dbfin.com.shell-extension.zip" ] || error 'autogen or make did not finish successfully' 2
+
+echo "Copying extension $1..."
+d="$HOME/.local/share/gnome-shell/extensions/$1@dbfin.com/"
+[ ! -d "$d" ] || rm -rf "$d"
+mkdir -p "$d" || error "cannot create $d" 3
+unzip -q "./zip/$1@dbfin.com.shell-extension.zip" -d "$d" || error "cannot unzip made extension to $d"
+
+ok 'Everything seems OK.'

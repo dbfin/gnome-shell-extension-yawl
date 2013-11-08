@@ -16,8 +16,8 @@ Makefile.in
 Makefile.in.in
 metadata.json
 missing
-/pos.log
-/changeversion.log
+pos.log
+changeversion.log
 POTFILES
 
 *~

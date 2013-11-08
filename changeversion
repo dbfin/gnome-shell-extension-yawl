@@ -1,11 +1,11 @@
 #!/bin/bash --
 #
 # This script changes the version in all scripts and include files where necessary
-# It also updates po files accordingly
-# Useful when the version of the extension changes
+# It can also update po files accordingly if a block of code is uncommented below
+# Useful when the version of an extension changes
 #
-# Copyright (c) 2012 Vadim@dbFin <vadim@dbfin.com>
-# This file is distributed under the same license as dbFin YAWL Gnome-Shell Extension.
+# Copyright (c) 2012-2013 Vadim@dbFin <vadim@dbfin.com>
+# This file is distributed under the same license as dbFin YAWL Gnome-Shell Extensions.
 #
 # Notes:
 #   Also adds messages to src/changelog.txt for current version
@@ -13,13 +13,12 @@
 #
 # Special note about po/*.po files:
 #   When a new version of the extension is out use this script to substitute
-#   the new version tag into all files where necessary, including script pos
-#   that can further be used to generate .po files in the po/ subdirectory.
+#   the new version tag into all files where necessary. To update *.po files
+#   use script pos that can regenerate *.po files in the po/ subdirectory.
 #   After succesfully running this script manually delete all po/*.po files,
 #   and run bash pos: this will regenerate all fresh copies of po/*.po files
 #   WITHOUT any translations (but the resulting po/.po files will be in sync
-#   with the current version of the extension). Script pos itself is renewed
-#   by this script to generate fresh .po files with the new version tags.
+#   with the current version of the extension).
 #   In this case scenario ALL YOUR PREVIOUS TRANSLATIONS WILL BE LOST: IT IS
 #   ASSUMED that you USE SOME EXTERNAL TRANSLATION SOFTWARE that keeps track
 #   of all your previous translations, and can automatically substitute them
@@ -30,6 +29,14 @@
 #   it will also update .po files using msgmerge: previous translations plus
 #   fuzzy matching (I guess?)
 #
+
+function help() {
+	echo "Usage: $BASH_SOURCE extension_name"
+	exit 1
+}
+[ $# -gt 0 ] && [ -f "./$1/autogen.sh" ] && [ -f "./$1/include.mk" ] || help
+
+cd "./$1/"
 
 echo 'Changing version'
 
@@ -52,10 +59,6 @@ f='configure.ac'
 echo "Modifying $f..."
 sed -i "s|\(^\s*AC_INIT\s*(\s*\[\s*gnome-shell-extension-yawl\s*\]\s*,\s*\)$v\([^)]*)\)|\1$vn\2|" $f && echo 'Done.' || echo -e "Cannot modify \e[0;31m$f\e[0m: refer to changeversion.log for details"
 
-f='pos'
-echo "Modifying $f..."
-sed -i "s|\(s\|PACKAGE\s\+VERSION\|YAWL\s\+\)$v\(\|\)|\1$vn\2|" $f && echo 'Done.' || echo -e "Cannot modify \e[0;31m$f\e[0m: refer to changeversion.log for details"
-
 ##
 # this block of code changes the version in po/.po files and updates them
 #   the new version of the extension may have different or additional strings
@@ -69,7 +72,7 @@ sed -i "s|\(s\|PACKAGE\s\+VERSION\|YAWL\s\+\)$v\(\|\)|\1$vn\2|" $f && echo 'Done
 #done < <( find ./po/ -type f -name '*.po' -print0 )
 
 # logging errors
-) 2> >( ( echo "$(date)"; while read e; do echo "$e"; done ) >>changeversion.log )
+) 2> >( ( echo "$(date) $1"; while read e; do echo "$e"; done ) >>../changeversion.log )
 
 # working with src/changelog.txt (if it exists)
 if [ -f src/changelog.txt ]; then
