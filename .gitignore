@@ -1,6 +1,6 @@
 autom4te.cache/
 Build/
-src/x/
+/x/
 staging/
 zip/
 
