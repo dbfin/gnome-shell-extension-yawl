@@ -1,8 +1,8 @@
-## YAWL (Yet Another Window List)
+## YAWL
 
-##### Gnome-Shell Extension
+##### Gnome-Shell Extensions
 
-_Copyright © 2013 Vadim Cherepanov @ dbFin (vadim (at) dbfin.com)_
+_Copyright © 2012-2013 Vadim Cherepanov @ dbFin (vadim (at) dbfin.com)_
 
 License: GNU GPL v3, please read src/license.txt
 
@@ -10,7 +10,9 @@ License: GNU GPL v3, please read src/license.txt
  
 ### Description
  
-YAWL is a Gnome-Shell window list extension (taskbar) that provides many features of a typical dock being integrated into Gnome-Shell. It aims to be simple to use and provide maximum convenience and consistency while supporting many advanced features and customizations.
+YAWL is a collection of Gnome-Shell extensions, including the Yet Another Window List (taskbar) extension providing many features of a typical dock being integrated into Gnome-Shell. YAWL aims to be simple to use and provide maximum convenience and consistency while supporting many advanced features and customizations.
+
+### Yet Another Window List (taskbar)
 
 **Main features include**:
 
@@ -48,7 +50,7 @@ If you want to keep up with the latest features that have not made it yet into a
 1.  Every time you update source code: just run install-extension.
 
         cd /path/to/where/you/have/subdir/with/yawl/gnome-shell-extension-yawl
-        ./install-extension
+        ./install-extension yawl
 
     If it gives errors please make sure you have all necessary dev-libraries installed. These include:
 
