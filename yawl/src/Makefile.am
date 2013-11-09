@@ -1,12 +1,12 @@
 include ../include.mk
 
 dist_extension_DATA = \
-	convenience2.js \
-	dbfinanimation.js \
-	dbfinanimationequations.js \
+	../../lib/convenience2.js \
+	../../lib/dbfinanimation.js \
+	../../lib/dbfinanimationequations.js \
 	dbfinappbutton.js \
-	dbfinarrayhash.js \
-	dbfinclicked.js \
+	../../lib/dbfinarrayhash.js \
+	../../lib/dbfinclicked.js \
 	dbfinclickmeter.js \
 	dbfinconsts.js \
 	dbfindebug.js \
@@ -16,17 +16,17 @@ dist_extension_DATA = \
 	dbfinpanelbuttontoggle.js \
 	dbfinpanelenhancements.js \
 	dbfinpreview.js \
-	dbfinsettings.js \
-	dbfinsignals.js \
-	dbfinsliceractor.js \
-	dbfinslicericon.js \
-	dbfinslicerlabel.js \
-	dbfinstyle.js \
+	../../lib/dbfinsettings.js \
+	../../lib/dbfinsignals.js \
+	../../lib/dbfinsliceractor.js \
+	../../lib/dbfinslicericon.js \
+	../../lib/dbfinslicerlabel.js \
+	../../lib/dbfinstyle.js \
 	dbfintracker.js \
 	dbfintrackerapp.js \
 	dbfintrackerwindow.js \
-	dbfinutils.js \
-	dbfinutilsprefs.js \
+	../../lib/dbfinutils.js \
+	../../lib/dbfinutilsprefs.js \
 	dbfinwindowthumbnail.js \
 	dbfinyawl.js \
 	dbfinyawlpanel.js \
