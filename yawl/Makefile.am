@@ -19,7 +19,7 @@ zip-file: all
 	( cd "$(builddir)/Build/$(uuid)"; \
 		zip -qr "$(abs_builddir)/zip/$(uuid).shell-extension.zip" .; \
 	);
-#	-rm -fR $(builddir)/Build
+	-rm -fR $(builddir)/Build
 
 local-install: zip-file
 	if [ -d "$(localextensiondir)" ]; then \
