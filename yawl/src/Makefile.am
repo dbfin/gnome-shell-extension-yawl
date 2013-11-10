@@ -9,7 +9,7 @@ dist_extension_DATA = \
 	../../lib/dbfinclicked.js \
 	dbfinclickmeter.js \
 	dbfinconsts.js \
-	dbfindebug.js \
+	../../lib/dbfindebug.js \
 	dbfindebugview.js \
 	dbfinmenubuilder.js \
 	dbfinmovecenter.js \
@@ -35,11 +35,12 @@ dist_extension_DATA = \
 	stylesheet.css
 nodist_extension_DATA = \
 	changelog.txt \
-	GNUGPLv3 \
-	license.txt \
+	../../lib/GNUGPLv3 \
+	../../lib/license.txt \
 	metadata.json \
 	readme.txt \
-	icon.png
+	icon.png \
+	screenshot.png
 images = \
 	../../images/mouse-left.png \
 	../../images/mouse-right.png \

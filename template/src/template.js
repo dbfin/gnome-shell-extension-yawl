@@ -19,47 +19,33 @@
  * GNUGPLv3) along with the program. A copy of the License
  * is also available at <http://www.gnu.org/licenses/>.
  *
- * extension.js
- * Main extension file.
+ * .js
+ * Description
  *
  */
+
+const Lang = imports.lang;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const Convenience = Me.imports.convenience2;
-const dbFinDebugView = Me.imports.dbfindebugview;
-const dbFinYAWL = Me.imports.dbfinyawl;
+//const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
 const _D = Me.imports.dbfindebug._D;
 
-var dbfinyawl = null;
+const  = new Lang.Class({
+	Name: 'dbFin.',
 
-function init() {
-    Convenience.initTranslations();
-}
+    _init: function() {
+    	_D('>' + this.__name__ + '._init()');
+    	_D('<');
+    },
 
-function enable() {
-    _D('>Enabling YAWL extension...');
-    dbfinyawl = new dbFinYAWL.dbFinYAWL();
-    _D('<YAWL extension enabled.\n>YAWL is up and running...');
-	if (!global._yawlDebugView) {
-		global._yawlDebugView = new dbFinDebugView.dbFinDebugView();
+	destroy: function() {
+		_D('>' + this.__name__ + '.destroy()');
+		_D('<');
 	}
-}
-
-function disable() {
-	if (global._yawlDebugView) {
-		global._yawlDebugView.destroy();
-		global._yawlDebugView = null;
-	}
-    _D('<\n>Disabling YAWL extension...');
-    if (dbfinyawl) {
-        dbfinyawl.destroy();
-        dbfinyawl = null;
-    }
-    _D('<YAWL extension disabled.');
-}
+});

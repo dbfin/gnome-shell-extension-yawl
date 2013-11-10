@@ -1,0 +1,11 @@
+{
+    "shell-version": ["3.6", "3.8"],
+    "uuid": "@UUID@",
+    "name": "#%#ExtensionName",
+    "version": @EXTENSIONVERSION@,
+    "original-author": "Vadim@dbFin",
+    "url": "@EXTENSIONURL@",
+    "description": "#%#ExtensionName... Latest version @EXTENSIONVERSION@ (check your version on Welcome page in Preferences).\n\n--- What's new (UR = under review, use link above to install manually) ---\nv (UR):\n\nIf you keep up with the latest GitHub version, just run \"install-extension #%#name\" to update after pull. You need some dev-libraries installed. Please consult readme.md for further details.\n\nExtension is translation-ready. Please report problems and suggestions here or on GitHub.",
+    "gettext-domain": "@EXTENSIONID@",
+    "settings-schema": "@GSCHEMANAME@"
+}

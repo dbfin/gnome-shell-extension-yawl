@@ -3,19 +3,18 @@ Build/
 zzz/
 staging/
 zip/
+/test/
 
 aclocal.m4
 config\.*
 configure
 COPYING
-install-sh
 libtool
 ltmain.sh
 Makefile
 Makefile.in
 Makefile.in.in
 metadata.json
-missing
 pos.log
 changeversion.log
 POTFILES

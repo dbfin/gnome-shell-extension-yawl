@@ -1,4 +1,4 @@
-YAWL (Yet Another Window List) Gnome-Shell Extension
+Yet Another Window List Gnome-Shell Extension
 
 Copyright (c) 2013 Vadim Cherepanov @ dbFin (vadim (at) dbfin.com)
 

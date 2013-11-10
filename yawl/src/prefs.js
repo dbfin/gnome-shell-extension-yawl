@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL (Yet Another Window List) Gnome-Shell Extension
+ * YAWL Gnome-Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * Yet Another Window List (YAWL) Gnome-Shell extension is
+ * YAWL, a group of Gnome-Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -25,10 +25,7 @@
  */
 
 const Lang = imports.lang;
-const Mainloop = imports.mainloop;
 
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
 const Gtk = imports.gi.Gtk;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -149,178 +146,6 @@ const dbFinClicksThreshold = new Lang.Class({
     }
 });
 
-const dbFinSettingsResetExportImport = new Lang.Class({
-	Name: 'dbFin.SettingsResetExportImport',
-
-	_init: function(gtkButtonReset, gtkButtonExport, gtkButtonImport, gtkFileChooser, gtkLabelStatus) {
-        this._signals = new dbFinSignals.dbFinSignals();
-		this._settings = Convenience.getSettings();
-
-		if (gtkButtonReset) {
-			this._gtkButtonReset = gtkButtonReset;
-			this._signals.connectNoId({	emitter: gtkButtonReset, signal: 'clicked',
-                                        callback: this.doReset, scope: this });
-		}
-		if (gtkButtonExport) {
-			this._gtkButtonExport = gtkButtonExport;
-			this._signals.connectNoId({	emitter: gtkButtonExport, signal: 'clicked',
-					 					callback: this.doExport, scope: this });
-		}
-		if (gtkButtonImport) {
-			this._gtkButtonImport = gtkButtonImport;
-			this._signals.connectNoId({	emitter: gtkButtonImport, signal: 'clicked',
-					 					callback: this.doImport, scope: this });
-		}
-		if (gtkFileChooser) {
-			this._gtkFileChooser = gtkFileChooser;
-		}
-		if (gtkLabelStatus) {
-			this._gtkLabelStatus = gtkLabelStatus;
-			gtkLabelStatus.label = '';
-		}
-		this._timeoutStatus = null;
-	},
-
-	destroy: function() {
-        if (this._signals) {
-            this._signals.destroy();
-            this._signals = null;
-        }
-		this._cancelTimeoutStatus();
-        this._gtkButtonReset = null;
-		this._gtkButtonExport = null;
-		this._gtkButtonImport = null;
-		this._gtkFileChooser = null;
-		this._gtkLabelStatus = null;
-        this._settings = null;
-	},
-
-    doReset: function() {
-        try {
-            let ([ ok, pid ] = GLib.spawn_async(
-                    /*working_directory = */null,
-                    /*argv = */[ 'dconf', 'reset', '-f', '/org/gnome/shell/extensions/dbfin/yawl/' ],
-                    /*envp = */null,
-                    /*GSpawnFlags = */GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-                    /*GSpawnChildSetupFunc = */null
-            )) {
-                if (ok) this._updateStatus(_("Settings were reset successfully!"), '#dfa');
-                else this._updateStatus('Something went wrong.', '#faa');
-                if (pid) GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, function () {}, null);
-            }
-        }
-        catch (e) {
-            if (e.message) this._updateStatus(e.message, '#faa');
-            else this._updateStatus('' + e, '#faa');
-        }
-    },
-
-	doExport: function() {
-		if (!this._gtkFileChooser || !this._settings) return;
-		let (pf = this._gtkFileChooser.get_filename()) {
-			try {
-				if (!pf) throw _("Please specify settings file name.");
-				let (s = '', groups = {}, groupsArray = [], gf = null, gfos = null, gbos = null) {
-					dbFinConsts.Settings.forEach(function (ss) {
-						if (ss[3]) {
-							if (groups[ss[3]] === undefined) {
-								groups[ss[3]] = [];
-								groupsArray.push(ss[3]);
-							}
-							groups[ss[3]].push(ss[0]);
-						}
-					});
-					groupsArray.sort();
-					groupsArray.forEach(Lang.bind(this, function (g) {
-						if (s) s += '\n';
-						s += '[' + g + ']\n';
-						groups[g].forEach(Lang.bind(this, function (k) {
-							if (this._settings.list_keys().indexOf(k) == -1) return;
-							let (v = this._settings.get_value(k)) {
-								let (t = v.get_type_string(), vs = '') {
-									if (t == 's') vs = v.get_string()[0];
-									else if (t == 'b') vs = (v.get_boolean() ? '+' : '-');
-									if (vs) s += k + '\t' + t + '\t' + vs + '\n';
-								} // let (t, vs)
-							} // let (v)
-						})); // groups[g].forEach(k)
-					})); // groupsArray.forEach(g)
-					if (!(gf = Gio.file_new_for_path(pf))) throw _("Cannot create Gio.File object for file ") + pf + '.';
-					if (!(gfos = gf.replace(/* etag = */null,
-											/* make_backup = */true,
-											/* flags = */Gio.FileCreateFlags.NONE,
-											/* cancellable = */null))) {
-						// typically, this throws its own exception if something goes wrong, but just in case...
-						throw _("Cannot create/replace file ") + pf + '.';
-					}
-					if (!(gbos = Gio.DataOutputStream.new(/* base_stream = */gfos))) throw _("Cannot create Gio.DataOutputStream object for file ") + pf + '.';
-					if (!gbos.put_string(/* str = */s + '\n',
-										 /* cancellable = */null)) throw _("Cannot write to file ") + pf + '.';
-					if (gbos) {
-						gbos.close(null);
-					}
-					this._updateStatus(_("File was created/updated successfully!"), '#dfa');
-				} // let (s, groups, groupsArray, gf, gfos, gbos)
-			} // try
-			catch (e) {
-				if (e.message) this._updateStatus(e.message, '#faa');
-				else this._updateStatus('' + e, '#faa');
-			} // try catch (e)
-		} // let (pf)
-	},
-
-	doImport: function() {
-		if (!this._gtkFileChooser || !this._settings) return;
-		let (pf = this._gtkFileChooser.get_filename()) {
-			try {
-				if (!pf) throw _("Please specify settings file name.");
-				let (s = '', keys = this._settings.list_keys(), imported = 0, gf = null, gfis = null, gbis = null) {
-					if (!(gf = Gio.file_new_for_path(pf))) throw _("Cannot create Gio.File object for file ") + pf + '.';
-					if (!(gfis = gf.read(/* cancellable = */null))) throw _("Cannot open file ") + pf + '.';
-					if (!(gbis = Gio.DataInputStream.new(/* base_stream = */gfis))) throw _("Cannot create Gio.DataInputStream object for file ") + pf + '.';
-					while ((s = gbis.read_line(/* cancellable = */null)[0]) !== null) { // read line returns NULL at the end
-						let (res = /(.*?)\t(.*?)\t(.*)/.exec(s)) {
-							if (!res) continue;
-							let (k = res[1], t = res[2], v = res[3]) {
-								if (k && t && v && keys.indexOf(k) != -1) {
-									++imported;
-									if (t == 's') this._settings.set_string(k, v);
-									else if (t == 'b') this._settings.set_boolean(k, v == '+');
-									else --imported;
-								}
-							}
-						}
-					}
-					if (gbis) {
-						gbis.close(null);
-					}
-					this._updateStatus(_("File was read successfully") + ': ' + imported + ' ' + _("settings values imported."), '#dfa');
-				} // let (s, keys, imported, gf, gfis, gbis)
-			} // try
-			catch (e) {
-				if (e.message) this._updateStatus(e.message, '#faa');
-				else this._updateStatus('' + e, '#faa');
-			} // try catch (e)
-		} // let (pf)
-	},
-
-	_cancelTimeoutStatus: function() {
-		if (this._timeoutStatus) {
-			Mainloop.source_remove(this._timeoutStatus);
-			this._timeoutStatus = null;
-		}
-	},
-
-	_updateStatus: function(msg, color) {
-		this._cancelTimeoutStatus();
-		if (!this._gtkLabelStatus) return;
-		msg = msg || '';
-		if (color) this._gtkLabelStatus.set_markup('<span background="' + color + '">   ' + msg + '   </span>');
-		else this._gtkLabelStatus.set_markup('<span>   ' + msg + '   </span>');
-		if (msg || color) this._timeoutStatus = Mainloop.timeout_add(2222, Lang.bind(this, function() { this._updateStatus(); }));
-	}
-});
-
 function buildPrefsWidget() {
     _D('@'); // supress all debugging
     let (builder = new dbFinUtilsPrefs.dbFinSettingsWidgetBuilder(),
@@ -334,64 +159,7 @@ function buildPrefsWidget() {
                 widgets[0].set_line_wrap(false);
             }
 
-        builder.addPage(_("Welcome"));
-			widgets = builder.addWidget(Gtk.Image.new_from_file(Me.path + '/images/yawl.png'), 0, 0, 3, 7);
-			if (widgets && widgets.length) {
-				widgets[0].hexpand = true;
-				widgets[0].vexpand = true;
-				widgets[0].xalign = 0.5;
-				widgets[0].yalign = 0.5;
-			}
-			widgets = builder.addWidget(Gtk.Image.new_from_file(Me.path + '/images/gplv3.png'), 9, 11, 1, 2);
-			if (widgets && widgets.length) {
-				widgets[0].hexpand = true;
-				widgets[0].vexpand = true;
-				widgets[0].xalign = 1.0;
-				widgets[0].yalign = 0.5;
-			}
-
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 6 ], [ new Gtk.Label({ halign: Gtk.Align.END }), 1 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_markup('<span size="x-large"><span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist</span>');
-				widgets[1].set_markup('v' + Me.metadata.version);
-			}
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_markup('<span size="large">' + _("Gnome-Shell Extension") + '</span>');
-			}
-			builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 7 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_markup(_("Copyright") + ' &#169; 2013 Vadim Cherepanov @ dbFin <a href="mailto:vadim@dbfin.com"><span color="#000000" underline="none">&lt;vadim@dbfin.com&gt;</span></a>');
-			}
-			builder.addRow(null, [ [ new Gtk.Separator({ hexpand: true }), 7 ] ]);
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 2 ], [ new Gtk.Label({ halign: Gtk.Align.START }), 5 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_markup(_("Home page") + ':');
-				widgets[1].set_markup('<a href="http://dbfin.com/yawl"><span color="#347" underline="none">http://dbfin.com/yawl</span></a>');
-			}
-			widgets = builder.addRow(null, [ [ new Gtk.Label({ halign: Gtk.Align.START }), 2 ], [ new Gtk.Label({ halign: Gtk.Align.START }), 5 ] ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_markup(_("Source code") + ':');
-				widgets[1].set_markup('<a href="https://github.com/dbfin/gnome-shell-extension-yawl"><span color="#347" underline="none">https://github.com/dbfin/gnome-shell-extension-yawl</span></a>');
-			}
-
-			builder.addLabel('<span size="small"> </span>', null, true);
-			let (s = '') {
-				for (let i = 0; i < dbFinConsts.arrayContributors.length; ++i) {
-					s += (i ? ', ' : ' ') + dbFinConsts.arrayContributors[i][0]
-							+ ' (' + _(dbFinConsts.arrayContributors[i][1]) + ')';
-				}
-				if (s != '') builder.addLabel(_("Special thanks to") + ':' + s, null, true, 3);
-			}
-			builder.addLabel('<span size="small">' + _("If you would like to translate the program to your language feel free to do so: please use GitHub or email me for instructions.") + '</span>', null, true);
-			builder.addSeparator();
-			builder.addLabel('<span size="small">' + _("This is free software -- free as in beer and free as in freeman -- distributed under the terms of the GNU General Public License (GPL) version 3.") + '</span>', null, true, 3, 1);
-            builder.addLabel('<span size="small">' + _("A copy of the License is distributed along with the software (file GNUGPLv3) and is also available at <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>.") + '</span>', null, true, 3, 1);
-			builder.addLabel('<span size="small">' + _("You are free to use, modify or otherwise distribute the code of this software provided that your actions comply with all applicable laws and GPL.") + '</span>'
-							  + ' ' + '<span size="small">' + _("In particular, you must include the above copyright notice and a copy of the License in all copies or substantial portions of the software, whether original or modified.") + '</span>', null, true, 3);
-			builder.addLabel('<span size="small">' + _("This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.") + '</span>'
-							  + ' ' + '<span size="small">' + _("For more details please see the GNU General Public License (GPL) version 3.") + '</span>', null, true, 3);
+        dbFinUtilsPrefs.dbFinSettingsWelcome(builder, 'yawl', '<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist');
 
 		builder.addPage(_("Icons"));
             builder.addNotebook(_("Panel"), 'panel.png');
@@ -669,65 +437,7 @@ function buildPrefsWidget() {
 
             builder.closeNotebook();
 
-		builder.addPage(_("Export/Import"));
-            widgets = builder.addRow(null, [
-                [ new Gtk.Label({ label: _("Back up, sync and share settings."), halign: Gtk.Align.START, valign: Gtk.Align.START }), 4 ],
-                [ null, 1 ],
-                [ new Gtk.Label({ halign: Gtk.Align.END, valign: Gtk.Align.START }), 5 ]
-            ], '@!advanced');
-            if (widgets && widgets.length) {
-                widgets[0].set_line_wrap(true);
-                widgets[1].set_line_wrap(true);
-                widgets[1].set_markup(_("To reset all settings please enable") + ' ' + _("Advanced settings") + ' <span color="red">*</span>');
-            }
-            widgets = builder.addRow(null, [
-                [ new Gtk.Label({ label: _("Back up, sync and share settings."), halign: Gtk.Align.START, valign: Gtk.Align.START }), 4 ],
-                [ null, 1 ],
-                [ new Gtk.Label({ halign: Gtk.Align.END, valign: Gtk.Align.START }), 2 ],
-                [ new Gtk.Button({ label: '\u26a0 ' + _("Reset settings"), halign: Gtk.Align.FILL, valign: Gtk.Align.CENTER, hexpand: true }), 3 ]
-            ], '@advanced');
-            if (widgets && widgets.length) {
-                widgets[0].set_line_wrap(true);
-                widgets[1].set_line_wrap(true);
-                widgets[1].set_markup('<span size="small">' + '\u26a0 ' + _("This will overwrite all current settings") + '</span>' + ' <span color="red">*</span>');
-                builder.getWidget()._bsr = widgets[2];
-            }
-			widgets = builder.addRow(new Gtk.FileChooserWidget({	action: Gtk.FileChooserAction.SAVE, create_folders: true,
-																	do_overwrite_confirmation: false, select_multiple: false,
-																	show_hidden: false, hexpand: true, vexpand: true,
-																	halign: Gtk.Align.FILL, valign: Gtk.Align.FILL }));
-			if (widgets && widgets.length) {
-				widgets[0].set_current_folder('~');
-				widgets[0].set_show_hidden(true);
-				widgets[0].set_current_name('all.yawl.settings');
-                builder.getWidget()._fcw = widgets[0];
-			}
-			widgets = builder.addRow(_("Status:"), [ [ new Gtk.Label({ label: '', halign: Gtk.Align.FILL }), 9 ] ]);
-			if (widgets && widgets.length) {
-                builder.getWidget()._ls = widgets[1];
-			}
-			widgets = builder.addRow(null, [
-									[ new Gtk.Label({ justify: 1, halign: Gtk.Align.END, hexpand: true }), 2 ],
-									[ new Gtk.Button({ label: _("Export"), halign: Gtk.Align.FILL, hexpand: true }), 2 ],
-			                        [ null, 1 ],
-									[ new Gtk.Label({ justify: 1, halign: Gtk.Align.END, hexpand: true }), 2 ],
-									[ new Gtk.Button({ label: _("Import"), halign: Gtk.Align.FILL, hexpand: true }), 2 ]
-			                     ]);
-			if (widgets && widgets.length) {
-				widgets[0].set_line_wrap(true);
-				widgets[0].set_markup('<span size="small">' + '\u26a0 ' + _("This will overwrite the file with settings") + '</span>');
-                builder.getWidget()._bse = widgets[1];
-				widgets[2].set_line_wrap(true);
-				widgets[2].set_markup('<span size="small">' + '\u26a0 ' + _("This will overwrite all current settings") + '</span>');
-                builder.getWidget()._bsi = widgets[3];
-			}
-            builder.getWidget()._sei = new dbFinSettingsResetExportImport(
-                    builder.getWidget()._bsr,
-                    builder.getWidget()._bse,
-                    builder.getWidget()._bsi,
-                    builder.getWidget()._fcw,
-                    builder.getWidget()._ls
-            );
+        dbFinUtilsPrefs.dbFinSettingsREI(builder, 'yawl');
 
 		builder.addPage(_("Did you know?"));
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
