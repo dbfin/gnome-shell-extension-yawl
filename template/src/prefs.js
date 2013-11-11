@@ -57,9 +57,9 @@ function buildPrefsWidget() {
                 widgets[0].set_line_wrap(false);
             }
 
-        dbFinUtilsPrefs.dbFinSettingsWelcome(builder, '#%#name', '#%#ExtensionName');
+        builder.addPageWelcome('#%#name', '#%#ExtensionName');
 
-        dbFinUtilsPrefs.dbFinSettingsREI(builder, '#%#name');
+        builder.addPageREI('#%#name');
 
  		_D('<');
        return builder.getWidget();
