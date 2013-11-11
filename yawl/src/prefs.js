@@ -159,7 +159,7 @@ function buildPrefsWidget() {
                 widgets[0].set_line_wrap(false);
             }
 
-        dbFinUtilsPrefs.dbFinSettingsWelcome(builder, 'yawl', '<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist');
+        builder.addPageWelcome('yawl', '<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist');
 
 		builder.addPage(_("Icons"));
             builder.addNotebook(_("Panel"), 'panel.png');
@@ -437,7 +437,7 @@ function buildPrefsWidget() {
 
             builder.closeNotebook();
 
-        dbFinUtilsPrefs.dbFinSettingsREI(builder, 'yawl');
+        builder.addPageREI('yawl');
 
 		builder.addPage(_("Did you know?"));
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
