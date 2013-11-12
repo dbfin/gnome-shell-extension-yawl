@@ -42,6 +42,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinAppButton = Me.imports.dbfinappbutton;
+const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinDebugView = Me.imports.dbfindebugview;
 const dbFinMenuBuilder = Me.imports.dbfinmenubuilder;
@@ -183,6 +184,12 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedMouseClickRelease =
         this._updatedMouseLongClick =
                 this._updatedIconsDragAndDrop = function () {
+            // No drag and drop for GS 3.6, sorry
+            if (global.yawl && global.yawl._iconsDragAndDrop
+                && dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
+                global.yawl.set('icons-drag-and-drop', false);
+                return;
+            }
 		    if (this._clicked) {
 			    this._clicked.destroy();
 			    this._clicked = null;
