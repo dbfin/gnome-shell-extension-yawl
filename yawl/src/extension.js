@@ -46,9 +46,6 @@ function enable() {
     _D('>Enabling YAWL extension...');
     dbfinyawl = new dbFinYAWL.dbFinYAWL();
     _D('<YAWL extension enabled.\n>YAWL is up and running...');
-	if (!global._yawlDebugView) {
-		global._yawlDebugView = new dbFinDebugView.dbFinDebugView();
-	}
 }
 
 function disable() {
