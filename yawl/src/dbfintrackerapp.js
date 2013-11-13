@@ -1229,7 +1229,7 @@ const dbFinTrackerApp = new Lang.Class({
 				return;
 			}
 			let (workspace = global.screen.get_workspace_by_index(workspaceIndex)) {
-				if (workspace) workspace.activate(Math.round(GLib.get_monotonic_time() / 1000));
+				if (workspace) workspace.activate((global.yawl ? global.yawl.get_current_time() : global.get_current_time()) || undefined);
 			}
 		} // if (workspaceIndex !== undefined)
 		if (this.metaApp.state != Shell.AppState.STOPPED) this.metaApp.open_new_window(-1);
