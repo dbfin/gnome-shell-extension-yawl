@@ -32,6 +32,7 @@ const Shell = imports.gi.Shell;
 const AppFavorites = imports.ui.appFavorites;
 const Main = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
+const RemoteMenu = PopupMenu.RemoteMenu ? PopupMenu : imports.ui.remoteMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -177,7 +178,7 @@ const dbFinMenuBuilder = new Lang.Class({
             }
             // remote menu
 			if (metaApp.action_group && metaApp.menu) {
-				menu = new PopupMenu.RemoteMenu(actor, metaApp.menu, metaApp.action_group);
+				menu = new RemoteMenu.RemoteMenu(actor, metaApp.menu, metaApp.action_group);
 				if (menu && menu.isEmpty()) {
 					if (typeof menu.destroy === 'function') menu.destroy();
 					menu = null;
