@@ -28,7 +28,6 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const Convenience = Me.imports.convenience2;
-const dbFinDebugView = Me.imports.dbfindebugview;
 const dbFinYAWL = Me.imports.dbfinyawl;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -49,10 +48,6 @@ function enable() {
 }
 
 function disable() {
-	if (global._yawlDebugView) {
-		global._yawlDebugView.destroy();
-		global._yawlDebugView = null;
-	}
     _D('<\n>Disabling YAWL extension...');
     if (dbfinyawl) {
         dbfinyawl.destroy();

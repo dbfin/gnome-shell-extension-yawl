@@ -260,6 +260,10 @@ const dbFinYAWL = new Lang.Class({
             global.yawl.animation.destroy();
             global.yawl.animation = null;
         }
+        if (global._yawlDebugView) {
+            global._yawlDebugView.destroy();
+            global._yawlDebugView = null;
+        }
         if (global.yawl) { // must be destroyed last
             global.yawl.destroy();
             global.yawl = null;
