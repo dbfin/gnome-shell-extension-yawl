@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -164,7 +164,7 @@ const dbFinMoveCenter = new Lang.Class({
 
     _updateActivities: function() {
         _D('>' + this.__name__ + '._updateActivities()');
-		// Gnome-Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
+		// GNOME Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
 		if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
 			if (global.yawl._hideActivities && global.yawl._preserveHotCorner) {
 				if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();

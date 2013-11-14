@@ -1,6 +1,6 @@
-# Translation for dbFin YAWL Gnome-Shell extension
+# Translation for dbFin YAWL GNOME Shell extension
 # Copyright (C) 2013 Vadim Cherepanov @ dbFin.com
-# This file is distributed under the same license as dbFin YAWL Gnome-Shell Extension.
+# This file is distributed under the same license as dbFin YAWL GNOME Shell Extension.
 # Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
 #
 msgid ""
@@ -248,8 +248,8 @@ msgid "Welcome"
 msgstr "Ласкаво просимо!"
 
 #: src/prefs.js:360
-msgid "Gnome-Shell Extension"
-msgstr "Розширення Gnome-Shell"
+msgid "GNOME Shell Extension"
+msgstr "Розширення GNOME Shell"
 
 #: src/prefs.js:365
 msgid "Copyright"
@@ -961,7 +961,7 @@ msgid ""
 msgstr "Ви можете також встановити це вкрай рекомендоване розширення:"
 
 #: src/prefs.js:757
-msgid "tries to seamlessly integrate into the Gnome-Shell panel."
+msgid "tries to seamlessly integrate into the GNOME Shell panel."
 msgstr "обережно інтегровано в панель GNOME Shell."
 
 #: src/prefs.js:760

@@ -19,7 +19,7 @@ v3  	2013-05-20
 v4  	2013-05-21
     	- Fix: position of thumbnails when the top panel is on the right monitor
 v5	2013-05-24
-    	- Gnome-Shell 3.8 compatibility
+    	- GNOME Shell 3.8 compatibility
 v6	2013-05-29
     	- Dimmed background while previewing windows
     	- Smoother preview animation and hiding in Overview
