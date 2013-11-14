@@ -266,7 +266,12 @@ const dbFinMenuBuilder = new Lang.Class({
                                             else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.DOT);
                                         }
 										if (tracker && this._yawlTracker.hasAppWindowAttention(tracker.get_window_app(metaWindow), metaWindow)) {
-											menuItem.addActor(new St.Icon({ icon_name: 'dialog-warning', icon_size: 16, x_align: St.Align.END }));
+                                            let (icon = new St.Icon({ icon_name: 'dialog-warning', icon_size: 16, x_align: St.Align.END })) {
+                                                if (icon) {
+                                                    if (menuItem.addActor) menuItem.addActor(icon);
+                                                    else if (menuItem.actor) menuItem.actor.add_actor(icon);
+                                                }
+                                            }
 										}
 									}
 								}
