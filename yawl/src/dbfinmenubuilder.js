@@ -101,15 +101,15 @@ const dbFinMenuBuilder = new Lang.Class({
     _menuSetProperties: function(menu, metaApp, trackerApp, createPinMenu/* = true*/) {
         _D('>' + this.__name__ + '._menuSetProperties()');
         if (menu) {
-            menu._app = metaApp;
-            menu._trackerApp = trackerApp;
-            menu._tracker = trackerApp && trackerApp._tracker || null;
-            if (createPinMenu === undefined || createPinMenu) menu._createPinMenu = true;
-			if (menu._addonsPosition !== undefined) {
-                menu._menuUpdateAddons = Lang.bind(this, this._menuUpdateAddons);
+            menu._yawlMetaApp = metaApp;
+            menu._yawlTrackerApp = trackerApp;
+            menu._yawlTracker = trackerApp && trackerApp._tracker || null;
+            menu._yawlCreatePinMenu = (createPinMenu === undefined || !!createPinMenu);
+            if (menu._yawlAddonsPosition !== undefined) {
+                menu._yawlUpdateAddons = Lang.bind(this, this._menuUpdateAddons);
             }
-            if (!menu._openWas) {
-                menu._openWas = menu.open;
+            if (!menu._yawlOpenWas) {
+                menu._yawlOpenWas = menu.open;
                 menu.open = this.open;
             }
         }
@@ -119,39 +119,39 @@ const dbFinMenuBuilder = new Lang.Class({
     _menuUpdateAddons: function(menu, metaApp) {
         _D('>' + this.__name__ + '._menuUpdateAddons()');
         // menu add-ons
-        if (!menu || !metaApp || menu._addonsPosition === undefined) {
+        if (!menu || !metaApp || menu._yawlAddonsPosition === undefined) {
             _D('<');
             return;
         }
-        let (position = menu._addonsPosition >= 0 ? menu._addonsPosition : undefined) {
-            if (global.yawl._appQuicklists && !menu._menuQuicklists) {
+        let (position = menu._yawlAddonsPosition >= 0 ? menu._yawlAddonsPosition : undefined) {
+            if (global.yawl._appQuicklists && !menu._yawlMenuQuicklists) {
                 let (mf = this._getMenuFunction('quicklists', 'setQuicklist')) {
                     if (mf) {
-                        menu._menuQuicklists = new dbFinPopupMenuScrollableSection();
-                        if (menu._menuQuicklists) {
-                            mf(metaApp, menu._menuQuicklists);
-                            if (menu._menuQuicklists.isEmpty()) {
-                                menu._menuQuicklists.destroy();
-                                menu._menuQuicklists = null;
+                        menu._yawlMenuQuicklists = new dbFinPopupMenuScrollableSection();
+                        if (menu._yawlMenuQuicklists) {
+                            mf(metaApp, menu._yawlMenuQuicklists);
+                            if (menu._yawlMenuQuicklists.isEmpty()) {
+                                menu._yawlMenuQuicklists.destroy();
+                                menu._yawlMenuQuicklists = null;
                             }
                             else {
-                                menu.addMenuItem(menu._menuQuicklists, position);
-                                menu._menuQuicklistsSeparator = new PopupMenu.PopupSeparatorMenuItem();
-                                if (menu._menuQuicklistsSeparator) {
-                                    menu.addMenuItem(menu._menuQuicklistsSeparator, position);
+                                menu.addMenuItem(menu._yawlMenuQuicklists, position);
+                                menu._yawlMenuQuicklistsSeparator = new PopupMenu.PopupSeparatorMenuItem();
+                                if (menu._yawlMenuQuicklistsSeparator) {
+                                    menu.addMenuItem(menu._yawlMenuQuicklistsSeparator, position);
                                 }
                             }
                         }
                     }
                 }
             }
-            else if (!global.yawl._appQuicklists && menu._menuQuicklists) {
-                if (menu._menuQuicklistsSeparator) {
-                    menu._menuQuicklistsSeparator.destroy();
-                    menu._menuQuicklistsSeparator = null;
+            else if (!global.yawl._appQuicklists && menu._yawlMenuQuicklists) {
+                if (menu._yawlMenuQuicklistsSeparator) {
+                    menu._yawlMenuQuicklistsSeparator.destroy();
+                    menu._yawlMenuQuicklistsSeparator = null;
                 }
-                menu._menuQuicklists.destroy();
-                menu._menuQuicklists = null;
+                menu._yawlMenuQuicklists.destroy();
+                menu._yawlMenuQuicklists = null;
             }
         }
         _D('<');
@@ -184,7 +184,7 @@ const dbFinMenuBuilder = new Lang.Class({
 					menu = null;
 				}
                 if (menu) {
-                    menu._addonsPosition = 0;
+                    menu._yawlAddonsPosition = 0;
                     this._menuSetProperties(menu, metaApp, trackerApp);
                     _D('<');
                     return menu;
@@ -203,7 +203,7 @@ const dbFinMenuBuilder = new Lang.Class({
                         inState = dbFinConsts.arrayAppMenuItems[i][2]) {
                     if (!text || !(state & inState)) continue;
                     if (text === 'addons') {
-                        menu._addonsPosition = p;
+                        menu._yawlAddonsPosition = p;
                     }
                     else if (functionName && trackerApp[functionName]) {
                         menu.addAction(text, Lang.bind(trackerApp, trackerApp[functionName]));
@@ -228,22 +228,22 @@ const dbFinMenuBuilder = new Lang.Class({
 				if (typeof this._menuWindows.destroy === 'function') this._menuWindows.destroy();
 				this._menuWindows = null;
 			}
-			if (this._app && this._tracker) {
+			if (this._yawlMetaApp && this._yawlTracker) {
 				// addons
-				if (this._menuUpdateAddons) {
-		            this._menuUpdateAddons(this, this._app);
-					this._menuUpdateAddons = null;
+				if (typeof this._yawlUpdateAddons == 'function') {
+		            this._yawlUpdateAddons(this, this._yawlMetaApp);
 				}
+                this._yawlUpdateAddons = null;
 				// add windows
 				let (windows = [],
-                     tracker = this._tracker.getTracker()) {
-                    if (tracker) this._app.get_windows().forEach(Lang.bind(this, function (metaWindow) {
-						if (!metaWindow || !this._tracker.isWindowInteresting(metaWindow)) return;
+                     tracker = this._yawlTracker.getTracker()) {
+                    if (tracker) this._yawlMetaApp.get_windows().forEach(Lang.bind(this, function (metaWindow) {
+						if (!metaWindow || !this._yawlTracker.isWindowInteresting(metaWindow)) return;
 						windows.push([
 								(metaWindow.is_on_all_workspaces() ? -1 : metaWindow.get_workspace().index()),
 								metaWindow
 						]);
-					})); // if (tracker) this._app.get_windows().forEach(metaWindow)
+					})); // if (tracker) this._yawlMetaApp.get_windows().forEach(metaWindow)
 					if (windows.length) {
 						this._menuWindows = new PopupMenu.PopupMenuSection();
 						windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
@@ -257,13 +257,13 @@ const dbFinMenuBuilder = new Lang.Class({
 								let (title = metaWindow.get_title()) {
 									if (title.length > 33) title = title.substring(0, 30) + '...';
 									let (menuItem = this._menuWindows.addAction(title, Lang.bind(this, function () {
-														if (this._tracker) this._tracker.activateWindow(metaWindow);
+														if (this._yawlTracker) this._yawlTracker.activateWindow(metaWindow);
                                                     }))) {
                                         if (focusedWindow && (metaWindow === focusedWindow
                                                               || metaWindow === focusedWindow.get_transient_for())) {
                                             menuItem.setShowDot(true);
                                         }
-										if (tracker && this._tracker.hasAppWindowAttention(tracker.get_window_app(metaWindow), metaWindow)) {
+										if (tracker && this._yawlTracker.hasAppWindowAttention(tracker.get_window_app(metaWindow), metaWindow)) {
 											menuItem.addActor(new St.Icon({ icon_name: 'dialog-warning', icon_size: 16, x_align: St.Align.END }));
 										}
 									}
@@ -273,29 +273,29 @@ const dbFinMenuBuilder = new Lang.Class({
 					} // if (windows.length)
 				} // let (windows, tracker)
                 // add pin menu
-                if (this._createPinMenu && this._trackerApp && this._trackerApp._isStable()) {
+                if (this._yawlCreatePinMenu && this._yawlTrackerApp && this._yawlTrackerApp._isStable()) {
                     if (!this._menuWindows) {
                         this._menuWindows = new PopupMenu.PopupMenuSection();
                     }
                     else if (!this._menuWindows.isEmpty()) {
                         this._menuWindows.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
                     }
-                    if (this._trackerApp.pin) {
+                    if (this._yawlTrackerApp.pin) {
                         this._menuWindows.addAction(_("Remove from Favorites"), Lang.bind(this, function() {
-                            if (this._app) AppFavorites.getAppFavorites().removeFavorite(this._app.get_id());
+                            if (this._yawlMetaApp) AppFavorites.getAppFavorites().removeFavorite(this._yawlMetaApp.get_id());
                         }));
                     }
                     else {
                         this._menuWindows.addAction(_("Add to Favorites"), Lang.bind(this, function() {
-                            if (this._app) AppFavorites.getAppFavorites().addFavorite(this._app.get_id());
+                            if (this._yawlMetaApp) AppFavorites.getAppFavorites().addFavorite(this._yawlMetaApp.get_id());
                         }));
                     }
                 }
                 if (this._menuWindows) {
                     this.addMenuItem(this._menuWindows, 0);
                 }
-			} // if (this._app && this._tracker)
-			if (this._openWas) Lang.bind(this, this._openWas)(animate);
+			} // if (this._yawlMetaApp && this._yawlTracker)
+			if (this._yawlOpenWas) Lang.bind(this, this._yawlOpenWas)(animate);
             _D('<');
 		} // if (this)
 	},
