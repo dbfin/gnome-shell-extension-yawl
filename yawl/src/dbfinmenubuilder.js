@@ -262,7 +262,8 @@ const dbFinMenuBuilder = new Lang.Class({
                                                     }))) {
                                         if (focusedWindow && (metaWindow === focusedWindow
                                                               || metaWindow === focusedWindow.get_transient_for())) {
-                                            menuItem.setShowDot(true);
+                                            if (menuItem.setShowDot) menuItem.setShowDot(true);
+                                            else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.DOT);
                                         }
 										if (tracker && this._yawlTracker.hasAppWindowAttention(tracker.get_window_app(metaWindow), metaWindow)) {
 											menuItem.addActor(new St.Icon({ icon_name: 'dialog-warning', icon_size: 16, x_align: St.Align.END }));
