@@ -184,6 +184,7 @@ const dbFinMenuBuilder = new Lang.Class({
 					menu = null;
 				}
                 if (menu) {
+                    if (!(menu.firstMenuItem instanceof PopupMenu.PopupSeparatorMenuItem)) menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem(), 0);
                     menu._yawlAddonsPosition = 0;
                     this._menuSetProperties(menu, metaApp, trackerApp);
                     _D('<');
