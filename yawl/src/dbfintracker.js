@@ -687,7 +687,7 @@ const dbFinTracker = new Lang.Class({
     activateWindow: function (metaWindow) {
         _D('>' + this.__name__ + '.activateWindow()');
         if (metaWindow) {
-            Main.activateWindow(metaWindow, (global.yawl ? global.yawl.get_current_time() : global.get_current_time()) || undefined);
+            Main.activateWindow(metaWindow, global.get_current_time());
             metaWindow.foreach_transient(Lang.bind(this, function (metaWindow) { this.activateWindow(metaWindow); }));
         }
         _D('<');

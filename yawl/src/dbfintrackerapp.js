@@ -1080,7 +1080,8 @@ const dbFinTrackerApp = new Lang.Class({
 	_showAllWindows: function(minimized/* = false*/) {
         _D('>' + this.__name__ + '._showAllWindows()');
 		let (windows = this._listWindowsFresh(minimized)) {
-            if (windows.length) { // not necessary, but for consistency
+            if (windows.length) {
+                this.metaApp.activate();
     			for (let i = windows.length - 1; i >= 0; --i) {
                     if (this._tracker) this._tracker.activateWindow(windows[i]);
                 }
@@ -1229,7 +1230,7 @@ const dbFinTrackerApp = new Lang.Class({
 				return;
 			}
 			let (workspace = global.screen.get_workspace_by_index(workspaceIndex)) {
-				if (workspace) workspace.activate((global.yawl ? global.yawl.get_current_time() : global.get_current_time()) || undefined);
+				if (workspace) workspace.activate(global.get_current_time());
 			}
 		} // if (workspaceIndex !== undefined)
 		if (this.metaApp.state != Shell.AppState.STOPPED) this.metaApp.open_new_window(-1);

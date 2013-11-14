@@ -262,7 +262,7 @@ const dbFinTrackerWindow = new Lang.Class({
 
 	closeWindow: function() {
         _D('>' + this.__name__ + '.closeWindow()');
-        if (this.metaWindow) this.metaWindow.delete((global.yawl ? global.yawl.get_current_time() : global.get_current_time()) || undefined);
+        if (this.metaWindow) this.metaWindow.delete(global.get_current_time());
         _D('<');
 	},
 

@@ -74,14 +74,6 @@ const dbFinYAWL = new Lang.Class({
 
         this._signals = new dbFinSignals.dbFinSignals();
 
-        this._globalCurrentTime = 0;
-        (global.yawl.get_current_time = Lang.bind(this, function () {
-            let (time = global.get_current_time()) {
-                if (time) this._globalCurrentTime = time;
-                return this._globalCurrentTime;
-            }
-        }))();
-
 		if (global.yawl._firstTime) {
 			try { Util.trySpawn([ 'gnome-shell-extension-prefs', 'yawl@dbfin.com' ]); }
             catch (e) { _D('!YAWL: could not launch preference dialog on first run.'); }
@@ -328,7 +320,7 @@ const dbFinYAWL = new Lang.Class({
 							}
 						});
 					}
-                    workspace.activate((global.yawl ? global.yawl.get_current_time() : global.get_current_time()) || undefined);
+                    workspace.activate(global.get_current_time());
                 }
 			} // let (workspace)
 		} // let (workspaceIndexNow, workspaceIndex, hide, trackerApp)
