@@ -1,6 +1,6 @@
 #!/bin/bash --
 
-git update-index -q --refresh || { echo 'Not a git repository.'; exit 1; }
+git update-index -q --refresh 2>/dev/null || { echo 'Not a git repository.'; exit 1; }
 git diff-index --quiet --cached HEAD \
     && git diff-index --quiet HEAD \
     && test -z "$( git ls-files --other --exclude-standard --directory . 2>&1 )" \
