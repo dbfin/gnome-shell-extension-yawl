@@ -1,5 +1,11 @@
 #!/bin/bash --
 
+git update-index -q --refresh || { echo 'Not a git repository.'; exit 1; }
+git diff-index --quiet --cached HEAD \
+    && git diff-index --quiet HEAD \
+    && test -z "$( git ls-files --other --exclude-standard --directory . 2>&1 )" \
+    || { echo 'The git repository is not clean.'; exit 1; }
+
 read -p 'Short name: ' name
 [[ "$name" =~ \  ]] && { echo 'Short name should not contain spaces.'; exit 1; }
 [ -d ./$name/ ] && { echo "Folder $name already exists."; exit 1; }
@@ -20,5 +26,13 @@ cp ../images/$name.png src/icon.png
 find . -type f -print0 | xargs -0 sed -i -e "s|#%#name|$name|g"
 find . -type f -print0 | xargs -0 sed -i -e "s|#%#Name|$Name|g"
 find . -type f -print0 | xargs -0 sed -i -e "s|#%#ExtensionName|$ExtensionName|g"
+
+cd .. \
+    && git checkout -b $name \
+    && git rm -r template/ \
+    && git rm new-extension \
+    && git add -u . \
+    && git add -A $name/ \
+    && git commit -m "New extension $ExtensionName."
 
 }
