@@ -293,7 +293,6 @@ const dbFinWindowThumbnail = new Lang.Class({
 				if (this._signals) {
 					this._signals.connectId('window-destroy', {	emitter: this._compositor, signal: 'destroy',
 																callback: function () {
-                                                                    this.hide();
                                                                     this._updateClone(null);
                                                                 }, scope: this });
 					this._signals.connectId('window-resize', {	emitter: this._compositor, signal: 'size-changed',
