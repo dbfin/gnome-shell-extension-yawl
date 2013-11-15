@@ -259,11 +259,9 @@ msgstr "значень налаштувань імпортовано."
 msgid "Welcome"
 msgstr "Ласкаво просимо!"
 
-<<<<<<< HEAD
+
 #: ../lib/dbfinutilsprefs.js:857
-=======
 #: src/prefs.js:360
->>>>>>> 1fc7ce9143053b5c75b2505ea9c54b92bbbba903
 msgid "GNOME Shell Extension"
 msgstr "Розширення GNOME Shell"
 
@@ -980,11 +978,8 @@ msgid ""
 "please consider installing in addition this highly recommended extension:"
 msgstr "Ви можете також встановити це вкрай рекомендоване розширення:"
 
-<<<<<<< HEAD
 #: src/prefs.js:469
-=======
 #: src/prefs.js:757
->>>>>>> 1fc7ce9143053b5c75b2505ea9c54b92bbbba903
 msgid "tries to seamlessly integrate into the GNOME Shell panel."
 msgstr "обережно інтегровано в панель GNOME Shell."
 
