@@ -173,19 +173,19 @@ msgid "Please specify settings file name."
 msgstr "Bitte einen Dateinamen für die Einstellungen eingeben."
 
 #: src/prefs.js:221 src/prefs.js:251
-msgid "Cannot create Gio.File object for file "
+msgid "Cannot create Gio.File object for file"
 msgstr "Konnte Gio.File-Objekt für die Datei nicht anlegen"
 
 #: src/prefs.js:227
-msgid "Cannot create/replace file "
+msgid "Cannot create/replace file"
 msgstr "Konnte die Datei nicht erzeugen/überschreiben"
 
 #: src/prefs.js:229
-msgid "Cannot create Gio.DataOutputStream object for file "
+msgid "Cannot create Gio.DataOutputStream object for file"
 msgstr "Konnte Gio.DataOutputStream-Objekt für die Datei nicht anlegen"
 
 #: src/prefs.js:231
-msgid "Cannot write to file "
+msgid "Cannot write to file"
 msgstr "Konnte nicht in die Datei geschrieben werden"
 
 #: src/prefs.js:235
@@ -193,11 +193,11 @@ msgid "File was created/updated successfully!"
 msgstr "Datei wurde erfolgreich erzeugt/aktualisiert!"
 
 #: src/prefs.js:252
-msgid "Cannot open file "
+msgid "Cannot open file"
 msgstr "Konnte Datei nicht öffnen"
 
 #: src/prefs.js:253
-msgid "Cannot create Gio.DataInputStream object for file "
+msgid "Cannot create Gio.DataInputStream object for file"
 msgstr "Konnte Gio.DataInputStream-Objekt für die Datei nicht anlegen"
 
 #: src/prefs.js:270

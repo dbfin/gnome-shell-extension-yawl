@@ -220,32 +220,32 @@ msgid "Please specify settings directory and file name."
 msgstr "Будь ласка, вкажіть теку і назву файлу налаштувань."
 
 #: ../lib/dbfinutilsprefs.js:192 ../lib/dbfinutilsprefs.js:222
-msgid "Cannot create Gio.File object for file "
-msgstr "Не можу створити об’єкт Gio.File для файлу "
+msgid "Cannot create Gio.File object for file"
+msgstr "Не можу створити об’єкт Gio.File для файлу"
 
 #: ../lib/dbfinutilsprefs.js:198
-msgid "Cannot create/replace file "
-msgstr "Не можу створити/замінити файл "
+msgid "Cannot create/replace file"
+msgstr "Не можу створити/замінити файл"
 
 #: ../lib/dbfinutilsprefs.js:200
-msgid "Cannot create Gio.DataOutputStream object for file "
-msgstr "Не можу створити об’єкт Gio.DataOutputStream для файлу "
+msgid "Cannot create Gio.DataOutputStream object for file"
+msgstr "Не можу створити об’єкт Gio.DataOutputStream для файлу"
 
 #: ../lib/dbfinutilsprefs.js:202
-msgid "Cannot write to file "
-msgstr "Не можу записати в файл "
+msgid "Cannot write to file"
+msgstr "Не можу записати в файл"
 
 #: ../lib/dbfinutilsprefs.js:206
 msgid "File was created/updated successfully!"
 msgstr "Файл створено/оновлено успішно!"
 
 #: ../lib/dbfinutilsprefs.js:223
-msgid "Cannot open file "
-msgstr "Не можу відкрити файл "
+msgid "Cannot open file"
+msgstr "Не можу відкрити файл"
 
 #: ../lib/dbfinutilsprefs.js:224
-msgid "Cannot create Gio.DataInputStream object for file "
-msgstr "Не можу створити об’єкт Gio.DataInputStream для файлу "
+msgid "Cannot create Gio.DataInputStream object for file"
+msgstr "Не можу створити об’єкт Gio.DataInputStream для файлу"
 
 #: ../lib/dbfinutilsprefs.js:241
 msgid "File was read successfully"
@@ -645,8 +645,8 @@ msgid "Middle button"
 msgstr "Середня кнопка"
 
 #: src/prefs.js:282
-msgid "Disable option "
-msgstr "Вимкніть опцію "
+msgid "Disable option"
+msgstr "Вимкніть опцію"
 
 #: src/prefs.js:282 src/prefs.js:408
 msgid "Scroll to change workspace"
