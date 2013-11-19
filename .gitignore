@@ -1,23 +1,22 @@
 autom4te.cache/
 Build/
-src/x/
+zzz/
 staging/
 zip/
+/test/
 
 aclocal.m4
 config\.*
 configure
-/COPYING
-/install-sh
+COPYING
 libtool
-/ltmain.sh
+ltmain.sh
 Makefile
 Makefile.in
 Makefile.in.in
 metadata.json
-/missing
-/pos.log
-/changeversion.log
+pos.log
+changeversion.log
 POTFILES
 
 *~
@@ -26,10 +25,8 @@ POTFILES
 *.gschema.valid
 *.pot
 
-*anjuta*
 stamp-*
 
-.anjuta/
 .git/
 /commit
 *.svg

@@ -1,0 +1,16 @@
+Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
+
+YAWL, a group of Gnome-Shell extensions, is provided as
+free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License (GPL)
+as published by the Free Software Foundation, version 3
+of the License, or any later version.
+
+YAWL is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY: without even implied warranty
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the License (in file
+GNUGPLv3) along with the program. A copy of the License
+is also available at <http://www.gnu.org/licenses/>.

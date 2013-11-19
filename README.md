@@ -1,8 +1,8 @@
-## YAWL (Yet Another Window List)
+## YAWL
 
-##### Gnome-Shell Extension
+##### Gnome-Shell Extensions
 
-_Copyright © 2013 Vadim Cherepanov @ dbFin (vadim (at) dbfin.com)_
+_Copyright © 2012-2013 Vadim Cherepanov @ dbFin (vadim (at) dbfin.com)_
 
 License: GNU GPL v3, please read src/license.txt
 
@@ -10,9 +10,21 @@ License: GNU GPL v3, please read src/license.txt
  
 ### Description
  
-YAWL is a Gnome-Shell extension that is similar to Window 7 taskbar. It aims to provide maximum convenience and consistency when manipulating windows in Gnome-Shell.
+YAWL is a collection of Gnome-Shell extensions, including the Yet Another Window List (taskbar) extension providing many features of a typical dock being integrated into Gnome-Shell. YAWL aims to be simple to use and provide maximum convenience and consistency while supporting many advanced features and customizations.
 
-**Main features include**: task bar with thumbnails, "window peeking" to preview window by hovering its thumbnail, app-specific menus, Quicklists, window attention indicators, scrolling over panel to change workspace, "smart scroll" to search app's windows on other workspaces and others.
+### Yet Another Window List (taskbar)
+
+**Main features include**:
+
+1.  task bar with thumbnails;
+1.  "window peeking" to preview window by hovering its thumbnail;
+1.  advanced menus including list of windows on all workspaces, app-specific menus, and Quicklists;
+1.  favorite apps;
+1.  icon reordering preserved across reboots;
+1.  window attention indicators;
+1.  scrolling over panel to change workspace + "smart scroll" to search app's windows on other workspaces;
+
+and many more.
 
 The extension works out of the box but provides numerous settings to adjust its look and behavior to your liking.
 
@@ -38,10 +50,11 @@ If you want to keep up with the latest features that have not made it yet into a
 1.  Every time you update source code: just run install-extension.
 
         cd /path/to/where/you/have/subdir/with/yawl/gnome-shell-extension-yawl
-        ./install-extension
+        ./install-extension yawl
 
     If it gives errors please make sure you have all necessary dev-libraries installed. These include:
 
-  - On ubuntu: sudo apt-get install autoconf autogen automake libglib2.0-dev
+  - On **ubuntu**: sudo apt-get install gnome-common autoconf autogen automake intltool libglib2.0-dev
+  - On **fedora**: sudo yum install gnome-common autoconf autogen automake intltool glib2-devel
   - On other OS: please find corresponding packages
 
