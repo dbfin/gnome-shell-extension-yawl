@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: YAWL 7\n"
+"Project-Id-Version: YAWL 13\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-19 07:51+0100\n"
 "PO-Revision-Date: 2013-11-19 08:07+0100\n"
@@ -20,191 +20,191 @@ msgstr ""
 msgid "German translation"
 msgstr "Deutsche Übersetzung"
 
-#: src/dbfinconsts.js:40
+#: src/dbfinconsts.js:41
 msgid "Linear"
 msgstr "Linear"
 
-#: src/dbfinconsts.js:41
+#: src/dbfinconsts.js:42
 msgid "Slow at the end"
 msgstr "Am Ende langsam"
 
-#: src/dbfinconsts.js:42
+#: src/dbfinconsts.js:43
 msgid "Slow at the beginning"
 msgstr "Am Anfang langsam"
 
-#: src/dbfinconsts.js:43
+#: src/dbfinconsts.js:44
 msgid "Slow on both sides"
 msgstr "Auf beiden Seiten langsam"
 
-#: src/dbfinconsts.js:44
+#: src/dbfinconsts.js:45
 msgid "Slow in the middle"
 msgstr "In der Mitte langsam"
 
-#: src/dbfinconsts.js:45
+#: src/dbfinconsts.js:46
 msgid "Slower at the end"
 msgstr "Am Ende langsamer"
 
-#: src/dbfinconsts.js:46
+#: src/dbfinconsts.js:47
 msgid "Slower at the beginning"
 msgstr "Am Anfang langsamer"
 
-#: src/dbfinconsts.js:47
+#: src/dbfinconsts.js:48
 msgid "Slower on both sides"
 msgstr "Auf beiden Seiten langsamer"
 
-#: src/dbfinconsts.js:48
+#: src/dbfinconsts.js:49
 msgid "Slower in the middle"
 msgstr "In der Mitte langsamer"
 
-#: src/dbfinconsts.js:49
+#: src/dbfinconsts.js:50
 msgid "Slowest at the end"
 msgstr "Am Ende am langsamsten"
 
-#: src/dbfinconsts.js:50
+#: src/dbfinconsts.js:51
 msgid "Slowest at the beginning"
 msgstr "Am Anfang am langsamsten"
 
-#: src/dbfinconsts.js:51
+#: src/dbfinconsts.js:52
 msgid "Slowest on both sides"
 msgstr "Auf beiden Seiten am langsamsten"
 
-#: src/dbfinconsts.js:52
+#: src/dbfinconsts.js:53
 msgid "Slowest in the middle"
 msgstr "In der Mitte am langsamsten"
 
-#: src/dbfinconsts.js:53
+#: src/dbfinconsts.js:54
 msgid "Bounce at the end"
 msgstr "Am Ende federn"
 
-#: src/dbfinconsts.js:54
+#: src/dbfinconsts.js:55
 msgid "Bounce at the beginning"
 msgstr "Am Anfang federn"
 
-#: src/dbfinconsts.js:55
+#: src/dbfinconsts.js:56
 msgid "Bounce on both sides"
 msgstr "Auf beiden Seiten federn"
 
-#: src/dbfinconsts.js:56
+#: src/dbfinconsts.js:57
 msgid "Bounce in the middle"
 msgstr "In der Mitte federn"
 
-#: src/dbfinconsts.js:57
+#: src/dbfinconsts.js:58
 msgid "Back'n'forth in the middle"
 msgstr "In der Mitte vor und zurück"
 
-#: src/dbfinconsts.js:58
+#: src/dbfinconsts.js:59
 msgid "Elastic in the middle"
 msgstr "In der Mitte elastisch"
 
-#: src/dbfinconsts.js:62 src/dbfinconsts.js:78
+#: src/dbfinconsts.js:63 src/dbfinconsts.js:79
 msgid "No action"
 msgstr "Keine Aktion"
 
-#: src/dbfinconsts.js:63
+#: src/dbfinconsts.js:64
 msgid "Show next : all non-minimized windows"
 msgstr "Nächstes anzeigen : Alle nicht minimierten Fenster"
 
-#: src/dbfinconsts.js:64
+#: src/dbfinconsts.js:65
 msgid "Show next : all windows"
 msgstr "Nächstes anzeigen : Alle Fenster"
 
-#: src/dbfinconsts.js:65
+#: src/dbfinconsts.js:66
 msgid "Show all/next non-minimized : all windows"
 msgstr "Alle/nächstes nicht minimiertes anzeigen : Alle Fenster"
 
-#: src/dbfinconsts.js:66
+#: src/dbfinconsts.js:67
 msgid "Rotate windows forward : backward"
 msgstr "Rotiere Fenster vorwärts : rückwärts"
 
-#: src/dbfinconsts.js:67
+#: src/dbfinconsts.js:68
 msgid "Rotate windows backward : forward"
 msgstr "Rotiere Fenster rückwärts : vorwärts"
 
-#: src/dbfinconsts.js:68
+#: src/dbfinconsts.js:69
 msgid "Minimize top : all windows"
 msgstr "Minimiere oberstes : alle Fenster"
 
-#: src/dbfinconsts.js:69
+#: src/dbfinconsts.js:70
 msgid "(Un)Maximize top : all windows"
 msgstr "Maximiere oberstes : alle Fenster"
 
-#: src/dbfinconsts.js:70
+#: src/dbfinconsts.js:71
 msgid "Open new window : none"
 msgstr "Neues Fenster öffnen : nichts"
 
-#: src/dbfinconsts.js:71
+#: src/dbfinconsts.js:72
 msgid "Open new window (new workspace) : none"
 msgstr "Neues Fenster (neue Arbeitsfläche) öffnen : nichts"
 
-#: src/dbfinconsts.js:72
+#: src/dbfinconsts.js:73
 msgid "Open menu : none"
 msgstr "Menü öffnen : nichts"
 
-#: src/dbfinconsts.js:73
+#: src/dbfinconsts.js:74
 msgid "Quit : none"
 msgstr "Beenden : nichts"
 
-#: src/dbfinconsts.js:74
+#: src/dbfinconsts.js:75
 msgid "Show next (minimize if single) : all windows"
 msgstr "Nächstes anzeigen (minimieren, falls allein) : Alle Fenster"
 
-#: src/dbfinconsts.js:79 src/dbfinconsts.js:85
+#: src/dbfinconsts.js:80 src/dbfinconsts.js:86
 msgid "Show and focus"
 msgstr "Anzeigen und fokusieren"
 
-#: src/dbfinconsts.js:80
+#: src/dbfinconsts.js:81
 msgid "Minimize"
 msgstr "Minimieren"
 
-#: src/dbfinconsts.js:81
+#: src/dbfinconsts.js:82
 msgid "(Un)Maximize"
 msgstr "Maximieren"
 
-#: src/dbfinconsts.js:82
+#: src/dbfinconsts.js:83
 msgid "Close"
 msgstr "Schließen"
 
-#: src/dbfinconsts.js:83
+#: src/dbfinconsts.js:84
 msgid "Preview on/Thumbnail panel opacity"
 msgstr "Vorschau an/Transparenz des Vorschaubereichs"
 
-#: src/dbfinconsts.js:84
+#: src/dbfinconsts.js:85
 msgid "Preview off/Thumbnail panel opacity"
 msgstr "Vorschau aus/Transparenz des Vorschaubereichs"
 
-#: src/dbfinconsts.js:85
+#: src/dbfinconsts.js:86
 msgid "close thumbnails"
 msgstr "Vorschau schließen"
 
-#: src/dbfinconsts.js:93
+#: src/dbfinconsts.js:94
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/dbfinconsts.js:96
+#: src/dbfinconsts.js:97
 msgid "Quit"
 msgstr "Beenden"
 
-#: src/dbfinconsts.js:104
+#: src/dbfinconsts.js:105
 msgid "Hide window indicators"
 msgstr "Fensterindikatoren verstecken"
 
-#: src/dbfinconsts.js:105
+#: src/dbfinconsts.js:106
 msgid "Point lights"
 msgstr "Punktlichter"
 
-#: src/dbfinconsts.js:106
+#: src/dbfinconsts.js:107
 msgid "Actual number of windows"
 msgstr "Aktuelle Anzahl an Fenstern"
 
-#: src/dbfinconsts.js:106
+#: src/dbfinconsts.js:107
 msgid "experimental"
 msgstr "experimentell"
 
-#: src/dbfinmenubuilder.js:291
+#: src/dbfinmenubuilder.js:292
 msgid "Remove from Favorites"
 msgstr "Aus Favoriten entfernen"
 
-#: src/dbfinmenubuilder.js:296
+#: src/dbfinmenubuilder.js:297
 msgid "Add to Favorites"
 msgstr "Zu Favoriten hinzufügen"
 
@@ -662,7 +662,7 @@ msgid "Middle button"
 msgstr "Mittlere Maustaste"
 
 #: src/prefs.js:282
-msgid "Disable option "
+msgid "Disable option"
 msgstr "Option deaktivieren"
 
 #: src/prefs.js:282 src/prefs.js:408
