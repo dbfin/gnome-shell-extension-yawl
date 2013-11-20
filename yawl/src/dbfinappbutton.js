@@ -101,7 +101,7 @@ const dbFinAppButton = new Lang.Class({
 			}
             if (global.yawl && this._slicerIcon && this._slicerIcon.actor) {
                 this._clicked = new dbFinClicked.dbFinClicked(this._slicerIcon.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */true,
-                                /*scroll = */!global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
+                                /*scroll = */!global.yawl._mouseScrollWorkspace,
                                 /*dragAndDrop = */global.yawl._mouseDragAndDrop && global.yawl._iconsDragAndDrop,
                                 /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
                                 /*longClick = */global.yawl._mouseLongClick);

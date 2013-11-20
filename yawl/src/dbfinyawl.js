@@ -196,7 +196,7 @@ const dbFinYAWL = new Lang.Class({
 		    }
             if (global.yawl && global.yawl.panelApps) {
                 this._clicked = new dbFinClicked.dbFinClicked(global.yawl.panelApps.container, this._buttonClicked, this, /*clicks = */false, /*doubleClicks = */true,
-                                /*scroll = */global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
+                                /*scroll = */global.yawl._mouseScrollWorkspace,
                                 /*dragAndDrop = */false,
                                 /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
                                 /*longClick = */global.yawl._mouseLongClick);
