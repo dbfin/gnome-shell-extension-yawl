@@ -19,3 +19,9 @@ which gnome-autogen.sh || {
 }
 . gnome-autogen.sh
 
+# added by Vadim @ dbFin
+sed -i \
+	-e 's|^\(\s*dir=\)\([^;]*\)\(;.*\)$|\1"\2"\3|' \
+	-e 's|\(\s\)\(\$\$dir[^;"]*\)\(;\)|\1"\2"\3|' \
+	po/Makefile.in.in
+
