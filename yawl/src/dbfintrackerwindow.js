@@ -83,10 +83,10 @@ const dbFinTrackerWindow = new Lang.Class({
 
         this.hovered = false;
 		if (this.windowThumbnail) {
-			if (this.windowThumbnail.actor) {
-				this._signals.connectNoId({ emitter: this.windowThumbnail.actor, signal: 'enter-event',
+			if (this.windowThumbnail.container) {
+				this._signals.connectNoId({ emitter: this.windowThumbnail.container, signal: 'enter-event',
 											callback: this._enterEvent, scope: this });
-				this._signals.connectNoId({ emitter: this.windowThumbnail.actor, signal: 'leave-event',
+				this._signals.connectNoId({ emitter: this.windowThumbnail.container, signal: 'leave-event',
 											callback: this._leaveEvent , scope: this });
 			}
         }
@@ -151,9 +151,9 @@ const dbFinTrackerWindow = new Lang.Class({
 									&& focusedWindow.get_transient_for() == this.metaWindow
 								);
             if (focused != this.focused) {
-                if (this.windowThumbnail && this.windowThumbnail.actor) {
-                    if (this.focused) this.windowThumbnail.actor.add_style_pseudo_class('active');
-                    else this.windowThumbnail.actor.remove_style_pseudo_class('active');
+                if (this.windowThumbnail && this.windowThumbnail.container) {
+                    if (this.focused) this.windowThumbnail.container.add_style_pseudo_class('active');
+                    else this.windowThumbnail.container.remove_style_pseudo_class('active');
                 }
                 if (this._tracker) {
                     this._tracker.windowEvent(this, 'focused');
@@ -213,9 +213,9 @@ const dbFinTrackerWindow = new Lang.Class({
 
     attention: function(state) {
         _D('>' + this.__name__ + '.attention()');
-        if (this.windowThumbnail && this.windowThumbnail.actor) {
-            if (state) this.windowThumbnail.actor.add_style_pseudo_class('attention');
-            else this.windowThumbnail.actor.remove_style_pseudo_class('attention');
+        if (this.windowThumbnail && this.windowThumbnail.container) {
+            if (state) this.windowThumbnail.container.add_style_pseudo_class('attention');
+            else this.windowThumbnail.container.remove_style_pseudo_class('attention');
         }
         _D('<');
     },
