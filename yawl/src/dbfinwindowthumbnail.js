@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -64,46 +64,54 @@ const dbFinWindowThumbnail = new Lang.Class({
         this.hiding = false;
         this._minimized = false;
 
-        this.actor = new St.Bin({ style_class: 'yawl-thumbnail', reactive: true, track_hover: true, y_align: St.Align.START });
-        if (this.actor) {
-        }
+		this.container = new St.Bin({ style_class: 'yawl-thumbnail', reactive: true, track_hover: true, y_align: St.Align.START });
+		if (this.container) {
+            this._signals.connectNoId({	emitter: this.container, signal: 'enter-event',
+                                        callback: this._hoverEnter, scope: this });
+            this._signals.connectNoId({	emitter: this.container, signal: 'leave-event',
+                                        callback: this._hoverLeave, scope: this });
+		}
 
-		this._slicerContainer = new Shell.GenericContainer({ reactive: true });
-		if (this._slicerContainer) {
-			this._signals.connectNoId({	emitter: this._slicerContainer, signal: 'get-preferred-width',
-										callback: this._slicerContainerGetPreferredWidth, scope: this });
-			this._signals.connectNoId({	emitter: this._slicerContainer, signal: 'get-preferred-height',
-										callback: this._slicerContainerGetPreferredHeight, scope: this });
-			this._signals.connectNoId({	emitter: this._slicerContainer, signal: 'allocate',
-										callback: this._slicerContainerAllocate, scope: this });
+		this.actor = new Shell.GenericContainer({ reactive: true });
+		if (this.actor) {
+			if (this.container) this.container.set_child(this.actor);
+			this._signals.connectNoId({	emitter: this.actor, signal: 'get-preferred-width',
+										callback: this._getPreferredWidth, scope: this });
+			this._signals.connectNoId({	emitter: this.actor, signal: 'get-preferred-height',
+										callback: this._getPreferredHeight, scope: this });
+			this._signals.connectNoId({	emitter: this.actor, signal: 'allocate',
+										callback: this._allocate, scope: this });
 		}
 
 		this._slicerBin = new St.Bin();
 		if (this._slicerBin) {
-			if (this._slicerContainer) this._slicerContainer.add_child(this._slicerBin);
 			this._slicerBin.set_child(this._clone);
+		}
+
+		this._slicerActor = new dbFinSlicerActor.dbFinSlicerActor(this._slicerBin, { y_align: St.Align.START });
+        if (this._slicerActor) {
+			if (this._slicerActor.container && this.actor) this.actor.add_child(this._slicerActor.container);
 		}
 
 		this._toolbarButtonHovered = null;
 
-		this._slicerToolbar = new St.BoxLayout({ style_class: 'yawl-thumbnail-toolbar', vertical: false, x_align: Clutter.ActorAlign.END });
-		if (this._slicerToolbar) {
-			if (this._slicerContainer) this._slicerContainer.add_child(this._slicerToolbar);
+		this.toolbar = new St.BoxLayout({ style_class: 'yawl-thumbnail-toolbar', vertical: false, x_align: Clutter.ActorAlign.END });
+		if (this.toolbar) {
+			if (this.actor) this.actor.add_child(this.toolbar);
+            this._signals.connectNoId({	emitter: this.toolbar, signal: 'enter-event',
+                                        callback: this._hoverEnter, scope: this });
+            this._signals.connectNoId({	emitter: this.toolbar, signal: 'leave-event',
+                                        callback: this._hoverLeave, scope: this });
 			dbFinConsts.arrayThumbnailButtons.forEach(Lang.bind(this, function (p) {
 				let (icon = new St.Icon({ icon_name: p[0] + '-symbolic', style_class: 'button-' + p[0], reactive: true, track_hover: true })) {
 					icon._do = p[1];
-					this._slicerToolbar.add_child(icon);
+					this.toolbar.add_child(icon);
 					this._signals.connectNoId({	emitter: icon, signal: 'enter-event',
-												callback: function (actor) { this._toolbarButtonHovered = actor; }, scope: this });
+												callback: function (actor) { this._toolbarButtonHovered = actor; this._hoverEnter(actor); }, scope: this });
 					this._signals.connectNoId({	emitter: icon, signal: 'leave-event',
-												callback: function (actor) { this._toolbarButtonHovered = null; }, scope: this });
+												callback: function (actor) { this._toolbarButtonHovered = null; this._hoverLeave(actor); }, scope: this });
 				}
 			}));
-		}
-
-		this._slicerActor = new dbFinSlicerActor.dbFinSlicerActor(this._slicerContainer, { y_align: St.Align.START });
-        if (this._slicerActor) {
-			if (this.actor) this.actor.set_child(this._slicerActor.container);
 		}
 
         this._updatedWindowsThumbnailsWidth =
@@ -129,7 +137,7 @@ const dbFinWindowThumbnail = new Lang.Class({
 				this._clicked.destroy();
 				this._clicked = null;
 			}
-			this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*clicks = */true, /*doubleClicks = */false,
+			this._clicked = new dbFinClicked.dbFinClicked(this.container, this._buttonClicked, this, /*clicks = */true, /*doubleClicks = */false,
 							/*scroll = */true, /*sendSingleClicksImmediately = */true,
                             /*dragAndDrop = */false,
                             /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
@@ -152,32 +160,32 @@ const dbFinWindowThumbnail = new Lang.Class({
 			this._clicked.destroy();
 			this._clicked = null;
 		}
-		if (this.actor) {
-			this.actor.reactive = false;
-            this.actor.hide();
-		}
-		if (this._slicerToolbar) {
-			this._slicerToolbar.destroy();
-			this._slicerToolbar = null;
+		if (this.container) {
+			this.container.reactive = false;
+            this.container.hide();
 		}
 		if (this._slicerBin) {
             this._slicerBin.set_child(null);
+/* destroyed by this._slicerActor
 			this._slicerBin.destroy();
 			this._slicerBin = null;
-		}
-/* destroyed by this._slicerActor
-		if (this._slicerContainer) {
-			this._slicerContainer.destroy();
-			this._slicerContainer = null;
-		}
 */
+		}
         if (this._slicerActor) {
 			this._slicerActor.destroy();
 			this._slicerActor = null;
 		}
-		if (this.actor) {
-			this.actor.destroy();
-			this.actor = null;
+		if (this.toolbar) {
+			this.toolbar.destroy();
+			this.toolbar = null;
+		}
+        if (this.actor) {
+            this.actor.destroy();
+            this.actor = null;
+        }
+		if (this.container) {
+			this.container.destroy();
+			this.container = null;
 		}
         if (this._clone) {
             this._clone.destroy();
@@ -195,25 +203,27 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('<');
 	},
 
-	_slicerContainerGetPreferredWidth: function(actor, forHeight, alloc) {
-		_D('@' + this.__name__ + '._slicerContainerGetPreferredWidth()');
-		[ alloc.min_size, alloc.natural_size ] = this._slicerBin && this._slicerBin.get_stage()
-                                                        ? this._slicerBin.get_preferred_width(forHeight)
+	_getPreferredWidth: function(actor, forHeight, alloc) {
+		_D('@' + this.__name__ + '._getPreferredWidth()');
+		[ alloc.min_size, alloc.natural_size ] = this._slicerActor && this._slicerActor.container
+                                                        && this._slicerActor.container.get_stage()
+                                                        ? this._slicerActor.container.get_preferred_width(forHeight)
                                                         : [ 0, 0 ];
 		_D('<');
 	},
 
-	_slicerContainerGetPreferredHeight: function(actor, forWidth, alloc) {
-		_D('@' + this.__name__ + '._slicerContainerGetPreferredHeight()');
-		[ alloc.min_size, alloc.natural_size ] = this._slicerBin && this._slicerBin.get_stage()
-														? this._slicerBin.get_preferred_height(forWidth)
+	_getPreferredHeight: function(actor, forWidth, alloc) {
+		_D('@' + this.__name__ + '._getPreferredHeight()');
+		[ alloc.min_size, alloc.natural_size ] = this._slicerActor && this._slicerActor.container
+                                                        && this._slicerActor.container.get_stage()
+														? this._slicerActor.container.get_preferred_height(forWidth)
 														: [ 0, 0 ];
 		_D('<');
 	},
 
-	_slicerContainerAllocate: function(actor, box, flags) {
-		_D('@' + this.__name__ + '._slicerContainerAllocate()');
-		if (!this._slicerBin || !this._slicerBin.get_stage()) {
+	_allocate: function(actor, box, flags) {
+		_D('@' + this.__name__ + '._allocate()');
+		if (!this._slicerActor || !this._slicerActor.container || !this.container || !this.container.get_stage()) {
 			_D('<');
 			return;
 		}
@@ -221,33 +231,47 @@ const dbFinWindowThumbnail = new Lang.Class({
                 h = box.y2 - box.y1,
                 x = box.x1,
                 y = box.y1,
-                [ wm, wn ] = this._slicerBin.get_preferred_width(-1),
-                [ hm, hn ] = this._slicerBin.get_preferred_height(-1),
+                [ wm, wn ] = this._slicerActor.container.get_preferred_width(-1),
+                [ hm, hn ] = this._slicerActor.container.get_preferred_height(-1),
                 boxChild = new Clutter.ActorBox()) {
 			let (x2 = Math.min(box.x2, x + wn),
 				 y2 = Math.min(box.y2, y + hn)) {
 				dbFinUtils.setBox(boxChild, x, y, x2, y2);
-				this._slicerBin.allocate(boxChild, flags);
-				if (this._slicerToolbar && this._slicerToolbar.get_stage()) {
-					let ([ thm, thn ] = this._slicerToolbar.get_preferred_height(-1) || [ 0, 0 ]) {
+				this._slicerActor.container.allocate(boxChild, flags);
+				if (this.toolbar) {
+					let ([ thm, thn ] = this.toolbar.get_preferred_height(-1) || [ 0, 0 ]) {
 						dbFinUtils.setBox(boxChild, x, y, x2, Math.min(box.y2, y + thn));
-						this._slicerToolbar.allocate(boxChild, flags);
+						this.toolbar.allocate(boxChild, flags);
 					} // let ([ thm, thn ])
-				} //  if (this._slicerToolbar && this._slicerToolbar.get_stage())
+				} //  if (this.toolbar && this.toolbar.get_stage())
 			} // let (x2, y2)
         } // let (w, h, x, y, [ wm, wn ], [ hm, hn ], boxChild)
 		_D('<');
 	},
 
+    _hoverEnter: function() {
+        _D('>' + this.__name__ + '._hoverEnter()');
+        if (this._slicerActor) this._slicerActor.hoverEnter();
+        _D('<');
+    },
+
+    _hoverLeave: function() {
+        _D('>' + this.__name__ + '._hoverLeave()');
+        if (this._slicerActor) this._slicerActor.hoverLeave();
+        _D('<');
+    },
+
 	show: function(time) {
         _D('>' + this.__name__ + '.show()');
-		if (this.actor) {
-			this.actor.show();
-			this.actor.reactive = true;
+		if (this.container) {
+			this.container.show();
+			this.container.reactive = true;
 		}
 		this.hidden = false;
         this.hiding = false;
-		if (this._slicerActor) this._slicerActor.show(time);
+		if (this._slicerActor) this._slicerActor.show(time, function () {
+                                                               if (this.toolbar) this.toolbar.show();
+                                                           }, this);
         _D('<');
 	},
 
@@ -255,10 +279,11 @@ const dbFinWindowThumbnail = new Lang.Class({
         _D('>' + this.__name__ + '.hide()');
 		if (this._slicerActor) {
             this.hiding = true;
+            if (this.toolbar) this.toolbar.hide();
             this._slicerActor.hide(time, function () {
-                                            if (this.actor) {
-                                                this.actor.reactive = false;
-                                                this.actor.hide();
+                                            if (this.container) {
+                                                this.container.reactive = false;
+                                                this.container.hide();
                                             }
                                             this.hidden = true;
                                             this.hiding = false;
@@ -293,7 +318,6 @@ const dbFinWindowThumbnail = new Lang.Class({
 				if (this._signals) {
 					this._signals.connectId('window-destroy', {	emitter: this._compositor, signal: 'destroy',
 																callback: function () {
-                                                                    this.hide();
                                                                     this._updateClone(null);
                                                                 }, scope: this });
 					this._signals.connectId('window-resize', {	emitter: this._compositor, signal: 'size-changed',

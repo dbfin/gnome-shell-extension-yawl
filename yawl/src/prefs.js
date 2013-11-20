@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -170,7 +170,7 @@ function buildPrefsWidget() {
                 builder.addCheckBox(_("Move central panel"), 'move-center');
                 builder.addCheckBox(_("Hide Activities button"), 'hide-activities');
                 builder.shift();
-				// Gnome-Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
+				// GNOME Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
 				if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
                     builder.addCheckBox(_("Preserve Hot Corner"), 'preserve-hot-corner', 'hide-activities');
 				}
@@ -279,7 +279,7 @@ function buildPrefsWidget() {
 						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0);
 						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
 						builder.addSeparator();
-	                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option ") + _("Add-ons") + ' > ' + _("Panel") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
+	                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option") + ' ' + _("Add-ons") + ' > ' + _("Panel") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
 						builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0, '!mouse-scroll-workspace');
 
 					builder.addPage(_("Right button"), 'mouse-right.png');
@@ -466,7 +466,7 @@ function buildPrefsWidget() {
 								 + '</span>', null, true, 3);
 			builder.unshift();
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-							 + ' ' + _("tries to seamlessly integrate into the Gnome-Shell panel."), null, true, 3);
+							 + ' ' + _("tries to seamlessly integrate into the GNOME Shell panel."), null, true, 3);
 			builder.shift();
 				builder.addLabel('<span size="small">' +
 								 _("It is embedded into the panel right where there is space for it not claimed by anything else, and uses panel theme by default.")
@@ -486,7 +486,7 @@ function buildPrefsWidget() {
 								 + '</span>', null, true, 3);
 				builder.addLabel('<span size="small">' +
 								 _("The development of this extension would not be possible without this wonderful FOSS:")
-								 + ' ' + '<b>Anjuta</b>, <b>Inkscape</b>, <b>Gimp</b>, <b>OmegaT</b>, <b>Ubuntu</b>, <b>Fedora</b> ' + _("and, of course,") + ' <b>Gnome-Shell</b>!'
+								 + ' ' + '<b>Anjuta</b>, <b>Inkscape</b>, <b>Gimp</b>, <b>OmegaT</b>, <b>Ubuntu</b>, <b>Fedora</b> ' + _("and, of course,") + ' <b>GNOME Shell</b>!'
 								 + '</span>', null, true, 3);
 			builder.unshift();
 
