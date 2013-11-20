@@ -5,14 +5,14 @@
 _Copyright © 2012-2013 Vadim Cherepanov @ dbFin (vadim (at) dbfin.com)_
 
 License: GNU GPL v3, please read src/license.txt
-
- ![ ](src/screenshot.png?raw=true)
  
 ### Description
  
 YAWL is a collection of GNOME Shell extensions, including the Yet Another Window List (taskbar) extension providing many features of a typical dock being integrated into GNOME Shell. YAWL aims to be simple to use and provide maximum convenience and consistency while supporting many advanced features and customizations.
 
 ### Yet Another Window List (taskbar)
+
+ ![ ](yawl/src/screenshot.png?raw=true)
 
 **Main features include**:
 
