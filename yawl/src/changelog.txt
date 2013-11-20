@@ -62,3 +62,6 @@ v13	2013-11-06
 		- Adjustable smaller icons size
 		- Option to close thumbnails once a thumbnail is clicked to show its window
 		- Fix reordering of icons when backed-window apps are present
+v14	2013-11-19
+		- GNOME Shell 3.10 compatibility
+		- Updated German + Ukrainian translation
