@@ -404,7 +404,7 @@ const dbFinTrackerApp = new Lang.Class({
                 if (active) {
                     if (global.yawl._iconsWindowsIndicator === 2) {
                         if (!this._badgesWindowsNumber) {
-                            this._badgesWindowsNumber = new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' },
+                            this._badgesWindowsNumber = new dbFinSlicerLabel.dbFinSlicerLabel({ text: ' ' },
                                                             { style_class: 'badge-icon-windows-number',
                                                               x_align: St.Align.MIDDLE,
                                                               y_align: St.Align.MIDDLE });
