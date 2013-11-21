@@ -1,4 +1,5 @@
 ../lib/convenience2.js
+src/dbfinactivities.js
 ../lib/dbfinanimation.js
 ../lib/dbfinanimationequations.js
 src/dbfinappbutton.js

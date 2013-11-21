@@ -116,6 +116,7 @@ const Settings = [
     [ 'yawl-panel-width', 100, { min: 1, max: 100 }, 'panel' ],
     [ 'move-center', true, { }, 'panel' ],
     [ 'hide-activities', false, { }, 'panel' ],
+    [ 'alternative-activities', true, { }, 'panel' ],
     [ 'preserve-hot-corner', true, { }, 'panel' ],
     [ 'hide-app-menu', false, { }, 'panel' ],
     [ 'panel-background', false, { }, 'panel' ],

@@ -35,6 +35,7 @@ const Panel = imports.ui.panel;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinActivities = Me.imports.dbfinactivities;
 const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinPanelButtonToggle = Me.imports.dbfinpanelbuttontoggle;
 const dbFinSignals = Me.imports.dbfinsignals;
@@ -118,6 +119,7 @@ const dbFinMoveCenter = new Lang.Class({
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
 		this._panelbuttonstoggle = new dbFinPanelButtonToggle.dbFinPanelButtonToggle();
+        this._buttonAlternativeActivities = null;
 		this._hotcorner = null;
 		this._signals.connectNoId({ emitter: Main.panel.actor, signal: 'allocate',
 									callback: this._allocate, scope: this });
@@ -126,7 +128,8 @@ const dbFinMoveCenter = new Lang.Class({
                 this._updatedYawlPanelWidth =
                 this._updatedMoveCenter = this._updatePanel;
         this._updatedHideActivities =
-                this._updatedPreserveHotCorner = this._updateActivities;
+                this._updatedPreserveHotCorner =
+                this._updatedAlternativeActivities = this._updateActivities;
         // this._updatedHideAppMenu: below
 
 		this._updatePanel();
@@ -146,6 +149,10 @@ const dbFinMoveCenter = new Lang.Class({
 			this._hotcorner.destroy();
 			this._hotcorner = null;
 		}
+        if (this._buttonAlternativeActivities) {
+            this._buttonAlternativeActivities.destroy();
+            this._buttonAlternativeActivities = null;
+        }
         if (this._panelbuttonstoggle) {
             this._panelbuttonstoggle.destroy(); // this should restore Activities button
             this._panelbuttonstoggle = null;
@@ -164,18 +171,32 @@ const dbFinMoveCenter = new Lang.Class({
 
     _updateActivities: function() {
         _D('>' + this.__name__ + '._updateActivities()');
-		// GNOME Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
-		if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
-			if (global.yawl._hideActivities && global.yawl._preserveHotCorner) {
-				if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
-			}
-			else if (this._hotcorner) {
-				this._hotcorner.destroy();
-				this._hotcorner = null;
-			}
-		}
-		if (global.yawl._hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
-		else this._panelbuttonstoggle.restore('activities');
+        if (!global.yawl) {
+            _D('global.yawl == null');
+            _D('<');
+            return;
+        }
+        let (hideActivities = global.yawl._hideActivities || global.yawl._alternativeActivities) {
+            // GNOME Shell 3.8+: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
+            if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
+                if (hideActivities && global.yawl._preserveHotCorner) {
+                    if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
+                }
+                else if (this._hotcorner) {
+                    this._hotcorner.destroy();
+                    this._hotcorner = null;
+                }
+            }
+            if (hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
+            else this._panelbuttonstoggle.restore('activities');
+            if (global.yawl._alternativeActivities) {
+                if (!this._buttonAlternativeActivities) this._buttonAlternativeActivities = new dbFinActivities.dbFinActivities();
+            }
+            else if (this._buttonAlternativeActivities) {
+                this._buttonAlternativeActivities.destroy();
+                this._buttonAlternativeActivities = null;
+            }
+        }
         _D('<');
     },
 
@@ -189,12 +210,13 @@ const dbFinMoveCenter = new Lang.Class({
 	// GNOMENEXT: modified from ui/panel.js: class Panel
     _allocate: function (actor, box, flags) {
         _D('@' + this.__name__ + '._allocate()');
-        if (!Main.panel) {
+        if (!Main.panel || !global.yawl) {
             _D('<');
             return;
         }
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
+		     	[wam, wan] = Main.panel._yawlToolsPanel && Main.panel._yawlToolsPanel.get_stage() ? Main.panel._yawlToolsPanel.get_preferred_width(-1) : [ 0, 0 ],
                 [wlm, wln] = Main.panel._leftBox && Main.panel._leftBox.get_stage() ? Main.panel._leftBox.get_preferred_width(-1) : [ 0, 0 ], // minimum and natural widths
 		     	[wym, wyn] = Main.panel._yawlPanel && Main.panel._yawlPanel.get_stage() ? Main.panel._yawlPanel.get_preferred_width(-1) : [ 0, 0 ],
                 [wcm, wcn] = Main.panel._centerBox && Main.panel._centerBox.get_stage() ? Main.panel._centerBox.get_preferred_width(-1) : [ 0, 0 ],
@@ -202,6 +224,8 @@ const dbFinMoveCenter = new Lang.Class({
                 boxChild = new Clutter.ActorBox(),
                 drl = (Main.panel.actor.get_text_direction() == Clutter.TextDirection.RTL)) {
 			if (!wym && Main.panel._yawlPanel) wym = Main.panel._yawlPanel._box.get_n_children();
+            wlm += wam;
+            wln += wan;
 			let (wly, wl, wy, wr, xl, xr) {
 				if (global.yawl._moveCenter) {
 					// let left box + YAWL panel occupy all the space on the left, but no less than (w - wcn) / 2
@@ -217,8 +241,15 @@ const dbFinMoveCenter = new Lang.Class({
 				wy = Math.max(wym, Math.min(wly - wl, Math.floor(w * global.yawl._yawlPanelWidth / 100)));
 				wly = Math.max(wly, wl + wy);
 				[ xl, xr ] = drl ? [ w, w ] : [ 0, 0 ];
+                if (wan) {
+                    if (wan > wl) wan = wam;
+                    wl -= wan;
+					if (drl) xl = w - wan; else xr = wan;
+					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
+					Main.panel._yawlToolsPanel.allocate(boxChild, flags);
+                }
 				if (wl) {
-					if (drl) xl = w - wl; else xr = wl;
+					if (drl) { xr = xl; xl -= wl; } else { xl = xr; xr += wl; }
 					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
 					Main.panel._leftBox.allocate(boxChild, flags);
 				}

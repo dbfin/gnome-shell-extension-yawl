@@ -175,6 +175,7 @@ function buildPrefsWidget() {
                     builder.addCheckBox(_("Preserve Hot Corner"), 'preserve-hot-corner', 'hide-activities');
 				}
                 builder.unshift();
+                builder.addCheckBox(_("Show alternative Activities button"), 'alternative-activities');
                 builder.addCheckBox(_("Hide AppMenu button"), 'hide-app-menu');
                 builder.addSeparator();
                 builder.addCheckBox(_("Custom panel background"), 'panel-background');
