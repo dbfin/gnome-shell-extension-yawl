@@ -259,7 +259,7 @@ const dbFinDebugView = new Lang.Class({
 	_buttonPreferencesButtonPressEvent: function(label, event) {
 		if (!event) return;
 		let (button = event.get_button()) {
-			if (button == 1) Util.trySpawn([ 'gnome-shell-extension-prefs', 'yawl@dbfin.com' ]);
+			if (button == 1) try { Util.trySpawn([ 'gnome-shell-extension-prefs', 'yawl@dbfin.com' ]); } catch (e) {}
 		}
 	},
 
