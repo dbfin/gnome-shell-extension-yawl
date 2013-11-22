@@ -25,17 +25,19 @@
  */
 
 const Lang = imports.lang;
+const Mainloop = imports.mainloop;
 
 const Clutter = imports.gi.Clutter;
 const St = imports.gi.St;
 
+const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinSignals = Me.imports.dbfinsignals;
-//const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -62,18 +64,46 @@ const dbFinActivities = new Lang.Class({
         this._minHPadding = 0;
         this._natHPadding = 0;
         if (this.actor) {
+            this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
+            this.actor.reactive = true;
             this._signals.connectNoId({ emitter: this.actor, signal: 'style-changed',
                                         callback: function () {
                                             this._minHPadding = 0;
                                             this._natHPadding = 0;
                                         }, scope: this },
                                         /*after = */true);
+            this.actor.add_style_class_name('yawl-activities');
         }
 
-        this.label = new St.Label({ style_class: 'yawl-activities-label', text: '0', y_align: Clutter.ActorAlign.FILL, y_expand: true });
+        this.label = new St.Label({ style_class: 'yawl-activities-label', text: '?',
+                                    x_align: Clutter.ActorAlign.CENTER, y_align: Clutter.ActorAlign.CENTER,
+                                    x_expand: true, y_expand: true });
         if (this.label) {
             if (this.actor) this.actor.add_child(this.label);
+            this._signals.connectNoId({	emitter: global.screen, signal: 'notify::n-workspaces',
+                                        callback: this._updateLabel, scope: this });
+            this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
+                                        callback: this._updateLabel, scope: this });
+            this._updateLabel();
         }
+
+        this._clicked = null;
+        this._updatedMouseDragAndDrop =
+                this._updatedMouseClickRelease =
+                this._updatedMouseLongClick = function () {
+			if (this._clicked) {
+				this._clicked.destroy();
+				this._clicked = null;
+			}
+            if (global.yawl && this.actor) {
+                this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */false,
+                                /*scroll = */true, /*dragAndDrop = */false,
+                                /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
+                                /*longClick = */global.yawl._mouseLongClick);
+            }
+		};
+
+        global.yawl.watch(this);
     	_D('<');
     },
 
@@ -92,5 +122,53 @@ const dbFinActivities = new Lang.Class({
         }
         this.parent();
 		_D('<');
-	}
+	},
+
+    _updateLabel: function() {
+        _D('>' + this.__name__ + '._updateLabel()');
+        if (this.label) {
+            let (index = global.screen && global.screen.get_active_workspace_index()) {
+                this.label.set_text(index || index === 0 ? '' + (index + 1) : '?');
+            }
+        }
+        _D('<');
+    },
+
+    _buttonClicked: function(state, name) {
+        _D('>' + this.__name__ + '._buttonClicked()');
+        if (!name || (!state.scroll && (!state.clicks || state.clicks < 1))) {
+            _D('<');
+            return;
+        }
+        if (state.scroll) {
+            if (state.up) {
+				Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(-1); }));
+            }
+            else {
+				Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(1); }));
+            }
+        }
+        else if (state.left) {
+            if (Main.overview) {
+                if (Main.overview.visible) Main.overview.hide();
+                else Main.overview.show();
+            }
+        }
+        _D('<');
+    },
+
+    changeWorkspace: function (direction) {
+        _D('>' + this.__name__ + '.changeWorkspace()');
+		if (!direction || !global.screen) {
+			_D('<');
+			return;
+		}
+		let (workspaceIndex = global.screen.get_active_workspace_index() + direction) {
+			let (workspace = workspaceIndex >= 0 && workspaceIndex < global.screen.n_workspaces
+                             && global.screen.get_workspace_by_index(workspaceIndex)) {
+				if (workspace) workspace.activate(global.get_current_time());
+			} // let (workspace)
+		} // let (workspaceIndex)
+        _D('<');
+   }
 });
