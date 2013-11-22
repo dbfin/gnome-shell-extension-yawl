@@ -28,15 +28,21 @@ const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 
 const Clutter = imports.gi.Clutter;
+const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
+const Util = imports.misc.util;
+
+const ExtensionSystem = imports.ui.extensionSystem;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
+const PopupMenu = imports.ui.popupMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinClicked = Me.imports.dbfinclicked;
+const dbFinMenuBuilder = Me.imports.dbfinmenubuilder;
 const dbFinSignals = Me.imports.dbfinsignals;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -50,7 +56,7 @@ const dbFinActivities = new Lang.Class({
 
     _init: function() {
     	_D('>' + this.__name__ + '._init()');
-        this.parent(0.0, null);
+        this.parent(0.0, null, true);
 
 		this._signals = new dbFinSignals.dbFinSignals();
 
@@ -87,6 +93,8 @@ const dbFinActivities = new Lang.Class({
             this._updateLabel();
         }
 
+        this._buildMenu();
+
         this._clicked = null;
         this._updatedMouseDragAndDrop =
                 this._updatedMouseClickRelease =
@@ -113,6 +121,7 @@ const dbFinActivities = new Lang.Class({
 			this._signals.destroy();
 			this._signals = null;
 		}
+        this._destroyMenu();
         if (this.label) {
             this.label.destroy();
             this.label = null;
@@ -127,10 +136,119 @@ const dbFinActivities = new Lang.Class({
     _updateLabel: function() {
         _D('>' + this.__name__ + '._updateLabel()');
         if (this.label) {
-            let (index = global.screen && global.screen.get_active_workspace_index()) {
-                this.label.set_text(index || index === 0 ? '' + (index + 1) : '?');
+            let (workspaceActiveIndex = global.screen && global.screen.get_active_workspace_index()) {
+                this.label.set_text(workspaceActiveIndex || workspaceActiveIndex === 0 ? '' + (workspaceActiveIndex + 1) : '?');
             }
         }
+        _D('<');
+    },
+
+    _buildMenu: function() {
+        _D('>' + this.__name__ + '._buildMenu()');
+        this._destroyMenu();
+        let (menu = this.actor && new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.TOP, 0)) {
+            if (menu) {
+                menu._yawlMenuWorkspaces = new dbFinMenuBuilder.dbFinPopupMenuScrollableSection();
+                if (menu._yawlMenuWorkspaces) menu.addMenuItem(menu._yawlMenuWorkspaces);
+                menu._yawlOpenWas = menu.open;
+                menu.open = Lang.bind(menu, this._openMenu);
+                // adding menu items
+                menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+                menu.addAction('\u2692 ' + _("extension preferences"), function () {
+                    try { Util.trySpawn([ 'gnome-shell-extension-prefs', 'yawl@dbfin.com' ]); }
+                    catch (e) { _D('!Error launching preferences: ' + (e && e.message || e)); }
+                });
+                menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+                menu.addAction('\u27f2 ' + _("reload extension"), function () {
+                    try { ExtensionSystem.reloadExtension(Me); }
+                    catch (e) { _D('!Error reloading extension: ' + (e && e.message || e)); }
+                });
+                this.setMenu(menu);
+                this._menuManager = Main.panel && Main.panel.menuManager || null;
+                if (this._menuManager) this._menuManager.addMenu(this.menu);
+            } // if (menu)
+        } // let (menu)
+        _D('<');
+    },
+
+    _destroyMenu: function() {
+        _D('>' + this.__name__ + '._destroyMenu()');
+        if (this._menuManager) {
+            if (this.menu) this._menuManager.removeMenu(this.menu);
+            this._menuManager = null;
+        }
+        if (this.menu && this.menu._yawlMenuWorkspaces) {
+            this.menu._yawlMenuWorkspaces.removeAll();
+            this.menu._yawlMenuWorkspaces.destroy();
+            this.menu._yawlMenuWorkspaces = null;
+        }
+        this.setMenu(null);
+        _D('<');
+    },
+
+    _openMenu: function(animate) {
+        _D('>' + this.__name__ + '._openMenu()');
+        if (this._yawlMenuWorkspaces) {
+            this._yawlMenuWorkspaces.removeAll();
+            let (n_workspaces = global.screen && global.screen.n_workspaces,
+                 workspaceActiveIndex = global.screen && global.screen.get_active_workspace_index(),
+                 workspaces = [],
+                 workspacesApps = []) {
+                for (let i = 0; i < n_workspaces; ++i) {
+                    workspaces.push(global.screen.get_workspace_by_index(i));
+                    workspacesApps.push([]);
+                }
+                let (appButtons = global.yawl && global.yawl.panelApps && global.yawl.panelApps._childrenObjects
+                                  && global.yawl.panelApps._childrenObjects._keys || null) {
+                    if (appButtons && (appButtons = appButtons.filter(function (appButton) {
+                            return appButton && appButton.metaApp && appButton.metaApp.state != Shell.AppState.STOPPED;
+                        })).length) {
+                        appButtons.forEach(function (appButton) {
+                            for (let i = 0; i < n_workspaces; ++i) {
+                                if (appButton.metaApp.is_on_workspace(workspaces[i])) workspacesApps[i].push(appButton.metaApp);
+                            }
+                        }); // appButtons.forEach(appButton)
+                    } // if (appButtons && appButtons.length)
+                } // let (appButtons)
+                for (let i = 0; i < n_workspaces; ++i) {
+                    let (menuItem = new PopupMenu.PopupMenuItem('' + (i + 1) + ': '),
+                         apps = workspacesApps[i]) {
+                        if (menuItem) {
+                            for (let j = 0; j < apps.length; ++j) {
+                                if (j >= 10) {
+                                    let (label = new St.Label({ text: ' ... ' })) {
+                                        if (label) {
+                                            if (menuItem.addActor) menuItem.addActor(label);
+                                            else if (menuItem.actor) menuItem.actor.add_actor(label);
+                                        }
+                                    }
+                                    break;
+                                }
+                                let (icon = apps[j].create_icon_texture(24)) {
+                                    if (icon) {
+                                        icon.y_align = Clutter.ActorAlign.CENTER;
+                                        icon.y_expand = false;
+                                        if (menuItem.addActor) menuItem.addActor(icon);
+                                        else if (menuItem.actor) menuItem.actor.add_actor(icon);
+                                    }
+                                }
+                            } // for (let j)
+                            if (i === workspaceActiveIndex) {
+                                if (menuItem.setShowDot) menuItem.setShowDot(true);
+                                else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.DOT);
+                            }
+                            menuItem.connect('activate', (function (i) { return function (menuItem, event) {
+                                let (workspace = global.screen && global.screen.get_workspace_by_index(i)) {
+                                    if (workspace) workspace.activate(global.get_current_time());
+                                }
+                            }; })(i));
+                            this._yawlMenuWorkspaces.addMenuItem(menuItem);
+                        } // if (menuItem)
+                    } // let (menuItem, apps)
+                } // for (let i)
+            } // let (n_workspaces, workspaceActiveIndex, workspaces, workspacesApps)
+        } // if (this._yawlMenuWorkspaces)
+        if (this._yawlOpenWas) Lang.bind(this, this._yawlOpenWas)(animate);
         _D('<');
     },
 
@@ -154,6 +272,9 @@ const dbFinActivities = new Lang.Class({
                 else Main.overview.show();
             }
         }
+        else if (state.right) {
+            if (this.menu) this.menu.toggle();
+        }
         _D('<');
     },
 
@@ -170,5 +291,9 @@ const dbFinActivities = new Lang.Class({
 			} // let (workspace)
 		} // let (workspaceIndex)
         _D('<');
-   }
+   },
+
+	_onButtonPress: function() {
+		// nothing to do here
+	}
 });
