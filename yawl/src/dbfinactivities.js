@@ -226,7 +226,7 @@ const dbFinActivities = new Lang.Class({
                                 if (j >= 10) {
                                     let (label = new St.Label({ text: '...', y_align: Clutter.ActorAlign.END })) {
                                         if (label) {
-                                            label.set_style('padding: 0 0 0 8px;');
+                                            label.set_style('padding: 0 0 0 12px;');
                                             menuItem._box.add_child(label);
                                         }
                                     }
@@ -235,7 +235,7 @@ const dbFinActivities = new Lang.Class({
                                 let (icon = new St.Bin()) {
                                     if (icon) {
                                         icon.set_child(apps[j].create_icon_texture(24) || null);
-                                        icon.set_style('padding: 0 0 0 8px;');
+                                        icon.set_style('padding: 0 0 0 12px;');
                                         icon.x_align = Clutter.ActorAlign.CENTER;
                                         icon.y_align = Clutter.ActorAlign.CENTER;
                                         icon.x_expand = false;
