@@ -189,9 +189,8 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedDebugBottom = function () { if (global._yawlDebugView) global._yawlDebugView.updatePosition(); };
 
         this._updatedMouseScrollWorkspace =
-        this._updatedMouseDragAndDrop =
-		this._updatedMouseClickRelease =
-        this._updatedMouseLongClick =
+                this._updatedMouseDragAndDrop =
+                this._updatedMouseLongClick =
                 this._updatedIconsDragAndDrop = function () {
             // No drag and drop for GS 3.6, sorry
             if (global.yawl && global.yawl._iconsDragAndDrop
@@ -204,10 +203,10 @@ const dbFinYAWL = new Lang.Class({
 			    this._clicked = null;
 		    }
             if (global.yawl && global.yawl.panelApps) {
-                this._clicked = new dbFinClicked.dbFinClicked(global.yawl.panelApps.container, this._buttonClicked, this, /*clicks = */false, /*doubleClicks = */true,
+                this._clicked = new dbFinClicked.dbFinClicked(global.yawl.panelApps.container, this._buttonClicked, this, /*clicks = */true, /*doubleClicks = */true,
                                 /*scroll = */global.yawl._mouseScrollWorkspace,
                                 /*dragAndDrop = */false,
-                                /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
+                                /*clickOnRelease = */false,
                                 /*longClick = */global.yawl._mouseLongClick);
                 if (global.yawl._mouseDragAndDrop && global.yawl._iconsDragAndDrop) {
                     global.yawl.panelApps._childrenObjects.forEach(function (appButton, signals) {
@@ -356,7 +355,29 @@ const dbFinYAWL = new Lang.Class({
             else {
 				Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(1); }));
             }
-        }
+        } // if (state.scroll)
+        else if (state.left) {
+            let (focusWindow = Main.modalCount == 0 && global.display && global.display.focus_window,
+                 [ x, y, m ] = global.get_pointer()) {
+                if (focusWindow && focusWindow.is_attached_dialog()) focusWindow = focusWindow.get_transient_for();
+                if (focusWindow && focusWindow.maximized_vertically && Meta.GrabOp) {
+                    let (box = focusWindow.get_outer_rect()) {
+                        if (x > box.x && x < box.x + box.width) {
+                            global.display.begin_grab_op(global.screen,
+                                                         focusWindow,
+                                                         Meta.GrabOp.MOVING,
+                                                         false, /* pointer grab */
+                                                         true, /* frame action */
+                                                         1, /* button */
+                                                         0 | (state.ctrl ? Clutter.ModifierType.CONTROL_MASK : 0)
+                                                           | (state.shift ? Clutter.ModifierType.SHIFT_MASK : 0), /* state */
+                                                         global.get_current_time(),
+                                                         x, y);
+                        }
+                    } // let (box)
+                } // if (focusWindow && focusWindow.maximized_vertically)
+            } // let (focusWindow, [ x, y, m ])
+        } // if (state.scroll) else if (state.left)
         _D('<');
     },
 
