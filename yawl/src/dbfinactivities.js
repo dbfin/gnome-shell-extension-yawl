@@ -85,7 +85,10 @@ const dbFinActivities = new Lang.Class({
                                     x_align: Clutter.ActorAlign.CENTER, y_align: Clutter.ActorAlign.CENTER,
                                     x_expand: true, y_expand: true });
         if (this.label) {
-            if (this.actor) this.actor.add_child(this.label);
+            if (this.actor) {
+                this.actor.add_child(this.label);
+                this.actor.label_actor = this.label;
+            }
             this._signals.connectNoId({	emitter: global.screen, signal: 'notify::n-workspaces',
                                         callback: this._updateLabel, scope: this });
             this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
@@ -132,6 +135,13 @@ const dbFinActivities = new Lang.Class({
         this.parent();
 		_D('<');
 	},
+
+    _getPreferredWidth: function (actor, forWidth, alloc) {
+        this.parent(actor, forWidth, alloc);
+        let (wln = actor && actor.label_actor && actor.label_actor.get_preferred_width(-1)[1] || 0) {
+            if (wln > alloc.min_size) alloc.min_size = wln;
+        }
+    },
 
     _updateLabel: function() {
         _D('>' + this.__name__ + '._updateLabel()');
