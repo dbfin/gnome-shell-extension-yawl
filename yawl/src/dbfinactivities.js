@@ -211,25 +211,36 @@ const dbFinActivities = new Lang.Class({
                     } // if (appButtons && appButtons.length)
                 } // let (appButtons)
                 for (let i = 0; i < n_workspaces; ++i) {
-                    let (menuItem = new PopupMenu.PopupMenuItem('' + (i + 1) + ': '),
+                    let (menuItem = new PopupMenu.PopupBaseMenuItem(),
                          apps = workspacesApps[i]) {
-                        if (menuItem) {
+                        if (menuItem) menuItem._box = new St.BoxLayout({ vertical: false, y_align: Clutter.ActorAlign.CENTER, y_expand: false });
+                        if (menuItem && menuItem.actor && menuItem._box) {
+                            if (menuItem.addActor) menuItem.addActor(menuItem._box);
+                            else menuItem.actor.add_actor(menuItem._box);
+                            let (label = new St.Label({ text: '' + (i + 1) + ' : ', y_align: Clutter.ActorAlign.CENTER })) {
+                                if (label) {
+                                    menuItem._box.add_child(label);
+                                }
+                            }
                             for (let j = 0; j < apps.length; ++j) {
                                 if (j >= 10) {
-                                    let (label = new St.Label({ text: ' ... ' })) {
+                                    let (label = new St.Label({ text: '...', y_align: Clutter.ActorAlign.END })) {
                                         if (label) {
-                                            if (menuItem.addActor) menuItem.addActor(label);
-                                            else if (menuItem.actor) menuItem.actor.add_actor(label);
+                                            label.set_style('padding: 0 0 0 8px;');
+                                            menuItem._box.add_child(label);
                                         }
                                     }
                                     break;
                                 }
-                                let (icon = apps[j].create_icon_texture(24)) {
+                                let (icon = new St.Bin()) {
                                     if (icon) {
+                                        icon.set_child(apps[j].create_icon_texture(24) || null);
+                                        icon.set_style('padding: 0 0 0 8px;');
+                                        icon.x_align = Clutter.ActorAlign.CENTER;
                                         icon.y_align = Clutter.ActorAlign.CENTER;
+                                        icon.x_expand = false;
                                         icon.y_expand = false;
-                                        if (menuItem.addActor) menuItem.addActor(icon);
-                                        else if (menuItem.actor) menuItem.actor.add_actor(icon);
+                                        menuItem._box.add_child(icon);
                                     }
                                 }
                             } // for (let j)
@@ -243,7 +254,7 @@ const dbFinActivities = new Lang.Class({
                                 }
                             }; })(i));
                             this._yawlMenuWorkspaces.addMenuItem(menuItem);
-                        } // if (menuItem)
+                        } // if (menuItem && menuItem.actor && menuItem._box)
                     } // let (menuItem, apps)
                 } // for (let i)
             } // let (n_workspaces, workspaceActiveIndex, workspaces, workspacesApps)

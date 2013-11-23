@@ -63,7 +63,10 @@
 
 /* Tools */
 #panelYAWLTools {
-    padding-left: 2px;
+}
+
+#panelYAWLTools .panel-button-container {
+    padding: 0 4px;
 }
 
 #panelYAWLTools .panel-button {
