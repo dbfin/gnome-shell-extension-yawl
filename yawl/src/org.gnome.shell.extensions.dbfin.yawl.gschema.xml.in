@@ -36,15 +36,15 @@
       <_summary>Move central panel to the right.</_summary>
       <_description>If true the central panel is moved to the right.</_description>
     </key>
-    <key name="hide-activities" type="b">
-      <default>false</default>
-      <_summary>Hide Activities button.</_summary>
-      <_description>If true the Activities button is hidden.</_description>
-    </key>
     <key name="alternative-activities" type="b">
       <default>true</default>
       <_summary>Show alternative Activities button.</_summary>
       <_description>If true the alternative Activities button is shown.</_description>
+    </key>
+    <key name="hide-activities" type="b">
+      <default>false</default>
+      <_summary>Hide Activities button.</_summary>
+      <_description>If true the Activities button is hidden.</_description>
     </key>
     <key name="preserve-hot-corner" type="b">
       <default>true</default>
