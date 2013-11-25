@@ -249,15 +249,15 @@ const dbFinWindowThumbnail = new Lang.Class({
 		_D('<');
 	},
 
-    _hoverEnter: function() {
+    _hoverEnter: function(actor) {
         _D('>' + this.__name__ + '._hoverEnter()');
-        if (this._slicerActor) this._slicerActor.hoverEnter();
+        if (this._slicerActor) this._slicerActor.hoverEnter(actor);
         _D('<');
     },
 
-    _hoverLeave: function() {
+    _hoverLeave: function(actor) {
         _D('>' + this.__name__ + '._hoverLeave()');
-        if (this._slicerActor) this._slicerActor.hoverLeave();
+        if (this._slicerActor) this._slicerActor.hoverLeave(actor);
         _D('<');
     },
 
