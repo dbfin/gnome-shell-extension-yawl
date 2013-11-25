@@ -112,8 +112,9 @@ const dbFinAppButton = new Lang.Class({
 
         this._updatedIconsSize =
                 this._updatedIconsFaded = this._updateIcon;
+		this._updatedIconsClipTop = function () { if (global.yawl && this._slicerIcon) this._slicerIcon.setClipTop(global.yawl._iconsClipTop); };
 		this._updatedIconsClipBottom = function () {
-            if (this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom);
+            if (global.yawl && this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom);
             this._updatePivotPoint();
             if (this._trackerApp) this._trackerApp.updateBadges();
         };
