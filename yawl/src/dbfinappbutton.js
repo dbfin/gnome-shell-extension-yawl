@@ -73,7 +73,8 @@ const dbFinAppButton = new Lang.Class({
         if (this.actor) {
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
             this.actor.reactive = true;
-            if (this.actor) this.actor._delegate = this;
+            this.actor._delegate = this;
+            this.actor.x_align = Clutter.ActorAlign.CENTER;
         }
 
 		this._minHPadding = 0;
@@ -311,28 +312,34 @@ const dbFinAppButton = new Lang.Class({
             return;
         }
         if (state.dnd) {
-            if (this._trackerApp) {
-                switch (state.dnd) {
-                    case 1: // drag
-				        if (this.menu && this.menu.isOpen) this.menu.close();
-                        if (this.menuWindows && this.menuWindows.isOpen) this.menuWindows.close();
-                        if (this.container && this._slicerIcon) this.container.width = this._slicerIcon.getNaturalWidth();
-                        this._dragging = true;
-                        break;
-                    case 2: // cancelled or drop
-                    case 3:
-                        if (this._dragging) {
-                            this._dragging = false;
-                            if (this.container) this.container.width = -1;
-                            if (this._slicerIcon) this._slicerIcon.hoverLeaveAll();
-				            this._trackerApp.hideWindowsGroup(0);
-                            this._trackerApp.updateVisibility();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+            switch (state.dnd) {
+                case 1: // drag
+                    if (this.menu && this.menu.isOpen) this.menu.close();
+                    if (this.menuWindows && this.menuWindows.isOpen) this.menuWindows.close();
+                    if (this.container && this._slicerIcon) {
+                        this.container.natural_width = this._slicerIcon.getNaturalWidth();
+                        this._signals.connectId('drag-actor-returns', { emitter: this.actor, signal: 'parent-set',
+                                                                        callback: function () {
+                                                                            if (this.actor && this.actor.get_parent() === this.container) {
+                                                                                this._signals.disconnectId('drag-actor-returns');
+                                                                                if (this.container) this.container.natural_width_set = false;
+                                                                            }
+                                                                        }, scope: this });
+                    }
+                    this._dragging = true;
+                    break;
+                case 2: // cancelled or drop
+                case 3:
+                    if (this._dragging) {
+                        this._dragging = false;
+                        if (this._slicerIcon) this._slicerIcon.hoverLeaveAll();
+                        this._trackerApp.hideWindowsGroup(0);
+                        this._trackerApp.updateVisibility();
+                    }
+                    break;
+                default:
+                    break;
+            } // switch (state.dnd)
             _D('<');
             return;
         }
