@@ -69,6 +69,7 @@ const dbFinAppButton = new Lang.Class({
         if (this.actor) {
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
             this.actor.reactive = true;
+            if (this.actor) this.actor._delegate = this;
         }
 
 		this._minHPadding = 0;
@@ -81,7 +82,6 @@ const dbFinAppButton = new Lang.Class({
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
         if (this._slicerIcon && this._slicerIcon.container) {
             if (this.actor) this.actor.add_child(this._slicerIcon.container);
-            if (this._slicerIcon.actor) this._slicerIcon.actor._delegate = this;
 /*            if (Main.panel && Main.panel.actor && Main.panel.actor.get_stage()) {
                 this._slicerIcon.container.min_height = Main.panel.actor.get_height();
             }*/
@@ -91,16 +91,16 @@ const dbFinAppButton = new Lang.Class({
 
         this._clicked = null;
         this._updatedMouseScrollWorkspace =
-        this._updatedMouseDragAndDrop =
-		this._updatedMouseClickRelease =
-        this._updatedMouseLongClick =
+                this._updatedMouseDragAndDrop =
+                this._updatedMouseClickRelease =
+                this._updatedMouseLongClick =
                 this._updatedIconsDragAndDrop = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
 				this._clicked = null;
 			}
-            if (global.yawl && this._slicerIcon && this._slicerIcon.actor) {
-                this._clicked = new dbFinClicked.dbFinClicked(this._slicerIcon.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */true,
+            if (global.yawl && this.actor) {
+                this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */true,
                                 /*scroll = */!global.yawl._mouseScrollWorkspace,
                                 /*dragAndDrop = */global.yawl._mouseDragAndDrop && global.yawl._iconsDragAndDrop,
                                 /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
@@ -311,12 +311,14 @@ const dbFinAppButton = new Lang.Class({
                     case 1: // drag
 				        if (this.menu && this.menu.isOpen) this.menu.close();
                         if (this.menuWindows && this.menuWindows.isOpen) this.menuWindows.close();
+                        if (this.container && this._slicerIcon) this.container.width = this._slicerIcon.getNaturalWidth();
                         this._dragging = true;
                         break;
                     case 2: // cancelled or drop
                     case 3:
                         if (this._dragging) {
                             this._dragging = false;
+                            if (this.container) this.container.width = -1;
 				            this._trackerApp.hideWindowsGroup(0);
                             this._trackerApp.updateVisibility();
                         }
