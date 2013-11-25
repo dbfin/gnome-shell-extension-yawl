@@ -65,6 +65,10 @@ const dbFinAppButton = new Lang.Class({
 		// this.actor and this.container related stuff
         if (this.container) {
             this.container.add_style_class_name('panel-button-container');
+            this._signals.connectNoId({	emitter: this.container, signal: 'enter-event',
+                                        callback: function (actor) { if (this._slicerIcon) this._slicerIcon.hoverEnter(actor); }, scope: this });
+            this._signals.connectNoId({	emitter: this.container, signal: 'leave-event',
+                                        callback: function (actor) { if (this._slicerIcon) this._slicerIcon.hoverLeave(actor); }, scope: this });
         }
         if (this.actor) {
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
@@ -320,6 +324,7 @@ const dbFinAppButton = new Lang.Class({
                         if (this._dragging) {
                             this._dragging = false;
                             if (this.container) this.container.width = -1;
+                            if (this._slicerIcon) this._slicerIcon.hoverLeaveAll();
 				            this._trackerApp.hideWindowsGroup(0);
                             this._trackerApp.updateVisibility();
                         }
