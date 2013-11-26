@@ -13,6 +13,7 @@ src/dbfinmenubuilder.js
 src/dbfinmovecenter.js
 src/dbfinpanelbuttontoggle.js
 src/dbfinpanelenhancements.js
+../lib/dbfinpopupmenu.js
 src/dbfinpreview.js
 ../lib/dbfinsettings.js
 ../lib/dbfinsignals.js

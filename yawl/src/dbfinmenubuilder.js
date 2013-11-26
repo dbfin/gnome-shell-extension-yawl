@@ -40,40 +40,12 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinConsts = Me.imports.dbfinconsts;
+const dbFinPopupMenu = Me.imports.dbfinpopupmenu;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
 const _D = Me.imports.dbfindebug._D;
-
-const dbFinPopupMenuScrollableSection = new Lang.Class({
-    Name: 'dbFin.PopupMenuScrollableSection',
-    Extends: PopupMenu.PopupMenuSection,
-
-    _init: function() {
-        this.parent();
-		this.actor = new St.ScrollView({ style_class: 'popup-menu-section-scroll' });
-		if (this.actor) {
-			this.actor.add_actor(this.box);
-			this.actor._delegate = this;
-			this.actor.clip_to_allocation = true;
-		}
-		else if (this.box) {
-			this.actor = this.box;
-	        this.actor._delegate = this;
-		}
-    },
-
-    destroy: function() {
-		if (this.actor && this.actor.has_style_class_name('popup-menu-section-scroll')) {
-            this.actor.remove_actor(this.box);
-			this.actor.destroy();
-			this.actor = this.box;
-	        this.actor._delegate = this;
-		}
-        this.parent();
-    }
-});
 
 const dbFinMenuBuilder = new Lang.Class({
 	Name: 'dbFin.MenuBuilder',
@@ -128,7 +100,7 @@ const dbFinMenuBuilder = new Lang.Class({
             if (global.yawl._appQuicklists && !menu._yawlMenuQuicklists) {
                 let (mf = this._getMenuFunction('quicklists', 'setQuicklist')) {
                     if (mf) {
-                        menu._yawlMenuQuicklists = new dbFinPopupMenuScrollableSection();
+                        menu._yawlMenuQuicklists = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
                         if (menu._yawlMenuQuicklists) {
                             mf(metaApp, menu._yawlMenuQuicklists);
                             if (menu._yawlMenuQuicklists.isEmpty()) {

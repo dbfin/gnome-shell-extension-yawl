@@ -43,6 +43,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinMenuBuilder = Me.imports.dbfinmenubuilder;
+const dbFinPopupMenu = Me.imports.dbfinpopupmenu;
 const dbFinSignals = Me.imports.dbfinsignals;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
@@ -158,7 +159,7 @@ const dbFinActivities = new Lang.Class({
         this._destroyMenu();
         let (menu = this.actor && new PopupMenu.PopupMenu(this.actor, 0.0, St.Side.TOP, 0)) {
             if (menu) {
-                menu._yawlMenuWorkspaces = new dbFinMenuBuilder.dbFinPopupMenuScrollableSection();
+                menu._yawlMenuWorkspaces = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
                 if (menu._yawlMenuWorkspaces) menu.addMenuItem(menu._yawlMenuWorkspaces);
                 menu._yawlOpenWas = menu.open;
                 menu.open = Lang.bind(menu, this._openMenu);
