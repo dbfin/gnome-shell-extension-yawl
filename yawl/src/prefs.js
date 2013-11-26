@@ -188,9 +188,9 @@ function buildPrefsWidget() {
                 builder.addScale(_("Icon size"), 'icons-size', 16, 96, 8);
                 builder.addCheckBox(_("Faded icons"), 'icons-faded');
 				builder.addScale(_("Default icon opacity") + ' <span color="red">*</span>', 'icons-opacity', 50, 100, 1, '@advanced');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ '@advanced', '@!icons-show-all' ], true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ '@advanced', 'icons-show-all', '@!icons-show-all' ], true);
 				builder.addScale(_("Icon opacity if app is not on current workspace") + ' <span color="red">*</span>', 'icons-opacity-other', 10, 100, 1, [ '@advanced', 'icons-show-all' ]);
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Add-ons") + ' > ' + _("Icons") + ' > ' + _("Favorite apps") + '</span>', [ '@advanced', '@!icons-favorites' ], true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Add-ons") + ' > ' + _("Icons") + ' > ' + _("Favorite apps") + '</span>', [ '@advanced', 'icons-favorites', '@!icons-favorites' ], true);
 				builder.addScale(_("Icon opacity if app is not running") + ' <span color="red">*</span>', 'icons-opacity-inactive', 10, 100, 1, [ '@advanced', 'icons-favorites' ]);
                 builder.addSeparator();
                 builder.addScaleScale(_("Clip icons") + ': ' + _("top") + ' &amp; ' + _("bottom") + ' (' + _("px") + ')', 'icons-clip-top', 'icons-clip-bottom', 0, 7, 1, 0, 7, 1);
@@ -402,13 +402,15 @@ function buildPrefsWidget() {
 		builder.addPage(_("Add-ons"));
             builder.addNotebook(_("Panel"), 'panel.png');
                 if (dbFinConsts.arrayShellVersion[0] > 3 || dbFinConsts.arrayShellVersion[1] > 6) {
-                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable option") + ' ' + _("Behavior") + ' > ' + _("Mouse") + ' > ' + _("Fine-tuning") + ' <span color="red">*</span>' + ' > ' + _("Mouse events") + ' > ' +_("Use mouse drag-and-drop") + '</span>', '@!mouse-drag-and-drop', true);
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable option") + ' ' + _("Behavior") + ' > ' + _("Mouse") + ' > ' + _("Fine-tuning") + ' <span color="red">*</span>' + ' > ' + _("Mouse events") + ' > ' +_("Use mouse drag-and-drop") + '</span>', [ 'mouse-drag-and-drop', '@!mouse-drag-and-drop' ], true);
                     builder.addCheckBox('<b>' + _("Rearrange icons on the panel using mouse") + '</b>', 'icons-drag-and-drop', 'mouse-drag-and-drop');
                     builder.addSeparator();
                 }
 				builder.addCheckBox('<b>' + _("Scroll to change workspace") + '</b>: ' + _("Scroll over YAWL panel to change workspace"), 'mouse-scroll-workspace');
                 builder.shift();
-                    builder.addCheckBox('<b>' + _("Scroll to find other windows") + '</b>: ' + _("find app's windows on other workspaces by scrolling over its icon when its thumbnails are shown"), 'mouse-scroll-workspace-search', 'mouse-scroll-workspace');
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ 'icons-show-all', '@!icons-show-all' ], true);
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
+                    builder.addCheckBox('<b>' + _("Scroll to find other windows") + '</b>: ' + _("find app's windows on other workspaces by scrolling over its icon when its thumbnails are shown"), 'mouse-scroll-workspace-search', [ 'mouse-scroll-workspace', 'icons-show-all', 'windows-show' ]);
                 builder.unshift();
 
             builder.addPage(_("Icons"), 'icon.png');
