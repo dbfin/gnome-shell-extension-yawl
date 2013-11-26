@@ -20,7 +20,7 @@ function help() {
 cd "./$1/"
 
 # get current version of extension
-vd=$( cat include.mk | grep '^\s*extensionversion\s*=\s*' )
+vd=$( cat include.mk | grep '^ *extensionversion *= *' )
 vd=${vd#*extensionversion = }
 
 while read l; do
