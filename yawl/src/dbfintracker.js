@@ -268,10 +268,14 @@ const dbFinTracker = new Lang.Class({
 
     _cancelRefreshTimeout: function() {
         _D('@' + this.__name__ + '._cancelRefreshTimeout()');
-        Mainloop.source_remove(this._refreshTimeout);
-        this._refreshTimeout = null;
-		Mainloop.source_remove(this._refreshIdle);
-		this._refreshIdle = null;
+        if (this._refreshTimeout) {
+            Mainloop.source_remove(this._refreshTimeout);
+            this._refreshTimeout = null;
+        }
+        if (this._refreshIdle) {
+            Mainloop.source_remove(this._refreshIdle);
+            this._refreshIdle = null;
+        }
         _D('<');
     },
 
