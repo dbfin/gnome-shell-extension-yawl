@@ -24,6 +24,7 @@ dist_extension_DATA = \
 	../../lib/dbfinslicericon.js \
 	../../lib/dbfinslicerlabel.js \
 	../../lib/dbfinstyle.js \
+	../../lib/dbfintimeout.js \
 	dbfintracker.js \
 	dbfintrackerapp.js \
 	dbfintrackerwindow.js \

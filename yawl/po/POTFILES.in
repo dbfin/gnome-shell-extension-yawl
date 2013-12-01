@@ -21,6 +21,7 @@ src/dbfinpreview.js
 ../lib/dbfinslicericon.js
 ../lib/dbfinslicerlabel.js
 ../lib/dbfinstyle.js
+../lib/dbfintimeout.js
 src/dbfintracker.js
 src/dbfintrackerapp.js
 src/dbfintrackerwindow.js
