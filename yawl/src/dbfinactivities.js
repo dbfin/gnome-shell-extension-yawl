@@ -25,7 +25,6 @@
  */
 
 const Lang = imports.lang;
-const Mainloop = imports.mainloop;
 
 const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
@@ -281,12 +280,7 @@ const dbFinActivities = new Lang.Class({
             return;
         }
         if (state.scroll) {
-            if (state.up) {
-				Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(-1); }));
-            }
-            else {
-				Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(1); }));
-            }
+            this.changeWorkspace(state.up ? -1 : 1);
         }
         else if (state.left) {
             if (Main.overview) {
