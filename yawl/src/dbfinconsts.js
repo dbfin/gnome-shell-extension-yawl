@@ -72,7 +72,7 @@ const arrayAppClickFunctions = [
     [   _("Open new window (new workspace) : none"),	'openNewWindowNewWorkspace',    ''                              ],
     [   _("Open menu : none"),                       	'openMenu',                     ''                              ],
 	[	_("Quit : none"),								'quitApplication',				''								],
-    [   _("Show next (minimize if single) : all windows"),  'nextWindowMinimize',       'showAllWindows'                ]
+    [   _("Show next (minimize if single) : all windows"),  'nextWindowMinimizeSingle', 'showAllWindows'                ]
 ];
 
 const arrayWindowClickFunctions = [

@@ -670,6 +670,25 @@ const dbFinTracker = new Lang.Class({
         _D('<');
     },
 
+    activateWindows: function (metaWindows) {
+        _D('>' + this.__name__ + '.activateWindow()');
+        if (metaWindows && metaWindows.length) {
+            let (metaWindow = null) {
+                for (let i = metaWindows.length; i >= 0; --i) {
+                    if (metaWindows[i]) {
+                        metaWindow = metaWindows[i];
+                        this.activateWindow(metaWindow);
+                    }
+                }
+                // make sure the top window is focused
+                if (metaWindow && this._timeout) {
+                    this._timeout.add('activate-window', 0, function () { this.activateWindow(metaWindow); }, this, true);
+                }
+            }
+        }
+        _D('<');
+    },
+
     minimizeWindow: function(metaWindow) {
         _D('>' + this.__name__ + '.minimizeWindow()');
         if (metaWindow) {
