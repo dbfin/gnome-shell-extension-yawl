@@ -26,7 +26,6 @@
 
 const Cairo = imports.cairo;
 const Lang = imports.lang;
-const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
@@ -44,6 +43,7 @@ const dbFinAnimationEquations = Me.imports.dbfinanimationequations;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerLabel = Me.imports.dbfinslicerlabel;
+const dbFinTimeout = Me.imports.dbfintimeout;
 const dbFinUtils = Me.imports.dbfinutils;
 const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
 
@@ -60,6 +60,7 @@ const dbFinTrackerApp = new Lang.Class({
     _init: function(metaApp, tracker, state) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
+        this._timeout = new dbFinTimeout.dbFinTimeout();
 		this.metaApp = metaApp;
 		this._tracker = tracker;
         this.state = state || 0;
@@ -150,11 +151,6 @@ const dbFinTrackerApp = new Lang.Class({
         this._nextWindowsTimeout = null;
 		this._resetNextWindows();
 
-        this._showThumbnailsTimeout = null;
-
-		this._createMenuTimeout = null;
-
-		this._attentionTimeout = null;
 		this.attention(!!(this._tracker && this._tracker.hasAppAttention(this.metaApp)));
 
 		this._updatedIconsShowAll =
@@ -184,9 +180,11 @@ const dbFinTrackerApp = new Lang.Class({
 			this._signals = null;
 		}
         this._resetNextWindows();
-        this._cancelShowThumbnailsTimeout();
-		this._cancelCreateMenuTimeout();
         this.attention(false);
+        if (this._timeout) {
+            this._timeout.destroy();
+            this._timeout = null;
+        }
         if (this.appButton) {
 			if (this.appButton.menuWindows) {
 	            if (this._menuWindowsManager) this._menuWindowsManager.removeMenu(this.appButton.menuWindows);
@@ -494,23 +492,13 @@ const dbFinTrackerApp = new Lang.Class({
 
 	updateMenu: function() {
         _D('>' + this.__name__ + '.updateMenu()');
-		this._cancelCreateMenuTimeout();
-		this._createMenuTimeout = Mainloop.timeout_add(777, Lang.bind(this, this._createMenu));
+        if (this._timeout) this._timeout.add('create-menu', 777, this._createMenu, this);
         _D('<');
 	},
 
-    _cancelCreateMenuTimeout: function() {
-        _D('>' + this.__name__ + '._cancelCreateMenuTimeout()');
-        if (this._createMenuTimeout) {
-            Mainloop.source_remove(this._createMenuTimeout);
-            this._createMenuTimeout = null;
-        }
-        _D('<');
-    },
-
 	_createMenu: function() {
 		_D('>' + this.__name__ + '._createMenu()');
-		this._cancelCreateMenuTimeout();
+        if (this._timeout) this._timeout.remove('create-menu');
         if (!this.appButton || !global.yawl || !global.yawl.menuBuilder) {
             _D('<');
             return;
@@ -611,7 +599,7 @@ const dbFinTrackerApp = new Lang.Class({
 
     attention: function(state) {
         _D('>' + this.__name__ + '.attention()');
-        this._cancelAttentionTimeout();
+        if (this._timeout) this._timeout.remove('attention');
         this._attention = !!state;
         if (this.appButton) {
             if (this.appButton.actor) {
@@ -634,16 +622,7 @@ const dbFinTrackerApp = new Lang.Class({
 			this._attentionAnimationDirection = 1;
             this._attentionAnimationLevels = Math.round(545.45454545454545 / global.yawl._iconsAttentionBlinkRate);
             this._attentionAnimationConstant = this._attentionAnimationLevels / 240;
-            this._attentionTimeout = Mainloop.timeout_add(55, Lang.bind(this, this._attentionAnimation));
-        }
-        _D('<');
-    },
-
-    _cancelAttentionTimeout: function() {
-        _D('>' + this.__name__ + '._cancelAttentionTimeout()');
-        if (this._attentionTimeout) {
-            Mainloop.source_remove(this._attentionTimeout);
-            this._attentionTimeout = null;
+            if (this._timeout) this._timeout.add('attention', 55, this._attentionAnimation, this);
         }
         _D('<');
     },
@@ -898,17 +877,16 @@ const dbFinTrackerApp = new Lang.Class({
 
     showWindowsGroup: function(time) {
         _D('>' + this.__name__ + '.showWindowsGroup()');
-		this._cancelShowThumbnailsTimeout();
+        if (this._timeout) this._timeout.remove('show-windows');
         if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen
             || !this.windows || !this.windows.length) {
             _D('<');
             return;
         }
 		if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows) {
-			this._showThumbnailsTimeout = Mainloop.timeout_add(
+            if (this._timeout) this._timeout.add('show-windows',
                     time === 0 ? 0 : Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
-                    Lang.bind(this, function() {
-                        this._cancelShowThumbnailsTimeout();
+                    function () {
                         if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen) return;
                         if (this.appButton && this.appButton.menuWindows && this.appButton.menuWindows.isOpen) return;
                         this.positionWindowsGroup(); // position it before showing if it is hidden
@@ -929,7 +907,9 @@ const dbFinTrackerApp = new Lang.Class({
 						}
                         global.yawl.panelWindows.show(time, null, null, null, this.yawlPanelWindowsGroup);
                         global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;
-                    })
+                    },
+                    this,
+                    true
             );
         } // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
         _D('<');
@@ -937,16 +917,17 @@ const dbFinTrackerApp = new Lang.Class({
 
     hideWindowsGroup: function(time) {
         _D('>' + this.__name__ + '.hideWindowsGroup()');
-		this._cancelShowThumbnailsTimeout();
-		if (this.yawlPanelWindowsGroup && global.yawl.panelWindows) {
-			this._showThumbnailsTimeout = Mainloop.timeout_add(
+        if (this._timeout) this._timeout.remove('show-windows');
+		if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows) {
+            if (this._timeout) this._timeout.add('show-windows',
 			        time === 0 ? 0 : 77,
-			        Lang.bind(this, function() {
-						this._cancelShowThumbnailsTimeout();
+			        function() {
 						global.yawl.panelWindows.hide(time, null, null, null, true, this.yawlPanelWindowsGroup);
-					})
+					},
+                    this,
+                    true
 			);
-		} // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
+		} // if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows)
         _D('<');
     },
 
@@ -981,28 +962,10 @@ const dbFinTrackerApp = new Lang.Class({
 
     _resetNextWindows: function() {
         _D('>' + this.__name__ + '._resetNextWindows()');
-        this._cancelNextWindowsTimeout();
+        if (this._timeout) this._timeout.remove('next-windows');
 		this._nextWindowsWorkspace = null;
         this._nextWindowsLength = 0;
         this._nextWindowsIndex = 0;
-        _D('<');
-    },
-
-    _cancelNextWindowsTimeout: function() {
-        _D('>' + this.__name__ + '._cancelNextWindowsTimeout()');
-        if (this._nextWindowsTimeout) {
-            Mainloop.source_remove(this._nextWindowsTimeout);
-            this._nextWindowsTimeout = null;
-        }
-        _D('<');
-    },
-
-    _cancelShowThumbnailsTimeout: function() {
-        _D('>' + this.__name__ + '._cancelShowThumbnailsTimeout()');
-        if (this._showThumbnailsTimeout) {
-            Mainloop.source_remove(this._showThumbnailsTimeout);
-            this._showThumbnailsTimeout = null;
-        }
         _D('<');
     },
 
@@ -1034,8 +997,7 @@ const dbFinTrackerApp = new Lang.Class({
 					}
 					if (this._tracker) this._tracker.activateWindow(windows[Math.min(++this._nextWindowsIndex, this._nextWindowsLength - 1)]);
                     if (showall) this._showAllWindows(minimized);
-					this._cancelNextWindowsTimeout();
-					this._nextWindowsTimeout = Mainloop.timeout_add(3333, Lang.bind(this, this._resetNextWindows));
+                    if (this._timeout) this._timeout.add('next-windows', 3333, this._resetNextWindows, this);
 				} // if (!this.focused) else if (windows.length == 1 && minimize) else
 			}
 			else if (windows.length
