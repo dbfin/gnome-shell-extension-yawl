@@ -26,7 +26,6 @@
 
 const Cairo = imports.cairo;
 const Lang = imports.lang;
-const Mainloop = imports.mainloop;
 
 const Clutter = imports.gi.Clutter;
 const Gdk = imports.gi.Gdk;
@@ -36,6 +35,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinTimeout = Me.imports.dbfintimeout;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -56,7 +56,8 @@ const dbFinClickMeter = new Lang.Class({
 		this._clicksi = 0;
 		this._clicksilast = undefined;
 		for (let i = 0; i < 256; ++i) this._clicks[i] = 0;
-		this._timeout = Mainloop.timeout_add(25, Lang.bind(this, this._onTimeout));
+        this._timeout = new dbFinTimeout.dbFinTimeout();
+        if (this._timeout) this._timeout.add('running', 25, this._onTimeout, this);
 		this._signals.connectNoId({ emitter: this.widget, signal: 'button-press-event',
                                     callback: this._onButtonPress, scope: this });
 		this.widget.add_events(1 << 8);
@@ -68,7 +69,7 @@ const dbFinClickMeter = new Lang.Class({
             this._signals = null;
         }
         if (this._timeout) {
-            Mainloop.source_remove(this._timeout);
+            this._timeout.destroy();
             this._timeout = null;
         }
 		if (this.widget) {
