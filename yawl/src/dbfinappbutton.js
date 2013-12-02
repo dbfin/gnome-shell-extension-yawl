@@ -99,6 +99,8 @@ const dbFinAppButton = new Lang.Class({
                 this._updatedMouseDragAndDrop =
                 this._updatedMouseClickRelease =
                 this._updatedMouseLongClick =
+                this._updatedMouseScrollTimeout =
+                this._updatedMouseClicksTimeThreshold =
                 this._updatedIconsDragAndDrop = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
@@ -109,7 +111,9 @@ const dbFinAppButton = new Lang.Class({
                                 /*scroll = */!global.yawl._mouseScrollWorkspace,
                                 /*dragAndDrop = */global.yawl._mouseDragAndDrop && global.yawl._iconsDragAndDrop,
                                 /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
-                                /*longClick = */global.yawl._mouseLongClick);
+                                /*longClick = */global.yawl._mouseLongClick,
+                                /*clicksTimeThreshold = */global.yawl._mouseClicksTimeThreshold,
+                                /*scrollTimeout = */global.yawl._mouseScrollTimeout);
             }
 		};
 

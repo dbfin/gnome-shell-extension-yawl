@@ -101,7 +101,8 @@ const dbFinActivities = new Lang.Class({
         this._clicked = null;
         this._updatedMouseDragAndDrop =
                 this._updatedMouseClickRelease =
-                this._updatedMouseLongClick = function () {
+                this._updatedMouseLongClick =
+                this._updatedMouseScrollTimeout = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
 				this._clicked = null;
@@ -110,7 +111,9 @@ const dbFinActivities = new Lang.Class({
                 this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */false,
                                 /*scroll = */true, /*dragAndDrop = */false,
                                 /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
-                                /*longClick = */global.yawl._mouseLongClick);
+                                /*longClick = */global.yawl._mouseLongClick,
+                                /*clicksTimeThreshold = */null/*global.yawl._mouseClicksTimeThreshold*/,
+                                /*scrollTimeout = */global.yawl._mouseScrollTimeout);
             }
 		};
 

@@ -132,7 +132,8 @@ const dbFinWindowThumbnail = new Lang.Class({
         this._clicked = null;
         this._updatedMouseDragAndDrop =
 		this._updatedMouseClickRelease =
-                this._updatedMouseLongClick = function () {
+                this._updatedMouseLongClick =
+                this._updatedMouseScrollTimeout = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
 				this._clicked = null;
@@ -141,7 +142,9 @@ const dbFinWindowThumbnail = new Lang.Class({
 							/*scroll = */true,
                             /*dragAndDrop = */false,
                             /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
-                            /*longClick = */global.yawl._mouseLongClick);
+                            /*longClick = */global.yawl._mouseLongClick,
+                            /*clicksTimeThreshold = */null/*global.yawl._mouseClicksTimeThreshold*/,
+                            /*scrollTimeout = */global.yawl._mouseScrollTimeout);
 		};
 
         global.yawl.watch(this);

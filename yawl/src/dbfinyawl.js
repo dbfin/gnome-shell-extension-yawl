@@ -190,7 +190,7 @@ const dbFinYAWL = new Lang.Class({
 
         this._updatedMouseScrollWorkspace =
                 this._updatedMouseDragAndDrop =
-                this._updatedMouseLongClick =
+                this._updatedMouseScrollTimeout =
                 this._updatedIconsDragAndDrop = function () {
             // No drag and drop for GS 3.6, sorry
             if (global.yawl && global.yawl._iconsDragAndDrop
@@ -203,11 +203,13 @@ const dbFinYAWL = new Lang.Class({
 			    this._clicked = null;
 		    }
             if (global.yawl && global.yawl.panelApps) {
-                this._clicked = new dbFinClicked.dbFinClicked(global.yawl.panelApps.container, this._buttonClicked, this, /*clicks = */true, /*doubleClicks = */true,
+                this._clicked = new dbFinClicked.dbFinClicked(global.yawl.panelApps.container, this._buttonClicked, this, /*clicks = */true, /*doubleClicks = */false,
                                 /*scroll = */global.yawl._mouseScrollWorkspace,
                                 /*dragAndDrop = */false,
                                 /*clickOnRelease = */false,
-                                /*longClick = */global.yawl._mouseLongClick);
+                                /*longClick = */false,
+                                /*clicksTimeThreshold = */null/*global.yawl._mouseClicksTimeThreshold*/,
+                                /*scrollTimeout = */global.yawl._mouseScrollTimeout);
                 if (global.yawl._mouseDragAndDrop && global.yawl._iconsDragAndDrop) {
                     global.yawl.panelApps._childrenObjects.forEach(function (appButton, signals) {
                         if (appButton && appButton._trackerApp) {
