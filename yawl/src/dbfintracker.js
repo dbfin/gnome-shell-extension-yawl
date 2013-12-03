@@ -682,7 +682,8 @@ const dbFinTracker = new Lang.Class({
                 }
                 // make sure the top window is focused
                 if (metaWindow && this._timeout) {
-                    this._timeout.add('activate-window', 0, function () { this.activateWindow(metaWindow); }, this, true);
+                    this._timeout.add('activate-window', 0, (function (metaWindow, activateWindow) {
+                            return function () { activateWindow(metaWindow); }; })(metaWindow, Lang.bind(this, this.activateWindow)), this, true, true);
                 }
             }
         }
