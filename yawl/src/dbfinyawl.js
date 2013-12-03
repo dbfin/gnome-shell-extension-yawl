@@ -333,7 +333,7 @@ const dbFinYAWL = new Lang.Class({
 							}
 						});
 					}
-                    workspace.activate(global.get_current_time());
+                    workspace.activate(global._updateCurrentTime && global._updateCurrentTime() || global.get_current_time && global.get_current_time() || undefined);
                 }
 			} // let (workspace)
 		} // let (workspaceIndexNow, workspaceIndex, hide, trackerApp)
@@ -367,7 +367,7 @@ const dbFinYAWL = new Lang.Class({
                                                          1, /* button */
                                                          0 | (state.ctrl ? Clutter.ModifierType.CONTROL_MASK : 0)
                                                            | (state.shift ? Clutter.ModifierType.SHIFT_MASK : 0), /* state */
-                                                         global.get_current_time(),
+                                                         global._updateCurrentTime && global._updateCurrentTime() || global.get_current_time && global.get_current_time() || undefined,
                                                          x, y);
                         }
                     } // let (box)
