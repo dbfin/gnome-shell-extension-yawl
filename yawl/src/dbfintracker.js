@@ -665,7 +665,10 @@ const dbFinTracker = new Lang.Class({
         _D('>' + this.__name__ + '.activateWindow()');
         if (metaWindow) {
             Main.activateWindow(metaWindow, global._updateCurrentTime && global._updateCurrentTime() || global.get_current_time && global.get_current_time() || undefined);
-            metaWindow.foreach_transient(Lang.bind(this, function (metaWindow) { this.activateWindow(metaWindow); }));
+            let (transientWindows = []) {
+                metaWindow.foreach_transient(function (metaWindow) { transientWindows.unshift(metaWindow); });
+                this.activateWindows(transientWindows);
+            }
         }
         _D('<');
     },
