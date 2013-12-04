@@ -179,6 +179,7 @@ const dbFinTrackerApp = new Lang.Class({
 			this._signals = null;
 		}
         this._resetNextWindows();
+        this._cancelShowWindows();
         this.attention(false);
         if (this._timeout) {
             this._timeout.destroy();
@@ -876,7 +877,7 @@ const dbFinTrackerApp = new Lang.Class({
 
     showWindowsGroup: function(time) {
         _D('>' + this.__name__ + '.showWindowsGroup()');
-        if (this._timeout) this._timeout.remove('show-windows');
+        this._cancelShowWindows();
         if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen
             || !this.windows || !this.windows.length) {
             _D('<');
@@ -916,7 +917,7 @@ const dbFinTrackerApp = new Lang.Class({
 
     hideWindowsGroup: function(time) {
         _D('>' + this.__name__ + '.hideWindowsGroup()');
-        if (this._timeout) this._timeout.remove('show-windows');
+        this._cancelShowWindows();
 		if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows) {
             if (this._timeout) this._timeout.add('show-windows',
 			        time === 0 ? 0 : 77,
@@ -927,6 +928,12 @@ const dbFinTrackerApp = new Lang.Class({
                     true
 			);
 		} // if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows)
+        _D('<');
+    },
+
+    _cancelShowWindows: function() {
+        _D('>' + this.__name__ + '._cancelShowWindows()');
+        if (this._timeout) this._timeout.remove('show-windows');
         _D('<');
     },
 

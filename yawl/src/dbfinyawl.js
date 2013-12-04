@@ -329,7 +329,7 @@ const dbFinYAWL = new Lang.Class({
                     if (this._tracker && this._tracker.apps) {
 						this._tracker.apps.forEach(function (metaApp, trackerApp) {
 							if (trackerApp) {
-								trackerApp[hide ? 'hideWindowsGroup' : '_cancelShowThumbnailsTimeout'].call(trackerApp);
+								trackerApp[hide ? 'hideWindowsGroup' : '_cancelShowWindows'].call(trackerApp);
 							}
 						});
 					}
