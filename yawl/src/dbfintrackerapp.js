@@ -148,7 +148,6 @@ const dbFinTrackerApp = new Lang.Class({
 										callback: this._updateFocused, scope: this });
 		}
 
-        this._nextWindowsTimeout = null;
 		this._resetNextWindows();
 
 		this.attention(!!(this._tracker && this._tracker.hasAppAttention(this.metaApp)));
