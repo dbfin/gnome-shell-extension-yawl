@@ -1025,8 +1025,10 @@ const dbFinTrackerApp = new Lang.Class({
 					}
 				}
 			}
-            else { // no windows at all? open a new window
-                this.openNewWindowThisWorkspace();
+            else if (this.metaApp) { // no windows at all? open a new window
+                if (!this.metaApp.is_on_workspace(global.screen.get_active_workspace())) {
+                    this.openNewWindowThisWorkspace();
+                }
             }
 		} // let (windows)
         _D('<');
