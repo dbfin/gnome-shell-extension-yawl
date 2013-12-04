@@ -97,6 +97,10 @@ const dbFinYAWL = new Lang.Class({
                                                                     hideinoverview: true });
         if (global.yawl.panelApps) {
             global.yawl.panelApps.handleDragOver = Lang.bind(this, this._handleDragOverApps);
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
+										callback: this._hideInOverviewPanelApps, scope: this });
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
+										callback: this._showOutOfOverviewPanelApps, scope: this });
         }
 
         global.yawl.panelWindows = new dbFinYAWLPanel.dbFinYAWLPanel({  panelname: 'panelYAWLWindows',
@@ -471,6 +475,26 @@ const dbFinYAWL = new Lang.Class({
 		} // let (style)
         _D('<');
 	},
+
+    _showOutOfOverviewPanelApps: function () {
+        _D('>' + this.__name__ + '.showOutOfOverviewPanelApps()');
+        if (global.yawl && global.yawl.panelApps && global.yawl.panelApps._childrenObjects && global.yawl.panelApps._childrenObjects._keys) {
+            global.yawl.panelApps._childrenObjects._keys.forEach(function (appButton) {
+                if (appButton && appButton.actor) appButton.actor.reactive = true;
+            });
+        }
+        _D('<');
+    },
+
+    _hideInOverviewPanelApps: function () {
+        _D('>' + this.__name__ + '._hideInOverviewPanelApps()');
+        if (global.yawl && global.yawl.panelApps && global.yawl.panelApps._childrenObjects && global.yawl.panelApps._childrenObjects._keys) {
+            global.yawl.panelApps._childrenObjects._keys.forEach(function (appButton) {
+                if (appButton && appButton.actor) appButton.actor.reactive = false;
+            });
+        }
+        _D('<');
+    },
 
     _handleDragOverApps: function(source, actor, x, y, time) {
         _D('@' + this.__name__ + '._handleDragOverApps()');
