@@ -664,9 +664,10 @@ const dbFinTracker = new Lang.Class({
     activateWindow: function (metaWindow) {
         _D('>' + this.__name__ + '.activateWindow()');
         if (metaWindow) {
-            Main.activateWindow(metaWindow, global._updateCurrentTime && global._updateCurrentTime() || global.get_current_time && global.get_current_time() || undefined);
+            this._timeout.remove('activate-window');
+            Main.activateWindow(metaWindow);
             let (transientWindows = []) {
-                metaWindow.foreach_transient(function (metaWindow) { transientWindows.unshift(metaWindow); });
+                metaWindow.foreach_transient(function (metaWindow) { transientWindows.push(metaWindow); });
                 this.activateWindows(transientWindows);
             }
         }
@@ -677,7 +678,7 @@ const dbFinTracker = new Lang.Class({
         _D('>' + this.__name__ + '.activateWindow()');
         if (metaWindows && metaWindows.length) {
             let (metaWindow = null) {
-                for (let i = metaWindows.length; i >= 0; --i) {
+                for (let i = metaWindows.length; --i >= 0;) {
                     if (metaWindows[i]) {
                         metaWindow = metaWindows[i];
                         this.activateWindow(metaWindow);
@@ -686,7 +687,7 @@ const dbFinTracker = new Lang.Class({
                 // make sure the top window is focused
                 if (metaWindow && this._timeout) {
                     this._timeout.add('activate-window', 0, (function (metaWindow, activateWindow) {
-                            return function () { activateWindow(metaWindow); }; })(metaWindow, Lang.bind(this, this.activateWindow)), this, true, true);
+                            return function () { activateWindow(metaWindow); }; })(metaWindow, Lang.bind(this, this.activateWindow)), null, false, true);
                 }
             }
         }

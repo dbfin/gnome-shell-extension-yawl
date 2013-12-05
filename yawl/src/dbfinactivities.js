@@ -263,7 +263,7 @@ const dbFinActivities = new Lang.Class({
                             }
                             menuItem.connect('activate', (function (i) { return function (menuItem, event) {
                                 let (workspace = global.screen && global.screen.get_workspace_by_index(i)) {
-                                    if (workspace) workspace.activate(global._updateCurrentTime && global._updateCurrentTime() || global.get_current_time && global.get_current_time() || undefined);
+                                    if (workspace) workspace.activate(global.get_current_time && global.get_current_time() || 0);
                                 }
                             }; })(i));
                             this._yawlMenuWorkspaces.addMenuItem(menuItem);
@@ -306,7 +306,7 @@ const dbFinActivities = new Lang.Class({
 		let (workspaceIndex = global.screen.get_active_workspace_index() + direction) {
 			let (workspace = workspaceIndex >= 0 && workspaceIndex < global.screen.n_workspaces
                              && global.screen.get_workspace_by_index(workspaceIndex)) {
-				if (workspace) workspace.activate(global._updateCurrentTime && global._updateCurrentTime() || global.get_current_time && global.get_current_time() || undefined);
+				if (workspace) workspace.activate(global.get_current_time && global.get_current_time() || 0);
 			} // let (workspace)
 		} // let (workspaceIndex)
         _D('<');
