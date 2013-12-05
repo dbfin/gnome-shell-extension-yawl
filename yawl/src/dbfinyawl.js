@@ -195,12 +195,6 @@ const dbFinYAWL = new Lang.Class({
                 this._updatedMouseDragAndDrop =
                 this._updatedMouseScrollTimeout =
                 this._updatedIconsDragAndDrop = function () {
-            // No drag and drop for GS 3.6, sorry
-            if (global.yawl && global.yawl._iconsDragAndDrop
-                && dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
-                global.yawl.set('icons-drag-and-drop', false);
-                return;
-            }
 		    if (this._clicked) {
 			    this._clicked.destroy();
 			    this._clicked = null;

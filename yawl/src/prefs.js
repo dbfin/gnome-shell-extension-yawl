@@ -401,11 +401,9 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Add-ons"));
             builder.addNotebook(_("Panel"), 'panel.png');
-                if (dbFinConsts.arrayShellVersion[0] > 3 || dbFinConsts.arrayShellVersion[1] > 6) {
-                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable option") + ' ' + _("Behavior") + ' > ' + _("Mouse") + ' > ' + _("Fine-tuning") + ' <span color="red">*</span>' + ' > ' + _("Mouse events") + ' > ' +_("Use mouse drag-and-drop") + '</span>', [ 'mouse-drag-and-drop', '@!mouse-drag-and-drop' ], true);
-                    builder.addCheckBox('<b>' + _("Rearrange icons on the panel using mouse") + '</b>', 'icons-drag-and-drop', 'mouse-drag-and-drop');
-                    builder.addSeparator();
-                }
+                builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable option") + ' ' + _("Behavior") + ' > ' + _("Mouse") + ' > ' + _("Fine-tuning") + ' <span color="red">*</span>' + ' > ' + _("Mouse events") + ' > ' +_("Use mouse drag-and-drop") + '</span>', [ 'mouse-drag-and-drop', '@!mouse-drag-and-drop' ], true);
+                builder.addCheckBox('<b>' + _("Rearrange icons on the panel using mouse") + '</b>', 'icons-drag-and-drop', 'mouse-drag-and-drop');
+                builder.addSeparator();
 				builder.addCheckBox('<b>' + _("Scroll to change workspace") + '</b>: ' + _("Scroll over YAWL panel to change workspace"), 'mouse-scroll-workspace');
                 builder.shift();
                     builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ 'icons-show-all', '@!icons-show-all' ], true);
