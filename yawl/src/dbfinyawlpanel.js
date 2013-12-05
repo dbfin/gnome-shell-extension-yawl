@@ -725,17 +725,17 @@ const dbFinYAWLPanel = new Lang.Class({
         }
     },
 
-    animateToState: function(state, callback, scope, time, transition) {
+    animateToState: function(state, callback, scope, time, transition, rounded) {
         _D('>' + this.__name__ + '.animateToState()');
 		if (time === undefined || time === null) time = this.animationTime;
 		if (transition === undefined || transition === null) {
 			transition = this.animationEffect;
 		}
-		dbFinAnimation.animateToState(this, state, callback, scope, time, transition);
+		dbFinAnimation.animateToState(this, state, callback, scope, time, transition, rounded);
         _D('<');
     },
 
-    animateContainerToState: function(state, callback, scope, time, transition) {
+    animateContainerToState: function(state, callback, scope, time, transition, rounded) {
         _D('>' + this.__name__ + '.animateContainerToState()');
 		if (!this.container) {
 			_D('<');
@@ -745,7 +745,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (transition === undefined || transition === null) {
 			transition = this.animationEffect;
 		}
-		dbFinAnimation.animateToState(this.container, state, callback, scope, time, transition);
+		dbFinAnimation.animateToState(this.container, state, callback, scope, time, transition, rounded);
         _D('<');
     }
 });
