@@ -320,16 +320,6 @@ const dbFinAppButton = new Lang.Class({
                 case 1: // drag
                     if (this.menu && this.menu.isOpen) this.menu.close();
                     if (this.menuWindows && this.menuWindows.isOpen) this.menuWindows.close();
-                    if (this.container && this._slicerIcon) {
-                        this.container.natural_width = this._slicerIcon.getNaturalWidth();
-                        this._signals.connectId('drag-actor-returns', { emitter: this.actor, signal: 'parent-set',
-                                                                        callback: function () {
-                                                                            if (this.actor && this.actor.get_parent() === this.container) {
-                                                                                this._signals.disconnectId('drag-actor-returns');
-                                                                                if (this.container) this.container.natural_width_set = false;
-                                                                            }
-                                                                        }, scope: this });
-                    }
                     this._dragging = true;
                     break;
                 case 2: // cancelled or drop
@@ -375,6 +365,29 @@ const dbFinAppButton = new Lang.Class({
 	_onButtonPress: function() {
 		// nothing to do here
 	},
+
+    getDragActor: function() {
+        _D('>' + this.__name__ + '.getDragActor()');
+        let (icon = this.metaApp && this.metaApp.create_icon_texture(
+                    Math.round(global.yawl && global.yawl._iconsSize || 24)
+             )) {
+            if (icon) {
+                icon.opacity = 128;
+                icon.scale_x = this._slicerIcon && this._slicerIcon.getZoom() || 1.0;
+                icon.scale_y = this._slicerIcon && this._slicerIcon.getZoom() || 1.0;
+                _D('<');
+                return icon;
+            }
+            _D('<');
+            return this.actor;
+        }
+    },
+
+    getDragActorSource: function() {
+        _D('>' + this.__name__ + '.getDragActorSource()');
+        _D('<');
+        return this.container || undefined;
+    },
 
     // Parameters:
     //      name: a string or a number
