@@ -64,7 +64,8 @@ images = \
 	../../images/gplv3.png \
 	../../images/thumbnail_16.png \
 	../../images/icon_16.png \
-	../../images/animation_engine.png
+	../../images/animation_engine.png \
+	../../images/overview.png
 
 imagedir = $(extensiondir)/images
 dist_image_DATA = $(images)
