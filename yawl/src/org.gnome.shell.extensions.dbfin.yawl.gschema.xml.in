@@ -168,6 +168,16 @@
       <_summary>Icons on hover animation effect.</_summary>
       <_description>Icons animation effect when hovered.</_description>
     </key>
+    <key name="icons-overview-show-test" type="b">
+      <default>false</default>
+      <_summary>Whether to show icons in Overview.</_summary>
+      <_description>If true icons are shown in Overview.</_description>
+    </key>
+    <key name="icons-overview-hide-dash" type="b">
+      <default>false</default>
+      <_summary>Whether to hide Dash in Overview when icons are shown.</_summary>
+      <_description>If true Dash is hidden in Overview when icons are shown.</_description>
+    </key>
 
     <key name="windows-show" type="b">
       <default>true</default>

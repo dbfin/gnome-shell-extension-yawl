@@ -212,6 +212,12 @@ function buildPrefsWidget() {
                     builder.addComboBoxText(_("Mouse over animation effect") + ' <span color="red">*</span>', 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, [ '@advanced', 'icons-hover-animation' ]);
 				builder.unshift();
 
+            builder.addPage(_("Overview"), 'overview.png');
+                builder.addCheckBox(_("Show icons in Overview") + ' (' + _("experimental") + ')', 'icons-overview-show-test');
+                builder.shift();
+                    builder.addCheckBox(_("Hide Dash"), 'icons-overview-hide-dash', 'icons-overview-show-test');
+                builder.unshift();
+
             builder.closeNotebook();
 
 		builder.addPage(_("Thumbnails"));
