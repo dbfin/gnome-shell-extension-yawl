@@ -476,11 +476,6 @@ const dbFinYAWL = new Lang.Class({
             _D('<');
             return;
         }
-        if (this._dashActor) {
-            this._dashActor.opacity = 0;
-            this._dashActor.show();
-            dbFinAnimation.animateToState(this._dashActor, { opacity: 255 }, null, null, (imports.ui.overview.ANIMATION_TIME || 0.25) * 2000);
-        }
         if (global.yawl.panelApps && global.yawl.panelApps._childrenObjects && global.yawl.panelApps._childrenObjects._keys) {
             global.yawl.panelApps._childrenObjects._keys.forEach(function (appButton) {
                 if (appButton && appButton.actor) appButton.actor.reactive = true;
@@ -495,14 +490,8 @@ const dbFinYAWL = new Lang.Class({
             _D('<');
             return;
         }
-        if (global.yawl._iconsOverviewShowTest) {
+        if (global.yawl._iconsOverviewShow) {
             if (global.yawl.panelApps) global.yawl.panelApps._showOutOfOverview();
-            if (global.yawl._iconsOverviewHideDash) {
-                this._dashActor = Main.overview && (Main.overview._controls && Main.overview._controls._dashSlider
-                                                    || Main.overview._dash || Main.overview.dash);
-                if (this._dashActor) this._dashActor = this._dashActor.container || this._dashActor.actor;
-                if (this._dashActor) this._dashActor.hide();
-            }
         }
         else {
             if (global.yawl.panelApps && global.yawl.panelApps._childrenObjects && global.yawl.panelApps._childrenObjects._keys) {
