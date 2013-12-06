@@ -213,7 +213,7 @@ function buildPrefsWidget() {
 				builder.unshift();
 
             builder.addPage(_("Overview"), 'overview.png');
-                builder.addCheckBox(_("Show icons in Overview") + ' (' + _("experimental") + ')', 'icons-overview-show');
+                builder.addCheckBox(_("Show icons in Overview"), 'icons-overview-show');
 
             builder.closeNotebook();
 
