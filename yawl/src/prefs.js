@@ -213,10 +213,7 @@ function buildPrefsWidget() {
 				builder.unshift();
 
             builder.addPage(_("Overview"), 'overview.png');
-                builder.addCheckBox(_("Show icons in Overview") + ' (' + _("experimental") + ')', 'icons-overview-show-test');
-                builder.shift();
-                    builder.addCheckBox(_("Hide Dash"), 'icons-overview-hide-dash', 'icons-overview-show-test');
-                builder.unshift();
+                builder.addCheckBox(_("Show icons in Overview") + ' (' + _("experimental") + ')', 'icons-overview-show');
 
             builder.closeNotebook();
 
