@@ -11,11 +11,17 @@ read -p 'Short name: ' name
 [ -d ./$name/ ] && { echo "Folder $name already exists."; exit 1; }
 [ -f ./images/$name.png ] || { echo "Icon images/$name.png not found."; exit 1; }
 
+NameDefault="${name^}"
+read -p 'Name: ['$NameDefault'] ' Name
+[ -n "$Name" ] \
+    && { [ "$Name" != "$name" -a "${Name^^}" == "${name^^}" ] \
+         || { echo "Name should be equal to short name with different case."; exit 1; } \
+       } \
+    || Name="$NameDefault"
+
 read -p 'Long name: ' ExtensionName
 
-Name="${name^}"
-
-read -p "This will install $ExtensionName into $name, proceed (y/n)? " yn
+read -p "This will install $ExtensionName ($Name) into $name, proceed (y/n)? " yn
 [[ "$yn" =~ ^[yY]$ ]] || exit 0
 
 cp -r ./template/ ./$name/ && cd ./$name/ && {
