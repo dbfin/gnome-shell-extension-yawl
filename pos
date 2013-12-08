@@ -27,7 +27,7 @@ while read l; do
   if [ -f po/$l.po ]; then
   	echo -e "\e[0;33mpo/$l.po\e[0m already exists: delete the file if you want a fresh copy"
   else
-    xgettext -k_ -kN_ -L Java -f po/POTFILES.in -o po/$l.po 2> >( while read e; do echo "$(date) $1: $e"; done >> ../pos.log ) \
+    xgettext --no-location -k_ -kN_ -L Java -f po/POTFILES.in -o po/$l.po 2> >( while read e; do echo "$(date) $1: $e"; done >> ../pos.log ) \
           && echo -e "\e[0;32mpo/$l.po\e[0m was created successfully, ready to be translated" \
           && sed -i \
              -e 's|SOME DESCRIPTIVE TITLE.|Translation for dbFin YAWL GNOME Shell extension|' \
