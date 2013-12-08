@@ -35,7 +35,6 @@ const Panel = imports.ui.panel;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const dbFinActivities = Me.imports.dbfinactivities;
 const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinPanelButtonToggle = Me.imports.dbfinpanelbuttontoggle;
 const dbFinSignals = Me.imports.dbfinsignals;
@@ -119,7 +118,6 @@ const dbFinMoveCenter = new Lang.Class({
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
 		this._panelbuttonstoggle = new dbFinPanelButtonToggle.dbFinPanelButtonToggle();
-        this._buttonAlternativeActivities = null;
 		this._hotcorner = null;
 		this._signals.connectNoId({ emitter: Main.panel.actor, signal: 'allocate',
 									callback: this._allocate, scope: this });
@@ -128,8 +126,7 @@ const dbFinMoveCenter = new Lang.Class({
                 this._updatedYawlPanelWidth =
                 this._updatedMoveCenter = this._updatePanel;
         this._updatedHideActivities =
-                this._updatedPreserveHotCorner =
-                this._updatedAlternativeActivities = this._updateActivities;
+                this._updatedPreserveHotCorner = this._updateActivities;
         // this._updatedHideAppMenu: below
 
 		this._updatePanel();
@@ -149,10 +146,6 @@ const dbFinMoveCenter = new Lang.Class({
 			this._hotcorner.destroy();
 			this._hotcorner = null;
 		}
-        if (this._buttonAlternativeActivities) {
-            this._buttonAlternativeActivities.destroy();
-            this._buttonAlternativeActivities = null;
-        }
         if (this._panelbuttonstoggle) {
             this._panelbuttonstoggle.destroy(); // this should restore Activities button
             this._panelbuttonstoggle = null;
@@ -176,7 +169,7 @@ const dbFinMoveCenter = new Lang.Class({
             _D('<');
             return;
         }
-        let (hideActivities = global.yawl._hideActivities || global.yawl._alternativeActivities) {
+        let (hideActivities = global.yawl._hideActivities) {
             // GNOME Shell 3.8+: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
             if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
                 if (hideActivities && global.yawl._preserveHotCorner) {
@@ -189,13 +182,6 @@ const dbFinMoveCenter = new Lang.Class({
             }
             if (hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
             else this._panelbuttonstoggle.restore('activities');
-            if (global.yawl._alternativeActivities) {
-                if (!this._buttonAlternativeActivities) this._buttonAlternativeActivities = new dbFinActivities.dbFinActivities();
-            }
-            else if (this._buttonAlternativeActivities) {
-                this._buttonAlternativeActivities.destroy();
-                this._buttonAlternativeActivities = null;
-            }
         }
         _D('<');
     },

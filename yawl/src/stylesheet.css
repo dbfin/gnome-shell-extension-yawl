@@ -74,16 +74,6 @@
     padding: 0;
 }
 
-#panelYAWLTools .panel-button.yawl-activities {
-}
-
-#panelYAWLTools StLabel.yawl-activities-label {
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 3px;
-    padding: 0 11px;
-    background: rgba(128, 128, 128, 0.21);
-}
-
 /* Thumbnails */
 
 #panelYAWLWindows .yawl-panel-label-title {

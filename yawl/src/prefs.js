@@ -168,12 +168,11 @@ function buildPrefsWidget() {
                 builder.addScaleScale(_("YAWL-panel position and width"), 'yawl-panel-position', 'yawl-panel-width', 0, 50, 1, 1, 100, 1);
                 builder.addSeparator();
                 builder.addCheckBox(_("Move central panel"), 'move-center');
-                builder.addCheckBox(_("Show Alternative Activities button"), 'alternative-activities');
-                builder.addCheckBox(_("Hide Activities button"), 'hide-activities', '!alternative-activities');
+                builder.addCheckBox(_("Hide Activities button"), 'hide-activities');
                 builder.shift();
 				// GNOME Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
 				if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
-                    builder.addCheckBox(_("Preserve Hot Corner"), 'preserve-hot-corner', [ 'hide-activities', '!alternative-activities' ]);
+                    builder.addCheckBox(_("Preserve Hot Corner"), 'preserve-hot-corner', 'hide-activities');
 				}
                 builder.unshift();
                 builder.addCheckBox(_("Hide AppMenu button"), 'hide-app-menu');
