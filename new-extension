@@ -11,6 +11,7 @@ read -p 'Short name: ' name
 [[ "$name" =~ \  ]] && { echo 'Short name should not contain spaces.'; exit 1; }
 [ -d ./$name/ ] && { echo "Folder $name already exists."; exit 1; }
 [ -f ./images/$name.png ] || { echo "Icon images/$name.png not found."; exit 1; }
+[ -z "$( git branch | grep '^ *'$name' *$' )" ] || { echo "There is already a branch named $name."; exit 1; }
 
 NameDefault="${name^}"
 read -p 'Name: ['$NameDefault'] ' Name
