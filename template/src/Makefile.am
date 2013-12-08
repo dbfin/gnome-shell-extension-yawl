@@ -8,6 +8,7 @@ dist_extension_DATA = \
 	../../lib/dbfindebug.js \
 	../../lib/dbfinsettings.js \
 	../../lib/dbfinsignals.js \
+	../../lib/dbfintimeout.js \
 	../../lib/dbfinutils.js \
 	../../lib/dbfinutilsprefs.js \
 	extension.js \
