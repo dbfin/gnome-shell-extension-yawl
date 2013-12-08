@@ -31,14 +31,17 @@ cp -r ./template/ ./$name/ && cd ./$name/ && {
 mv src/dbfinmain.js src/dbfin$name.js
 mv src/org.gnome.shell.extensions.dbfin.main.gschema.xml.in src/org.gnome.shell.extensions.dbfin.$name.gschema.xml.in
 cp ../images/$name.png src/icon.png
-find . -type f -print0 | xargs -0 sed -i -e "s|#%#name|$name|g"
-find . -type f -print0 | xargs -0 sed -i -e "s|#%#Name|$Name|g"
-find . -type f -print0 | xargs -0 sed -i -e "s|#%#ExtensionName|$ExtensionName|g"
 
-cd .. \
-    && git checkout -b $name \
-    && git rm -r template/ \
-    && git rm new-extension \
+cd ..
+
+git rm -r template/
+git rm new-extension
+
+find . -type f -print0 | xargs -0 sed -i -e "s|\#\%\#name|$name|g"
+find . -type f -print0 | xargs -0 sed -i -e "s|\#\%\#Name|$Name|g"
+find . -type f -print0 | xargs -0 sed -i -e "s|\#\%\#ExtensionName|$ExtensionName|g"
+
+git checkout -b $name \
     && git add -u . \
     && git add -A $name/ \
     && git commit -m "New extension $ExtensionName."
