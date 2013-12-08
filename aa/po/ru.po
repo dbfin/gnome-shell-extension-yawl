@@ -1,0 +1,136 @@
+# Translation for dbFin YAWL GNOME Shell extension
+# Copyright (C) 2013 Vadim Cherepanov @ dbFin.com
+# This file is distributed under the same license as dbFin YAWL GNOME Shell Extension.
+# Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
+#
+msgid ""
+msgstr "Project-Id-Version: Alternative Activities 1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-12-08 02:43-0600\n"
+"PO-Revision-Date: 2013-12-08 02:43-0600\n"
+"Last-Translator: Vadim Cherepanov @ dbFin <vadim@dbfin.com>\n"
+"Language-Team: dbFin\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit"
+
+msgid "Settings were reset successfully!"
+msgstr "Настройки успешно возвращены в исходное состояние!"
+
+msgid "Please specify settings directory and file name."
+msgstr "Пожалуйста, укажите директорию и имя файла настроек."
+
+msgid "Cannot create Gio.File object for file"
+msgstr "Не могу создать объект Gio.File для файла"
+
+msgid "Cannot create/replace file"
+msgstr "Не могу создать/заменить файл"
+
+msgid "Cannot create Gio.DataOutputStream object for file"
+msgstr "Не могу создать объект Gio.DataOutputStream для файла"
+
+msgid "Cannot write to file"
+msgstr "Не могу записать в файл"
+
+msgid "File was created/updated successfully!"
+msgstr "Файл создан/обновлен успешно!"
+
+msgid "Cannot open file"
+msgstr "Не могу открыть файл"
+
+msgid "Cannot create Gio.DataInputStream object for file"
+msgstr "Не могу создать объект Gio.DataInputStream для файла"
+
+msgid "File was read successfully"
+msgstr "Файл прочитан успешно"
+
+msgid "settings values imported."
+msgstr "значений параметров импортировано."
+
+msgid "Welcome"
+msgstr "Добро пожаловать!"
+
+msgid "GNOME Shell Extension"
+msgstr "Расширение GNOME Shell"
+
+msgid "Copyright"
+msgstr "Копирайт"
+
+msgid "Home page"
+msgstr "Веб-страница"
+
+msgid "Source code"
+msgstr "Исходный код"
+
+msgid "Special thanks to"
+msgstr "Особая благодарность"
+
+msgid ""
+"If you would like to translate the program to your language feel free to do "
+"so: please use GitHub or email me for instructions."
+msgstr "Если Вы желаете, Вы можете перевести программу на свой язык: пожалуйста, воспользуйтесь GitHub или напишите мне для инструкций."
+
+msgid ""
+"This is free software -- free as in beer and free as in freeman -- "
+"distributed under the terms of the GNU General Public License (GPL) version "
+"3."
+msgstr "Это бесплатное и свободное программное обеспечение (ПО), распространяемое под Лицензией GNU General Public License 3 (GPL 3)."
+
+msgid ""
+"A copy of the License is distributed along with the software (file GNUGPLv3) "
+"and is also available at <a href='http://www.gnu.org/licenses/'><span "
+"color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</"
+"span></a>."
+msgstr "Копия Лицензии приложена к программе (файл GNUGPLv3), а также доступна по адресу <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>."
+
+msgid ""
+"You are free to use, modify or otherwise distribute the code of this "
+"software provided that your actions comply with all applicable laws and GPL."
+msgstr "Вы можете свободно использовать, изменять и распространять данное ПО при условии, что Вы действуете в рамках закона и в соответствии с условиями GPL."
+
+msgid ""
+"In particular, you must include the above copyright notice and a copy of the "
+"License in all copies or substantial portions of the software, whether "
+"original or modified."
+msgstr "В частности, Вы обязаны указывать приведенные выше авторские права и прилагать Лицензию ко всем копиям или частям данного ПО в оригинальном или измененном виде."
+
+msgid ""
+"This software is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE."
+msgstr "Данное ПО распространяется с лучшими намерениями, но без каких-либо гарантий: в частности, без косвенных гарантий товарного качества или пригодности для использования."
+
+msgid ""
+"For more details please see the GNU General Public License (GPL) version 3."
+msgstr "Для дополнительной информации смотрите GNU GPL версии 3."
+
+msgid "Export/Import"
+msgstr "Экспорт/Импорт"
+
+msgid "Back up, sync and share settings."
+msgstr "Для резервного копирования и синхронизации."
+
+msgid "To reset all settings please enable"
+msgstr "Чтобы вернуть все настройки в исходное состояние, пожалуйста, включите"
+
+msgid "Advanced settings"
+msgstr "Дополнительные параметры"
+
+msgid "Reset settings"
+msgstr "Восстановить все настройки"
+
+msgid "This will overwrite all current settings"
+msgstr "Восстановить настройки из файла"
+
+msgid "Status:"
+msgstr "Статус:"
+
+msgid "Export"
+msgstr "Экспорт"
+
+msgid "Import"
+msgstr "Импорт"
+
+msgid "This will overwrite the file with settings"
+msgstr "Создать/обновить файл с настройками"
