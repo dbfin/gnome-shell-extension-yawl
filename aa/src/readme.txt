@@ -1,4 +1,4 @@
-#%#ExtensionName GNOME Shell Extension
+Alternative Activities GNOME Shell Extension
 
 Copyright (c) 2013 Vadim Cherepanov @ dbFin (vadim (at) dbfin.com)
 

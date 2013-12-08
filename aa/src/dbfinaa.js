@@ -19,7 +19,7 @@
  * GNUGPLv3) along with the program. A copy of the License
  * is also available at <http://www.gnu.org/licenses/>.
  *
- * dbfin#%#name.js
+ * dbfinaa.js
  * Main class.
  *
  */
@@ -38,14 +38,14 @@ const _ = Gettext.gettext;
 
 const _D = Me.imports.dbfindebug._D;
 
-const dbFin#%#Name = new Lang.Class({
-    Name: 'dbFin.#%#Name',
+const dbFinAA = new Lang.Class({
+    Name: 'dbFin.AA',
 
     _init: function() {
         _D('>' + this.__name__ + '._init()');
-		global.yawl#%#Name = new dbFinSettings.dbFinSettings();
-		if (!global.yawl#%#Name) {
-			_D('!#%#ExtensionName: critical error "Cannot create global object."');
+		global.yawlAA = new dbFinSettings.dbFinSettings();
+		if (!global.yawlAA) {
+			_D('!Alternative Activities: critical error "Cannot create global object."');
 			_D('<');
 			return;
 		}
@@ -53,10 +53,10 @@ const dbFin#%#Name = new Lang.Class({
         this._signals = new dbFinSignals.dbFinSignals();
 
         this._updatedFirstTime = function () {
-        	if (global.yawl#%#Name && global.yawl#%#Name._firstTime) global.yawl#%#Name.set('first-time', false);
+        	if (global.yawlAA && global.yawlAA._firstTime) global.yawlAA.set('first-time', false);
         }
 
-        global.yawl#%#Name.watch(this);
+        global.yawlAA.watch(this);
         _D('<');
     },
 
@@ -66,12 +66,12 @@ const dbFin#%#Name = new Lang.Class({
             this._signals.destroy();
             this._signals = null;
         }
-        if (global.yawl#%#Name) { // must be destroyed last
-            global.yawl#%#Name.destroy();
-            global.yawl#%#Name = null;
+        if (global.yawlAA) { // must be destroyed last
+            global.yawlAA.destroy();
+            global.yawlAA = null;
         }
         this.emit('destroy');
         _D('<');
     }
 });
-Signals.addSignalMethods(dbFin#%#Name.prototype);
+Signals.addSignalMethods(dbFinAA.prototype);

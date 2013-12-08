@@ -28,31 +28,31 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const Convenience = Me.imports.convenience2;
-const dbFin#%#Name = Me.imports.dbfin#%#name;
+const dbFinAA = Me.imports.dbfinaa;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
 const _D = Me.imports.dbfindebug._D;
 
-var dbfin#%#name = null;
+var dbfinaa = null;
 
 function init() {
     Convenience.initTranslations();
 }
 
 function enable() {
-    _D('>Enabling #%#ExtensionName...');
-    dbfin#%#name = new dbFin#%#Name.dbFin#%#Name();
-    _D('<#%#ExtensionName enabled.\n>');
+    _D('>Enabling Alternative Activities...');
+    dbfinaa = new dbFinAA.dbFinAA();
+    _D('<Alternative Activities enabled.\n>');
 }
 
 function disable() {
-    _D('<\n>Disabling #%#ExtensionName...');
-    if (dbfin#%#name) {
-        dbfin#%#name.destroy();
-        dbfin#%#name = null;
+    _D('<\n>Disabling Alternative Activities...');
+    if (dbfinaa) {
+        dbfinaa.destroy();
+        dbfinaa = null;
     }
-    _D('<#%#ExtensionName disabled.');
+    _D('<Alternative Activities disabled.');
 }
 

@@ -57,9 +57,9 @@ function buildPrefsWidget() {
                 widgets[0].set_line_wrap(false);
             }
 
-        builder.addPageWelcome('#%#name', '#%#ExtensionName');
+        builder.addPageWelcome('aa', 'Alternative Activities');
 
-        builder.addPageREI('#%#name');
+        builder.addPageREI('aa');
 
  		_D('<');
        return builder.getWidget();

@@ -1,5 +1,5 @@
-EXTENSION_ID = gnome-shell-extension-#%#name
-EXTENSION_ID_SHORT = #%#name
+EXTENSION_ID = gnome-shell-extension-aa
+EXTENSION_ID_SHORT = aa
 
 extensionversion = 1
 

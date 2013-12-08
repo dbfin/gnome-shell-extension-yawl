@@ -1,7 +1,7 @@
 include ../include.mk
 
 dist_extension_DATA = \
-	dbfin#%#name.js \
+	dbfinaa.js \
 	../../lib/convenience2.js \
 	../../lib/dbfinarrayhash.js \
 	dbfinconsts.js \
@@ -23,7 +23,7 @@ nodist_extension_DATA = \
 	icon.png \
 	screenshot.png
 images = \
-	../../images/#%#name.png \
+	../../images/aa.png \
 	../../images/gplv3.png
 
 imagedir = $(extensiondir)/images

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="gnome-shell-extension-#%#name">
-  <schema id="org.gnome.shell.extensions.dbfin.#%#name" path="/org/gnome/shell/extensions/dbfin/#%#name/">
+<schemalist gettext-domain="gnome-shell-extension-aa">
+  <schema id="org.gnome.shell.extensions.dbfin.aa" path="/org/gnome/shell/extensions/dbfin/aa/">
     <key name="first-time" type="b">
       <default>true</default>
       <_summary>Whether the extension is run for the first time.</_summary>
