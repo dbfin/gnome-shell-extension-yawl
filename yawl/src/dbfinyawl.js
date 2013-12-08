@@ -83,14 +83,6 @@ const dbFinYAWL = new Lang.Class({
 
         global.yawl.animation = new dbFinAnimation.dbFinAnimation();
 
-        global.yawl.panelTools = new St.BoxLayout({ name: 'panelYAWLTools', vertical: false, y_align: Clutter.ActorAlign.FILL, y_expand: true });
-        if (global.yawl.panelTools) {
-            if (Main.panel) {
-                if (Main.panel.actor) Main.panel.actor.add_child(global.yawl.panelTools);
-                Main.panel._yawlToolsPanel = global.yawl.panelTools;
-            }
-        }
-
         global.yawl.panelApps = new dbFinYAWLPanel.dbFinYAWLPanel({ panelname: 'panelYAWL',
                                                                     parent: Main.panel || null,
                                                                     parentproperty: '_yawlPanel',
@@ -254,10 +246,6 @@ const dbFinYAWL = new Lang.Class({
         if (global.yawl.panelApps) {
             global.yawl.panelApps.destroy();
             global.yawl.panelApps = null;
-        }
-        if (global.yawl.panelTools) {
-            global.yawl.panelTools.destroy();
-            global.yawl.panelTools = null;
         }
         if (global.yawl.animation) {
             global.yawl.animation.destroy();

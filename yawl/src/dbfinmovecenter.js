@@ -202,7 +202,6 @@ const dbFinMoveCenter = new Lang.Class({
         }
 		let (   w = box.x2 - box.x1, // what do we have?
                 h = box.y2 - box.y1,
-		     	[wam, wan] = Main.panel._yawlToolsPanel && Main.panel._yawlToolsPanel.get_stage() ? Main.panel._yawlToolsPanel.get_preferred_width(-1) : [ 0, 0 ],
                 [wlm, wln] = Main.panel._leftBox && Main.panel._leftBox.get_stage() ? Main.panel._leftBox.get_preferred_width(-1) : [ 0, 0 ], // minimum and natural widths
 		     	[wym, wyn] = Main.panel._yawlPanel && Main.panel._yawlPanel.get_stage() ? Main.panel._yawlPanel.get_preferred_width(-1) : [ 0, 0 ],
                 [wcm, wcn] = Main.panel._centerBox && Main.panel._centerBox.get_stage() ? Main.panel._centerBox.get_preferred_width(-1) : [ 0, 0 ],
@@ -210,8 +209,6 @@ const dbFinMoveCenter = new Lang.Class({
                 boxChild = new Clutter.ActorBox(),
                 drl = (Main.panel.actor.get_text_direction() == Clutter.TextDirection.RTL)) {
 			if (!wym && Main.panel._yawlPanel) wym = Main.panel._yawlPanel._box.get_n_children();
-            wlm += wam;
-            wln += wan;
 			let (wly, wl, wy, wr, xl, xr) {
 				if (global.yawl._moveCenter) {
 					// let left box + YAWL panel occupy all the space on the left, but no less than (w - wcn) / 2
@@ -227,15 +224,8 @@ const dbFinMoveCenter = new Lang.Class({
 				wy = Math.max(wym, Math.min(wly - wl, Math.floor(w * global.yawl._yawlPanelWidth / 100)));
 				wly = Math.max(wly, wl + wy);
 				[ xl, xr ] = drl ? [ w, w ] : [ 0, 0 ];
-                if (wan) {
-                    if (wan > wl) wan = wam;
-                    wl -= wan;
-					if (drl) xl = w - wan; else xr = wan;
-					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
-					Main.panel._yawlToolsPanel.allocate(boxChild, flags);
-                }
 				if (wl) {
-					if (drl) { xr = xl; xl -= wl; } else { xl = xr; xr += wl; }
+					if (drl) xl -= wl; else xr = wl;
 					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
 					Main.panel._leftBox.allocate(boxChild, flags);
 				}

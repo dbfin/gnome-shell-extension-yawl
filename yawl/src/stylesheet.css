@@ -61,19 +61,6 @@
 #panelYAWL .panel-button:attention {
 }
 
-/* Tools */
-#panelYAWLTools {
-}
-
-#panelYAWLTools .panel-button-container {
-    padding: 0 4px;
-}
-
-#panelYAWLTools .panel-button {
-    border: 0;
-    padding: 0;
-}
-
 /* Thumbnails */
 
 #panelYAWLWindows .yawl-panel-label-title {
