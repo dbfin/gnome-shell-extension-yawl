@@ -76,7 +76,7 @@ sed -i "s|\(^\s*AC_INIT\s*(\s*\[\s*gnome-shell-extension-yawl\s*\]\s*,\s*\)$v\([
 
 # working with src/changelog.txt (if it exists)
 if [ -f src/changelog.txt ]; then
-  m=$( cat src/changelog.txt | grep "^v$vn\s\+.*" )
+  m=$( cat src/changelog.txt | grep "^v$vn \+.*" )
   if [ -z "$m" ]; then
     read -p 'src/changelog.txt does not contain messages for current version, would you like to add some? ' yn
     if [[ "$yn" =~ ^[yY]$ ]]; then
