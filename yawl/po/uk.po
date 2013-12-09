@@ -4,10 +4,10 @@
 # Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
 #
 msgid ""
-msgstr "Project-Id-Version: YAWL 15\n"
+msgstr "Project-Id-Version: YAWL 14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-26 01:23+0200\n"
-"PO-Revision-Date: 2013-11-26 01:23+0200\n"
+"POT-Creation-Date: 2013-12-08 13:37+0200\n"
+"PO-Revision-Date: 2013-12-08 13:37+0200\n"
 "Last-Translator: Svitozar Cherepii\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -15,292 +15,215 @@ msgstr "Project-Id-Version: YAWL 15\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/dbfinactivities.js:167
-msgid "extension preferences"
-msgstr "параметри розширення"
-
-#: src/dbfinactivities.js:172
-msgid "reload extension"
-msgstr "перезавантажити розширення"
-
-#: src/dbfinconsts.js:36
 msgid "German translation"
 msgstr "переклад на німецьку"
 
-#: src/dbfinconsts.js:37
 msgid "Ukranian translation"
 msgstr "переклад на українську"
 
-#: src/dbfinconsts.js:41
 msgid "Linear"
 msgstr "Рівномірно"
 
-#: src/dbfinconsts.js:42
 msgid "Slow at the end"
 msgstr "Повільно наприкінці"
 
-#: src/dbfinconsts.js:43
 msgid "Slow at the beginning"
 msgstr "Повільно на початку"
 
-#: src/dbfinconsts.js:44
 msgid "Slow on both sides"
 msgstr "Повільно з обох кінців"
 
-#: src/dbfinconsts.js:45
 msgid "Slow in the middle"
 msgstr "Повільно посередині"
 
-#: src/dbfinconsts.js:46
 msgid "Slower at the end"
 msgstr "Повільніше наприкінці"
 
-#: src/dbfinconsts.js:47
 msgid "Slower at the beginning"
 msgstr "Повільніше на початку"
 
-#: src/dbfinconsts.js:48
 msgid "Slower on both sides"
 msgstr "Повільніше з обох кінців"
 
-#: src/dbfinconsts.js:49
 msgid "Slower in the middle"
 msgstr "Повільніше посередині"
 
-#: src/dbfinconsts.js:50
 msgid "Slowest at the end"
 msgstr "Найповільніше наприкінці"
 
-#: src/dbfinconsts.js:51
 msgid "Slowest at the beginning"
 msgstr "Найповільніше на початку"
 
-#: src/dbfinconsts.js:52
 msgid "Slowest on both sides"
 msgstr "Найповільніше з обох кінців"
 
-#: src/dbfinconsts.js:53
 msgid "Slowest in the middle"
 msgstr "Найповільніше посередині"
 
-#: src/dbfinconsts.js:54
 msgid "Bounce at the end"
 msgstr "Відскакувати наприкінці"
 
-#: src/dbfinconsts.js:55
 msgid "Bounce at the beginning"
 msgstr "Відскакувати на початку"
 
-#: src/dbfinconsts.js:56
 msgid "Bounce on both sides"
 msgstr "Відскакувати з обох кінців"
 
-#: src/dbfinconsts.js:57
 msgid "Bounce in the middle"
 msgstr "Відскакувати посередині"
 
-#: src/dbfinconsts.js:58
 msgid "Back'n'forth in the middle"
 msgstr "Туди-сюди посередині"
 
-#: src/dbfinconsts.js:59
 msgid "Elastic in the middle"
 msgstr "Пружний посередині"
 
-#: src/dbfinconsts.js:63 src/dbfinconsts.js:79
 msgid "No action"
 msgstr "Бездіяльність"
 
-#: src/dbfinconsts.js:64
 msgid "Show next : all non-minimized windows"
 msgstr "Наступне : всі незгорнуті вікна"
 
-#: src/dbfinconsts.js:65
 msgid "Show next : all windows"
 msgstr "Наступне : всі вікна"
 
-#: src/dbfinconsts.js:66
 msgid "Show all/next non-minimized : all windows"
 msgstr "Всі/наступне незгорнуті : всі вікна"
 
-#: src/dbfinconsts.js:67
-msgid "Rotate windows forward : backward"
-msgstr "Прокрутити вікна вперед : назад"
+msgid "Show next : prev non-minimized window"
+msgstr "Наступне : попереднє незгорнуте вікно"
 
-#: src/dbfinconsts.js:68
-msgid "Rotate windows backward : forward"
-msgstr "Прокрутити вікна назад : вперед"
+msgid "Show next : prev window"
+msgstr "Наступне : попереднє вікно"
 
-#: src/dbfinconsts.js:69
 msgid "Minimize top : all windows"
 msgstr "Згорнути верхнє : всі вікна"
 
-#: src/dbfinconsts.js:70
 msgid "(Un)Maximize top : all windows"
 msgstr "Розгорнути верхнє : всі вікна"
 
-#: src/dbfinconsts.js:71
 msgid "Open new window : none"
 msgstr "Нове вікно : нічого"
 
-#: src/dbfinconsts.js:72
 msgid "Open new window (new workspace) : none"
 msgstr "Нове вікно (на новому робочому просторі) : нічого"
 
-#: src/dbfinconsts.js:73
 msgid "Open menu : none"
 msgstr "Відкрити меню : нічого"
 
-#: src/dbfinconsts.js:74
 msgid "Quit : none"
 msgstr "Вийти : нічого"
 
-#: src/dbfinconsts.js:75
 msgid "Show next (minimize if single) : all windows"
 msgstr "Наступне (згорнути якщо одне) : всі вікна"
 
-#: src/dbfinconsts.js:80 src/dbfinconsts.js:86
 msgid "Show and focus"
 msgstr "Показати і фокусувати"
 
-#: src/dbfinconsts.js:81
 msgid "Minimize"
 msgstr "Згорнути"
 
-#: src/dbfinconsts.js:82
 msgid "(Un)Maximize"
 msgstr "Розгорнути"
 
-#: src/dbfinconsts.js:83
 msgid "Close"
 msgstr "Закрити"
 
-#: src/dbfinconsts.js:84
 msgid "Preview on/Thumbnail panel opacity"
 msgstr "Увімкнути підглядання/Прозорість мініатюр"
 
-#: src/dbfinconsts.js:85
 msgid "Preview off/Thumbnail panel opacity"
 msgstr "Вимкнути підглядання/Прозорість мініатюр"
 
-#: src/dbfinconsts.js:86
 msgid "close thumbnails"
 msgstr "закрити мініатюри"
 
-#: src/dbfinconsts.js:94
 msgid "Open"
 msgstr "Відкрити"
 
-#: src/dbfinconsts.js:97
 msgid "Quit"
 msgstr "Вийти"
 
-#: src/dbfinconsts.js:105
 msgid "Hide window indicators"
 msgstr "Сховати індикатори вікон"
 
-#: src/dbfinconsts.js:106
 msgid "Point lights"
 msgstr "Світлові точки"
 
-#: src/dbfinconsts.js:107
 msgid "Actual number of windows"
 msgstr "Кількість вікон"
 
-#: src/dbfinconsts.js:107
 msgid "experimental"
 msgstr "експериментально"
 
-#: src/dbfinmenubuilder.js:292
 msgid "Remove from Favorites"
 msgstr "Вилучити з улюбленого"
 
-#: src/dbfinmenubuilder.js:297
 msgid "Add to Favorites"
 msgstr "Додати до улюбленого"
 
-#: ../lib/dbfinutilsprefs.js:151
 msgid "Settings were reset successfully!"
 msgstr "Налаштування успішно повернені в вихідний стан!"
 
-#: ../lib/dbfinutilsprefs.js:166 ../lib/dbfinutilsprefs.js:220
 msgid "Please specify settings directory and file name."
 msgstr "Будь ласка, вкажіть теку і назву файлу налаштувань."
 
-#: ../lib/dbfinutilsprefs.js:192 ../lib/dbfinutilsprefs.js:222
 msgid "Cannot create Gio.File object for file"
 msgstr "Не можу створити об’єкт Gio.File для файлу"
 
-#: ../lib/dbfinutilsprefs.js:198
 msgid "Cannot create/replace file"
 msgstr "Не можу створити/замінити файл"
 
-#: ../lib/dbfinutilsprefs.js:200
 msgid "Cannot create Gio.DataOutputStream object for file"
 msgstr "Не можу створити об’єкт Gio.DataOutputStream для файлу"
 
-#: ../lib/dbfinutilsprefs.js:202
 msgid "Cannot write to file"
 msgstr "Не можу записати в файл"
 
-#: ../lib/dbfinutilsprefs.js:206
 msgid "File was created/updated successfully!"
 msgstr "Файл створено/оновлено успішно!"
 
-#: ../lib/dbfinutilsprefs.js:223
 msgid "Cannot open file"
 msgstr "Не можу відкрити файл"
 
-#: ../lib/dbfinutilsprefs.js:224
 msgid "Cannot create Gio.DataInputStream object for file"
 msgstr "Не можу створити об’єкт Gio.DataInputStream для файлу"
 
-#: ../lib/dbfinutilsprefs.js:241
 msgid "File was read successfully"
 msgstr "Файл прочитано успішно"
 
-#: ../lib/dbfinutilsprefs.js:241
 msgid "settings values imported."
 msgstr "значень налаштувань імпортовано."
 
-#: ../lib/dbfinutilsprefs.js:834
 msgid "Welcome"
 msgstr "Ласкаво просимо!"
 
-#: ../lib/dbfinutilsprefs.js:857
 msgid "GNOME Shell Extension"
 msgstr "Розширення GNOME Shell"
 
-#: ../lib/dbfinutilsprefs.js:862
 msgid "Copyright"
 msgstr "Авторське право"
 
-#: ../lib/dbfinutilsprefs.js:867
 msgid "Home page"
 msgstr "Веб-сторінка"
 
-#: ../lib/dbfinutilsprefs.js:872
 msgid "Source code"
 msgstr "Вихідний код"
 
-#: ../lib/dbfinutilsprefs.js:884
 msgid "Special thanks to"
 msgstr "Особлива вдячність"
 
-#: ../lib/dbfinutilsprefs.js:887
 msgid ""
 "If you would like to translate the program to your language feel free to do "
 "so: please use GitHub or email me for instructions."
 msgstr "Якщо Ви бажаєте перекласти програму на вашу мову, будь-ласка використовуйте GitHub або надішліть мені листа для подальших інструкцій"
 
-#: ../lib/dbfinutilsprefs.js:889
 msgid ""
 "This is free software -- free as in beer and free as in freeman -- "
 "distributed under the terms of the GNU General Public License (GPL) version "
 "3."
 msgstr "Це безкоштовне та вільне програмне забезпечення (ПЗ), розповсюджуване під Ліцензією GNU General Public License 3 (GPL 3)."
 
-#: ../lib/dbfinutilsprefs.js:890
 msgid ""
 "A copy of the License is distributed along with the software (file GNUGPLv3) "
 "and is also available at <a href='http://www.gnu.org/licenses/'><span "
@@ -308,743 +231,567 @@ msgid ""
 "span></a>."
 msgstr "Копія Ліцензії поширюєтся разом із програмним забезпеченням (файл GNUGPLv3), а також доступна за адресою <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>."
 
-#: ../lib/dbfinutilsprefs.js:891
 msgid ""
 "You are free to use, modify or otherwise distribute the code of this "
 "software provided that your actions comply with all applicable laws and GPL."
 msgstr "Ви можете вільно використовувати, модифікувати чи іншим чином поширювати код цього програмного забезпечення за умови, що ваші дії не суперечать закону і GPL."
 
-#: ../lib/dbfinutilsprefs.js:892
 msgid ""
 "In particular, you must include the above copyright notice and a copy of the "
 "License in all copies or substantial portions of the software, whether "
 "original or modified."
 msgstr "Зокрема, Ви повинні включити вказане вище повідомлення про авторське право і копію ліцензії у всі копії або значущі частини даного програмного забезпечення, будь то оригінальні або змінені."
 
-#: ../lib/dbfinutilsprefs.js:893
 msgid ""
 "This software is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS "
 "FOR A PARTICULAR PURPOSE."
 msgstr "Ця програма поширюється в надії, що вона буде корисною, але БЕЗ БУДЬ-ЯКИХ ГАРАНТІЙ: навіть без гарантій КОМЕРЦІЙНОЇ ЦІННОСТІ чи ПРИДАТНОСТІ ДЛЯ КОНКРЕТНИХ ЦІЛЕЙ."
 
-#: ../lib/dbfinutilsprefs.js:894
 msgid ""
 "For more details please see the GNU General Public License (GPL) version 3."
 msgstr "Для додаткової інформації звертайтесь до GNU GPL версії 3."
 
-#: ../lib/dbfinutilsprefs.js:902
 msgid "Export/Import"
 msgstr "Експорт/Імпорт"
 
-#: ../lib/dbfinutilsprefs.js:912 ../lib/dbfinutilsprefs.js:922
 msgid "Back up, sync and share settings."
 msgstr "Для резервного копіювання і синхронізації."
 
-#: ../lib/dbfinutilsprefs.js:919
 msgid "To reset all settings please enable"
 msgstr "Щоб повернути всі налаштування в вихідний стан, будь ласка, увімкніть"
 
-#: ../lib/dbfinutilsprefs.js:919 src/prefs.js:157
 msgid "Advanced settings"
 msgstr "Додаткові налаштування"
 
-#: ../lib/dbfinutilsprefs.js:925
 msgid "Reset settings"
 msgstr "Відновити всі налаштування"
 
-#: ../lib/dbfinutilsprefs.js:930 ../lib/dbfinutilsprefs.js:959
 msgid "This will overwrite all current settings"
 msgstr "Відновити налаштування з файлу"
 
-#: ../lib/dbfinutilsprefs.js:943
 msgid "Status:"
 msgstr "Статус:"
 
-#: ../lib/dbfinutilsprefs.js:949
 msgid "Export"
 msgstr "Експорт"
 
-#: ../lib/dbfinutilsprefs.js:952
 msgid "Import"
 msgstr "Імпорт"
 
-#: ../lib/dbfinutilsprefs.js:956
 msgid "This will overwrite the file with settings"
 msgstr "Створити/оновити файл с налаштуваннями"
 
-#: src/prefs.js:164 src/prefs.js:187 src/prefs.js:191 src/prefs.js:193
-#: src/prefs.js:270 src/prefs.js:414
 msgid "Icons"
 msgstr "Піктограми"
 
-#: src/prefs.js:165 src/prefs.js:191 src/prefs.js:218 src/prefs.js:220
-#: src/prefs.js:235 src/prefs.js:248 src/prefs.js:283 src/prefs.js:292
-#: src/prefs.js:403 src/prefs.js:433
 msgid "Panel"
 msgstr "Панель"
 
-#: src/prefs.js:166 src/prefs.js:191
 msgid "Show app icons from all workspaces"
 msgstr "Показувати піктограми з усіх робочих просторів"
 
-#: src/prefs.js:168
 msgid "YAWL-panel position and width"
 msgstr "Позиція і ширина панелі YAWL"
 
-#: src/prefs.js:170
 msgid "Move central panel"
 msgstr "Зсунути центральну панель"
 
-#: src/prefs.js:171
-msgid "Show Alternative Activities button"
-msgstr "показувати Альтернативну кнопку Активності"
-
-#: src/prefs.js:172
 msgid "Hide Activities button"
-msgstr "Сховати кнопку Активність"
+msgstr "Сховати кнопку Діяльність"
 
-#: src/prefs.js:176
 msgid "Preserve Hot Corner"
 msgstr "Залишити «гарячий» куток"
 
-#: src/prefs.js:179
 msgid "Hide AppMenu button"
 msgstr "Сховати кнопку меню програми"
 
-#: src/prefs.js:181
 msgid "Custom panel background"
 msgstr "Змінити тло панелі"
 
-#: src/prefs.js:183
 msgid "Top color and opacity"
 msgstr "Колір і непрозорість зверху"
 
-#: src/prefs.js:183 src/prefs.js:184
 msgid "Choose panel background color"
 msgstr "Виберіть колір тла панелі"
 
-#: src/prefs.js:184
 msgid "Bottom color and opacity"
 msgstr "Колір і непрозорість знизу"
 
-#: src/prefs.js:188
 msgid "Icon size"
 msgstr "Розмір піктограм"
 
-#: src/prefs.js:189
 msgid "Faded icons"
 msgstr "Затінені піктограми"
 
-#: src/prefs.js:190
 msgid "Default icon opacity"
 msgstr "Непрозорість піктограм"
 
-#: src/prefs.js:191 src/prefs.js:193 src/prefs.js:220 src/prefs.js:235
-#: src/prefs.js:248 src/prefs.js:292 src/prefs.js:405 src/prefs.js:433
 msgid "Enable option"
 msgstr "Увімкніть опцію"
 
-#: src/prefs.js:192
 msgid "Icon opacity if app is not on current workspace"
 msgstr "Непрозорість піктограми програми на іншому робочому просторі"
 
-#: src/prefs.js:193 src/prefs.js:283 src/prefs.js:402
 msgid "Add-ons"
 msgstr "Додатки"
 
-#: src/prefs.js:193 src/prefs.js:422
 msgid "Favorite apps"
 msgstr "Улюблені програми"
 
-#: src/prefs.js:194
 msgid "Icon opacity if app is not running"
 msgstr "Непрозорість піктограми зупиненої програми"
 
-#: src/prefs.js:196
 msgid "Clip icons"
 msgstr "Обрізати піктограми"
 
-#: src/prefs.js:196
 msgid "top"
 msgstr "верх"
 
-#: src/prefs.js:196
 msgid "bottom"
 msgstr "низ"
 
-#: src/prefs.js:196
 msgid "px"
 msgstr "пікс"
 
-#: src/prefs.js:198
 msgid "Align icons on the panel (%)"
 msgstr "Вирівнювання піктограм на панелі (%)"
 
-#: src/prefs.js:199
 msgid "Distance between icons"
 msgstr "Відстань між піктограмами"
 
-#: src/prefs.js:199
 msgid "% of icon size"
 msgstr "% від розміру піктограми"
 
-#: src/prefs.js:201 src/prefs.js:247 src/prefs.js:373
 msgid "Animation"
 msgstr "Анімація"
 
-#: src/prefs.js:202 src/prefs.js:250
 msgid "Animation time in ms (0: no animation)"
 msgstr "Тривалість анімації (0: без анімації)"
 
-#: src/prefs.js:203 src/prefs.js:251
 msgid "Animation effect"
 msgstr "Ефект анімації"
 
-#: src/prefs.js:205
 msgid "Animate icons on mouse over"
 msgstr "Анімувати при наведенні вказівника"
 
-#: src/prefs.js:207
 msgid "Change size (%)"
 msgstr "Змінити розмір (%)"
 
-#: src/prefs.js:208 src/prefs.js:255
 msgid "Change opacity"
 msgstr "Змінити непрозорість"
 
-#: src/prefs.js:209 src/prefs.js:256
 msgid "Show full width if partially hidden"
 msgstr "Показати у всю ширину"
 
-#: src/prefs.js:211 src/prefs.js:258
 msgid "Mouse over animation time"
 msgstr "Тривалість анімації при наведенні вказівника"
 
-#: src/prefs.js:211 src/prefs.js:258
 msgid "% of animation time"
 msgstr "% від тривалості анімації"
 
-#: src/prefs.js:212 src/prefs.js:259
 msgid "Mouse over animation effect"
 msgstr "Ефект анімації при наведенні вказівника"
 
-#: src/prefs.js:217 src/prefs.js:220 src/prefs.js:234 src/prefs.js:235
-#: src/prefs.js:248 src/prefs.js:291 src/prefs.js:292 src/prefs.js:432
-#: src/prefs.js:433
+msgid "Overview"
+msgstr "Огляд"
+
+msgid "Show icons in Overview"
+msgstr "Показувати піктограми в огляді Діяльності"
+
 msgid "Thumbnails"
 msgstr "Мініатюри"
 
-#: src/prefs.js:219 src/prefs.js:220 src/prefs.js:235 src/prefs.js:248
-#: src/prefs.js:292 src/prefs.js:433
 msgid "Show thumbnails when app icon is hovered"
 msgstr "Показувати мініатюри при наведенні вказівника на піктограму"
 
-#: src/prefs.js:221
 msgid "Show thumbnails of 'interesting' windows only"
 msgstr "Показувати мініатюри тільки \"цікавих\" вікон"
 
-#: src/prefs.js:223
 msgid "Use arrow-style thumbnails app indicator"
 msgstr "Індикатор-стрілка для поточної програми"
 
-#: src/prefs.js:225
 msgid "Customize thumbnail panel theme"
 msgstr "Налаштувати зовнішній виглад панелі мініатюр"
 
-#: src/prefs.js:227
 msgid "Match main panel background"
 msgstr "Тло збігається з головною панеллю"
 
-#: src/prefs.js:228
 msgid "Background color and opacity"
 msgstr "Колір і непрозорість тла"
 
-#: src/prefs.js:228
 msgid "Choose thumbnail panel background color"
 msgstr "Виберіть колір тла панелі мініатюр"
 
-#: src/prefs.js:229
 msgid "Text color and size"
 msgstr "Колір і розмір тексту"
 
-#: src/prefs.js:229
 msgid "Choose thumbnail panel text color"
 msgstr "Виберіть колір тексту панелі мініатюр"
 
-#: src/prefs.js:230
 msgid "Border color and width"
 msgstr "Колір і ширина границі"
 
-#: src/prefs.js:230
 msgid "Choose thumbnail panel border color"
 msgstr "Виберіть колір границі панелі мініатюр"
 
-#: src/prefs.js:231
 msgid "Border radius"
 msgstr "Радіус границі"
 
-#: src/prefs.js:231
 msgid "and"
 msgstr "і"
 
-#: src/prefs.js:231
 msgid "Padding"
 msgstr "Відступ (padding)"
 
-#: src/prefs.js:236
 msgid "Same height thumbnails"
 msgstr "Мініатюри однієї висоти"
 
-#: src/prefs.js:237
 msgid "Thumbnail maximum width"
 msgstr "Максимальна ширина мініатюр"
 
-#: src/prefs.js:238
 msgid "Thumbnail maximum height"
 msgstr "Максимальна висота мініатюр"
 
-#: src/prefs.js:239
 msgid "Thumbnail maximum visible height"
 msgstr "Максимальна видима висота мініатюр"
 
-#: src/prefs.js:241
 msgid "Default thumbnail opacity"
 msgstr "Непрозорість мініатюри"
 
-#: src/prefs.js:242
 msgid "Minimized thumbnail opacity"
 msgstr "Непрозорість мініатюри згорнутого вікна"
 
-#: src/prefs.js:244
 msgid "Distance between thumbnails"
 msgstr "Відстань між мініатюрами"
 
-#: src/prefs.js:244
 msgid "% of thumbnail size"
 msgstr "% від розміру мініатюр"
 
-#: src/prefs.js:245
 msgid "Thumbnail top padding (px)"
 msgstr "Відступ (padding) зверху (пікселі)"
 
-#: src/prefs.js:249
 msgid "Thumbnails show delay in ms"
 msgstr "Затримка перед показом мініатюр (мс)"
 
-#: src/prefs.js:253
 msgid "Animate thumbnails on mouse over"
 msgstr "Анімувати при наведенні вказівника"
 
-#: src/prefs.js:264 src/prefs.js:405
 msgid "Behavior"
 msgstr "Поведінка"
 
-#: src/prefs.js:265 src/prefs.js:405
 msgid "Mouse"
 msgstr "Миша"
 
-#: src/prefs.js:271 src/prefs.js:293
 msgid "Left button"
 msgstr "Ліва кнопка"
 
-#: src/prefs.js:272 src/prefs.js:278 src/prefs.js:287
 msgid "Click : Double click"
 msgstr "Клік : Подвійний клік"
 
-#: src/prefs.js:273 src/prefs.js:279
 msgid "Ctrl + Click : Double click"
 msgstr "Ctrl + Клік : Подвійний клік"
 
-#: src/prefs.js:274 src/prefs.js:280
 msgid "Shift + Click : Double click"
 msgstr "Shift + Клік : Подвійний клік"
 
-#: src/prefs.js:275 src/prefs.js:281
 msgid "Ctrl + Shift + Click : Double click"
 msgstr "Ctrl + Shift + Клік : Подвійний клік"
 
-#: src/prefs.js:277 src/prefs.js:299
 msgid "Middle button"
 msgstr "Середня кнопка"
 
-#: src/prefs.js:283
 msgid "Disable option"
 msgstr "Вимкніть опцію"
 
-#: src/prefs.js:283 src/prefs.js:409
 msgid "Scroll to change workspace"
 msgstr "Зміна робочого простору коліщатком миші"
 
-#: src/prefs.js:284
 msgid "Scroll up : down"
 msgstr "Прокрутити вверх : вниз"
 
-#: src/prefs.js:286 src/prefs.js:305
 msgid "Right button"
 msgstr "Права кнопка"
 
-#: src/prefs.js:294 src/prefs.js:300 src/prefs.js:306
 msgid "Click"
 msgstr "Клік"
 
-#: src/prefs.js:295
 msgid "Ctrl + Click"
 msgstr "Ctrl + Клік"
 
-#: src/prefs.js:296
 msgid "Shift + Click"
 msgstr "Shift + Клік"
 
-#: src/prefs.js:297
 msgid "Ctrl + Shift + Click"
 msgstr "Ctrl + Shift + Клік"
 
-#: src/prefs.js:302
 msgid "Scroll up"
 msgstr "Прокрутити вверх"
 
-#: src/prefs.js:303
 msgid "Scroll down"
 msgstr "Прокрутити вниз"
 
-#: src/prefs.js:312 src/prefs.js:405
 msgid "Fine-tuning"
 msgstr "Налаштування"
 
-#: src/prefs.js:313 src/prefs.js:405
 msgid "Mouse events"
 msgstr "Події миші"
 
-#: src/prefs.js:314 src/prefs.js:405
 msgid "Use mouse drag-and-drop"
 msgstr "Використовувати переміщення мишкою"
 
-#: src/prefs.js:315
 msgid "Register mouse events on button release"
 msgstr "Реєструвати сигнали миші при відпусканні кнопки"
 
-#: src/prefs.js:317 src/prefs.js:318
 msgid "Long left button click = right button click"
 msgstr "Довгий натиск лівою кнопрою = права кнопка"
 
-#: src/prefs.js:321
 msgid ""
 "Scroll timeout: the time after one scroll event during which other scroll "
 "events are rejected."
 msgstr "Тривалість прокрутки: час після прокрутки, протягом якого інші сигнали прокрутки не приймаються."
 
-#: src/prefs.js:323
 msgid "Mouse scroll timeout"
 msgstr "Тривалість прокрутки миші"
 
-#: src/prefs.js:326
 msgid "Single vs Double clicks"
 msgstr "Одинарні/подвійні кліки"
 
-#: src/prefs.js:329
 msgid ""
 "This will measure the SHORTEST time between two consecutive SINGLE clicks."
 msgstr "Вимірювання НАЙМЕНШОГО часу між двома ОДИНАРНИМИ кліками."
 
-#: src/prefs.js:331
 msgid "A fast series of SINGLE clicks"
 msgstr "Швидка серія ОДИНАРНИХ кліків"
 
-#: src/prefs.js:333 src/prefs.js:349
 msgid "click here"
 msgstr "клікайте тут"
 
-#: src/prefs.js:340
 msgid "Consequent single clicks time:"
 msgstr "Тривалість між послідовними кліками:"
 
-#: src/prefs.js:345
 msgid ""
 "This will measure the LONGEST time between the two clicks of one DOUBLE "
 "click."
 msgstr "Вимірювання НАЙБІЛЬШОГО інтервалу між двома кліками одного ПОДВІЙНОГО кліку."
 
-#: src/prefs.js:347
 msgid "A series of DOUBLE clicks"
 msgstr "Серія ПОДВІЙНИХ кліків"
 
-#: src/prefs.js:356
 msgid "Double clicks time:"
 msgstr "Тривалість подвійних кліків:"
 
-#: src/prefs.js:361
 msgid ""
 "Based on the data provided above we set the following value (you can adjust "
 "it manually):"
 msgstr "На основі вказаних даних встановлено наступне значення (можна змінювати вручну):"
 
-#: src/prefs.js:363
 msgid "Single/Double clicks threshold:"
 msgstr "Межа одиночних/подвійних кліків:"
 
-#: src/prefs.js:374
 msgid "Disable all animation"
 msgstr "Відключити анімацію повністю"
 
-#: src/prefs.js:375
 msgid "Use alternative animation engine (experimental)"
 msgstr "Використовувати альтернативний метод анімації (експериментальний)"
 
-#: src/prefs.js:377
 msgid "Lower FPS = better responsiveness, higher FPS = smoother animation"
 msgstr "Нижче FPS = кращий відклик, вище FPS = плавніша анімація"
 
-#: src/prefs.js:378
 msgid "Frames per second"
 msgstr "Кадрів в секунду (FPS)"
 
-#: src/prefs.js:381
 msgid "Debug"
 msgstr "Відлагодження"
 
-#: src/prefs.js:382
 msgid "These options are for developers only."
 msgstr "Ця сторінка опцій тільки для розробників."
 
-#: src/prefs.js:384
 msgid ""
 "Debugging panel shows a hierarchical structure of internal function calls."
 msgstr "Панель відлагодження показує ієрархічну структуру внутрішніх викликів функцій."
 
-#: src/prefs.js:385
 msgid "The panel has a small toolbar which allows one to:"
 msgstr "Панель має невеликий набір інструментів, що дозволяють:"
 
-#: src/prefs.js:387
 msgid "pin the panel (so that it is always visible)"
 msgstr "закріпити панель (зробити її постійно видимою)"
 
-#: src/prefs.js:388
 msgid "stop, resume and clear all messages"
 msgstr "зупинити, продовжити і очистити всі повідомлення"
 
-#: src/prefs.js:389
 msgid "access extension preferences"
 msgstr "викликати вікно параметрів розширення"
 
-#: src/prefs.js:390
 msgid "restart the extension"
 msgstr "перезапустити розширення"
 
-#: src/prefs.js:392
 msgid "Debugging panel"
 msgstr "Панель відлагодження"
 
-#: src/prefs.js:394
 msgid "By default the panel is placed at the right side (of the last monitor)."
 msgstr "По замовчуванню, панель розміщується справа (на останньому моніторі)."
 
-#: src/prefs.js:395
 msgid "Move the panel to the bottom left"
 msgstr "Перемістити панель вниз і вліво"
 
-#: src/prefs.js:396
 msgid "Debug panel width"
 msgstr "Ширина панелі відлагодження"
 
-#: src/prefs.js:396
 msgid "% of the monitor width"
 msgstr "% від ширини монітора"
 
-#: src/prefs.js:397
 msgid "Force all messages"
 msgstr "Форсувати всі повідомлення"
 
-#: src/prefs.js:397
 msgid "ouch!"
 msgstr "обережно!"
 
-#: src/prefs.js:406
 msgid "Rearrange icons on the panel using mouse"
 msgstr "Сортувати піктограми панелі мишою"
 
-#: src/prefs.js:409
 msgid "Scroll over YAWL panel to change workspace"
 msgstr "Прогортання коліщатком миші над панелю перемикає робочий простір"
 
-#: src/prefs.js:411
 msgid "Scroll to find other windows"
 msgstr "Прогортання з пошуком вікон"
 
-#: src/prefs.js:411
 msgid ""
 "find app's windows on other workspaces by scrolling over its icon when its "
 "thumbnails are shown"
 msgstr "пошук вікон програм на інших робочих просторах, гортаючи коліщатко над піктограмою, коли панель вікон програми відкрита"
 
-#: src/prefs.js:415
 msgid "Window demanding attention"
 msgstr "Вікно, що потребує уваги"
 
-#: src/prefs.js:415
 msgid "blink"
 msgstr "блимати"
 
-#: src/prefs.js:417
 msgid "Blinking rate (times per minute)"
 msgstr "Частота блимання (раз в хвилину)"
 
-#: src/prefs.js:420
 msgid "requires extension"
 msgstr "потребує розширення"
 
-#: src/prefs.js:420 src/prefs.js:466 src/prefs.js:476
 msgid "author"
 msgstr "автор"
 
-#: src/prefs.js:422
 msgid "always show"
 msgstr "завжди показувати"
 
-#: src/prefs.js:424
 msgid "Use smaller icons if not running"
 msgstr "Використовувати піктограми меншого розміру"
 
-#: src/prefs.js:427
 msgid "Windows indicators"
 msgstr "Індикатори вікон"
 
-#: src/prefs.js:429
 msgid "Choose windows indicator color"
 msgstr "Виберіть колір індикаторів вікон"
 
-#: src/prefs.js:434
 msgid "Window Peeking"
 msgstr "Підглядання вікна"
 
-#: src/prefs.js:434
 msgid ""
 "scroll up/down over a thumbnail to turn previews on/off and to reduce panel "
 "opacity while previewing"
 msgstr "прогортання вверх/вниз вмикає/вимикає підглядання і міняє прозорість панелі"
 
-#: src/prefs.js:436
 msgid "Preview window when its thumbnail is hovered"
 msgstr "Підглядання вікна при наведенні вказівника на мініатюру"
 
-#: src/prefs.js:437
 msgid "Dim background: color and opacity"
 msgstr "Затемнити тло: колір і непрозорість"
 
-#: src/prefs.js:437
 msgid "Choose dimmed background color"
 msgstr "Виберіть колір затемнення"
 
-#: src/prefs.js:438
 msgid "Reduced thumbnails panel opacity"
 msgstr "Змінення прозорості панелі"
 
-#: src/prefs.js:445
 msgid "Did you know?"
 msgstr "Чи знаєте Ви?"
 
-#: src/prefs.js:447
 msgid "is designed to be simple to use yet highly customizable."
 msgstr "призначений бути простим в користуванні, тим не менш чудово налаштовуваним."
 
-#: src/prefs.js:451
 msgid ""
 "settings are currently available to customize feel and look of the extension."
 msgstr "опцій доступно для адаптації під будь-який смак і колір."
 
-#: src/prefs.js:452
 msgid "Exploring the options also helps you to uncover some hidden features."
 msgstr "Досліджування налаштувань дозволить Вам відкрити ряд схованих можливостей розширення."
 
-#: src/prefs.js:453
 msgid ""
 "For example, <b>did you know</b> that there is an option to preview a window "
 "when its thumbnail is hovered, and that you can easily switch it on and off "
 "just by scrolling the middle mouse button over the thumbnail?"
 msgstr "Наприклад, <b>чи знаєте Ви</b>, що є опція підглядання вікна при наведенні вказівника на його мініатюру, і що Ви можете легко вмикати і вимикати цю можливість простим поворотом коліщатка вказівника?"
 
-#: src/prefs.js:457
 msgid "is active workspace centric."
 msgstr "орієнтований на активний робочий простір."
 
-#: src/prefs.js:460
 msgid ""
 "It highlights icons of apps and shows windows open on the current active "
 "workspace."
 msgstr "Розширення підсвічує програми і показує вікна, відкриті на поточному робочому просторі."
 
-#: src/prefs.js:461
 msgid ""
 "App icons highlighted on the top panel are indicative of what workspace you "
 "are currently on and what task/activity it is intended for."
 msgstr "Піктограми програм на панелі показують, на якому робочому просторі Ви знаходитесь, і для якої задачі цей простір призначений."
 
-#: src/prefs.js:462
 msgid ""
 "You can even optionally hide app icons not present on the active workspace."
 msgstr "Ви можете навіть зовсім сховати піктограми програм, які не присутні на поточному робочому просторі."
 
-#: src/prefs.js:463
 msgid ""
 "Most of the extension's functionality (such as cycling through windows) is "
 "also active-workspace-oriented."
 msgstr "Також більшість дій (таких, як циклічний перебір вікон) виконується на активному робочому просторі."
 
-#: src/prefs.js:464
 msgid "For quick access to favorites"
 msgstr "Для швидкого доступу до улюблених програм"
 
-#: src/prefs.js:465
 msgid ""
 "please consider installing in addition this highly recommended extension:"
 msgstr "Ви можете також встановити це вкрай рекомендоване розширення:"
 
-#: src/prefs.js:470
 msgid "tries to seamlessly integrate into the GNOME Shell panel."
 msgstr "обережно інтегровано в панель GNOME Shell."
 
-#: src/prefs.js:473
 msgid ""
 "It is embedded into the panel right where there is space for it not claimed "
 "by anything else, and uses panel theme by default."
 msgstr "Розширення вбудовується там, де для нього є незайняте нічим іншим місце, і використовує тему головної панелі по замовчуванню."
 
-#: src/prefs.js:474
 msgid ""
 "It further allows you to hide some unnecessary buttons on the left and shift "
 "the central panel to the right to give itself more space."
 msgstr "Воно дозволяє звільнити трохи місця для себе, забравши непотрібні кнопки зліва і зсунути центральну панель вправо."
 
-#: src/prefs.js:475
 msgid ""
 "You can tweak the panel even more by installing some of the following "
 "recommended extensions:"
 msgstr "Ви можете навіть більше змінити зовнішній вигляд панелі, встановивши одне з цих рекомендованих розширень:"
 
-#: src/prefs.js:480
 msgid "is a part of greater FOSS."
 msgstr "є частиною більшого FOSS (вільне і відкрите ПЗ)."
 
-#: src/prefs.js:483
 msgid ""
 "And as such it is completely free to use, study, distribute and modify "
 "provided you acknowledge all the copyrights and your actions comply with the "
 "applicable law and GNU GPL."
 msgstr "Ви можете вільно використовувати, вивчати, розповсюджувати і змінювати його при умові признання і підтвердження всіх установлених прав власності і при умові, що Ви дієте в рамках закону і в узгодженні з умовами GPL."
 
-#: src/prefs.js:486
 msgid ""
 "Your contribution in the form of feature suggestions, bug reports, "
 "translations, donations or even development is highly appreciated."
 msgstr "Ваша підтримка в формі порад, звітів про помилки, перекладі, добровільних внесків чи подальшої розробки завжди високо цінуєтся."
 
-#: src/prefs.js:489
 msgid ""
 "The development of this extension would not be possible without this "
 "wonderful FOSS:"
 msgstr "Розробка розширення не була би можливою без цього чудового вільного і безкоштовного ПЗ:"
 
-#: src/prefs.js:490
 msgid "and, of course,"
 msgstr "і, звісно,"
