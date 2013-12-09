@@ -180,8 +180,19 @@ const dbFinMoveCenter = new Lang.Class({
                     this._hotcorner = null;
                 }
             }
-            if (hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
-            else this._panelbuttonstoggle.restore('activities');
+            if (hideActivities) {
+                this._panelbuttonstoggle.hide('activities', 'left');
+            }
+            else {
+                this._panelbuttonstoggle.restore('activities');
+                // make sure the Activities button is the first one
+                let (activities = Main.panel && Main.panel.statusArea && Main.panel.statusArea['activities']) {
+                    if (activities && activities.container
+                        && Main.panel._leftBox === activities.container.get_parent()) {
+                        Main.panel._leftBox.set_child_at_index(activities.container, 0);
+                    }
+                }
+            }
         }
         _D('<');
     },
