@@ -3,9 +3,12 @@ include ../include.mk
 dist_extension_DATA = \
 	dbfinaa.js \
 	../../lib/convenience2.js \
+	dbfinactivities.js \
 	../../lib/dbfinarrayhash.js \
+	../../lib/dbfinclicked.js \
 	dbfinconsts.js \
 	../../lib/dbfindebug.js \
+	../../lib/dbfinpopupmenu.js \
 	../../lib/dbfinsettings.js \
 	../../lib/dbfinsignals.js \
 	../../lib/dbfintimeout.js \

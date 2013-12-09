@@ -11,5 +11,10 @@
       <_summary>Whether to show advanced preferences.</_summary>
       <_description>Whether to show advanced preferences.</_description>
     </key>
+    <key name="mouse-scroll-timeout" type="s">
+      <default>'125'</default>
+      <_summary>Mouse single scroll time.</_summary>
+      <_description>Mouse single scroll time (to prevent multiple scrolls).</_description>
+    </key>
   </schema>
 </schemalist>

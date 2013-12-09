@@ -33,8 +33,12 @@ const _ = Gettext.gettext;
 const arrayShellVersion = imports.misc.config.PACKAGE_VERSION.split('.').map(function (v) { return parseInt(v); });
 
 const arrayContributors = [
+        [       'Jonatan Zeidler',                                                      _("German translation")                 ],
+        [       'Svitozar Cherepii',                                                    _("Ukranian translation")               ]
 ];
 
 const Settings = [
 	[ 'first-time', true, { }, null ],
+
+    [ 'mouse-scroll-timeout', 125, { min: 25, max: 1000 }, 'mouse' ]
 ];

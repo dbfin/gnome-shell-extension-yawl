@@ -1,8 +1,11 @@
 src/dbfinaa.js
 ../lib/convenience2.js
+src/dbfinactivities.js
 ../lib/dbfinarrayhash.js
+../lib/dbfinclicked.js
 src/dbfinconsts.js
 ../lib/dbfindebug.js
+../lib/dbfinpopupmenu.js
 ../lib/dbfinsettings.js
 ../lib/dbfinsignals.js
 ../lib/dbfintimeout.js
@@ -10,4 +13,3 @@ src/dbfinconsts.js
 ../lib/dbfinutilsprefs.js
 src/extension.js
 src/prefs.js
-
