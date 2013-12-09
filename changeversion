@@ -41,7 +41,7 @@ cd "./$1/"
 echo 'Changing version'
 
 # getting older version
-vd=$( cat include.mk | grep '^\s*extensionversion\s*=\s*' )
+vd=$( cat include.mk | grep '^ *extensionversion *= *' )
 vd=${vd#*extensionversion = }
 
 read -p "Older version: [$vd] " v
