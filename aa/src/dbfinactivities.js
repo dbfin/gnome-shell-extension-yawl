@@ -72,10 +72,14 @@ const dbFinActivities = new Lang.Class({
 		this._signals = new dbFinSignals.dbFinSignals();
         this._timeout = new dbFinTimeout.dbFinTimeout();
 
-        this._bin = new St.Bin({ reactive: true });
+        this._bin = new St.Bin({ reactive: true, track_hover: true });
         if (this._bin) {
             this._activitiesActor.add_child(this._bin);
             this._bin.add_style_class_name('alternative-activities-face');
+            this._signals.connectNoId({ emitter: this._bin, signal: 'enter-event',
+                                        callback: this._activitiesActorEnterEvent, scope: this });
+            this._signals.connectNoId({ emitter: this._bin, signal: 'leave-event',
+                                        callback: this._activitiesActorLeaveEvent, scope: this });
         }
 
         this._activitiesActor.reactive = false;
@@ -156,7 +160,7 @@ const dbFinActivities = new Lang.Class({
 	},
 
     _activitiesActorAllocate: function(actor, box, flags) {
-        _D('@' + this.__name__ + '._activitiesActorAllocate');
+        _D('@' + this.__name__ + '._activitiesActorAllocate()');
         let (childBox = this._bin && this._activitiesActor && new Clutter.ActorBox()) {
             if (childBox) {
                 dbFinUtils.setBox(childBox,
@@ -170,8 +174,24 @@ const dbFinActivities = new Lang.Class({
         _D('<');
     },
 
+    _activitiesActorEnterEvent: function() {
+        _D('>' + this.__name__ + '._activitiesActorEnterEvent()');
+        if (this._activitiesActor) {
+            this._activitiesActor.add_style_pseudo_class('hover');
+        }
+        _D('<');
+    },
+
+    _activitiesActorLeaveEvent: function() {
+        _D('>' + this.__name__ + '._activitiesActorLeaveEvent()');
+        if (this._activitiesActor) {
+            this._activitiesActor.remove_style_pseudo_class('hover');
+        }
+        _D('<');
+    },
+
     _ensureVisible: function() {
-        _D('>' + this.__name__ + '._ensureVisible');
+        _D('>' + this.__name__ + '._ensureVisible()');
         if (this._activities && this._activities.container && !this._activities.container.visible) {
             if (global.yawl && global.yawl.set && global.yawl._hideActivities) {
                 this._timeout.add('ensure-visible-yawl', 250, function () { global.yawl.set('hide-activities', false); }, null, true, true);
