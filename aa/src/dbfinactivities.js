@@ -102,6 +102,9 @@ const dbFinActivities = new Lang.Class({
 
         this._buildMenu();
 
+        this._updatedStyleForceDefault = function () {
+            if (this._activitiesActor) this._activitiesActor.name = 'panelActivities' + (global.yawlAA && global.yawlAA._styleForceDefault ? 'Alternative' : '');
+        }
         this._updatedMouseScrollTimeout = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
@@ -151,6 +154,7 @@ const dbFinActivities = new Lang.Class({
         }
         if (this._activitiesActor) {
             this._activitiesActor.remove_style_class_name('alternative-activities');
+            this._activitiesActor.name = 'panelActivities';
             this._activitiesActor.reactive = true;
             this._activitiesActor = null;
         }

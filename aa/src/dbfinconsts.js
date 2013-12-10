@@ -40,5 +40,7 @@ const arrayContributors = [
 const Settings = [
 	[ 'first-time', true, { }, null ],
 
+    [ 'style-force-default', true, { }, 'style' ],
+
     [ 'mouse-scroll-timeout', 125, { min: 25, max: 1000 }, 'mouse' ]
 ];

@@ -59,6 +59,9 @@ function buildPrefsWidget() {
 
         builder.addPageWelcome('aa', 'Alternative Activities');
 
+        builder.addPage(_("General"));
+            builder.addCheckBox(_("Force Activities button look like other panel buttons"), 'style-force-default');
+
         builder.addPage(_("Fine-tuning") + ' <span color="red">*</span>', null, '@advanced');
             builder.addLabel(_("Scroll timeout: the time after one scroll event during which other scroll events are rejected."));
             builder.shift();

@@ -11,6 +11,11 @@
       <_summary>Whether to show advanced preferences.</_summary>
       <_description>Whether to show advanced preferences.</_description>
     </key>
+    <key name="style-force-default" type="b">
+      <default>true</default>
+      <_summary>Whether to force default panel button style.</_summary>
+      <_description>Whether to force default panel button style.</_description>
+    </key>
     <key name="mouse-scroll-timeout" type="s">
       <default>'125'</default>
       <_summary>Mouse single scroll time.</_summary>
