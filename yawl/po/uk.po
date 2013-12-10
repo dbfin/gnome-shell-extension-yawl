@@ -18,7 +18,7 @@ msgstr "Project-Id-Version: YAWL 14\n"
 msgid "German translation"
 msgstr "переклад на німецьку"
 
-msgid "Ukranian translation"
+msgid "Ukrainian translation"
 msgstr "переклад на українську"
 
 msgid "Linear"
