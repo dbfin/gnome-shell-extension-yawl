@@ -88,6 +88,9 @@ const dbFinActivities = new Lang.Class({
         this._signals.connectNoId({ emitter: this._activitiesActor, signal: 'allocate',
                                     callback: this._activitiesActorAllocate, scope: this },
                                   true);
+        this._signals.connectNoId({ emitter: this._activitiesActor, signal: 'style-changed',
+                                    callback: this._updateLabelWidth, scope: this },
+                                  true);
 
         this.label = this._activitiesActor.label_actor || this._activities._label || this._activities.label;
         if (this.label) {
@@ -219,10 +222,18 @@ const dbFinActivities = new Lang.Class({
         if (this.label) {
             let (workspaceActiveIndex = global.screen && global.screen.get_active_workspace_index()) {
                 this.label.set_text(workspaceActiveIndex || workspaceActiveIndex === 0 ? '' + (workspaceActiveIndex + 1) : '?');
-                let (wln = this.label.get_preferred_width(-1)[1] || 0) {
-                    this.label.min_width = wln + (this._activities && this._activities._minHPadding || 0) * 2;
-                    this.label.queue_relayout();
-                }
+                this._updateLabelWidth();
+            }
+        }
+        _D('<');
+    },
+
+    _updateLabelWidth: function() {
+        _D('>' + this.__name__ + '._updateLabelWidth()');
+        if (this.label) {
+            let (wln = this.label.get_preferred_width(-1)[1] || 0) {
+                this.label.min_width = wln + (this._activities && this._activities._minHPadding || 0) * 2;
+                this.label.queue_relayout();
             }
         }
         _D('<');
