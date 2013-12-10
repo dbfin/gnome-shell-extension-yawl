@@ -1,0 +1,153 @@
+# Translation for dbFin YAWL GNOME Shell extension
+# Copyright (C) 2013 Vadim Cherepanov @ dbFin.com
+# This file is distributed under the same license as dbFin YAWL GNOME Shell Extension.
+# Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
+#
+msgid ""
+msgstr "Project-Id-Version: Alternative Activities 1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-12-09 22:35-0600\n"
+"PO-Revision-Date: 2013-12-09 22:35-0600\n"
+"Last-Translator: Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
+"Language-Team: dbFin\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit"
+
+msgid "German translation"
+msgstr "Deutsche Übersetzung"
+
+msgid "Ukranian translation"
+msgstr ""
+
+msgid "Settings were reset successfully!"
+msgstr "Einstellungen wurden zurückgesetzt!"
+
+msgid "Please specify settings directory and file name."
+msgstr "Bitte einen Verzeichnis- und Dateinamen für die Einstellungen eingeben."
+
+msgid "Cannot create Gio.File object for file"
+msgstr "Konnte Gio.File-Objekt für die Datei nicht anlegen"
+
+msgid "Cannot create/replace file"
+msgstr "Konnte die Datei nicht erzeugen/ersetzen"
+
+msgid "Cannot create Gio.DataOutputStream object for file"
+msgstr "Konnte Gio.DataOutputStream-Objekt für die Datei nicht anlegen"
+
+msgid "Cannot write to file"
+msgstr "Konnte nicht in die Datei schreiben"
+
+msgid "File was created/updated successfully!"
+msgstr "Datei wurde erfolgreich erzeugt/aktualisiert!"
+
+msgid "Cannot open file"
+msgstr "Konnte Datei nicht öffnen"
+
+msgid "Cannot create Gio.DataInputStream object for file"
+msgstr "Konnte Gio.DataInputStream-Objekt für die Datei nicht anlegen"
+
+msgid "File was read successfully"
+msgstr "Datei wurde erfolgreich ausgelesen"
+
+msgid "settings values imported."
+msgstr "Einstellungswerte importiert."
+
+msgid "Welcome"
+msgstr "Willkommen!"
+
+msgid "GNOME Shell Extension"
+msgstr "GNOME-Shell-Erweiterung"
+
+msgid "Copyright"
+msgstr "Urheberrecht"
+
+msgid "Home page"
+msgstr "Webseite"
+
+msgid "Source code"
+msgstr "Quelltext"
+
+msgid "Special thanks to"
+msgstr "Besonderen Dank an"
+
+msgid ""
+"If you would like to translate the program to your language feel free to do "
+"so: please use GitHub or email me for instructions."
+msgstr "Zum Übersetzen der Erweiterung in eine andere Sprache einfach GitHub nutzen oder mir eine E-Mail schreiben für weitere Instruktionen."
+
+msgid ""
+"This is free software -- free as in beer and free as in freeman -- "
+"distributed under the terms of the GNU General Public License (GPL) version "
+"3."
+msgstr "Dies ist freie Software, veröffentlicht unter den Bestimmungen der GNU General Public License 3 (GPL 3)."
+
+msgid ""
+"A copy of the License is distributed along with the software (file GNUGPLv3) "
+"and is also available at <a href='http://www.gnu.org/licenses/'><span "
+"color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</"
+"span></a>."
+msgstr "Eine Kopie der Lizenz ist in dieser Software enthalten (Datei GNUGPLv3) und kann hier heruntergeladen werden: <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>."
+
+msgid ""
+"You are free to use, modify or otherwise distribute the code of this "
+"software provided that your actions comply with all applicable laws and GPL."
+msgstr "Der Quellcode dieser Software darf benutzt, verändert und anderweitig verbreiten werden entsprechend den geltenden Gesetzen und den Bestimmungen der GPL."
+
+msgid ""
+"In particular, you must include the above copyright notice and a copy of the "
+"License in all copies or substantial portions of the software, whether "
+"original or modified."
+msgstr "Insbesondere muss der obige Urheber-Hinweis und eine Kopie der Lizenz für alle originalen und modifizierten Teile der Software enthalten sein."
+
+msgid ""
+"This software is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE."
+msgstr "Diese Software wurde in der Hoffnung veröffentlicht, nützlich zu sein, aber OHNE JEDE GARANTIE: Ebenso ohne Gewährleistung, dass diese Software für einen bestimmten Zweck geeignet ist."
+
+msgid ""
+"For more details please see the GNU General Public License (GPL) version 3."
+msgstr "Für mehr Details lesen Sie bitte die GNU General Public License (GPL) version 3."
+
+msgid "Export/Import"
+msgstr "Exportieren/Importieren"
+
+msgid "Back up, sync and share settings."
+msgstr "Sichern, synchronisieren und teilen von Einstellungen."
+
+msgid "To reset all settings please enable"
+msgstr "Bitte aktivieren, um alle Einstellungen zurückzusetzen"
+
+msgid "Advanced settings"
+msgstr "Erweiterte Einstellungen"
+
+msgid "Reset settings"
+msgstr "Einstellungen zurücksetzen"
+
+msgid "This will overwrite all current settings"
+msgstr "Dies wird die alle momentanen Einstellungen überschreiben"
+
+msgid "Status:"
+msgstr "Status:"
+
+msgid "Export"
+msgstr "Exportieren"
+
+msgid "Import"
+msgstr "Importieren"
+
+msgid "This will overwrite the file with settings"
+msgstr "Dies wird die Datei mit den Einstellungen überschreiben"
+
+msgid "Fine-tuning"
+msgstr "Feineinstellung"
+
+msgid ""
+"Scroll timeout: the time after one scroll event during which other scroll "
+"events are rejected."
+msgstr "Scroll-Auszeit: Die Zeit nach dem Scrollen, in der andere Scroll-Ereignisse abgewiesen werden."
+
+msgid "Mouse scroll timeout"
+msgstr "Mausscroll-Auszeit"

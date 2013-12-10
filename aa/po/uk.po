@@ -1,0 +1,153 @@
+# Translation for dbFin YAWL GNOME Shell extension
+# Copyright (C) 2013 Vadim Cherepanov @ dbFin.com
+# This file is distributed under the same license as dbFin YAWL GNOME Shell Extension.
+# Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
+#
+msgid ""
+msgstr "Project-Id-Version: Alternative Activities 1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-12-09 22:35-0600\n"
+"PO-Revision-Date: 2013-12-09 22:35-0600\n"
+"Last-Translator: Svitozar Cherepii\n"
+"Language-Team: dbFin\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit"
+
+msgid "German translation"
+msgstr "переклад на німецьку"
+
+msgid "Ukranian translation"
+msgstr "переклад на українську"
+
+msgid "Settings were reset successfully!"
+msgstr "Налаштування успішно повернені в вихідний стан!"
+
+msgid "Please specify settings directory and file name."
+msgstr "Будь ласка, вкажіть теку і назву файлу налаштувань."
+
+msgid "Cannot create Gio.File object for file"
+msgstr "Не можу створити об’єкт Gio.File для файлу"
+
+msgid "Cannot create/replace file"
+msgstr "Не можу створити/замінити файл"
+
+msgid "Cannot create Gio.DataOutputStream object for file"
+msgstr "Не можу створити об’єкт Gio.DataOutputStream для файлу"
+
+msgid "Cannot write to file"
+msgstr "Не можу записати в файл"
+
+msgid "File was created/updated successfully!"
+msgstr "Файл створено/оновлено успішно!"
+
+msgid "Cannot open file"
+msgstr "Не можу відкрити файл"
+
+msgid "Cannot create Gio.DataInputStream object for file"
+msgstr "Не можу створити об’єкт Gio.DataInputStream для файлу"
+
+msgid "File was read successfully"
+msgstr "Файл прочитано успішно"
+
+msgid "settings values imported."
+msgstr "значень налаштувань імпортовано."
+
+msgid "Welcome"
+msgstr "Ласкаво просимо!"
+
+msgid "GNOME Shell Extension"
+msgstr "Розширення GNOME Shell"
+
+msgid "Copyright"
+msgstr "Авторське право"
+
+msgid "Home page"
+msgstr "Веб-сторінка"
+
+msgid "Source code"
+msgstr "Вихідний код"
+
+msgid "Special thanks to"
+msgstr "Особлива вдячність"
+
+msgid ""
+"If you would like to translate the program to your language feel free to do "
+"so: please use GitHub or email me for instructions."
+msgstr "Якщо Ви бажаєте перекласти програму на вашу мову, будь-ласка використовуйте GitHub або надішліть мені листа для подальших інструкцій"
+
+msgid ""
+"This is free software -- free as in beer and free as in freeman -- "
+"distributed under the terms of the GNU General Public License (GPL) version "
+"3."
+msgstr "Це безкоштовне та вільне програмне забезпечення (ПЗ), розповсюджуване під Ліцензією GNU General Public License 3 (GPL 3)."
+
+msgid ""
+"A copy of the License is distributed along with the software (file GNUGPLv3) "
+"and is also available at <a href='http://www.gnu.org/licenses/'><span "
+"color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</"
+"span></a>."
+msgstr "Копія Ліцензії поширюєтся разом із програмним забезпеченням (файл GNUGPLv3), а також доступна за адресою <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>."
+
+msgid ""
+"You are free to use, modify or otherwise distribute the code of this "
+"software provided that your actions comply with all applicable laws and GPL."
+msgstr "Ви можете вільно використовувати, модифікувати чи іншим чином поширювати код цього програмного забезпечення за умови, що ваші дії не суперечать закону і GPL."
+
+msgid ""
+"In particular, you must include the above copyright notice and a copy of the "
+"License in all copies or substantial portions of the software, whether "
+"original or modified."
+msgstr "Зокрема, Ви повинні включити вказане вище повідомлення про авторське право і копію ліцензії у всі копії або значущі частини даного програмного забезпечення, будь то оригінальні або змінені."
+
+msgid ""
+"This software is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE."
+msgstr "Ця програма поширюється в надії, що вона буде корисною, але БЕЗ БУДЬ-ЯКИХ ГАРАНТІЙ: навіть без гарантій КОМЕРЦІЙНОЇ ЦІННОСТІ чи ПРИДАТНОСТІ ДЛЯ КОНКРЕТНИХ ЦІЛЕЙ."
+
+msgid ""
+"For more details please see the GNU General Public License (GPL) version 3."
+msgstr "Для додаткової інформації звертайтесь до GNU GPL версії 3."
+
+msgid "Export/Import"
+msgstr "Експорт/Імпорт"
+
+msgid "Back up, sync and share settings."
+msgstr "Для резервного копіювання і синхронізації."
+
+msgid "To reset all settings please enable"
+msgstr "Щоб повернути всі налаштування в вихідний стан, будь ласка, увімкніть"
+
+msgid "Advanced settings"
+msgstr "Додаткові налаштування"
+
+msgid "Reset settings"
+msgstr "Відновити всі налаштування"
+
+msgid "This will overwrite all current settings"
+msgstr "Відновити налаштування з файлу"
+
+msgid "Status:"
+msgstr "Статус:"
+
+msgid "Export"
+msgstr "Експорт"
+
+msgid "Import"
+msgstr "Імпорт"
+
+msgid "This will overwrite the file with settings"
+msgstr "Створити/оновити файл с налаштуваннями"
+
+msgid "Fine-tuning"
+msgstr "Налаштування"
+
+msgid ""
+"Scroll timeout: the time after one scroll event during which other scroll "
+"events are rejected."
+msgstr "Тривалість прокрутки: час після прокрутки, протягом якого інші сигнали прокрутки не приймаються."
+
+msgid "Mouse scroll timeout"
+msgstr "Тривалість прокрутки миші"
