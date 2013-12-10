@@ -90,6 +90,7 @@ const dbFinActivities = new Lang.Class({
                                         callback: this._updateLabel, scope: this });
             this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
                                         callback: this._updateLabel, scope: this });
+            this._labelTextWas = this.label.get_text();
             this._updateLabel();
         }
 
@@ -132,13 +133,19 @@ const dbFinActivities = new Lang.Class({
             this._clicked = null;
         }
         this._destroyMenu();
-        this.label = null;
+        if (this.label) {
+            this.label.set_text(this._labelTextWas);
+            this.label = null;
+        }
         if (this._bin) {
             this._bin.destroy();
             this._bin = null;
         }
-        this._activitiesActor.reactive = true;
-        this._activitiesActor = null;
+        if (this._activitiesActor) {
+            this._activitiesActor.remove_style_class_name('alternative-activities');
+            this._activitiesActor.reactive = true;
+            this._activitiesActor = null;
+        }
         this._activities = null;
         this.emit('destroy');
 		_D('<');
