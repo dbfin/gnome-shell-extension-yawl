@@ -91,6 +91,8 @@ const dbFinActivities = new Lang.Class({
             this._signals.connectNoId({	emitter: global.window_manager, signal: 'switch-workspace',
                                         callback: this._updateLabel, scope: this });
             this._labelTextWas = this.label.get_text();
+            this._labelXAlignWas = this.label.x_align;
+            this.label.x_align = Clutter.ActorAlign.CENTER;
             this._updateLabel();
         }
 
@@ -134,6 +136,8 @@ const dbFinActivities = new Lang.Class({
         }
         this._destroyMenu();
         if (this.label) {
+            this.label.set_text(' ');
+            this.label.x_align = this._labelXAlignWas;
             this.label.set_text(this._labelTextWas);
             this.label = null;
         }
