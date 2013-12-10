@@ -24,3 +24,13 @@
  *
  */
 
+/* Activities button actor's style */
+#panelActivities.alternative-activities {
+    background: none;
+    color: inherit;
+}
+
+/* Activities button label's style */
+#panelActivities.alternative-activities StLabel {
+    color: inherit;
+}
