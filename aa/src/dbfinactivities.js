@@ -78,6 +78,7 @@ const dbFinActivities = new Lang.Class({
             this._bin.add_style_class_name('alternative-activities-face');
         }
 
+        this._activitiesActor.reactive = false;
         this._activitiesActor.add_style_class_name('alternative-activities');
         this._signals.connectNoId({ emitter: this._activitiesActor, signal: 'allocate',
                                     callback: this._activitiesActorAllocate, scope: this },
@@ -136,6 +137,7 @@ const dbFinActivities = new Lang.Class({
             this._bin.destroy();
             this._bin = null;
         }
+        this._activitiesActor.reactive = true;
         this._activitiesActor = null;
         this._activities = null;
         this.emit('destroy');
