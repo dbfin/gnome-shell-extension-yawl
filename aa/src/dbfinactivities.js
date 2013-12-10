@@ -45,6 +45,7 @@ const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinPopupMenu = Me.imports.dbfinpopupmenu;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinTimeout = Me.imports.dbfintimeout;
+const dbFinUtils = Me.imports.dbfinutils;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
@@ -143,7 +144,16 @@ const dbFinActivities = new Lang.Class({
 
     _activitiesActorAllocate: function(actor, box, flags) {
         _D('@' + this.__name__ + '._activitiesActorAllocate');
-        if (this._bin) this._bin.allocate(box, flags);
+        let (childBox = this._bin && this._activitiesActor && new Clutter.ActorBox()) {
+            if (childBox) {
+                dbFinUtils.setBox(childBox,
+                                  Math.min(0, box.x1),
+                                  Math.min(0, box.y1),
+                                  Math.max(this._activitiesActor.width || 0, box.x2),
+                                  Math.max(this._activitiesActor.height || 0, box.y2));
+                this._bin.allocate(childBox, flags);
+            }
+        }
         _D('<');
     },
 
