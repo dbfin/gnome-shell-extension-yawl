@@ -34,7 +34,7 @@ const arrayShellVersion = imports.misc.config.PACKAGE_VERSION.split('.').map(fun
 
 const arrayContributors = [
         [       'Jonatan Zeidler',                                                      _("German translation")                 ],
-        [       'Svitozar Cherepii',                                                    _("Ukranian translation")               ]
+        [       'Svitozar Cherepii',                                                    _("Ukrainian translation")              ]
 ];
 
 const Settings = [

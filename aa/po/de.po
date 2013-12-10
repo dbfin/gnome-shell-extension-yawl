@@ -18,9 +18,6 @@ msgstr "Project-Id-Version: Alternative Activities 1\n"
 msgid "German translation"
 msgstr "Deutsche Übersetzung"
 
-msgid "Ukranian translation"
-msgstr ""
-
 msgid "Settings were reset successfully!"
 msgstr "Einstellungen wurden zurückgesetzt!"
 
