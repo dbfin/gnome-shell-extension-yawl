@@ -33,14 +33,21 @@ const _ = Gettext.gettext;
 const arrayShellVersion = imports.misc.config.PACKAGE_VERSION.split('.').map(function (v) { return parseInt(v); });
 
 const arrayContributors = [
-        [       'Jonatan Zeidler',                                                      _("German translation")                 ],
-        [       'Svitozar Cherepii',                                                    _("Ukrainian translation")              ]
+    [   'Jonatan Zeidler',                  _("German translation")         ],
+    [   'Svitozar Cherepii',                _("Ukrainian translation")      ]
+];
+
+const arrayStyleBackgrounds = [
+    [   _("default")                        ],
+    [   _("frame")                          ],
+    [   _("transparent")                    ]
 ];
 
 const Settings = [
 	[ 'first-time', true, { }, null ],
 
     [ 'style-force-default', true, { }, 'style' ],
+    [ 'style-background', 1, { min: 0, max: arrayStyleBackgrounds.length - 1 }, 'style' ],
 
     [ 'mouse-scroll-timeout', 125, { min: 25, max: 1000 }, 'mouse' ]
 ];

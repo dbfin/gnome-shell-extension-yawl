@@ -42,6 +42,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinClicked = Me.imports.dbfinclicked;
+const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinPopupMenu = Me.imports.dbfinpopupmenu;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinTimeout = Me.imports.dbfintimeout;
@@ -104,7 +105,15 @@ const dbFinActivities = new Lang.Class({
 
         this._updatedStyleForceDefault = function () {
             if (this._activitiesActor) this._activitiesActor.name = 'panelActivities' + (global.yawlAA && global.yawlAA._styleForceDefault ? 'Alternative' : '');
-        }
+        };
+        this._updatedStyleBackground = function () {
+            if (this._activitiesActor) {
+                dbFinConsts.arrayStyleBackgrounds.forEach(Lang.bind(this, function (row) { this._activitiesActor.remove_style_class_name(row[0]); }));
+                if (global.yawlAA && global.yawlAA._styleBackground) {
+                    this._activitiesActor.add_style_class_name(dbFinConsts.arrayStyleBackgrounds[global.yawlAA._styleBackground][0]);
+                }
+            }
+        };
         this._updatedMouseScrollTimeout = function () {
 			if (this._clicked) {
 				this._clicked.destroy();

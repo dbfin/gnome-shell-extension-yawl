@@ -26,11 +26,60 @@
 
 /* Activities button actor's style */
 #panelActivities.alternative-activities {
-    background: none;
-    color: inherit;
+}
+
+#panelActivities.alternative-activities:hover {
+}
+
+/* Activities button actor's style with default panel button styling */
+#panelActivitiesAlternative.alternative-activities {
+}
+
+#panelActivitiesAlternative.alternative-activities:hover {
 }
 
 /* Activities button label's style */
-#panelActivities.alternative-activities StLabel {
-    color: inherit;
+#panelActivities.alternative-activities StLabel,
+#panelActivitiesAlternative.alternative-activities StLabel {
+}
+
+/* Activities button frame actor's style */
+#panelActivities.alternative-activities.frame,
+#panelActivitiesAlternative.alternative-activities.frame {
+    -minimum-hpadding: 1px;
+    -natural-hpadding: 3px;
+    background: transparent;
+}
+
+#panelActivities.alternative-activities.frame:hover,
+#panelActivitiesAlternative.alternative-activities.frame:hover {
+    -minimum-hpadding: 1px;
+    -natural-hpadding: 3px;
+    background: transparent;
+}
+
+/* Activities button frame label's style */
+#panelActivities.alternative-activities.frame StLabel,
+#panelActivitiesAlternative.alternative-activities.frame StLabel {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 3px;
+    padding: 0 11px;
+    background: rgba(128, 128, 128, 0.21);
+}
+
+/* Activities button transparent actor's style */
+#panelActivities.alternative-activities.transparent,
+#panelActivitiesAlternative.alternative-activities.transparent {
+    background: transparent;
+}
+
+#panelActivities.alternative-activities.transparent:hover,
+#panelActivitiesAlternative.alternative-activities.transparent:hover {
+    background: transparent;
+}
+
+/* Activities button transparent label's style */
+#panelActivities.alternative-activities.transparent StLabel,
+#panelActivitiesAlternative.alternative-activities.transparent StLabel {
+    background: transparent;
 }

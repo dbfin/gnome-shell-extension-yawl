@@ -61,6 +61,7 @@ function buildPrefsWidget() {
 
         builder.addPage(_("General"));
             builder.addCheckBox(_("Force Activities button look like other panel buttons"), 'style-force-default');
+            builder.addComboBoxText(_("Choose Activities button background"), 'style-background', dbFinConsts.arrayStyleBackgrounds, 0);
 
         builder.addPage(_("Fine-tuning") + ' <span color="red">*</span>', null, '@advanced');
             builder.addLabel(_("Scroll timeout: the time after one scroll event during which other scroll events are rejected."));
