@@ -249,7 +249,10 @@ const dbFinActivities = new Lang.Class({
                 if (menu._yawlAAMenuWorkspaces) menu.addMenuItem(menu._yawlAAMenuWorkspaces);
                 menu._yawlAAOpenWas = menu.open;
                 menu.open = Lang.bind(menu, this._openMenu);
+
+                this._activitiesMenuWas = this._activities.menu;
                 this._activities.setMenu(menu);
+
                 this._menuManager = Main.panel && Main.panel.menuManager || null;
                 if (this._menuManager) this._menuManager.addMenu(menu);
             } // if (menu)
@@ -263,13 +266,18 @@ const dbFinActivities = new Lang.Class({
             if (this.menu) this._menuManager.removeMenu(this.menu);
             this._menuManager = null;
         }
-        if (this.menu && this.menu._yawlAAMenuWorkspaces) {
-            this.menu._yawlAAMenuWorkspaces.removeAll();
-            this.menu._yawlAAMenuWorkspaces.destroy();
-            this.menu._yawlAAMenuWorkspaces = null;
+        if (this.menu) {
+            if (this.menu._yawlAAOpenWas) {
+                this.menu.open = this.menu._yawlAAOpenWas;
+            }
+            if (this.menu._yawlAAMenuWorkspaces) {
+                this.menu._yawlAAMenuWorkspaces.removeAll();
+                this.menu._yawlAAMenuWorkspaces.destroy();
+                this.menu._yawlAAMenuWorkspaces = null;
+            }
+            this.menu = null;
         }
-        this._activities.setMenu(null);
-        this.menu = null;
+        this._activities.setMenu(this._activitiesMenuWas || null);
         _D('<');
     },
 
