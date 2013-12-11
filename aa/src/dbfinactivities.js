@@ -401,8 +401,11 @@ const dbFinActivities = new Lang.Class({
                 } // for (let i)
             } // let (n_workspaces, workspaceActiveIndex, workspaces, workspacesApps)
         } // if (this._yawlAAMenuWorkspaces)
-        if (this._yawlAAMenuExtensions && this._dbFinActivities && ExtensionUtils.extensions) {
+        if (this._yawlAAMenuExtensions) {
             this._yawlAAMenuExtensions.removeAll();
+            this._yawlAAMenuExtensions.actor.hide();
+        }
+        if (global.yawlAA && global.yawlAA._extensionManager && this._yawlAAMenuExtensions && this._dbFinActivities && ExtensionUtils.extensions) {
             let (extensions = [], extensionsDisabled = []) { // [ extension, name, NAME ]
                 for (let id in ExtensionUtils.extensions) {
                     let (extension = id && ExtensionUtils.extensions.hasOwnProperty(id) && ExtensionUtils.extensions[id]) {
@@ -415,10 +418,7 @@ const dbFinActivities = new Lang.Class({
                         }
                     }
                 }
-                if (!extensions.length && !extensionsDisabled.length) {
-                    this._yawlAAMenuExtensions.actor.hide();
-                } // if (!extensions.length && !extensionsDisabled.length)
-                else {
+                if (extensions.length || extensionsDisabled.length) {
                     this._yawlAAMenuExtensions.actor.show();
                     if (extensions.length) {
                         extensions.sort(function (enn1, enn2) { return enn1[2] < enn2[2] ? -1 : 1; });
@@ -446,9 +446,9 @@ const dbFinActivities = new Lang.Class({
                             } // if (subMenu && subMenu.menu)
                         } // let (subMenu)
                     } // if (extensionsDisabled.length)
-                } // if (!extensions.length && !extensionsDisabled.length) else
+                } // if (extensions.length || extensionsDisabled.length)
             } // let (extensions, extensionsDisabled)
-        } // if (this._yawlAAMenuExtensions && this._dbFinActivities && ExtensionUtils.extensions)
+        } // if (global.yawlAA && global.yawlAA._extensionManager && this._yawlAAMenuExtensions && this._dbFinActivities && ExtensionUtils.extensions)
         if (this._yawlAAOpenWas) Lang.bind(this, this._yawlAAOpenWas)(animate);
         _D('<');
     },

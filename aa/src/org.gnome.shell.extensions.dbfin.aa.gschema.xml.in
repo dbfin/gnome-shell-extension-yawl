@@ -16,6 +16,11 @@
       <_summary>Whether to force default panel button style.</_summary>
       <_description>Whether to force default panel button style.</_description>
     </key>
+    <key name="extension-manager" type="b">
+      <default>true</default>
+      <_summary>Whether to show extensions in the menu.</_summary>
+      <_description>Whether to show extensions in the menu.</_description>
+    </key>
     <key name="style-background" type="s">
       <default>'1'</default>
       <_summary>Activities button background.</_summary>
