@@ -243,8 +243,10 @@ const dbFinActivities = new Lang.Class({
         _D('>' + this.__name__ + '._buildMenu()');
         this._destroyMenu();
         let (menu = this._activitiesActor && new PopupMenu.PopupMenu(this._activitiesActor, 0.0, St.Side.TOP, 0)) {
-            if (menu) {
+            if (menu && menu.actor) {
                 this.menu = menu;
+                menu.actor.add_style_class_name('alternative-activities');
+
                 menu._yawlAAMenuWorkspaces = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
                 if (menu._yawlAAMenuWorkspaces) menu.addMenuItem(menu._yawlAAMenuWorkspaces);
                 menu._yawlAAOpenWas = menu.open;
@@ -255,7 +257,7 @@ const dbFinActivities = new Lang.Class({
 
                 this._menuManager = Main.panel && Main.panel.menuManager || null;
                 if (this._menuManager) this._menuManager.addMenu(menu);
-            } // if (menu)
+            } // if (menu && menu.actor)
         } // let (menu)
         _D('<');
     },

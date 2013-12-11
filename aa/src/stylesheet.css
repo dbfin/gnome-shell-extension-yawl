@@ -83,3 +83,11 @@
 #panelActivitiesAlternative.alternative-activities.transparent StLabel {
     background: transparent;
 }
+
+/* Popup menu */
+.popup-menu.alternative-activities {
+}
+
+.popup-menu.alternative-activities .popup-menu-item {
+    font-size: 92%;
+}
