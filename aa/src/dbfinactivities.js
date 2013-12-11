@@ -78,13 +78,13 @@ const dbFinActivities = new Lang.Class({
         if (this._bin) {
             this._activitiesActor.add_child(this._bin);
             this._bin.add_style_class_name('alternative-activities-face');
+            this._bin._delegate = this._activitiesActor;
             this._signals.connectNoId({ emitter: this._bin, signal: 'enter-event',
                                         callback: this._activitiesActorEnterEvent, scope: this });
             this._signals.connectNoId({ emitter: this._bin, signal: 'leave-event',
                                         callback: this._activitiesActorLeaveEvent, scope: this });
         }
 
-        this._activitiesActor.reactive = false;
         this._activitiesActor.add_style_class_name('alternative-activities');
         this._signals.connectNoId({ emitter: this._activitiesActor, signal: 'allocate',
                                     callback: this._activitiesActorAllocate, scope: this },
@@ -169,7 +169,6 @@ const dbFinActivities = new Lang.Class({
         if (this._activitiesActor) {
             this._activitiesActor.remove_style_class_name('alternative-activities');
             this._activitiesActor.name = 'panelActivities';
-            this._activitiesActor.reactive = true;
             this._activitiesActor = null;
         }
         this._activities = null;
