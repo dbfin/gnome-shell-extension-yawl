@@ -249,6 +249,13 @@ const dbFinActivities = new Lang.Class({
 
                 menu._yawlAAMenuWorkspaces = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
                 if (menu._yawlAAMenuWorkspaces) menu.addMenuItem(menu._yawlAAMenuWorkspaces);
+
+                menu._yawlAAMenuSeparatorWE = new PopupMenu.PopupSeparatorMenuItem();
+                if (menu._yawlAAMenuSeparatorWE) menu.addMenuItem(menu._yawlAAMenuSeparatorWE);
+
+                menu._yawlAAMenuExtensions = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
+                if (menu._yawlAAMenuExtensions) menu.addMenuItem(menu._yawlAAMenuExtensions);
+
                 menu._yawlAAOpenWas = menu.open;
                 menu.open = Lang.bind(menu, this._openMenu);
 
@@ -271,6 +278,15 @@ const dbFinActivities = new Lang.Class({
         if (this.menu) {
             if (this.menu._yawlAAOpenWas) {
                 this.menu.open = this.menu._yawlAAOpenWas;
+            }
+            if (this.menu._yawlAAMenuExtensions) {
+                this.menu._yawlAAMenuExtensions.removeAll();
+                this.menu._yawlAAMenuExtensions.destroy();
+                this.menu._yawlAAMenuExtensions = null;
+            }
+            if (this.menu._yawlAAMenuSeparatorWE) {
+                this.menu._yawlAAMenuSeparatorWE.destroy();
+                this.menu._yawlAAMenuSeparatorWE = null;
             }
             if (this.menu._yawlAAMenuWorkspaces) {
                 this.menu._yawlAAMenuWorkspaces.removeAll();
