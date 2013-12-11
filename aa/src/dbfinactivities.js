@@ -25,6 +25,7 @@
  */
 
 const Lang = imports.lang;
+const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
@@ -245,6 +246,8 @@ const dbFinActivities = new Lang.Class({
         let (menu = this._activitiesActor && new PopupMenu.PopupMenu(this._activitiesActor, 0.0, St.Side.TOP, 0)) {
             if (menu && menu.actor) {
                 this.menu = menu;
+                menu._dbFinActivities = this;
+
                 menu.actor.add_style_class_name('alternative-activities');
 
                 menu._yawlAAMenuWorkspaces = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
@@ -293,6 +296,7 @@ const dbFinActivities = new Lang.Class({
                 this.menu._yawlAAMenuWorkspaces.destroy();
                 this.menu._yawlAAMenuWorkspaces = null;
             }
+            this.menu._dbFinActivities = null;
             this.menu = null;
         }
         this._activities.setMenu(this._activitiesMenuWas || null);
@@ -385,8 +389,96 @@ const dbFinActivities = new Lang.Class({
                 } // for (let i)
             } // let (n_workspaces, workspaceActiveIndex, workspaces, workspacesApps)
         } // if (this._yawlAAMenuWorkspaces)
+        if (this._yawlAAMenuExtensions && this._dbFinActivities && ExtensionUtils.extensions) {
+            this._yawlAAMenuExtensions.removeAll();
+            let (extensions = [], extensionsDisabled = []) { // [ extension, name, NAME ]
+                for (let id in ExtensionUtils.extensions) {
+                    let (extension = id && ExtensionUtils.extensions.hasOwnProperty(id) && ExtensionUtils.extensions[id]) {
+                        let (state = extension && extension.state,
+                             metadata = extension && extension.metadata) {
+                            if (metadata && metadata.name) {
+                                if (state == 1) extensions.push([ extension, metadata.name, metadata.name.toUpperCase() ]);
+                                else if (state == 2 || state == 6) extensionsDisabled.push([ extension, metadata.name, metadata.name.toUpperCase() ]);
+                            }
+                        }
+                    }
+                }
+                if (!extensions.length && !extensionsDisabled.length) {
+                    this._yawlAAMenuExtensions.actor.hide();
+                } // if (!extensions.length && !extensionsDisabled.length)
+                else {
+                    this._yawlAAMenuExtensions.actor.show();
+                    if (extensions.length) {
+                        extensions.sort(function (enn1, enn2) { return enn1[2] < enn2[2] ? -1 : 1; });
+                        extensions.forEach(Lang.bind(this, function (enn) {
+                            let (subMenu = new PopupMenu.PopupSubMenuMenuItem(enn[1])) {
+                                if (subMenu && subMenu.menu) {
+                                    if (enn[0].hasPrefs) this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u2692 ' + _("Extension preferences"), '_extensionPreferences');
+                                    this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u26aa ' + _("Soft restart"), '_extensionSoftRestart');
+                                    this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u26ab ' + _("Hard restart"), '_extensionHardRestart');
+                                    if (enn[0].uuid != 'aa@dbfin.com') this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u2296 ' + _("Disable extension"), '_extensionDisable');
+                                    this._yawlAAMenuExtensions.addMenuItem(subMenu);
+                                } // if (subMenu && subMenu.menu)
+                            } // let (subMenu)
+                        })); // extensions.forEach(enn)
+                    } // if (extensions.length)
+                    if (extensionsDisabled.length) {
+                        let (subMenu = new PopupMenu.PopupSubMenuMenuItem(_("Disabled extensions"))) {
+                            if (subMenu && subMenu.menu) {
+                                extensionsDisabled.sort(function (enn1, enn2) { return enn1[2] < enn2[2] ? -1 : 1; });
+                                extensionsDisabled.forEach(Lang.bind(this, function (enn) {
+                                    this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u2295 ' + enn[1], '_extensionEnable');
+                                }));
+                                if (extensions.length) this._yawlAAMenuExtensions.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+                                this._yawlAAMenuExtensions.addMenuItem(subMenu);
+                            } // if (subMenu && subMenu.menu)
+                        } // let (subMenu)
+                    } // if (extensionsDisabled.length)
+                } // if (!extensions.length && !extensionsDisabled.length) else
+            } // let (extensions, extensionsDisabled)
+        } // if (this._yawlAAMenuExtensions && this._dbFinActivities && ExtensionUtils.extensions)
         if (this._yawlAAOpenWas) Lang.bind(this, this._yawlAAOpenWas)(animate);
         _D('<');
+    },
+
+    _addExtensionAction: function (menu, extension, name, method) {
+        let (menuItem = new PopupMenu.PopupMenuItem(name)) {
+            menuItem._extension = extension;
+            menu.addMenuItem(menuItem);
+            menuItem.connect('activate', this[method]);
+        }
+    },
+    _extensionDisable: function (menuItem, event) {
+        ExtensionSystem.disableExtension(menuItem._extension.uuid);
+        let (enabledExtensions = global.settings && global.settings.get_strv(ExtensionSystem.ENABLED_EXTENSIONS_KEY)) {
+            let (index = enabledExtensions && enabledExtensions.indexOf(menuItem._extension.uuid)) {
+                if (index != -1) {
+                    enabledExtensions.splice(index, 1);
+                    global.settings.set_strv(ExtensionSystem.ENABLED_EXTENSIONS_KEY, enabledExtensions);
+                }
+            }
+        }
+    },
+    _extensionEnable: function (menuItem, event) {
+        ExtensionSystem.enableExtension(menuItem._extension.uuid);
+        let (enabledExtensions = global.settings && global.settings.get_strv(ExtensionSystem.ENABLED_EXTENSIONS_KEY)) {
+            let (index = enabledExtensions && enabledExtensions.indexOf(menuItem._extension.uuid)) {
+                if (index == -1) {
+                    enabledExtensions.push(menuItem._extension.uuid);
+                    global.settings.set_strv(ExtensionSystem.ENABLED_EXTENSIONS_KEY, enabledExtensions);
+                }
+            }
+        }
+    },
+    _extensionHardRestart: function (menuItem, event) {
+        ExtensionSystem.reloadExtension(menuItem._extension);
+    },
+    _extensionPreferences: function (menuItem, event) {
+        try { Util.trySpawn([ 'gnome-shell-extension-prefs', menuItem._extension.uuid ]); } catch (e) {}
+    },
+    _extensionSoftRestart: function (menuItem, event) {
+        ExtensionSystem.disableExtension(menuItem._extension.uuid);
+        Mainloop.idle_add(function () { ExtensionSystem.enableExtension(menuItem._extension.uuid); });
     },
 
     _buttonClicked: function(state, name) {
