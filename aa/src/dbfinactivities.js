@@ -131,6 +131,7 @@ const dbFinActivities = new Lang.Class({
             }
 		};
 
+        this._ensureVisibleCounter = 0;
         this._signals.connectNoId({ emitter: this._activities.container, signal: 'notify::visible',
                                     callback: this._ensureVisible, scope: this },
                                   true);
@@ -210,6 +211,18 @@ const dbFinActivities = new Lang.Class({
     _ensureVisible: function() {
         _D('>' + this.__name__ + '._ensureVisible()');
         if (this._activities && this._activities.container && !this._activities.container.visible) {
+            ++this._ensureVisibleCounter;
+            if (this._ensureVisibleCounter > 10) {
+                _D('<');
+                return;
+            } else if (this._ensureVisibleCounter == 10) {
+                this._timeout.remove('ensure-visible');
+                Main.notifyError('[Alternative Activities] ' + _("Cannot show Activities button, something actively hides it.") + ' ' + _("This might be another extension forcing the native GNOME Shell's Activities button to be hidden.") + ' ' + _("Alternative Activities uses the original Activities button.") + ' ' + _("Please disable anything that might mess with it.") + ' ' + _("Temporary disabling...") + ' ' + _("Restart GNOME Shell to try again."));
+                Mainloop.idle_add(function () { ExtensionSystem.disableExtension(Me.uuid); });
+                _D('<');
+                return;
+            }
+            this._timeout.add('ensure-visible', 5000, function () { this._ensureVisibleCounter = 0; }, this, true, false, true);
             if (global.yawl && global.yawl.set && global.yawl._hideActivities) {
                 this._timeout.add('ensure-visible-yawl', 250, function () { global.yawl.set('hide-activities', false); }, null, true, true);
             }
