@@ -42,6 +42,7 @@ const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinPopupMenu = Me.imports.dbfinpopupmenu;
@@ -105,6 +106,7 @@ const dbFinActivities = new Lang.Class({
             this._updateLabel();
         }
 
+        this._extensionMenuItems = new dbFinArrayHash.dbFinArrayHash(); // [ [ id, { menu:, menuEnable:, menuPreferences:, menuSoftRestart:, menuHardRestart:, menuDisable: } ] ]
         this._buildMenu();
 
         this._updatedStyleForceDefault = function () {
@@ -156,6 +158,10 @@ const dbFinActivities = new Lang.Class({
             this._clicked = null;
         }
         this._destroyMenu();
+        if (this._extensionMenuItems) {
+            this._extensionMenuItems.destroy();
+            this._extensionMenuItems = null;
+        }
         if (this.label) {
             this.label.set_text(' ');
             this.label.x_align = this._labelXAlignWas;
@@ -271,6 +277,12 @@ const dbFinActivities = new Lang.Class({
                 menu._yawlAAMenuExtensions = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
                 if (menu._yawlAAMenuExtensions) menu.addMenuItem(menu._yawlAAMenuExtensions);
 
+                menu._yawlAAMenuSeparatorEED = new PopupMenu.PopupSeparatorMenuItem();
+                if (menu._yawlAAMenuSeparatorEED) menu.addMenuItem(menu._yawlAAMenuSeparatorEED);
+
+                menu._yawlAAMenuExtensionsDisabled = new PopupMenu.PopupSubMenuMenuItem(_("Disabled extensions"));
+                if (menu._yawlAAMenuExtensionsDisabled) menu.addMenuItem(menu._yawlAAMenuExtensionsDisabled);
+
                 menu._yawlAAOpenWas = menu.open;
                 menu.open = Lang.bind(menu, this._openMenu);
 
@@ -286,6 +298,9 @@ const dbFinActivities = new Lang.Class({
 
     _destroyMenu: function() {
         _D('>' + this.__name__ + '._destroyMenu()');
+        if (this._extensionMenuItems) {
+            this._removeAllExtensionMenuItems();
+        }
         if (this._menuManager) {
             if (this.menu) this._menuManager.removeMenu(this.menu);
             this._menuManager = null;
@@ -293,6 +308,17 @@ const dbFinActivities = new Lang.Class({
         if (this.menu) {
             if (this.menu._yawlAAOpenWas) {
                 this.menu.open = this.menu._yawlAAOpenWas;
+            }
+            if (this.menu._yawlAAMenuExtensionsDisabled) {
+                if (this.menu._yawlAAMenuExtensionsDisabled.menu) {
+                    this.menu._yawlAAMenuExtensionsDisabled.menu.removeAll();
+                }
+                this.menu._yawlAAMenuExtensionsDisabled.destroy();
+                this.menu._yawlAAMenuExtensionsDisabled = null;
+            }
+            if (this.menu._yawlAAMenuSeparatorEED) {
+                this.menu._yawlAAMenuSeparatorEED.destroy();
+                this.menu._yawlAAMenuSeparatorEED = null;
             }
             if (this.menu._yawlAAMenuExtensions) {
                 this.menu._yawlAAMenuExtensions.removeAll();
@@ -315,8 +341,74 @@ const dbFinActivities = new Lang.Class({
         _D('<');
     },
 
+    _ensureExtensionMenuItem: function (extension) {
+        _D('>' + this.__name__ + '._ensureExtensionMenuItem()');
+        if (!extension || !extension.uuid || !extension.metadata || !extension.metadata.name
+            || !this._extensionMenuItems || !this.menu || !this.menu._yawlAAMenuExtensions
+            || !this.menu._yawlAAMenuExtensionsDisabled || !this.menu._yawlAAMenuExtensionsDisabled.menu) {
+            _D('<');
+            return undefined;
+        }
+        let (menus = this._extensionMenuItems.get(extension.uuid)) {
+            if (!menus) {
+                menus = {
+                    menu: new PopupMenu.PopupSubMenuMenuItem(extension.metadata.name),
+                    menuEnable: this._addExtensionAction(this.menu._yawlAAMenuExtensionsDisabled.menu, extension,
+                                                           '\u2295 ' + extension.metadata.name, '_extensionEnable')
+                };
+                if (menus.menu && (!menus.menu.actor || !menus.menu.menu || !menus.menu.menu.actor)) {
+                    menus.menu = null;
+                }
+                else if (menus.menuEnable && !menus.menuEnable.actor) {
+                    menus.menuEnable = null;
+                }
+                else if (menus.menu && menus.menuEnable) {
+                    this.menu._yawlAAMenuExtensions.addMenuItem(menus.menu);
+                    menus.menu.actor.visible = false;
+                    menus.menuEnable.actor.visible = false;
+                    menus.menuPreferences = this._addExtensionAction(menus.menu.menu, extension, '\u2692 ' + _("Extension preferences"), '_extensionPreferences');
+                    menus.menuSoftRestart = this._addExtensionAction(menus.menu.menu, extension, '\u26aa ' + _("Soft restart"), '_extensionSoftRestart');
+                    menus.menuHardRestart = this._addExtensionAction(menus.menu.menu, extension, '\u26ab ' + _("Hard restart"), '_extensionHardRestart');
+                    menus.menuDisable = this._addExtensionAction(menus.menu.menu, extension, '\u2296 ' + _("Disable extension"), '_extensionDisable');
+                }
+                if (!menus.menuPreferences || !menus.menuPreferences.actor || !menus.menuSoftRestart || !menus.menuSoftRestart.actor
+                    || !menus.menuHardRestart || !menus.menuHardRestart.actor || !menus.menuDisable || !menus.menuDisable.actor) {
+                    _D('<');
+                    return undefined;
+                }
+                this._extensionMenuItems.set(extension.uuid, menus);
+            }
+            _D('<');
+            return menus;
+        }
+    },
+
+    _removeAllExtensionMenuItems: function() {
+        _D('>' + this.__name__ + '._removeAllExtensionMenuItems()');
+        if (this._extensionMenuItems) {
+            this._extensionMenuItems.forEach(Lang.bind(this, function (id, menus) {
+                menus.menuDisable = null;
+                menus.menuHardRestart = null;
+                menus.menuSoftRestart = null;
+                menus.menuPreferences = null;
+                if (menus.menuEnable) {
+                    menus.menuEnable.destroy();
+                    menus.menuEnable = null;
+                }
+                if (menus.menu) {
+                    if (menus.menu.menu) menus.menu.menu.removeAll();
+                    menus.menu.destroy();
+                    menus.menu = null;
+                }
+                this._extensionMenuItems.remove(id);
+            }));
+        }
+        _D('<');
+    },
+
     _openMenu: function(animate) {
         _D('>' + this.__name__ + '._openMenu()');
+        // workspaces
         if (this._yawlAAMenuWorkspaces) {
             this._yawlAAMenuWorkspaces.removeAll();
             // workspaces and running apps
@@ -401,54 +493,61 @@ const dbFinActivities = new Lang.Class({
                 } // for (let i)
             } // let (n_workspaces, workspaceActiveIndex, workspaces, workspacesApps)
         } // if (this._yawlAAMenuWorkspaces)
-        if (this._yawlAAMenuExtensions) {
-            this._yawlAAMenuExtensions.removeAll();
-            this._yawlAAMenuExtensions.actor.hide();
-        }
-        if (global.yawlAA && global.yawlAA._extensionManager && this._yawlAAMenuExtensions && this._dbFinActivities && ExtensionUtils.extensions) {
-            let (extensions = [], extensionsDisabled = []) { // [ extension, name, NAME ]
+        // extensions
+        if (this._yawlAAMenuSeparatorWE) this._yawlAAMenuSeparatorWE.actor.hide();
+        if (this._yawlAAMenuExtensions) this._yawlAAMenuExtensions.actor.hide();
+        if (this._yawlAAMenuSeparatorEED) this._yawlAAMenuSeparatorEED.actor.hide();
+        if (this._yawlAAMenuExtensionsDisabled) this._yawlAAMenuExtensionsDisabled.actor.hide();
+        if (global.yawlAA && global.yawlAA._extensionManager
+                    && this._yawlAAMenuExtensions && this._yawlAAMenuExtensionsDisabled
+                    && this._dbFinActivities && this._dbFinActivities._extensionMenuItems && ExtensionUtils.extensions) {
+            let (extensions = [], renew = false, enabled = false, disabled = false) {
                 for (let id in ExtensionUtils.extensions) {
                     let (extension = id && ExtensionUtils.extensions.hasOwnProperty(id) && ExtensionUtils.extensions[id]) {
-                        let (state = extension && extension.state,
-                             metadata = extension && extension.metadata) {
-                            if (metadata && metadata.name) {
-                                if (state == 1) extensions.push([ extension, metadata.name, metadata.name.toUpperCase() ]);
-                                else if (state == 2 || state == 6) extensionsDisabled.push([ extension, metadata.name, metadata.name.toUpperCase() ]);
+                        let (state = extension && extension.metadata && extension.metadata.name && extension.state) {
+                            if (state == 1 || state == 2 || state == 6) {
+                                extensions.push(extension);
+                                if (!this._dbFinActivities._extensionMenuItems.has(id)) renew = true;
                             }
                         }
                     }
                 }
-                if (extensions.length || extensionsDisabled.length) {
+                if (renew || extensions.length != this._dbFinActivities._extensionMenuItems.length) {
+                    this._dbFinActivities._removeAllExtensionMenuItems();
+                }
+                else {
+                    this._dbFinActivities._extensionMenuItems.forEach(Lang.bind(this, function (id, menus) {
+                        menus.menu.actor.visible = false;
+                        menus.menuEnable.actor.visible = false;
+                    }));
+                }
+                extensions.sort(function (e1, e2) { return e1.metadata.name.toUpperCase() < e2.metadata.name.toUpperCase() ? -1 : 1; });
+                extensions.forEach(Lang.bind(this, function (e) {
+                    let (menus = this._dbFinActivities._ensureExtensionMenuItem(e)) {
+                        if (menus) {
+                            if (e.state == 1) {
+                                menus.menu.actor.visible = true;
+                                menus.menuPreferences.actor.visible = e.hasPrefs;
+                                menus.menuDisable.actor.visible = e.uuid != 'aa@dbfin.com';
+                                enabled = true;
+                            }
+                            else {
+                                menus.menuEnable.actor.visible = true;
+                                disabled = true;
+                            }
+                        }
+                    }
+                }));
+                if (enabled) {
+                    if (this._yawlAAMenuSeparatorWE) this._yawlAAMenuSeparatorWE.actor.show();
                     this._yawlAAMenuExtensions.actor.show();
-                    if (extensions.length) {
-                        extensions.sort(function (enn1, enn2) { return enn1[2] < enn2[2] ? -1 : 1; });
-                        extensions.forEach(Lang.bind(this, function (enn) {
-                            let (subMenu = new PopupMenu.PopupSubMenuMenuItem(enn[1])) {
-                                if (subMenu && subMenu.menu) {
-                                    if (enn[0].hasPrefs) this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u2692 ' + _("Extension preferences"), '_extensionPreferences');
-                                    this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u26aa ' + _("Soft restart"), '_extensionSoftRestart');
-                                    this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u26ab ' + _("Hard restart"), '_extensionHardRestart');
-                                    if (enn[0].uuid != 'aa@dbfin.com') this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u2296 ' + _("Disable extension"), '_extensionDisable');
-                                    this._yawlAAMenuExtensions.addMenuItem(subMenu);
-                                } // if (subMenu && subMenu.menu)
-                            } // let (subMenu)
-                        })); // extensions.forEach(enn)
-                    } // if (extensions.length)
-                    if (extensionsDisabled.length) {
-                        let (subMenu = new PopupMenu.PopupSubMenuMenuItem(_("Disabled extensions"))) {
-                            if (subMenu && subMenu.menu) {
-                                extensionsDisabled.sort(function (enn1, enn2) { return enn1[2] < enn2[2] ? -1 : 1; });
-                                extensionsDisabled.forEach(Lang.bind(this, function (enn) {
-                                    this._dbFinActivities._addExtensionAction(subMenu.menu, enn[0], '\u2295 ' + enn[1], '_extensionEnable');
-                                }));
-                                if (extensions.length) this._yawlAAMenuExtensions.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-                                this._yawlAAMenuExtensions.addMenuItem(subMenu);
-                            } // if (subMenu && subMenu.menu)
-                        } // let (subMenu)
-                    } // if (extensionsDisabled.length)
-                } // if (extensions.length || extensionsDisabled.length)
-            } // let (extensions, extensionsDisabled)
-        } // if (global.yawlAA && global.yawlAA._extensionManager && this._yawlAAMenuExtensions && this._dbFinActivities && ExtensionUtils.extensions)
+                }
+                if (disabled) {
+                    if (this._yawlAAMenuSeparatorEED) this._yawlAAMenuSeparatorEED.actor.show();
+                    this._yawlAAMenuExtensionsDisabled.actor.show();
+                }
+            } // let (extensions, renew, enabled, disabled)
+        } // if (should and can show extensions)
         if (this._yawlAAOpenWas) Lang.bind(this, this._yawlAAOpenWas)(animate);
         _D('<');
     },
@@ -458,6 +557,7 @@ const dbFinActivities = new Lang.Class({
             menuItem._extension = extension;
             menu.addMenuItem(menuItem);
             menuItem.connect('activate', this[method]);
+            return menuItem;
         }
     },
     _extensionDisable: function (menuItem, event) {
