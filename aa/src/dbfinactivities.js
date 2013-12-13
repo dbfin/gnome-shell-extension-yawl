@@ -29,6 +29,7 @@ const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
+const GLib = imports.gi.GLib;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
@@ -120,6 +121,11 @@ const dbFinActivities = new Lang.Class({
                 }
             }
         };
+        this._updatedSubmenuAdditional = function () {
+            if (this.menu && this.menu._yawlAAMenuAdditional && this.menu._yawlAAMenuAdditional.actor) {
+                this.menu._yawlAAMenuAdditional.actor.visible = global.yawlAA && global.yawlAA._submenuAdditional;
+            }
+        }
         this._updatedMouseScrollTimeout = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
@@ -222,7 +228,13 @@ const dbFinActivities = new Lang.Class({
                 return;
             } else if (this._ensureVisibleCounter == 10) {
                 this._timeout.remove('ensure-visible');
-                Main.notifyError('[Alternative Activities] ' + _("Cannot show Activities button, something actively hides it.") + ' ' + _("This might be another extension forcing the native GNOME Shell's Activities button to be hidden.") + ' ' + _("Alternative Activities uses the original Activities button.") + ' ' + _("Please disable anything that might mess with it.") + ' ' + _("Temporary disabling...") + ' ' + _("Restart GNOME Shell to try again."));
+                Main.notifyError('[Alternative Activities]'
+                                 + ' ' + _("Cannot show Activities button, something actively hides it.")
+                                 + ' ' + _("This might be another extension forcing the native GNOME Shell's Activities button to be hidden.")
+                                 + ' ' + _("Alternative Activities uses the original Activities button.")
+                                 + ' ' + _("Please disable anything that might mess with it.")
+                                 + ' ' + _("Temporary disabling...")
+                                 + ' ' + _("Restart GNOME Shell to try again."));
                 Mainloop.idle_add(function () { ExtensionSystem.disableExtension(Me.uuid); });
                 _D('<');
                 return;
@@ -283,6 +295,24 @@ const dbFinActivities = new Lang.Class({
                 menu._yawlAAMenuExtensionsDisabled = new PopupMenu.PopupSubMenuMenuItem(_("Disabled extensions"));
                 if (menu._yawlAAMenuExtensionsDisabled) menu.addMenuItem(menu._yawlAAMenuExtensionsDisabled);
 
+                // additional menu items
+                menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+
+                menu._yawlAAMenuAdditional = new PopupMenu.PopupMenuSection();
+                if (menu._yawlAAMenuAdditional) {
+                    menu.addMenuItem(menu._yawlAAMenuAdditional);
+
+                    if (GLib.file_test('/usr/bin/gnome-tweak-tool', GLib.FileTest.EXISTS)) {
+                        menu._yawlAAMenuAdvancedSettings = new PopupMenu.PopupMenuItem(_("Advanced settings"));
+                        if (menu._yawlAAMenuAdvancedSettings) {
+                            menu._yawlAAMenuAdditional.addMenuItem(menu._yawlAAMenuAdvancedSettings);
+                            menu._yawlAAMenuAdvancedSettings.connect('activate', function (menuItem, event) {
+                                try { Util.trySpawn([ '/usr/bin/gnome-tweak-tool', '' ]); } catch (e) {}
+                            });
+                        }
+                    }
+                }
+
                 menu._yawlAAOpenWas = menu.open;
                 menu.open = Lang.bind(menu, this._openMenu);
 
@@ -308,6 +338,15 @@ const dbFinActivities = new Lang.Class({
         if (this.menu) {
             if (this.menu._yawlAAOpenWas) {
                 this.menu.open = this.menu._yawlAAOpenWas;
+            }
+            if (this.menu._yawlAAMenuAdvancedSettings) {
+                this.menu._yawlAAMenuAdvancedSettings.destroy();
+                this.menu._yawlAAMenuAdvancedSettings = null;
+            }
+            if (this.menu._yawlAAMenuAdditional) {
+                this.menu._yawlAAMenuAdditional.removeAll();
+                this.menu._yawlAAMenuAdditional.destroy();
+                this.menu._yawlAAMenuAdditional = null;
             }
             if (this.menu._yawlAAMenuExtensionsDisabled) {
                 if (this.menu._yawlAAMenuExtensionsDisabled.menu) {
@@ -498,7 +537,7 @@ const dbFinActivities = new Lang.Class({
         if (this._yawlAAMenuExtensions) this._yawlAAMenuExtensions.actor.hide();
         if (this._yawlAAMenuSeparatorEED) this._yawlAAMenuSeparatorEED.actor.hide();
         if (this._yawlAAMenuExtensionsDisabled) this._yawlAAMenuExtensionsDisabled.actor.hide();
-        if (global.yawlAA && global.yawlAA._extensionManager
+        if (global.yawlAA && global.yawlAA._submenuExtensionManager
                     && this._yawlAAMenuExtensions && this._yawlAAMenuExtensionsDisabled
                     && this._dbFinActivities && this._dbFinActivities._extensionMenuItems && ExtensionUtils.extensions) {
             let (extensions = [], renew = false, enabled = false, disabled = false) {
@@ -548,6 +587,7 @@ const dbFinActivities = new Lang.Class({
                 }
             } // let (extensions, renew, enabled, disabled)
         } // if (should and can show extensions)
+        // parent open method
         if (this._yawlAAOpenWas) Lang.bind(this, this._yawlAAOpenWas)(animate);
         _D('<');
     },

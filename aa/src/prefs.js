@@ -63,7 +63,9 @@ function buildPrefsWidget() {
             builder.addCheckBox(_("Force Activities button look like other panel buttons"), 'style-force-default');
             builder.addComboBoxText(_("Choose Activities button background"), 'style-background', dbFinConsts.arrayStyleBackgrounds, 0);
             builder.addSeparator();
-            builder.addCheckBox(_("Show Extension Manager"), 'extension-manager');
+            builder.addCheckBox(_("Show Extension Manager in the menu"), 'submenu-extension-manager');
+            builder.addSeparator();
+            builder.addCheckBox(_("Show additional commands in the menu"), 'submenu-additional');
 
         builder.addPage(_("Advanced") + ' <span color="red">*</span>', null, '@advanced');
             builder.addLabel(_("Scroll timeout: the time after one scroll event during which other scroll events are rejected."));

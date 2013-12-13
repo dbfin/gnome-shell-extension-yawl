@@ -49,7 +49,9 @@ const Settings = [
     [ 'style-force-default', true, { }, 'style' ],
     [ 'style-background', 1, { min: 0, max: arrayStyleBackgrounds.length - 1 }, 'style' ],
 
-    [ 'extension-manager', true, { }, 'extensions' ],
+    [ 'submenu-extension-manager', true, { }, 'extensions' ],
+
+    [ 'submenu-additional', true, { }, 'additional' ],
 
     [ 'mouse-scroll-timeout', 125, { min: 25, max: 1000 }, 'mouse' ]
 ];
