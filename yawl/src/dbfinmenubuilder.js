@@ -219,7 +219,7 @@ const dbFinMenuBuilder = new Lang.Class({
 						]);
 					})); // if (tracker) this._yawlMetaApp.get_windows().forEach(metaWindow)
 					if (windows.length) {
-						this._menuWindows = new PopupMenu.PopupMenuSection();
+						this._menuWindows = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
 						windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
 						let (wIndexWas = windows[0][0],
                              focusedWindow = global.display && global.display.focus_window || null) {
