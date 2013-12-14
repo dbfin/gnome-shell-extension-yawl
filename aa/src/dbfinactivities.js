@@ -445,6 +445,7 @@ const dbFinActivities = new Lang.Class({
         _D('<');
     },
 
+    // called binded to the menu
     _openMenu: function(animate) {
         _D('>' + this.__name__ + '._openMenu()');
         // workspaces
@@ -594,16 +595,17 @@ const dbFinActivities = new Lang.Class({
 
     _addExtensionAction: function (menu, extension, name, method) {
         let (menuItem = new PopupMenu.PopupMenuItem(name)) {
-            menuItem._extension = extension;
+            menuItem._yawlAAExtension = extension;
             menu.addMenuItem(menuItem);
             menuItem.connect('activate', this[method]);
             return menuItem;
         }
     },
+    // called not binded
     _extensionDisable: function (menuItem, event) {
-        ExtensionSystem.disableExtension(menuItem._extension.uuid);
+        ExtensionSystem.disableExtension(menuItem._yawlAAExtension.uuid);
         let (enabledExtensions = global.settings && global.settings.get_strv(ExtensionSystem.ENABLED_EXTENSIONS_KEY)) {
-            let (index = enabledExtensions && enabledExtensions.indexOf(menuItem._extension.uuid)) {
+            let (index = enabledExtensions && enabledExtensions.indexOf(menuItem._yawlAAExtension.uuid)) {
                 if (index != -1) {
                     enabledExtensions.splice(index, 1);
                     global.settings.set_strv(ExtensionSystem.ENABLED_EXTENSIONS_KEY, enabledExtensions);
@@ -612,25 +614,25 @@ const dbFinActivities = new Lang.Class({
         }
     },
     _extensionEnable: function (menuItem, event) {
-        ExtensionSystem.enableExtension(menuItem._extension.uuid);
+        ExtensionSystem.enableExtension(menuItem._yawlAAExtension.uuid);
         let (enabledExtensions = global.settings && global.settings.get_strv(ExtensionSystem.ENABLED_EXTENSIONS_KEY)) {
-            let (index = enabledExtensions && enabledExtensions.indexOf(menuItem._extension.uuid)) {
+            let (index = enabledExtensions && enabledExtensions.indexOf(menuItem._yawlAAExtension.uuid)) {
                 if (index == -1) {
-                    enabledExtensions.push(menuItem._extension.uuid);
+                    enabledExtensions.push(menuItem._yawlAAExtension.uuid);
                     global.settings.set_strv(ExtensionSystem.ENABLED_EXTENSIONS_KEY, enabledExtensions);
                 }
             }
         }
     },
     _extensionHardRestart: function (menuItem, event) {
-        ExtensionSystem.reloadExtension(menuItem._extension);
+        ExtensionSystem.reloadExtension(menuItem._yawlAAExtension);
     },
     _extensionPreferences: function (menuItem, event) {
-        try { Util.trySpawn([ 'gnome-shell-extension-prefs', menuItem._extension.uuid ]); } catch (e) {}
+        try { Util.trySpawn([ 'gnome-shell-extension-prefs', menuItem._yawlAAExtension.uuid ]); } catch (e) { }
     },
     _extensionSoftRestart: function (menuItem, event) {
-        ExtensionSystem.disableExtension(menuItem._extension.uuid);
-        Mainloop.idle_add(function () { ExtensionSystem.enableExtension(menuItem._extension.uuid); });
+        ExtensionSystem.disableExtension(menuItem._yawlAAExtension.uuid);
+        Mainloop.idle_add(function () { ExtensionSystem.enableExtension(menuItem._yawlAAExtension.uuid); });
     },
 
     _buttonClicked: function(state, name) {
