@@ -115,9 +115,9 @@ const dbFinActivities = new Lang.Class({
         };
         this._updatedStyleBackground = function () {
             if (this._activitiesActor) {
-                dbFinConsts.arrayStyleBackgrounds.forEach(Lang.bind(this, function (row) { this._activitiesActor.remove_style_class_name(row[0]); }));
+                dbFinConsts.arrayStyleBackgrounds.forEach(Lang.bind(this, function (row) { this._activitiesActor.remove_style_class_name(row[1]); }));
                 if (global.yawlAA && global.yawlAA._styleBackground) {
-                    this._activitiesActor.add_style_class_name(dbFinConsts.arrayStyleBackgrounds[global.yawlAA._styleBackground][0]);
+                    this._activitiesActor.add_style_class_name(dbFinConsts.arrayStyleBackgrounds[global.yawlAA._styleBackground][1]);
                 }
             }
         };

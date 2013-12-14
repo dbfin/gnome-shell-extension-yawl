@@ -38,9 +38,9 @@ const arrayContributors = [
 ];
 
 const arrayStyleBackgrounds = [
-    [   _("default")                        ],
-    [   _("frame")                          ],
-    [   _("transparent")                    ]
+    [   _("Default"),                       ''                              ],
+    [   _("Frame"),                         'frame'                         ],
+    [   _("Transparent"),                   'transparent'                   ]
 ];
 
 const Settings = [
