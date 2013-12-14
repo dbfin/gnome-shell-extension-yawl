@@ -323,7 +323,7 @@ const dbFinActivities = new Lang.Class({
                 menu._yawlAAMenuSeparatorWE = new PopupMenu.PopupSeparatorMenuItem();
                 if (menu._yawlAAMenuSeparatorWE) menu.addMenuItem(menu._yawlAAMenuSeparatorWE);
 
-                menu._yawlAAMenuExtensions = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
+                menu._yawlAAMenuExtensions = new PopupMenu.PopupMenuSection();
                 if (menu._yawlAAMenuExtensions) menu.addMenuItem(menu._yawlAAMenuExtensions);
 
                 menu._yawlAAMenuSeparatorEED = new PopupMenu.PopupSeparatorMenuItem();
