@@ -283,7 +283,7 @@ const dbFinActivities = new Lang.Class({
     },
 
     _extensionFrequenciesLoad: function () {
-        _D('>' + this.__name__ + '._extensionFrequenciesLoad()');
+        _D('@' + this.__name__ + '._extensionFrequenciesLoad()');
         if (this._frequencies && global.yawlAA && global.yawlAA._extensionFrequencies) {
             let (frequencies = []) {
                 try { frequencies = JSON.parse(global.yawlAA._extensionFrequencies); } catch (e) {}
@@ -297,7 +297,7 @@ const dbFinActivities = new Lang.Class({
     },
 
     _extensionFrequenciesIncrement: function (id) {
-        _D('>' + this.__name__ + '._extensionFrequenciesIncrement()');
+        _D('@' + this.__name__ + '._extensionFrequenciesIncrement()');
         if (this._frequencies && id) {
             this._frequencies.set(id, 1 + (this._frequencies.get(id) || 0));
             if (global.yawlAA) {
