@@ -32,7 +32,7 @@
       <_description>Whether to show extensions in the menu.</_description>
     </key>
     <key name="extension-manager-sort" type="s">
-      <default>'1'</default>
+      <default>'2'</default>
       <_summary>Extension manager sort method.</_summary>
       <_description>Extension manager sort method.</_description>
     </key>

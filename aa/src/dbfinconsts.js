@@ -59,7 +59,7 @@ const Settings = [
     [ 'style-background', 1, { min: 0, max: arrayStyleBackgrounds.length - 1 }, 'style' ],
 
     [ 'submenu-extension-manager', true, { }, 'extensions' ],
-    [ 'extension-manager-sort', 1, { min: 0, max: arrayExtensionSortMethods.length - 1 }, 'extensions' ],
+    [ 'extension-manager-sort', 2, { min: 0, max: arrayExtensionSortMethods.length - 1 }, 'extensions' ],
 
     [ 'submenu-additional', true, { }, 'additional' ],
 
