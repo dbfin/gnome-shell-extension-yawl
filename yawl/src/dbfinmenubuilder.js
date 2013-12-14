@@ -199,8 +199,18 @@ const dbFinMenuBuilder = new Lang.Class({
 		if (this) {
             _D('>' + this.__name__ + '.open()');
 			if (this._menuWindows) {
+				if (typeof this._menuWindows.removeAll === 'function') this._menuWindows.removeAll();
 				if (typeof this._menuWindows.destroy === 'function') this._menuWindows.destroy();
 				this._menuWindows = null;
+			}
+			if (this._menuPinSeparator) {
+				if (typeof this._menuPinSeparator.destroy === 'function') this._menuPinSeparator.destroy();
+				this._menuPinSeparator = null;
+			}
+			if (this._menuPin) {
+				if (typeof this._menuPin.removeAll === 'function') this._menuPin.removeAll();
+				if (typeof this._menuPin.destroy === 'function') this._menuPin.destroy();
+				this._menuPin = null;
 			}
 			if (this._yawlMetaApp && this._yawlTracker) {
 				// addons
@@ -254,22 +264,21 @@ const dbFinMenuBuilder = new Lang.Class({
 				} // let (windows, tracker)
                 // add pin menu
                 if (this._yawlCreatePinMenu && this._yawlTrackerApp && this._yawlTrackerApp._isStable()) {
-                    if (!this._menuWindows) {
-                        this._menuWindows = new PopupMenu.PopupMenuSection();
-                    }
-                    else if (!this._menuWindows.isEmpty()) {
-                        this._menuWindows.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-                    }
+                    this._menuPin = new PopupMenu.PopupMenuSection();
                     if (this._yawlTrackerApp.pin) {
-                        this._menuWindows.addAction(_("Remove from Favorites"), Lang.bind(this, function() {
+                        this._menuPin.addAction(_("Remove from Favorites"), Lang.bind(this, function() {
                             if (this._yawlMetaApp) AppFavorites.getAppFavorites().removeFavorite(this._yawlMetaApp.get_id());
                         }));
                     }
                     else {
-                        this._menuWindows.addAction(_("Add to Favorites"), Lang.bind(this, function() {
+                        this._menuPin.addAction(_("Add to Favorites"), Lang.bind(this, function() {
                             if (this._yawlMetaApp) AppFavorites.getAppFavorites().addFavorite(this._yawlMetaApp.get_id());
                         }));
                     }
+                }
+                if (this._menuPin) {
+                    this.addMenuItem(this._menuPin, 0);
+                    this.addMenuItem(this._menuPinSeparator = new PopupMenu.PopupSeparatorMenuItem(), 0);
                 }
                 if (this._menuWindows) {
                     this.addMenuItem(this._menuWindows, 0);
