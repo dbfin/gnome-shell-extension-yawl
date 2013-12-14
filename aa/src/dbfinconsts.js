@@ -43,13 +43,23 @@ const arrayStyleBackgrounds = [
     [   _("Transparent"),                   'transparent'                   ]
 ];
 
+const arrayExtensionSortMethods = [
+    [   _("No sort"),                       ''                              ],
+    [   _("Sort by frequency of access"),   '_sortExtensionsByFrequency'    ],
+    [   _("Sort by name"),                  '_sortExtensionsByName'         ]
+];
+const EXTENSIONSORTMETHODS_FREQUENCY = 1;
+
 const Settings = [
 	[ 'first-time', true, { }, null ],
+
+    [ 'extension-frequencies', '[]', { }, 'extensions' ],
 
     [ 'style-force-default', true, { }, 'style' ],
     [ 'style-background', 1, { min: 0, max: arrayStyleBackgrounds.length - 1 }, 'style' ],
 
     [ 'submenu-extension-manager', true, { }, 'extensions' ],
+    [ 'extension-manager-sort', 1, { min: 0, max: arrayExtensionSortMethods.length - 1 }, 'extensions' ],
 
     [ 'submenu-additional', true, { }, 'additional' ],
 

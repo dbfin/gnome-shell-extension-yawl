@@ -110,6 +110,11 @@ const dbFinActivities = new Lang.Class({
         this._extensionMenuItems = new dbFinArrayHash.dbFinArrayHash(); // [ [ id, { menu:, menuEnable:, menuPreferences:, menuSoftRestart:, menuHardRestart:, menuDisable: } ] ]
         this._buildMenu();
 
+        this._frequencies = new dbFinArrayHash.dbFinArrayHash();
+
+        this._updatedExtensionFrequencies = function () {
+            this._extensionFrequenciesLoad();
+        }
         this._updatedStyleForceDefault = function () {
             if (this._activitiesActor) this._activitiesActor.name = 'panelActivities' + (global.yawlAA && global.yawlAA._styleForceDefault ? 'Alternative' : '');
         };
@@ -121,6 +126,9 @@ const dbFinActivities = new Lang.Class({
                 }
             }
         };
+        this._updatedExtensionManagerSort = function () {
+            this._removeAllExtensionMenuItems();
+        }
         this._updatedSubmenuAdditional = function () {
             if (this.menu && this.menu._yawlAAMenuAdditional && this.menu._yawlAAMenuAdditional.actor) {
                 this.menu._yawlAAMenuAdditional.actor.visible = global.yawlAA && global.yawlAA._submenuAdditional;
@@ -162,6 +170,10 @@ const dbFinActivities = new Lang.Class({
         if (this._clicked) {
             this._clicked.destroy();
             this._clicked = null;
+        }
+        if (this._frequencies) {
+            this._frequencies.destroy();
+            this._frequencies = null;
         }
         this._destroyMenu();
         if (this._extensionMenuItems) {
@@ -265,6 +277,31 @@ const dbFinActivities = new Lang.Class({
             let (wln = this.label.get_preferred_width(-1)[1] || 0) {
                 this.label.min_width = wln + (this._activities && this._activities._minHPadding || 0) * 2;
                 this.label.queue_relayout();
+            }
+        }
+        _D('<');
+    },
+
+    _extensionFrequenciesLoad: function () {
+        _D('>' + this.__name__ + '._extensionFrequenciesLoad()');
+        if (this._frequencies && global.yawlAA && global.yawlAA._extensionFrequencies) {
+            let (frequencies = []) {
+                try { frequencies = JSON.parse(global.yawlAA._extensionFrequencies); } catch (e) {}
+                if (!frequencies || Object.prototype.toString.call(frequencies) != '[object Array]' || !frequencies.length) frequencies = [];
+                this._frequencies.removeAll();
+                this._frequencies.setArray(frequencies);
+                if (global.yawlAA._extensionManagerSort == dbFinConsts.EXTENSIONSORTMETHODS_FREQUENCY) this._removeAllExtensionMenuItems();
+            }
+        }
+        _D('<');
+    },
+
+    _extensionFrequenciesIncrement: function (id) {
+        _D('>' + this.__name__ + '._extensionFrequenciesIncrement()');
+        if (this._frequencies && id) {
+            this._frequencies.set(id, 1 + (this._frequencies.get(id) || 0));
+            if (global.yawlAA) {
+                try { global.yawlAA.set('extension-frequencies', JSON.stringify(this._frequencies.toArray())); } catch (e) { }
             }
         }
         _D('<');
@@ -445,6 +482,18 @@ const dbFinActivities = new Lang.Class({
         _D('<');
     },
 
+    _sortExtensionsByName: function (e1, e2) {
+        return e1.metadata.name.toUpperCase() < e2.metadata.name.toUpperCase() ? -1 : 1;
+    },
+    _sortExtensionsByFrequency: function (e1, e2) {
+        if (this._frequencies) {
+            let (f1 = this._frequencies.get(e1.uuid) || 0, f2 = this._frequencies.get(e2.uuid) || 0) {
+                return f1 > f2 ? -1 : f1 < f2 ? 1 : this._sortExtensionsByName(e1, e2);
+            }
+        }
+        return this._sortExtensionsByName(e1, e2);
+    },
+
     // called binded to the menu
     _openMenu: function(animate) {
         _D('>' + this.__name__ + '._openMenu()');
@@ -541,7 +590,11 @@ const dbFinActivities = new Lang.Class({
         if (global.yawlAA && global.yawlAA._submenuExtensionManager
                     && this._yawlAAMenuExtensions && this._yawlAAMenuExtensionsDisabled
                     && this._dbFinActivities && this._dbFinActivities._extensionMenuItems && ExtensionUtils.extensions) {
-            let (extensions = [], renew = false, enabled = false, disabled = false) {
+            let (extensions = [], renew = false, enabled = false, disabled = false,
+                 sort = dbFinConsts.arrayExtensionSortMethods[
+                        dbFinUtils.inRange(global.yawlAA._extensionManagerSort, 0, dbFinConsts.arrayExtensionSortMethods.length - 1, 0)
+                 ][1]) {
+                sort = sort && Lang.bind(this._dbFinActivities, this._dbFinActivities[sort]) || undefined;
                 for (let id in ExtensionUtils.extensions) {
                     let (extension = id && ExtensionUtils.extensions.hasOwnProperty(id) && ExtensionUtils.extensions[id]) {
                         let (state = extension && extension.metadata && extension.metadata.name && extension.state) {
@@ -561,7 +614,7 @@ const dbFinActivities = new Lang.Class({
                         menus.menuEnable.actor.visible = false;
                     }));
                 }
-                extensions.sort(function (e1, e2) { return e1.metadata.name.toUpperCase() < e2.metadata.name.toUpperCase() ? -1 : 1; });
+                extensions.sort(sort);
                 extensions.forEach(Lang.bind(this, function (e) {
                     let (menus = this._dbFinActivities._ensureExtensionMenuItem(e)) {
                         if (menus) {
@@ -596,6 +649,7 @@ const dbFinActivities = new Lang.Class({
     _addExtensionAction: function (menu, extension, name, method) {
         let (menuItem = new PopupMenu.PopupMenuItem(name)) {
             menuItem._yawlAAExtension = extension;
+            menuItem._yawlAAFrequencyIncrement = Lang.bind(this, this._extensionFrequenciesIncrement);
             menu.addMenuItem(menuItem);
             menuItem.connect('activate', this[method]);
             return menuItem;
@@ -626,13 +680,16 @@ const dbFinActivities = new Lang.Class({
     },
     _extensionHardRestart: function (menuItem, event) {
         ExtensionSystem.reloadExtension(menuItem._yawlAAExtension);
+        if (menuItem._yawlAAFrequencyIncrement) menuItem._yawlAAFrequencyIncrement(menuItem._yawlAAExtension.uuid);
     },
     _extensionPreferences: function (menuItem, event) {
         try { Util.trySpawn([ 'gnome-shell-extension-prefs', menuItem._yawlAAExtension.uuid ]); } catch (e) { }
+        if (menuItem._yawlAAFrequencyIncrement) menuItem._yawlAAFrequencyIncrement(menuItem._yawlAAExtension.uuid);
     },
     _extensionSoftRestart: function (menuItem, event) {
         ExtensionSystem.disableExtension(menuItem._yawlAAExtension.uuid);
         Mainloop.idle_add(function () { ExtensionSystem.enableExtension(menuItem._yawlAAExtension.uuid); });
+        if (menuItem._yawlAAFrequencyIncrement) menuItem._yawlAAFrequencyIncrement(menuItem._yawlAAExtension.uuid);
     },
 
     _buttonClicked: function(state, name) {

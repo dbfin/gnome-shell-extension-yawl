@@ -64,6 +64,9 @@ function buildPrefsWidget() {
             builder.addComboBoxText(_("Choose Activities button background"), 'style-background', dbFinConsts.arrayStyleBackgrounds, 0);
             builder.addSeparator();
             builder.addCheckBox(_("Show Extension Manager in the menu"), 'submenu-extension-manager');
+            builder.shift();
+                builder.addComboBoxText(_("Choose extension sort method"), 'extension-manager-sort', dbFinConsts.arrayExtensionSortMethods, 0);
+            builder.unshift();
             builder.addSeparator();
             builder.addCheckBox(_("Show additional commands in the menu"), 'submenu-additional');
 

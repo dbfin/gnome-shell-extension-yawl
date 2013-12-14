@@ -11,6 +11,11 @@
       <_summary>Whether to show advanced preferences.</_summary>
       <_description>Whether to show advanced preferences.</_description>
     </key>
+    <key name="extension-frequencies" type="s">
+      <default>'[]'</default>
+      <_summary>Extension frequency of access.</_summary>
+      <_description>Extension frequency of access.</_description>
+    </key>
     <key name="style-force-default" type="b">
       <default>true</default>
       <_summary>Whether to force default panel button style.</_summary>
@@ -25,6 +30,11 @@
       <default>true</default>
       <_summary>Whether to show extensions in the menu.</_summary>
       <_description>Whether to show extensions in the menu.</_description>
+    </key>
+    <key name="extension-manager-sort" type="s">
+      <default>'1'</default>
+      <_summary>Extension manager sort method.</_summary>
+      <_description>Extension manager sort method.</_description>
     </key>
     <key name="submenu-additional" type="b">
       <default>true</default>
