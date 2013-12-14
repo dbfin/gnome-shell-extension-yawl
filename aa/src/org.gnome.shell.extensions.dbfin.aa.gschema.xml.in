@@ -16,6 +16,11 @@
       <_summary>Extension frequency of access.</_summary>
       <_description>Extension frequency of access.</_description>
     </key>
+    <key name="extension-favorites" type="s">
+      <default>'[]'</default>
+      <_summary>Favorite extensions.</_summary>
+      <_description>Favorite extensions.</_description>
+    </key>
     <key name="style-force-default" type="b">
       <default>true</default>
       <_summary>Whether to force default panel button style.</_summary>
@@ -35,6 +40,11 @@
       <default>'2'</default>
       <_summary>Extension manager sort method.</_summary>
       <_description>Extension manager sort method.</_description>
+    </key>
+    <key name="extension-manager-show-favorites" type="b">
+      <default>false</default>
+      <_summary>Show options for favorite extensions only.</_summary>
+      <_description>Show options for favorite extensions only.</_description>
     </key>
     <key name="submenu-additional" type="b">
       <default>true</default>

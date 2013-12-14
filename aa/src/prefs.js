@@ -65,7 +65,8 @@ function buildPrefsWidget() {
             builder.addSeparator();
             builder.addCheckBox(_("Show Extension Manager in the menu"), 'submenu-extension-manager');
             builder.shift();
-                builder.addComboBoxText(_("Choose extension sort method"), 'extension-manager-sort', dbFinConsts.arrayExtensionSortMethods, 0);
+                builder.addComboBoxText(_("Choose extension sort method"), 'extension-manager-sort', dbFinConsts.arrayExtensionSortMethods, 0, 'submenu-extension-manager');
+                builder.addCheckBox(_("Show options for favorite extensions only"), 'extension-manager-show-favorites', 'submenu-extension-manager');
             builder.unshift();
             builder.addSeparator();
             builder.addCheckBox(_("Show additional commands in the menu"), 'submenu-additional');

@@ -111,9 +111,13 @@ const dbFinActivities = new Lang.Class({
         this._buildMenu();
 
         this._frequencies = new dbFinArrayHash.dbFinArrayHash();
+        this._favorites = [];
 
         this._updatedExtensionFrequencies = function () {
             this._extensionFrequenciesLoad();
+        }
+        this._updatedExtensionFavorites = function () {
+            this._extensionFavoritesLoad();
         }
         this._updatedStyleForceDefault = function () {
             if (this._activitiesActor) this._activitiesActor.name = 'panelActivities' + (global.yawlAA && global.yawlAA._styleForceDefault ? 'Alternative' : '');
@@ -171,6 +175,7 @@ const dbFinActivities = new Lang.Class({
             this._clicked.destroy();
             this._clicked = null;
         }
+        this._favorites = [];
         if (this._frequencies) {
             this._frequencies.destroy();
             this._frequencies = null;
@@ -307,6 +312,30 @@ const dbFinActivities = new Lang.Class({
         _D('<');
     },
 
+    _extensionFavoritesLoad: function () {
+        _D('@' + this.__name__ + '._extensionFavoritesLoad()');
+        if (this._favorites && global.yawlAA && global.yawlAA._extensionFavorites) {
+            try { this._favorites = JSON.parse(global.yawlAA._extensionFavorites); } catch (e) {}
+            if (!this._favorites || Object.prototype.toString.call(this._favorites) != '[object Array]'
+                || !this._favorites.length) this._favorites = [];
+        }
+        _D('<');
+    },
+
+    _extensionFavoritesToggle: function (id) {
+        _D('@' + this.__name__ + '._extensionFavoritesToggle()');
+        if (this._favorites && id) {
+            let (index = this._favorites.indexOf(id)) {
+                if (index == -1) this._favorites.push(id);
+                else this._favorites.splice(index, 1);
+                if (global.yawlAA) {
+                    try { global.yawlAA.set('extension-favorites', JSON.stringify(this._favorites)); } catch (e) { }
+                }
+            }
+        }
+        _D('<');
+    },
+
     _buildMenu: function() {
         _D('>' + this.__name__ + '._buildMenu()');
         this._destroyMenu();
@@ -325,6 +354,12 @@ const dbFinActivities = new Lang.Class({
 
                 menu._yawlAAMenuExtensions = new PopupMenu.PopupMenuSection();
                 if (menu._yawlAAMenuExtensions) menu.addMenuItem(menu._yawlAAMenuExtensions);
+
+                menu._yawlAAMenuSeparatorEEM = new PopupMenu.PopupSeparatorMenuItem();
+                if (menu._yawlAAMenuSeparatorEEM) menu.addMenuItem(menu._yawlAAMenuSeparatorEEM);
+
+                menu._yawlAAMenuExtensionsMore = new PopupMenu.PopupSubMenuMenuItem('...');
+                if (menu._yawlAAMenuExtensionsMore) menu.addMenuItem(menu._yawlAAMenuExtensionsMore);
 
                 menu._yawlAAMenuSeparatorEED = new PopupMenu.PopupSeparatorMenuItem();
                 if (menu._yawlAAMenuSeparatorEED) menu.addMenuItem(menu._yawlAAMenuSeparatorEED);
@@ -396,6 +431,17 @@ const dbFinActivities = new Lang.Class({
                 this.menu._yawlAAMenuSeparatorEED.destroy();
                 this.menu._yawlAAMenuSeparatorEED = null;
             }
+            if (this.menu._yawlAAMenuExtensionsMore) {
+                if (this.menu._yawlAAMenuExtensionsMore.menu) {
+                    this.menu._yawlAAMenuExtensionsMore.menu.removeAll();
+                }
+                this.menu._yawlAAMenuExtensionsMore.destroy();
+                this.menu._yawlAAMenuExtensionsMore = null;
+            }
+            if (this.menu._yawlAAMenuSeparatorEEM) {
+                this.menu._yawlAAMenuSeparatorEEM.destroy();
+                this.menu._yawlAAMenuSeparatorEEM = null;
+            }
             if (this.menu._yawlAAMenuExtensions) {
                 this.menu._yawlAAMenuExtensions.removeAll();
                 this.menu._yawlAAMenuExtensions.destroy();
@@ -421,6 +467,7 @@ const dbFinActivities = new Lang.Class({
         _D('>' + this.__name__ + '._ensureExtensionMenuItem()');
         if (!extension || !extension.uuid || !extension.metadata || !extension.metadata.name
             || !this._extensionMenuItems || !this.menu || !this.menu._yawlAAMenuExtensions
+            || !this.menu._yawlAAMenuExtensionsMore || !this.menu._yawlAAMenuExtensionsMore.menu
             || !this.menu._yawlAAMenuExtensionsDisabled || !this.menu._yawlAAMenuExtensionsDisabled.menu) {
             _D('<');
             return undefined;
@@ -429,26 +476,36 @@ const dbFinActivities = new Lang.Class({
             if (!menus) {
                 menus = {
                     menu: new PopupMenu.PopupSubMenuMenuItem(extension.metadata.name),
+                    menuFavoriteOn: this._addExtensionAction(this.menu._yawlAAMenuExtensionsMore.menu, extension,
+                                                       '\u2605 ' + extension.metadata.name, '_extensionFavoriteOn'),
                     menuEnable: this._addExtensionAction(this.menu._yawlAAMenuExtensionsDisabled.menu, extension,
-                                                           '\u2295 ' + extension.metadata.name, '_extensionEnable')
+                                                         '\u2295 ' + extension.metadata.name, '_extensionEnable')
                 };
                 if (menus.menu && (!menus.menu.actor || !menus.menu.menu || !menus.menu.menu.actor)) {
                     menus.menu = null;
                 }
+                else if (menus.menuFavoriteOn && !menus.menuFavoriteOn.actor) {
+                    menus.menuFavoriteOn = null;
+                }
                 else if (menus.menuEnable && !menus.menuEnable.actor) {
                     menus.menuEnable = null;
                 }
-                else if (menus.menu && menus.menuEnable) {
+                else if (menus.menu && menus.menuFavoriteOn && menus.menuEnable) {
                     this.menu._yawlAAMenuExtensions.addMenuItem(menus.menu);
                     menus.menu.actor.visible = false;
+                    menus.menuFavoriteOn.actor.visible = false;
                     menus.menuEnable.actor.visible = false;
                     menus.menuPreferences = this._addExtensionAction(menus.menu.menu, extension, '\u2692 ' + _("Extension preferences"), '_extensionPreferences');
                     menus.menuSoftRestart = this._addExtensionAction(menus.menu.menu, extension, '\u26aa ' + _("Soft restart"), '_extensionSoftRestart');
                     menus.menuHardRestart = this._addExtensionAction(menus.menu.menu, extension, '\u26ab ' + _("Hard restart"), '_extensionHardRestart');
+                    menus.menuFavoriteOff = this._addExtensionAction(menus.menu.menu, extension, '\u2606 ' + _("Hide extension"), '_extensionFavoriteOff'),
                     menus.menuDisable = this._addExtensionAction(menus.menu.menu, extension, '\u2296 ' + _("Disable extension"), '_extensionDisable');
                 }
-                if (!menus.menuPreferences || !menus.menuPreferences.actor || !menus.menuSoftRestart || !menus.menuSoftRestart.actor
-                    || !menus.menuHardRestart || !menus.menuHardRestart.actor || !menus.menuDisable || !menus.menuDisable.actor) {
+                if (!menus.menuPreferences || !menus.menuPreferences.actor
+                        || !menus.menuSoftRestart || !menus.menuSoftRestart.actor
+                        || !menus.menuHardRestart || !menus.menuHardRestart.actor
+                        || !menus.menuFavoriteOff || !menus.menuFavoriteOff.actor
+                        || !menus.menuDisable || !menus.menuDisable.actor) {
                     _D('<');
                     return undefined;
                 }
@@ -464,12 +521,17 @@ const dbFinActivities = new Lang.Class({
         if (this._extensionMenuItems) {
             this._extensionMenuItems.forEach(Lang.bind(this, function (id, menus) {
                 menus.menuDisable = null;
+                menus.menuFavoriteOff = null;
                 menus.menuHardRestart = null;
                 menus.menuSoftRestart = null;
                 menus.menuPreferences = null;
                 if (menus.menuEnable) {
                     menus.menuEnable.destroy();
                     menus.menuEnable = null;
+                }
+                if (menus.menuFavoriteOn) {
+                    menus.menuFavoriteOn.destroy();
+                    menus.menuFavoriteOn = null;
                 }
                 if (menus.menu) {
                     if (menus.menu.menu) menus.menu.menu.removeAll();
@@ -585,12 +647,15 @@ const dbFinActivities = new Lang.Class({
         // extensions
         if (this._yawlAAMenuSeparatorWE) this._yawlAAMenuSeparatorWE.actor.hide();
         if (this._yawlAAMenuExtensions) this._yawlAAMenuExtensions.actor.hide();
+        if (this._yawlAAMenuSeparatorEEM) this._yawlAAMenuSeparatorEEM.actor.hide();
+        if (this._yawlAAMenuExtensionsMore) this._yawlAAMenuExtensionsMore.actor.hide();
         if (this._yawlAAMenuSeparatorEED) this._yawlAAMenuSeparatorEED.actor.hide();
         if (this._yawlAAMenuExtensionsDisabled) this._yawlAAMenuExtensionsDisabled.actor.hide();
         if (global.yawlAA && global.yawlAA._submenuExtensionManager
                     && this._yawlAAMenuExtensions && this._yawlAAMenuExtensionsDisabled
                     && this._dbFinActivities && this._dbFinActivities._extensionMenuItems && ExtensionUtils.extensions) {
             let (extensions = [], renew = false, enabled = false, disabled = false,
+                 showFavorites = global.yawlAA._extensionManagerShowFavorites, notFavorited = false,
                  sort = dbFinConsts.arrayExtensionSortMethods[
                         dbFinUtils.inRange(global.yawlAA._extensionManagerSort, 0, dbFinConsts.arrayExtensionSortMethods.length - 1, 0)
                  ][1]) {
@@ -611,6 +676,7 @@ const dbFinActivities = new Lang.Class({
                 else {
                     this._dbFinActivities._extensionMenuItems.forEach(Lang.bind(this, function (id, menus) {
                         menus.menu.actor.visible = false;
+                        menus.menuFavoriteOn.actor.visible = false;
                         menus.menuEnable.actor.visible = false;
                     }));
                 }
@@ -619,10 +685,18 @@ const dbFinActivities = new Lang.Class({
                     let (menus = this._dbFinActivities._ensureExtensionMenuItem(e)) {
                         if (menus) {
                             if (e.state == 1) {
-                                menus.menu.actor.visible = true;
-                                menus.menuPreferences.actor.visible = e.hasPrefs;
-                                menus.menuDisable.actor.visible = e.uuid != 'aa@dbfin.com';
-                                enabled = true;
+                                if (!showFavorites || this._dbFinActivities._favorites
+                                        && this._dbFinActivities._favorites.indexOf(e.uuid) != -1) {
+                                    menus.menu.actor.visible = true;
+                                    menus.menuPreferences.actor.visible = e.hasPrefs;
+                                    menus.menuFavoriteOff.actor.visible = showFavorites;
+                                    menus.menuDisable.actor.visible = e.uuid != 'aa@dbfin.com';
+                                    enabled = true;
+                                }
+                                else {
+                                    menus.menuFavoriteOn.actor.visible = true;
+                                    notFavorited = true;
+                                }
                             }
                             else {
                                 menus.menuEnable.actor.visible = true;
@@ -635,11 +709,20 @@ const dbFinActivities = new Lang.Class({
                     if (this._yawlAAMenuSeparatorWE) this._yawlAAMenuSeparatorWE.actor.show();
                     this._yawlAAMenuExtensions.actor.show();
                 }
+                if (notFavorited) {
+                    if (this._yawlAAMenuSeparatorEEM) this._yawlAAMenuSeparatorEEM.actor.show();
+                    this._yawlAAMenuExtensionsMore.actor.show();
+                    if (this._yawlAAMenuExtensionsMore.actor.label_actor) {
+                        this._yawlAAMenuExtensionsMore.actor.label_actor.set_text(
+                            !enabled ? _("Extensions") : _("Other extensions")
+                        );
+                    }
+                }
                 if (disabled) {
                     if (this._yawlAAMenuSeparatorEED) this._yawlAAMenuSeparatorEED.actor.show();
                     this._yawlAAMenuExtensionsDisabled.actor.show();
                 }
-            } // let (extensions, renew, enabled, disabled)
+            } // let (extensions, renew, enabled, disabled, showFavorites, notFavorited, sort)
         } // if (should and can show extensions)
         // parent open method
         if (this._yawlAAOpenWas) Lang.bind(this, this._yawlAAOpenWas)(animate);
@@ -650,6 +733,7 @@ const dbFinActivities = new Lang.Class({
         let (menuItem = new PopupMenu.PopupMenuItem(name)) {
             menuItem._yawlAAExtension = extension;
             menuItem._yawlAAFrequencyIncrement = Lang.bind(this, this._extensionFrequenciesIncrement);
+            menuItem._yawlAAFavoritesToggle = Lang.bind(this, this._extensionFavoritesToggle);
             menu.addMenuItem(menuItem);
             menuItem.connect('activate', this[method]);
             return menuItem;
@@ -677,6 +761,12 @@ const dbFinActivities = new Lang.Class({
                 }
             }
         }
+    },
+    _extensionFavoriteOff: function (menuItem, event) {
+        if (menuItem._yawlAAFavoritesToggle) menuItem._yawlAAFavoritesToggle(menuItem._yawlAAExtension.uuid);
+    },
+    _extensionFavoriteOn: function (menuItem, event) {
+        if (menuItem._yawlAAFavoritesToggle) menuItem._yawlAAFavoritesToggle(menuItem._yawlAAExtension.uuid);
     },
     _extensionHardRestart: function (menuItem, event) {
         ExtensionSystem.reloadExtension(menuItem._yawlAAExtension);

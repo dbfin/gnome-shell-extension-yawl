@@ -54,12 +54,14 @@ const Settings = [
 	[ 'first-time', true, { }, null ],
 
     [ 'extension-frequencies', '[]', { }, 'extensions' ],
+    [ 'extension-favorites', '[]', { }, 'extensions' ],
 
     [ 'style-force-default', true, { }, 'style' ],
     [ 'style-background', 1, { min: 0, max: arrayStyleBackgrounds.length - 1 }, 'style' ],
 
     [ 'submenu-extension-manager', true, { }, 'extensions' ],
     [ 'extension-manager-sort', 2, { min: 0, max: arrayExtensionSortMethods.length - 1 }, 'extensions' ],
+    [ 'extension-manager-show-favorites', false, { }, 'extensions' ],
 
     [ 'submenu-additional', true, { }, 'additional' ],
 
