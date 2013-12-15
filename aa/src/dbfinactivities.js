@@ -56,6 +56,49 @@ const _ = Gettext.gettext;
 
 const _D = Me.imports.dbfindebug._D;
 
+// menu stuff
+const dbFinPopupSubMenuMenuItemAutoCloseNoAnimation = new Lang.Class({
+    Name: 'dbFin.PopupSubMenuMenuItemAutoCloseNoAnimation',
+    Extends: PopupMenu.PopupSubMenuMenuItem,
+
+    _init: function () {
+        this.parent.apply(this, arguments);
+        if (this.menu) {
+            this.menu._openWas = this.menu.open;
+            this.menu.open = Lang.bind(this.menu, this._submenuOpen);
+            this.menu._closeWas = this.menu.close;
+            this.menu.close = Lang.bind(this.menu, this._submenuClose);
+            this.menu._removeTopSubmenuOpenedLast = Lang.bind(this.menu, this._removeTopSubmenuOpenedLast);
+        }
+    },
+
+    destroy: function () {
+        if (this.menu && this.menu._removeTopSubmenuOpenedLast) this.menu._removeTopSubmenuOpenedLast();
+        this.parent.apply(this, arguments);
+    },
+
+    // bounded to this.menu
+    _submenuOpen: function (animate) {
+        let (top = this._getTopMenu()) {
+            if (top) {
+                if (top._yawlAASubmenuOpenedLast) top._yawlAASubmenuOpenedLast.close(animate);
+                top._yawlAASubmenuOpenedLast = this;
+            }
+        }
+        if (this._openWas) this._openWas();
+    },
+    _submenuClose: function (animate) {
+        if (this._closeWas) this._closeWas();
+        if (this._removeTopSubmenuOpenedLast) this._removeTopSubmenuOpenedLast();
+    },
+    _removeTopSubmenuOpenedLast: function () {
+        let (top = this._getTopMenu()) {
+            if (top && top._yawlAASubmenuOpenedLast === this) top._yawlAASubmenuOpenedLast = null;
+        }
+    }
+});
+
+// main class
 const dbFinActivities = new Lang.Class({
 	Name: 'dbFin.Activities',
 
@@ -358,13 +401,13 @@ const dbFinActivities = new Lang.Class({
                 menu._yawlAAMenuSeparatorEEM = new PopupMenu.PopupSeparatorMenuItem();
                 if (menu._yawlAAMenuSeparatorEEM) menu.addMenuItem(menu._yawlAAMenuSeparatorEEM);
 
-                menu._yawlAAMenuExtensionsMore = new PopupMenu.PopupSubMenuMenuItem('...');
+                menu._yawlAAMenuExtensionsMore = new dbFinPopupSubMenuMenuItemAutoCloseNoAnimation('...');
                 if (menu._yawlAAMenuExtensionsMore) menu.addMenuItem(menu._yawlAAMenuExtensionsMore);
 
                 menu._yawlAAMenuSeparatorEED = new PopupMenu.PopupSeparatorMenuItem();
                 if (menu._yawlAAMenuSeparatorEED) menu.addMenuItem(menu._yawlAAMenuSeparatorEED);
 
-                menu._yawlAAMenuExtensionsDisabled = new PopupMenu.PopupSubMenuMenuItem(_("Disabled extensions"));
+                menu._yawlAAMenuExtensionsDisabled = new dbFinPopupSubMenuMenuItemAutoCloseNoAnimation(_("Disabled extensions"));
                 if (menu._yawlAAMenuExtensionsDisabled) menu.addMenuItem(menu._yawlAAMenuExtensionsDisabled);
 
                 // additional menu items
@@ -475,7 +518,7 @@ const dbFinActivities = new Lang.Class({
         let (menus = this._extensionMenuItems.get(extension.uuid)) {
             if (!menus) {
                 menus = {
-                    menu: new PopupMenu.PopupSubMenuMenuItem(extension.metadata.name),
+                    menu: new dbFinPopupSubMenuMenuItemAutoCloseNoAnimation(extension.metadata.name),
                     menuFavoriteOn: this._addExtensionAction(this.menu._yawlAAMenuExtensionsMore.menu, extension,
                                                        '\u2605 ' + extension.metadata.name, '_extensionFavoriteOn'),
                     menuEnable: this._addExtensionAction(this.menu._yawlAAMenuExtensionsDisabled.menu, extension,
@@ -556,7 +599,7 @@ const dbFinActivities = new Lang.Class({
         return this._sortExtensionsByName(e1, e2);
     },
 
-    // called binded to the menu
+    // bounded to this.menu
     _openMenu: function(animate) {
         _D('>' + this.__name__ + '._openMenu()');
         // workspaces
@@ -739,7 +782,7 @@ const dbFinActivities = new Lang.Class({
             return menuItem;
         }
     },
-    // called not binded
+    // not bounded
     _extensionDisable: function (menuItem, event) {
         ExtensionSystem.disableExtension(menuItem._yawlAAExtension.uuid);
         let (enabledExtensions = global.settings && global.settings.get_strv(ExtensionSystem.ENABLED_EXTENSIONS_KEY)) {
