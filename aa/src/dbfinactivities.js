@@ -340,6 +340,15 @@ const dbFinActivities = new Lang.Class({
             let (workspaceActiveIndex = global.screen && global.screen.get_active_workspace_index()) {
                 this.label.set_text(workspaceActiveIndex || workspaceActiveIndex === 0 ? '' + (workspaceActiveIndex + 1) : '?');
                 this._updateLabelWidth();
+                let (workspaceMenuItems = this.menu && this.menu.isOpen && this.menu._yawlAAMenuWorkspaces
+                                          && this.menu._yawlAAMenuWorkspaces._getMenuItems()) {
+                    if (workspaceMenuItems) {
+                        workspaceMenuItems.forEach(Lang.bind(this, function (menuItem, index) {
+                            if (index === workspaceActiveIndex) this._selectMenuItem(menuItem);
+                            else this._unselectMenuItem(menuItem);
+                        }));
+                    }
+                }
             }
         }
         _D('<');
@@ -569,6 +578,24 @@ const dbFinActivities = new Lang.Class({
         _D('<');
     },
 
+    _selectMenuItem: function(menuItem) {
+        _D('>' + this.__name__ + '._selectMenuItem()');
+        if (menuItem) {
+            if (menuItem.setShowDot) menuItem.setShowDot(true);
+            else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.DOT);
+        }
+        _D('<');
+    },
+
+    _unselectMenuItem: function(menuItem) {
+        _D('>' + this.__name__ + '._unselectMenuItem()');
+        if (menuItem) {
+            if (menuItem.setShowDot) menuItem.setShowDot(false);
+            else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.NONE);
+        }
+        _D('<');
+    },
+
     _ensureExtensionMenuItem: function (extension) {
         _D('>' + this.__name__ + '._ensureExtensionMenuItem()');
         if (!extension || !extension.uuid || !extension.metadata || !extension.metadata.name
@@ -736,8 +763,7 @@ const dbFinActivities = new Lang.Class({
                                 }
                             } // for (let j)
                             if (i === workspaceActiveIndex) {
-                                if (menuItem.setShowDot) menuItem.setShowDot(true);
-                                else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.DOT);
+                                this._dbFinActivities._selectMenuItem(menuItem);
                             }
                             menuItem.connect('activate', (function (i) { return function (menuItem, event) {
                                 let (workspace = global.screen && global.screen.get_workspace_by_index(i)) {
