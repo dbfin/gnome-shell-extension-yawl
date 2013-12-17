@@ -16,7 +16,9 @@ dist_extension_DATA = \
 	../../lib/dbfinutilsprefs.js \
 	extension.js \
 	prefs.js \
-	stylesheet.css
+	stylesheet.css \
+	stylesheet_custom.css \
+	stylesheet_custom2.css
 nodist_extension_DATA = \
 	../../lib/GNUGPLv3 \
 	../../lib/license.txt \
@@ -27,6 +29,12 @@ nodist_extension_DATA = \
 	screenshot.png
 images = \
 	../../images/aa.png \
+	../../images/gimp.png \
+	../../images/gimp_hover.png \
+	../../images/gnome_black.png \
+	../../images/gnome_black_hover.png \
+	../../images/gnome_white.png \
+	../../images/gnome_white_hover.png \
 	../../images/gplv3.png
 
 imagedir = $(extensiondir)/images

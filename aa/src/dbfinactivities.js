@@ -107,7 +107,8 @@ const dbFinActivities = new Lang.Class({
 
         this._activities = Main.panel && (Main.panel.statusArea || Main.panel._statusArea);
         this._activities = this._activities && this._activities['activities'] || null;
-        this._activitiesActor = this._activities && this._activities.actor || null;
+        this._activitiesContainer = this._activities && this._activities.container || null;
+        this._activitiesActor = this._activitiesContainer && this._activities.actor || null;
         if (!this._activitiesActor || !(this._activities instanceof PanelMenu.Button)) {
             this._activitiesActor = null;
             this._activities = null;
@@ -122,7 +123,7 @@ const dbFinActivities = new Lang.Class({
         this._bin = new St.Bin({ reactive: true, track_hover: true });
         if (this._bin) {
             this._activitiesActor.add_child(this._bin);
-            this._bin.add_style_class_name('alternative-activities-face');
+            this._bin.add_style_class_name('face');
             this._bin._delegate = this._activitiesActor;
             this._signals.connectNoId({ emitter: this._bin, signal: 'enter-event',
                                         callback: this._activitiesActorEnterEvent, scope: this });
@@ -130,7 +131,15 @@ const dbFinActivities = new Lang.Class({
                                         callback: this._activitiesActorLeaveEvent, scope: this });
         }
 
+        this._activitiesContainer.add_style_class_name('alternative-activities-container');
+        this._activitiesContainer.clip_to_allocation = false;
+        this._activitiesContainer.reactive = true;
+        this._activitiesContainer.track_hover = true;
+
         this._activitiesActor.add_style_class_name('alternative-activities');
+        this._activitiesActor.clip_to_allocation = true;
+        this._activitiesActor.reactive = true;
+        this._activitiesActor.track_hover = true;
         this._signals.connectNoId({ emitter: this._activitiesActor, signal: 'allocate',
                                     callback: this._activitiesActorAllocate, scope: this },
                                   true);
@@ -146,7 +155,12 @@ const dbFinActivities = new Lang.Class({
                                         callback: this._updateLabel, scope: this });
             this._labelTextWas = this.label.get_text();
             this._labelXAlignWas = this.label.x_align;
-            this.label.x_align = Clutter.ActorAlign.CENTER;
+            this.label.x_align = Clutter.ActorAlign.FILL;
+            this.label.clip_to_allocation = true;
+            if (this.label.get_children()[0]) {
+                this.label.get_children()[0].x_align = Clutter.ActorAlign.CENTER;
+                this.label.get_children()[0].y_align = Clutter.ActorAlign.CENTER;
+            }
             this._updateLabel();
         }
 
@@ -166,6 +180,12 @@ const dbFinActivities = new Lang.Class({
             if (this._activitiesActor) this._activitiesActor.name = 'panelActivities' + (global.yawlAA && global.yawlAA._styleForceDefault ? 'Alternative' : '');
         };
         this._updatedStyleBackground = function () {
+            if (this._activitiesContainer) {
+                dbFinConsts.arrayStyleBackgrounds.forEach(Lang.bind(this, function (row) { this._activitiesContainer.remove_style_class_name(row[1]); }));
+                if (global.yawlAA && global.yawlAA._styleBackground) {
+                    this._activitiesContainer.add_style_class_name(dbFinConsts.arrayStyleBackgrounds[global.yawlAA._styleBackground][1]);
+                }
+            }
             if (this._activitiesActor) {
                 dbFinConsts.arrayStyleBackgrounds.forEach(Lang.bind(this, function (row) { this._activitiesActor.remove_style_class_name(row[1]); }));
                 if (global.yawlAA && global.yawlAA._styleBackground) {
@@ -173,6 +193,7 @@ const dbFinActivities = new Lang.Class({
                 }
             }
         };
+        // below: this._updatedStyleCustomCss
         this._updatedExtensionManagerSort = function () {
             this._removeAllExtensionMenuItems();
         }
@@ -195,7 +216,7 @@ const dbFinActivities = new Lang.Class({
 		};
 
         this._ensureVisibleCounter = 0;
-        this._signals.connectNoId({ emitter: this._activities.container, signal: 'notify::visible',
+        this._signals.connectNoId({ emitter: this._activitiesContainer, signal: 'notify::visible',
                                     callback: this._ensureVisible, scope: this },
                                   true);
         this._ensureVisible();
@@ -218,6 +239,7 @@ const dbFinActivities = new Lang.Class({
             this._clicked.destroy();
             this._clicked = null;
         }
+        this._unloadCustomCss();
         this._favorites = [];
         if (this._frequencies) {
             this._frequencies.destroy();
@@ -242,6 +264,10 @@ const dbFinActivities = new Lang.Class({
             this._activitiesActor.remove_style_class_name('alternative-activities');
             this._activitiesActor.name = 'panelActivities';
             this._activitiesActor = null;
+        }
+        if (this._activitiesContainer) {
+            this._activitiesContainer.remove_style_class_name('alternative-activities-container');
+            this._activitiesContainer = null;
         }
         this._activities = null;
         this.emit('destroy');
@@ -281,7 +307,7 @@ const dbFinActivities = new Lang.Class({
 
     _ensureVisible: function() {
         _D('>' + this.__name__ + '._ensureVisible()');
-        if (this._activities && this._activities.container && !this._activities.container.visible) {
+        if (this._activities && this._activitiesContainer && !this._activitiesContainer.visible) {
             ++this._ensureVisibleCounter;
             if (this._ensureVisibleCounter > 10) {
                 _D('<');
@@ -303,7 +329,7 @@ const dbFinActivities = new Lang.Class({
             if (global.yawl && global.yawl.set && global.yawl._hideActivities) {
                 this._timeout.add('ensure-visible-yawl', 250, function () { global.yawl.set('hide-activities', false); }, null, true, true);
             }
-            if (this._activities.container) this._activities.container.show();
+            if (this._activitiesContainer) this._activitiesContainer.show();
         }
         _D('<');
     },
@@ -325,6 +351,40 @@ const dbFinActivities = new Lang.Class({
             let (wln = this.label.get_preferred_width(-1)[1] || 0) {
                 this.label.min_width = wln + (this._activities && this._activities._minHPadding || 0) * 2;
                 this.label.queue_relayout();
+            }
+        }
+        _D('<');
+    },
+
+    _updatedStyleCustomCss: function() {
+        _D('>' + this.__name__ + '._updatedStyleCustomCss()');
+        this._unloadCustomCss();
+        let (theme = St.ThemeContext.get_for_stage(global.stage).get_theme(),
+             filename = global.yawlAA && global.yawlAA._styleCustomCss && global.yawlAA._styleCustomCss.replace(/^~/, GLib.get_home_dir())) {
+            if (theme && filename && GLib.file_test(filename, GLib.FileTest.EXISTS)) {
+                try {
+                    theme.load_stylesheet(filename);
+                    Main.loadTheme();
+                    this._cssCustom = filename;
+                }
+                catch (e) {
+                }
+            }
+        }
+        _D('<');
+    },
+
+    _unloadCustomCss: function() {
+        _D('>' + this.__name__ + '._unloadCustomCss()');
+        let (theme = this._cssCustom && St.ThemeContext.get_for_stage(global.stage).get_theme()) {
+            if (theme) {
+                try {
+                    theme.unload_stylesheet(this._cssCustom);
+                    Main.loadTheme();
+                }
+                catch (e) {
+                }
+                this._cssCustom = null;
             }
         }
         _D('<');
@@ -388,6 +448,9 @@ const dbFinActivities = new Lang.Class({
                 menu._dbFinActivities = this;
 
                 menu.actor.add_style_class_name('alternative-activities');
+                if (global.yawlAA && global.yawlAA._styleBackground) {
+                    menu.actor.add_style_class_name(dbFinConsts.arrayStyleBackgrounds[global.yawlAA._styleBackground][1]);
+                }
 
                 menu._yawlAAMenuWorkspaces = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
                 if (menu._yawlAAMenuWorkspaces) menu.addMenuItem(menu._yawlAAMenuWorkspaces);

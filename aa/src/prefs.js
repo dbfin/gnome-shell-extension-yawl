@@ -59,9 +59,14 @@ function buildPrefsWidget() {
 
         builder.addPageWelcome('aa', 'Alternative Activities');
 
+        builder.setWidthRight(6);
+
         builder.addPage(_("General"));
             builder.addCheckBox(_("Force Activities button look like other panel buttons"), 'style-force-default');
             builder.addComboBoxText(_("Choose Activities button background"), 'style-background', dbFinConsts.arrayStyleBackgrounds, 0);
+            builder.shift();
+                builder.addFileChooserButton(_("Custom css file"), 'style-custom-css', _("Choose css file"), '*\.css');
+            builder.unshift();
             builder.addSeparator();
             builder.addCheckBox(_("Show Extension Manager in the menu"), 'submenu-extension-manager');
             builder.shift();

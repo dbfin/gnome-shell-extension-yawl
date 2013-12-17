@@ -40,7 +40,8 @@ const arrayContributors = [
 const arrayStyleBackgrounds = [
     [   _("Default"),                       ''                              ],
     [   _("Frame"),                         'frame'                         ],
-    [   _("Transparent"),                   'transparent'                   ]
+    [   _("Transparent"),                   'transparent'                   ],
+    [   _("Custom css file"),               'custom'                        ]
 ];
 
 const arrayExtensionSortMethods = [
@@ -58,6 +59,7 @@ const Settings = [
 
     [ 'style-force-default', true, { }, 'style' ],
     [ 'style-background', 1, { min: 0, max: arrayStyleBackgrounds.length - 1 }, 'style' ],
+    [ 'style-custom-css', '~/.local/share/gnome-shell/extensions/aa@dbfin.com/stylesheet_custom.css', { }, 'style' ],
 
     [ 'submenu-extension-manager', true, { }, 'extensions' ],
     [ 'extension-manager-sort', 2, { min: 0, max: arrayExtensionSortMethods.length - 1 }, 'extensions' ],

@@ -1,0 +1,71 @@
+/* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
+/*
+ * YAWL GNOME Shell Extensions
+ *
+ * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
+ *
+ * YAWL, a group of GNOME Shell extensions, is provided as
+ * free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License (GPL)
+ * as published by the Free Software Foundation, version 3
+ * of the License, or any later version.
+ *
+ * YAWL is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY: without even implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the License (in file
+ * GNUGPLv3) along with the program. A copy of the License
+ * is also available at <http://www.gnu.org/licenses/>.
+ *
+ * stylesheet_custom.css
+ * CSS Styles.
+ *
+ */
+
+/* Activities button container's style: the container is not clipped to allocation */
+/* The style does not depend on whether the Activities button is forced to be like other panel buttons */
+.alternative-activities-container.custom,
+.alternative-activities-container.custom:hover {
+    background: transparent;
+}
+
+/* Activities button actor's style: the actor is clipped to allocation */
+/* #panelActivities: when the Activities button style is not forced to be like other panel buttons */
+/* #panelActivitiesAlternative: when the Activities button style is forced to be like other panel buttons */
+#panelActivities.alternative-activities.custom,
+#panelActivities.alternative-activities.custom:hover,
+#panelActivitiesAlternative.alternative-activities.custom,
+#panelActivitiesAlternative.alternative-activities.custom:hover {
+    width: 48px;
+    -minimum-hpadding: 0px;
+    -natural-hpadding: 0px;
+    padding: 0;
+}
+
+#panelActivities.alternative-activities.custom,
+#panelActivitiesAlternative.alternative-activities.custom {
+    background: url('images/gnome_white.png');
+}
+
+#panelActivities.alternative-activities.custom:hover,
+#panelActivitiesAlternative.alternative-activities.custom:hover {
+    background: url('images/gnome_white_hover.png');
+}
+
+/* Activities button label's style */
+#panelActivities.alternative-activities.custom StLabel,
+#panelActivities.alternative-activities.custom StLabel:hover,
+#panelActivitiesAlternative.alternative-activities.custom StLabel,
+#panelActivitiesAlternative.alternative-activities.custom StLabel:hover {
+    padding: 0 0 0 24px;
+    background: transparent;
+}
+
+/* Popup menu */
+.popup-menu.alternative-activities.custom {
+}
+
+.popup-menu.alternative-activities.custom .popup-menu-item {
+}

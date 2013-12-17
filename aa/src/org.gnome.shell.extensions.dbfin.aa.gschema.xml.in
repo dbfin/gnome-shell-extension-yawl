@@ -31,6 +31,11 @@
       <_summary>Activities button background.</_summary>
       <_description>Activities button background.</_description>
     </key>
+    <key name="style-custom-css" type="s">
+      <default>'~/.local/share/gnome-shell/extensions/aa@dbfin.com/stylesheet_custom.css'</default>
+      <_summary>Custom css file.</_summary>
+      <_description>Custom css file.</_description>
+    </key>
     <key name="submenu-extension-manager" type="b">
       <default>true</default>
       <_summary>Whether to show extensions in the menu.</_summary>
