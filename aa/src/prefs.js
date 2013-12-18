@@ -65,6 +65,7 @@ function buildPrefsWidget() {
             builder.addCheckBox(_("Force Activities button look like other panel buttons"), 'style-force-default');
             builder.addComboBoxText(_("Choose Activities button background"), 'style-background', dbFinConsts.arrayStyleBackgrounds, 0);
             builder.shift();
+                builder.addLabel('\u26a0 ' + _("Please keep your custom css files outside of the installation directory."));
                 builder.addFileChooserButton(_("Custom css file"), 'style-custom-css', _("Choose css file"), '*\.css');
             builder.unshift();
             builder.addSeparator();
