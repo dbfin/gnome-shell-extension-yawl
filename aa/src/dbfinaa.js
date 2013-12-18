@@ -31,6 +31,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinActivities = Me.imports.dbfinactivities;
+const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinSettings = Me.imports.dbfinsettings;
 const dbFinSignals = Me.imports.dbfinsignals;
 
@@ -50,6 +51,8 @@ const dbFinAA = new Lang.Class({
 			_D('<');
 			return;
 		}
+
+        global.yawlAA.animation = new dbFinAnimation.dbFinAnimation();
 
         this._signals = new dbFinSignals.dbFinSignals();
 
@@ -72,6 +75,10 @@ const dbFinAA = new Lang.Class({
         if (this._activities) {
             this._activities.destroy();
             this._activities = null;
+        }
+        if (global.yawlAA.animation) {
+            global.yawlAA.animation.destroy();
+            global.yawlAA.animation = null;
         }
         if (global.yawlAA) { // must be destroyed last
             global.yawlAA.destroy();

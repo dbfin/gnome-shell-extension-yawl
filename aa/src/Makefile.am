@@ -4,6 +4,7 @@ dist_extension_DATA = \
 	dbfinaa.js \
 	../../lib/convenience2.js \
 	dbfinactivities.js \
+	../../lib/dbfinanimation.js \
 	../../lib/dbfinarrayhash.js \
 	../../lib/dbfinclicked.js \
 	dbfinconsts.js \

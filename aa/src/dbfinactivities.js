@@ -43,6 +43,7 @@ const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const dbFinAnimation = Me.imports.dbfinanimation;
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinClicked = Me.imports.dbfinclicked;
 const dbFinConsts = Me.imports.dbfinconsts;
@@ -57,8 +58,8 @@ const _ = Gettext.gettext;
 const _D = Me.imports.dbfindebug._D;
 
 // menu stuff
-const dbFinPopupSubMenuMenuItemAutoCloseNoAnimation = new Lang.Class({
-    Name: 'dbFin.PopupSubMenuMenuItemAutoCloseNoAnimation',
+const dbFinPopupSubMenuMenuItemAutoClose = new Lang.Class({
+    Name: 'dbFin.PopupSubMenuMenuItemAutoClose',
     Extends: PopupMenu.PopupSubMenuMenuItem,
 
     _init: function () {
@@ -80,16 +81,36 @@ const dbFinPopupSubMenuMenuItemAutoCloseNoAnimation = new Lang.Class({
     // bounded to this.menu
     _submenuOpen: function (animate) {
         let (top = this._getTopMenu()) {
-            if (top) {
-                if (top._yawlAASubmenuOpenedLast) top._yawlAASubmenuOpenedLast.close(animate);
+            if (top && top._yawlAASubmenuOpenedLast && top._yawlAASubmenuOpenedLast !== this) {
+                top._yawlAASubmenuOpenedLast.close(animate);
                 top._yawlAASubmenuOpenedLast = this;
             }
         }
-        if (this._openWas) this._openWas();
+        if (this._openWas) {
+            this.actor.set_height(-1);
+            let (ahn = this.actor.get_preferred_height(-1)[1]) {
+                this._openWas(animate);
+                dbFinAnimation.animateToState(this.actor, { _arrow_rotation: 90, height: ahn }, function () {
+                    if (this.actor) {
+                        this.actor.set_height(-1);
+                    }
+                }, this, 250, 'linear', true);
+                dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 90 }, null, null, 250, 'linear');
+            }
+        }
     },
     _submenuClose: function (animate) {
-        if (this._closeWas) this._closeWas();
         if (this._removeTopSubmenuOpenedLast) this._removeTopSubmenuOpenedLast();
+        if (this._closeWas) {
+            this._closeWas(animate);
+            dbFinAnimation.animateToState(this.actor, { _arrow_rotation: 0, height: 0 }, function () {
+                if (this.actor) {
+                    this.actor.hide();
+                    this.actor.set_height(-1);
+                }
+            }, this, 250, 'linear', true);
+            dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 0 }, null, null, 250, 'linear');
+        }
     },
     _removeTopSubmenuOpenedLast: function () {
         let (top = this._getTopMenu()) {
@@ -473,13 +494,13 @@ const dbFinActivities = new Lang.Class({
                 menu._yawlAAMenuSeparatorEEM = new PopupMenu.PopupSeparatorMenuItem();
                 if (menu._yawlAAMenuSeparatorEEM) menu.addMenuItem(menu._yawlAAMenuSeparatorEEM);
 
-                menu._yawlAAMenuExtensionsMore = new dbFinPopupSubMenuMenuItemAutoCloseNoAnimation('...');
+                menu._yawlAAMenuExtensionsMore = new dbFinPopupSubMenuMenuItemAutoClose('...');
                 if (menu._yawlAAMenuExtensionsMore) menu.addMenuItem(menu._yawlAAMenuExtensionsMore);
 
                 menu._yawlAAMenuSeparatorEED = new PopupMenu.PopupSeparatorMenuItem();
                 if (menu._yawlAAMenuSeparatorEED) menu.addMenuItem(menu._yawlAAMenuSeparatorEED);
 
-                menu._yawlAAMenuExtensionsDisabled = new dbFinPopupSubMenuMenuItemAutoCloseNoAnimation(_("Disabled extensions"));
+                menu._yawlAAMenuExtensionsDisabled = new dbFinPopupSubMenuMenuItemAutoClose(_("Disabled extensions"));
                 if (menu._yawlAAMenuExtensionsDisabled) menu.addMenuItem(menu._yawlAAMenuExtensionsDisabled);
 
                 // additional menu items
@@ -608,7 +629,7 @@ const dbFinActivities = new Lang.Class({
         let (menus = this._extensionMenuItems.get(extension.uuid)) {
             if (!menus) {
                 menus = {
-                    menu: new dbFinPopupSubMenuMenuItemAutoCloseNoAnimation(extension.metadata.name),
+                    menu: new dbFinPopupSubMenuMenuItemAutoClose(extension.metadata.name),
                     menuFavoriteOn: this._addExtensionAction(this.menu._yawlAAMenuExtensionsMore.menu, extension,
                                                        '\u2605 ' + extension.metadata.name, '_extensionFavoriteOn'),
                     menuEnable: this._addExtensionAction(this.menu._yawlAAMenuExtensionsDisabled.menu, extension,

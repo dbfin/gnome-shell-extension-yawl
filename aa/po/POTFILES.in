@@ -1,6 +1,7 @@
 src/dbfinaa.js
 ../lib/convenience2.js
 src/dbfinactivities.js
+../lib/dbfinanimation.js
 ../lib/dbfinarrayhash.js
 ../lib/dbfinclicked.js
 src/dbfinconsts.js
