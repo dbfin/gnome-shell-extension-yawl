@@ -6,20 +6,88 @@
 msgid ""
 msgstr "Project-Id-Version: Alternative Activities 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-09 22:35-0600\n"
-"PO-Revision-Date: 2013-12-09 22:35-0600\n"
+"POT-Creation-Date: 2013-12-19 00:38+0200\n"
+"PO-Revision-Date: 2013-12-19 00:38+0200\n"
 "Last-Translator: Svitozar Cherepii\n"
 "Language-Team: dbFin\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Cannot show Activities button, something actively hides it."
+msgstr "Не можу показати кнопку Діяльності, щось активно її ховає"
+
+msgid ""
+"This might be another extension forcing the native GNOME Shell's Activities "
+"button to be hidden."
+msgstr "Це може бути інше розширення, що примушує властиву GNOME кнопку Діяльності бути схованою"
+
+msgid "Alternative Activities uses the original Activities button."
+msgstr "Альтернативна кнопка Діяльності використовує оригінальну кнопку Діяльності"
+
+msgid "Please disable anything that might mess with it."
+msgstr "Будь ласка вимкніть все, що може може з нею взаємодіяти"
+
+msgid "Temporary disabling..."
+msgstr "Тимчасово вимикається..."
+
+msgid "Restart GNOME Shell to try again."
+msgstr "Щоб спробувати ще раз перезавантажте GNOME Shell"
+
+msgid "Disabled extensions"
+msgstr "Вимкнуті розширення"
+
+msgid "Advanced settings"
+msgstr "Додаткові налаштування"
+
+msgid "Extension preferences"
+msgstr "Параметри розширення"
+
+msgid "Soft restart"
+msgstr "Легкий перезапуск"
+
+msgid "Hard restart"
+msgstr "Повний перезапуск"
+
+msgid "Hide extension"
+msgstr "Сховати розширення"
+
+msgid "Disable extension"
+msgstr "Вимкнути розширення"
+
+msgid "Extensions"
+msgstr "Розширення"
+
+msgid "Other extensions"
+msgstr "Інші розширення"
 
 msgid "German translation"
 msgstr "переклад на німецьку"
 
 msgid "Ukrainian translation"
 msgstr "переклад на українську"
+
+msgid "Default"
+msgstr "По замовчуванню"
+
+msgid "Frame"
+msgstr "Рамка"
+
+msgid "Transparent"
+msgstr "Прозорий"
+
+msgid "Custom css file"
+msgstr "Свій файл css"
+
+msgid "No sort"
+msgstr "Без сортування"
+
+msgid "Sort by frequency of access"
+msgstr "Сортувати за частотою доступу"
+
+msgid "Sort by name"
+msgstr "Сортувати по імені"
 
 msgid "Settings were reset successfully!"
 msgstr "Налаштування успішно повернені в вихідний стан!"
@@ -120,9 +188,6 @@ msgstr "Для резервного копіювання і синхроніза
 msgid "To reset all settings please enable"
 msgstr "Щоб повернути всі налаштування в вихідний стан, будь ласка, увімкніть"
 
-msgid "Advanced settings"
-msgstr "Додаткові налаштування"
-
 msgid "Reset settings"
 msgstr "Відновити всі налаштування"
 
@@ -141,8 +206,36 @@ msgstr "Імпорт"
 msgid "This will overwrite the file with settings"
 msgstr "Створити/оновити файл с налаштуваннями"
 
-msgid "Fine-tuning"
-msgstr "Налаштування"
+msgid "General"
+msgstr "Основне"
+
+msgid "Force Activities button look like other panel buttons"
+msgstr "Примусити кнопку Діяльності виглядати як інші кнопки панелі"
+
+msgid "Choose Activities button background"
+msgstr "Виберіть тло кнопки Діяльності"
+
+msgid ""
+"Please keep your custom css files outside of the installation directory."
+msgstr "Будь ласка зберігайте свій css файл поза директорією встановлення"
+
+msgid "Choose css file"
+msgstr "Виберіть файл css"
+
+msgid "Show Extension Manager in the menu"
+msgstr "Показати Менеджер Розширень в меню"
+
+msgid "Choose extension sort method"
+msgstr "Виберіть метод сортування розширень"
+
+msgid "Show options for favorite extensions only"
+msgstr "Показати опції тільки для вибраних розширень"
+
+msgid "Show additional commands in the menu"
+msgstr "Показати додаткові команди в меню"
+
+msgid "Advanced"
+msgstr "Додатково"
 
 msgid ""
 "Scroll timeout: the time after one scroll event during which other scroll "
