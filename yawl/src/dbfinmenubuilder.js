@@ -85,6 +85,17 @@ const dbFinMenuBuilder = new Lang.Class({
                 menu._yawlOpenWas = menu.open;
                 menu.open = this.open;
             }
+            menu.connect('destroy', Lang.bind(menu, function () {
+                this._yawlMetaApp = null;
+                this._yawlTrackerApp = null;
+                this._yawlTracker = null;
+                this._yawlCreatePinMenu = null;
+                this._yawlUpdateAddons = null;
+                if (this._yawlOpenWas) {
+                    this.open = this._yawlOpenWas;
+                    this._yawlOpenWas = null;
+                }
+            }));
         }
         _D('<');
     },
@@ -195,6 +206,7 @@ const dbFinMenuBuilder = new Lang.Class({
         } // let (metaApp, menu)
     },
 
+    // bounded to menu
 	open: function(animate) {
 		if (this) {
             _D('>' + this.__name__ + '.open()');
