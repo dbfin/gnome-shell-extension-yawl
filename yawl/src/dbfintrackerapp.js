@@ -530,9 +530,11 @@ const dbFinTrackerApp = new Lang.Class({
 		if (!state) {
 			// make sure we are still "active" if focused
 			this._updateFocused();
+            if (this.appButton && this.appButton._slicerIcon) this.appButton._slicerIcon.hoverLeave(menu);
 		}
 		else {
 			this.hideWindowsGroup(0);
+            if (this.appButton && this.appButton._slicerIcon) this.appButton._slicerIcon.hoverEnter(menu);
 		}
         _D('<');
     },
