@@ -350,8 +350,7 @@ const dbFinAppButton = new Lang.Class({
 								this._trackerApp.hideWindowsGroup();
 								if (this.menu && this.menu.isOpen && functionName !== 'openMenu') this.menu.close();
                                 if (this.menuWindows && this.menuWindows.isOpen
-                                    && functionName !== 'nextWindowNonMinimized'
-                                    && functionName !== 'nextWindow') this.menuWindows.close();
+                                    && !/^nextWindow/.test(functionName)) this.menuWindows.close();
                                 Lang.bind(this._trackerApp, this._trackerApp[functionName])(state);
                             }
                         } // let (functionName)
