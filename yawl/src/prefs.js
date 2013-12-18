@@ -284,6 +284,9 @@ function buildPrefsWidget() {
 						builder.addSeparator();
 	                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option") + ' ' + _("Add-ons") + ' > ' + _("Panel") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
 						builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0, '!mouse-scroll-workspace');
+                        builder.shift();
+                            builder.addCheckBox(_("Do not launch apps with scroll"), 'mouse-app-scroll-no-launch', '!mouse-scroll-workspace');
+                        builder.unshift();
 
 					builder.addPage(_("Right button"), 'mouse-right.png');
 						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-right', dbFinConsts.arrayAppClickFunctions, 0);

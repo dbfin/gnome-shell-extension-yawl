@@ -975,7 +975,7 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-    _nextWindow: function(minimized/* = false*/, showall/* = false*/, minimizeSingle/* = false*/, backward/* = false*/) {
+    _nextWindow: function(minimized/* = false*/, showall/* = false*/, minimizeSingle/* = false*/, backward/* = false*/, donotlaunch/* = false*/) {
         _D('>' + this.__name__ + '._nextWindow()');
         if (this.appButton && this.appButton.menuWindows && this.appButton.menuWindows.isOpen) {
             this.appButton.menuWindows.close();
@@ -1026,7 +1026,7 @@ const dbFinTrackerApp = new Lang.Class({
 				}
 			}
             else if (this.metaApp) { // no windows at all? open a new window
-                if (!this.metaApp.is_on_workspace(global.screen.get_active_workspace())) {
+                if (!donotlaunch && !this.metaApp.is_on_workspace(global.screen.get_active_workspace())) {
                     this.openNewWindowThisWorkspace();
                 }
             }
@@ -1034,55 +1034,55 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-    _prevWindow: function(minimized/* = false*/, showall/* = false*/, minimizeSingle/* = false*/, backward/* = true*/) {
+    _prevWindow: function(minimized/* = false*/, showall/* = false*/, minimizeSingle/* = false*/, backward/* = true*/, donotlaunch/* = false*/) {
         _D('>' + this.__name__ + '._prevWindow()');
-        this._nextWindow(minimized, showall, minimizeSingle, backward === undefined || !!backward);
+        this._nextWindow(minimized, showall, minimizeSingle, backward === undefined || !!backward, donotlaunch);
         _D('<');
     },
 
-    nextWindowNonMinimized: function() {
+    nextWindowNonMinimized: function(state) {
         _D('>' + this.__name__ + '.nextWindowNonMinimized()');
-        this._nextWindow();
+        this._nextWindow(false, false, false, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
-    nextWindow: function() {
+    nextWindow: function(state) {
         _D('>' + this.__name__ + '.nextWindow()');
-        this._nextWindow(true);
+        this._nextWindow(true, false, false, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
     nextWindowNonMinimizedWaitDoubleClick: function(state) {
         _D('>' + this.__name__ + '.nextWindowNonMinimizedWaitDoubleClick()');
-        if (state.scroll || !this._timeout) this.nextWindowNonMinimized();
-        else this._timeout.add('next-window', global.yawl && global.yawl._mouseClicksTimeThreshold || 377, this.nextWindowNonMinimized, this, true);
+        if (state.scroll || !this._timeout) this.nextWindowNonMinimized(state);
+        else this._timeout.add('next-window', global.yawl && global.yawl._mouseClicksTimeThreshold || 377, (function (state) { return function () { this.nextWindowNonMinimized(state); }; })(state), this, true);
         _D('<');
     },
 
     nextWindowWaitDoubleClick: function(state) {
         _D('>' + this.__name__ + '.nextWindowWaitDoubleClick()');
-        if (state.scroll || !this._timeout) this.nextWindow();
-        else this._timeout.add('next-window', global.yawl && global.yawl._mouseClicksTimeThreshold || 377, this.nextWindow, this, true);
+        if (state.scroll || !this._timeout) this.nextWindow(state);
+        else this._timeout.add('next-window', global.yawl && global.yawl._mouseClicksTimeThreshold || 377, (function (state) { return function () { this.nextWindow(state); }; })(state), this, true);
         _D('<');
     },
 
-    prevWindowNonMinimized: function() {
+    prevWindowNonMinimized: function(state) {
         _D('>' + this.__name__ + '.prevWindowNonMinimized()');
         if (this._timeout) this._timeout.remove('next-window');
-        this._prevWindow();
+        this._prevWindow(false, false, false, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
-    prevWindow: function() {
+    prevWindow: function(state) {
         _D('>' + this.__name__ + '.prevWindow()');
         if (this._timeout) this._timeout.remove('next-window');
-        this._prevWindow(true);
+        this._prevWindow(true, false, false, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
-    nextWindowMinimizeSingle: function() {
+    nextWindowMinimizeSingle: function(state) {
         _D('>' + this.__name__ + '.nextWindowMinimizeSingle()');
-        this._nextWindow(true, false, true);
+        this._nextWindow(true, false, true, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
@@ -1104,21 +1104,21 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-    _showAllNext: function(minimized/* = false*/) {
+    _showAllNext: function(minimized/* = false*/, donotlaunch/* = false*/) {
         _D('>' + this.__name__ + '._showAllNext()');
-		this._nextWindow(minimized, true);
+		this._nextWindow(minimized, true, false, false, donotlaunch);
         _D('<');
     },
 
-    showAllNextNonMinimized: function() {
+    showAllNextNonMinimized: function(state) {
         _D('>' + this.__name__ + '.showAllNextNonMinimized()');
-		this._showAllNext();
+		this._showAllNext(false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
-    showAllNext: function() {
+    showAllNext: function(state) {
         _D('>' + this.__name__ + '.showAllNext()');
-		this._showAllNext(true);
+		this._showAllNext(true, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 

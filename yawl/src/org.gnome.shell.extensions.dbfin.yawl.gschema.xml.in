@@ -358,6 +358,11 @@
       <_summary>App mouse scroll function.</_summary>
       <_description>App mouse scroll function.</_description>
     </key>
+    <key name="mouse-app-scroll-no-launch" type="b">
+      <default>false</default>
+      <_summary>Do not launch apps with scroll.</_summary>
+      <_description>Do not launch apps with scroll.</_description>
+    </key>
 
     <key name="mouse-app-right" type="s">
       <default>'10'</default>
