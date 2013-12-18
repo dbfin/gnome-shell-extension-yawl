@@ -231,8 +231,7 @@ const dbFinMenuBuilder = new Lang.Class({
 					if (windows.length) {
 						this._menuWindows = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
 						windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
-						let (wIndexWas = windows[0][0],
-                             focusedWindow = global.display && global.display.focus_window || null) {
+						let (wIndexWas = windows[0][0]) {
 							windows.forEach(Lang.bind(this, function ([ wIndex, metaWindow ]) {
 								if (wIndex !== wIndexWas) {
 									wIndexWas = wIndex;
@@ -243,10 +242,28 @@ const dbFinMenuBuilder = new Lang.Class({
 									let (menuItem = this._menuWindows.addAction(title, Lang.bind(this, function () {
 														if (this._yawlTracker) this._yawlTracker.activateWindow(metaWindow);
                                                     }))) {
-                                        if (focusedWindow && (metaWindow === focusedWindow
-                                                              || metaWindow === focusedWindow.get_transient_for())) {
-                                            if (menuItem.setShowDot) menuItem.setShowDot(true);
-                                            else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.DOT);
+                                        let (updateFocusIndicator = (function (metaWindow, menuItem) { return function () {
+                                                 let (focusedWindow = menuItem && global.display && global.display.focus_window || null) {
+                                                     if (focusedWindow && (metaWindow === focusedWindow
+                                                                           || metaWindow === focusedWindow.get_transient_for())) {
+                                                         if (menuItem.setShowDot) menuItem.setShowDot(true);
+                                                         else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.DOT);
+                                                     }
+                                                     else if (menuItem) {
+                                                         if (menuItem.setShowDot) menuItem.setShowDot(false);
+                                                         else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.NONE);
+                                                     }
+                                                 }
+                                             }; })(metaWindow, menuItem)) {
+                                            if (global.display && menuItem) {
+                                                menuItem._yawlUpdateFocusIndicatorSignalId = global.display.connect('notify::focus-window', updateFocusIndicator);
+                                                menuItem.connect('destroy', Lang.bind(menuItem, function () {
+                                                    if (this._yawlUpdateFocusIndicatorSignalId && global.display) {
+                                                        global.display.disconnect(this._yawlUpdateFocusIndicatorSignalId);
+                                                    }
+                                                }));
+                                            }
+                                            updateFocusIndicator();
                                         }
 										if (tracker && this._yawlTracker.hasAppWindowAttention(tracker.get_window_app(metaWindow), metaWindow)) {
                                             let (icon = new St.Icon({ icon_name: 'dialog-warning', icon_size: 16, x_align: Clutter.ActorAlign.END, x_expand: true })) {
@@ -259,7 +276,7 @@ const dbFinMenuBuilder = new Lang.Class({
 									}
 								}
 							})); // windows.forEach([ wIndex, metaWindow ])
-						} // let (wIndexWas, focusedWindow)
+						} // let (wIndexWas)
 					} // if (windows.length)
 				} // let (windows, tracker)
                 // add pin menu
