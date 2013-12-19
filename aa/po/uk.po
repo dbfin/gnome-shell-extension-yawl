@@ -48,7 +48,7 @@ msgid "Soft restart"
 msgstr "Легкий перезапуск"
 
 msgid "Hard restart"
-msgstr "Повний перезапуск"
+msgstr "Жорсткий перезапуск"
 
 msgid "Hide extension"
 msgstr "Сховати розширення"
