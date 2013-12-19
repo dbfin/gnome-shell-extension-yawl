@@ -77,3 +77,9 @@ v15	2013-12-09
 		- Fixed panel being accessible in Overview when hidden
 		- Added option to show icons in Overview
 		- Changed window rotation to next/previous window for better user experience
+v16	2013-12-19
+		- The part of the menu with windows is made scrollable when needed.
+		- Menu: update focused window indicator if the focused window changes.
+		- Option to disable launching apps by scrolling over their icon.
+		- Keep icon "hovered" while its menu is open.
+		- Updated German, Russian and Ukrainian translations.

@@ -4,10 +4,10 @@
 # Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
 #
 msgid ""
-msgstr "Project-Id-Version: YAWL 14\n"
+msgstr "Project-Id-Version: YAWL 16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-07 21:26-0600\n"
-"PO-Revision-Date: 2013-12-07 21:26-0600\n"
+"POT-Creation-Date: 2013-12-19 16:37-0600\n"
+"PO-Revision-Date: 2013-12-19 16:37-0600\n"
 "Last-Translator: Vadim Cherepanov @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -509,6 +509,9 @@ msgstr "Смена рабочего стола колесом мыши"
 
 msgid "Scroll up : down"
 msgstr "Прокрутить вверх : вниз"
+
+msgid "Do not launch apps with scroll"
+msgstr "Не запускать приложения прокруткой мыши"
 
 msgid "Right button"
 msgstr "Правая кнопка"
