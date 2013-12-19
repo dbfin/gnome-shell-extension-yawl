@@ -94,8 +94,8 @@ const dbFinPopupSubMenuMenuItemAutoClose = new Lang.Class({
                     if (this.actor) {
                         this.actor.set_height(-1);
                     }
-                }, this, 200, 'linear', true);
-                dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 90 }, null, null, 200, 'linear');
+                }, this, 100, 'linear', true);
+                dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 90 }, null, null, 100, 'linear');
             }
         }
     },
@@ -108,8 +108,8 @@ const dbFinPopupSubMenuMenuItemAutoClose = new Lang.Class({
                     this.actor.hide();
                     this.actor.set_height(-1);
                 }
-            }, this, 200, 'linear', true);
-            dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 0 }, null, null, 200, 'linear');
+            }, this, 100, 'linear', true);
+            dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 0 }, null, null, 100, 'linear');
         }
     },
     _removeTopSubmenuOpenedLast: function () {
