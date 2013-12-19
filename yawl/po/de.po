@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAWL 13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-19 07:51+0100\n"
-"PO-Revision-Date: 2013-11-19 08:07+0100\n"
+"POT-Creation-Date: 2013-12-19 16:59+0100\n"
+"PO-Revision-Date: 2013-12-19 17:03+0100\n"
 "Last-Translator: Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language-Team: dbFin\n"
 "MIME-Version: 1.0\n"
@@ -16,268 +16,205 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: src/dbfinconsts.js:36
 msgid "German translation"
 msgstr "Deutsche Übersetzung"
 
-#: src/dbfinconsts.js:41
+msgid "Ukrainian translation"
+msgstr "Ukrainische Übersetzung"
+
 msgid "Linear"
 msgstr "Linear"
 
-#: src/dbfinconsts.js:42
 msgid "Slow at the end"
 msgstr "Am Ende langsam"
 
-#: src/dbfinconsts.js:43
 msgid "Slow at the beginning"
 msgstr "Am Anfang langsam"
 
-#: src/dbfinconsts.js:44
 msgid "Slow on both sides"
 msgstr "Auf beiden Seiten langsam"
 
-#: src/dbfinconsts.js:45
 msgid "Slow in the middle"
 msgstr "In der Mitte langsam"
 
-#: src/dbfinconsts.js:46
 msgid "Slower at the end"
 msgstr "Am Ende langsamer"
 
-#: src/dbfinconsts.js:47
 msgid "Slower at the beginning"
 msgstr "Am Anfang langsamer"
 
-#: src/dbfinconsts.js:48
 msgid "Slower on both sides"
 msgstr "Auf beiden Seiten langsamer"
 
-#: src/dbfinconsts.js:49
 msgid "Slower in the middle"
 msgstr "In der Mitte langsamer"
 
-#: src/dbfinconsts.js:50
 msgid "Slowest at the end"
 msgstr "Am Ende am langsamsten"
 
-#: src/dbfinconsts.js:51
 msgid "Slowest at the beginning"
 msgstr "Am Anfang am langsamsten"
 
-#: src/dbfinconsts.js:52
 msgid "Slowest on both sides"
 msgstr "Auf beiden Seiten am langsamsten"
 
-#: src/dbfinconsts.js:53
 msgid "Slowest in the middle"
 msgstr "In der Mitte am langsamsten"
 
-#: src/dbfinconsts.js:54
 msgid "Bounce at the end"
 msgstr "Am Ende federn"
 
-#: src/dbfinconsts.js:55
 msgid "Bounce at the beginning"
 msgstr "Am Anfang federn"
 
-#: src/dbfinconsts.js:56
 msgid "Bounce on both sides"
 msgstr "Auf beiden Seiten federn"
 
-#: src/dbfinconsts.js:57
 msgid "Bounce in the middle"
 msgstr "In der Mitte federn"
 
-#: src/dbfinconsts.js:58
 msgid "Back'n'forth in the middle"
 msgstr "In der Mitte vor und zurück"
 
-#: src/dbfinconsts.js:59
 msgid "Elastic in the middle"
 msgstr "In der Mitte elastisch"
 
-#: src/dbfinconsts.js:63 src/dbfinconsts.js:79
 msgid "No action"
 msgstr "Keine Aktion"
 
-#: src/dbfinconsts.js:64
 msgid "Show next : all non-minimized windows"
 msgstr "Nächstes anzeigen : Alle nicht minimierten Fenster"
 
-#: src/dbfinconsts.js:65
 msgid "Show next : all windows"
 msgstr "Nächstes anzeigen : Alle Fenster"
 
-#: src/dbfinconsts.js:66
 msgid "Show all/next non-minimized : all windows"
 msgstr "Alle/nächstes nicht minimiertes anzeigen : Alle Fenster"
 
-#: src/dbfinconsts.js:67
-msgid "Rotate windows forward : backward"
-msgstr "Rotiere Fenster vorwärts : rückwärts"
+msgid "Show next : prev non-minimized window"
+msgstr "Nächstes anzeigen : Vorheriges nicht minimiertes Fenster"
 
-#: src/dbfinconsts.js:68
-msgid "Rotate windows backward : forward"
-msgstr "Rotiere Fenster rückwärts : vorwärts"
+msgid "Show next : prev window"
+msgstr "Nächstes anzeigen : Vorheriges Fenster"
 
-#: src/dbfinconsts.js:69
 msgid "Minimize top : all windows"
-msgstr "Minimiere oberstes : alle Fenster"
+msgstr "Minimiere oberstes : Alle Fenster"
 
-#: src/dbfinconsts.js:70
 msgid "(Un)Maximize top : all windows"
-msgstr "Maximiere oberstes : alle Fenster"
+msgstr "Maximiere oberstes : Alle Fenster"
 
-#: src/dbfinconsts.js:71
 msgid "Open new window : none"
-msgstr "Neues Fenster öffnen : nichts"
+msgstr "Neues Fenster öffnen : Nichts"
 
-#: src/dbfinconsts.js:72
 msgid "Open new window (new workspace) : none"
-msgstr "Neues Fenster (neue Arbeitsfläche) öffnen : nichts"
+msgstr "Neues Fenster (neue Arbeitsfläche) öffnen : Nichts"
 
-#: src/dbfinconsts.js:73
 msgid "Open menu : none"
-msgstr "Menü öffnen : nichts"
+msgstr "Menü öffnen : Nichts"
 
-#: src/dbfinconsts.js:74
 msgid "Quit : none"
-msgstr "Beenden : nichts"
+msgstr "Beenden : Nichts"
 
-#: src/dbfinconsts.js:75
 msgid "Show next (minimize if single) : all windows"
 msgstr "Nächstes anzeigen (minimieren, falls allein) : Alle Fenster"
 
-#: src/dbfinconsts.js:80 src/dbfinconsts.js:86
 msgid "Show and focus"
 msgstr "Anzeigen und fokusieren"
 
-#: src/dbfinconsts.js:81
 msgid "Minimize"
 msgstr "Minimieren"
 
-#: src/dbfinconsts.js:82
 msgid "(Un)Maximize"
 msgstr "Maximieren"
 
-#: src/dbfinconsts.js:83
 msgid "Close"
 msgstr "Schließen"
 
-#: src/dbfinconsts.js:84
 msgid "Preview on/Thumbnail panel opacity"
 msgstr "Vorschau an/Transparenz des Vorschaubereichs"
 
-#: src/dbfinconsts.js:85
 msgid "Preview off/Thumbnail panel opacity"
 msgstr "Vorschau aus/Transparenz des Vorschaubereichs"
 
-#: src/dbfinconsts.js:86
 msgid "close thumbnails"
 msgstr "Vorschau schließen"
 
-#: src/dbfinconsts.js:94
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/dbfinconsts.js:97
 msgid "Quit"
 msgstr "Beenden"
 
-#: src/dbfinconsts.js:105
 msgid "Hide window indicators"
 msgstr "Fensterindikatoren verstecken"
 
-#: src/dbfinconsts.js:106
 msgid "Point lights"
 msgstr "Punktlichter"
 
-#: src/dbfinconsts.js:107
 msgid "Actual number of windows"
 msgstr "Aktuelle Anzahl an Fenstern"
 
-#: src/dbfinconsts.js:107
 msgid "experimental"
 msgstr "experimentell"
 
-#: src/dbfinmenubuilder.js:292
 msgid "Remove from Favorites"
 msgstr "Aus Favoriten entfernen"
 
-#: src/dbfinmenubuilder.js:297
 msgid "Add to Favorites"
 msgstr "Zu Favoriten hinzufügen"
 
-#: ../lib/dbfinutilsprefs.js:151
 msgid "Settings were reset successfully!"
 msgstr "Einstellungen wurden zurückgesetzt!"
 
-#: ../lib/dbfinutilsprefs.js:166 ../lib/dbfinutilsprefs.js:220
 msgid "Please specify settings directory and file name."
 msgstr ""
 "Bitte einen Verzeichnis- und Dateinamen für die Einstellungen eingeben."
 
-#: ../lib/dbfinutilsprefs.js:192 ../lib/dbfinutilsprefs.js:222
 msgid "Cannot create Gio.File object for file"
 msgstr "Konnte Gio.File-Objekt für die Datei nicht anlegen"
 
-#: ../lib/dbfinutilsprefs.js:198
 msgid "Cannot create/replace file"
 msgstr "Konnte die Datei nicht erzeugen/ersetzen"
 
-#: ../lib/dbfinutilsprefs.js:200
 msgid "Cannot create Gio.DataOutputStream object for file"
 msgstr "Konnte Gio.DataOutputStream-Objekt für die Datei nicht anlegen"
 
-#: ../lib/dbfinutilsprefs.js:202
 msgid "Cannot write to file"
 msgstr "Konnte nicht in die Datei schreiben"
 
-#: ../lib/dbfinutilsprefs.js:206
 msgid "File was created/updated successfully!"
 msgstr "Datei wurde erfolgreich erzeugt/aktualisiert!"
 
-#: ../lib/dbfinutilsprefs.js:223
 msgid "Cannot open file"
 msgstr "Konnte Datei nicht öffnen"
 
-#: ../lib/dbfinutilsprefs.js:224
 msgid "Cannot create Gio.DataInputStream object for file"
 msgstr "Konnte Gio.DataInputStream-Objekt für die Datei nicht anlegen"
 
-#: ../lib/dbfinutilsprefs.js:241
 msgid "File was read successfully"
 msgstr "Datei wurde erfolgreich ausgelesen"
 
-#: ../lib/dbfinutilsprefs.js:241
 msgid "settings values imported."
 msgstr "Einstellungswerte importiert."
 
-#: ../lib/dbfinutilsprefs.js:834
 msgid "Welcome"
 msgstr "Willkommen!"
 
-#: ../lib/dbfinutilsprefs.js:857
 msgid "GNOME Shell Extension"
 msgstr "GNOME-Shell-Erweiterung"
 
-#: ../lib/dbfinutilsprefs.js:862
 msgid "Copyright"
 msgstr "Urheberrecht"
 
-#: ../lib/dbfinutilsprefs.js:867
 msgid "Home page"
 msgstr "Webseite"
 
-#: ../lib/dbfinutilsprefs.js:872
 msgid "Source code"
 msgstr "Quelltext"
 
-#: ../lib/dbfinutilsprefs.js:884
 msgid "Special thanks to"
 msgstr "Besonderen Dank an"
 
-#: ../lib/dbfinutilsprefs.js:887
 msgid ""
 "If you would like to translate the program to your language feel free to do "
 "so: please use GitHub or email me for instructions."
@@ -285,7 +222,6 @@ msgstr ""
 "Zum Übersetzen der Erweiterung in eine andere Sprache einfach GitHub nutzen "
 "oder mir eine E-Mail schreiben für weitere Instruktionen."
 
-#: ../lib/dbfinutilsprefs.js:889
 msgid ""
 "This is free software -- free as in beer and free as in freeman -- "
 "distributed under the terms of the GNU General Public License (GPL) version "
@@ -294,7 +230,6 @@ msgstr ""
 "Dies ist freie Software, veröffentlicht unter den Bestimmungen der GNU "
 "General Public License 3 (GPL 3)."
 
-#: ../lib/dbfinutilsprefs.js:890
 msgid ""
 "A copy of the License is distributed along with the software (file GNUGPLv3) "
 "and is also available at <a href='http://www.gnu.org/licenses/'><span "
@@ -306,7 +241,6 @@ msgstr ""
 "licenses/'><span color='#000000' underline='none'>http://www.gnu.org/"
 "licenses/gpl.html</span></a>."
 
-#: ../lib/dbfinutilsprefs.js:891
 msgid ""
 "You are free to use, modify or otherwise distribute the code of this "
 "software provided that your actions comply with all applicable laws and GPL."
@@ -315,7 +249,6 @@ msgstr ""
 "verbreiten werden entsprechend den geltenden Gesetzen und den Bestimmungen "
 "der GPL."
 
-#: ../lib/dbfinutilsprefs.js:892
 msgid ""
 "In particular, you must include the above copyright notice and a copy of the "
 "License in all copies or substantial portions of the software, whether "
@@ -324,7 +257,6 @@ msgstr ""
 "Insbesondere muss der obige Urheber-Hinweis und eine Kopie der Lizenz für "
 "alle originalen und modifizierten Teile der Software enthalten sein."
 
-#: ../lib/dbfinutilsprefs.js:893
 msgid ""
 "This software is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS "
@@ -334,394 +266,310 @@ msgstr ""
 "OHNE JEDE GARANTIE: Ebenso ohne Gewährleistung, dass diese Software für "
 "einen bestimmten Zweck geeignet ist."
 
-#: ../lib/dbfinutilsprefs.js:894
 msgid ""
 "For more details please see the GNU General Public License (GPL) version 3."
 msgstr ""
 "Für mehr Details lesen Sie bitte die GNU General Public License (GPL) "
 "version 3."
 
-#: ../lib/dbfinutilsprefs.js:902
 msgid "Export/Import"
 msgstr "Exportieren/Importieren"
 
-#: ../lib/dbfinutilsprefs.js:912 ../lib/dbfinutilsprefs.js:922
 msgid "Back up, sync and share settings."
 msgstr "Sichern, synchronisieren und teilen von Einstellungen."
 
-#: ../lib/dbfinutilsprefs.js:919
 msgid "To reset all settings please enable"
 msgstr "Bitte aktivieren, um alle Einstellungen zurückzusetzen"
 
-#: ../lib/dbfinutilsprefs.js:919 src/prefs.js:157
 msgid "Advanced settings"
 msgstr "Erweiterte Einstellungen"
 
-#: ../lib/dbfinutilsprefs.js:925
 msgid "Reset settings"
 msgstr "Einstellungen zurücksetzen"
 
-#: ../lib/dbfinutilsprefs.js:930 ../lib/dbfinutilsprefs.js:959
 msgid "This will overwrite all current settings"
 msgstr "Dies wird die alle momentanen Einstellungen überschreiben"
 
-#: ../lib/dbfinutilsprefs.js:943
 msgid "Status:"
 msgstr "Status:"
 
-#: ../lib/dbfinutilsprefs.js:949
 msgid "Export"
 msgstr "Exportieren"
 
-#: ../lib/dbfinutilsprefs.js:952
 msgid "Import"
 msgstr "Importieren"
 
-#: ../lib/dbfinutilsprefs.js:956
 msgid "This will overwrite the file with settings"
 msgstr "Dies wird die Datei mit den Einstellungen überschreiben"
 
-#: src/prefs.js:164 src/prefs.js:186 src/prefs.js:190 src/prefs.js:192
-#: src/prefs.js:269 src/prefs.js:413
 msgid "Icons"
 msgstr "Symbole"
 
-#: src/prefs.js:165 src/prefs.js:190 src/prefs.js:217 src/prefs.js:219
-#: src/prefs.js:234 src/prefs.js:247 src/prefs.js:282 src/prefs.js:291
-#: src/prefs.js:402 src/prefs.js:432
 msgid "Panel"
 msgstr "Leiste"
 
-#: src/prefs.js:166 src/prefs.js:190
 msgid "Show app icons from all workspaces"
 msgstr "Anwendungssymbole von allen Arbeitsflächen anzeigen"
 
-#: src/prefs.js:168
 msgid "YAWL-panel position and width"
 msgstr "Position und Breite der YAWL-Leiste"
 
-#: src/prefs.js:170
 msgid "Move central panel"
 msgstr "Zentrale Leiste verschieben"
 
-#: src/prefs.js:171
 msgid "Hide Activities button"
 msgstr "Aktivitäten-Schaltfläche ausblenden"
 
-#: src/prefs.js:175
 msgid "Preserve Hot Corner"
 msgstr "\"Hot Corner\" erhalten"
 
-#: src/prefs.js:178
 msgid "Hide AppMenu button"
 msgstr "Anwendungsmenü ausblenden"
 
-#: src/prefs.js:180
 msgid "Custom panel background"
 msgstr "Hintergrund des Panels anpassen"
 
-#: src/prefs.js:182
 msgid "Top color and opacity"
 msgstr "Hauptfarbe und Transparenz"
 
-#: src/prefs.js:182 src/prefs.js:183
 msgid "Choose panel background color"
 msgstr "Panel-Hintergrundfarbe wählen"
 
-#: src/prefs.js:183
 msgid "Bottom color and opacity"
 msgstr "Untergrundfarbe und Transparenz"
 
-#: src/prefs.js:187
 msgid "Icon size"
 msgstr "Symbolgröße"
 
-#: src/prefs.js:188
 msgid "Faded icons"
 msgstr "Überblendete Symbole"
 
-#: src/prefs.js:189
 msgid "Default icon opacity"
 msgstr "Standard-Symboltransparenz"
 
-#: src/prefs.js:190 src/prefs.js:192 src/prefs.js:219 src/prefs.js:234
-#: src/prefs.js:247 src/prefs.js:291 src/prefs.js:404 src/prefs.js:432
 msgid "Enable option"
 msgstr "Option aktivieren"
 
-#: src/prefs.js:191
 msgid "Icon opacity if app is not on current workspace"
 msgstr ""
 "Symboltransparenz, falls Anwendung nicht auf der aktuellen Arbeitsfläche"
 
-#: src/prefs.js:192 src/prefs.js:282 src/prefs.js:401
 msgid "Add-ons"
 msgstr "Zusätze"
 
-#: src/prefs.js:192 src/prefs.js:421
 msgid "Favorite apps"
 msgstr "Favoriten"
 
-#: src/prefs.js:193
 msgid "Icon opacity if app is not running"
 msgstr "Symboltransparenz, falls Anwendung nicht läuft"
 
-#: src/prefs.js:195
-msgid "Clip icons: bottom (px)"
-msgstr "Symbole beschneiden: unten (px)"
+msgid "Clip icons"
+msgstr "Symbole beschneiden"
 
-#: src/prefs.js:197
+msgid "top"
+msgstr "Oben"
+
+msgid "bottom"
+msgstr "Unten"
+
+msgid "px"
+msgstr "Pixel"
+
 msgid "Align icons on the panel (%)"
 msgstr "Symbole auf der Leiste verschieben (%)"
 
-#: src/prefs.js:198
 msgid "Distance between icons"
 msgstr "Abstand zwischen den Symbolen"
 
-#: src/prefs.js:198
 msgid "% of icon size"
 msgstr "in % der Symbolgröße"
 
-#: src/prefs.js:200 src/prefs.js:246 src/prefs.js:372
 msgid "Animation"
 msgstr "Animation"
 
-#: src/prefs.js:201 src/prefs.js:249
 msgid "Animation time in ms (0: no animation)"
 msgstr "Animationszeit in ms (0: keine Animation)"
 
-#: src/prefs.js:202 src/prefs.js:250
 msgid "Animation effect"
 msgstr "Animationseffekt"
 
-#: src/prefs.js:204
 msgid "Animate icons on mouse over"
 msgstr "Symbole bei Mausberührung animieren"
 
-#: src/prefs.js:206
 msgid "Change size (%)"
 msgstr "Größe ändern (%)"
 
-#: src/prefs.js:207 src/prefs.js:254
 msgid "Change opacity"
 msgstr "Transparenz ändern"
 
-#: src/prefs.js:208 src/prefs.js:255
 msgid "Show full width if partially hidden"
 msgstr "Volle Größe, falls teilweise überdeckt"
 
-#: src/prefs.js:210 src/prefs.js:257
 msgid "Mouse over animation time"
 msgstr "Animationszeit bei Mausberührung"
 
-#: src/prefs.js:210 src/prefs.js:257
 msgid "% of animation time"
 msgstr "% der Animationszeit"
 
-#: src/prefs.js:211 src/prefs.js:258
 msgid "Mouse over animation effect"
 msgstr "Animationseffekt bei Mausberührung"
 
-#: src/prefs.js:216 src/prefs.js:219 src/prefs.js:233 src/prefs.js:234
-#: src/prefs.js:247 src/prefs.js:290 src/prefs.js:291 src/prefs.js:431
-#: src/prefs.js:432
+msgid "Overview"
+msgstr "Übersicht"
+
+msgid "Show icons in Overview"
+msgstr "Symbole in der Übersicht anzeigen"
+
 msgid "Thumbnails"
 msgstr "Vorschau"
 
-#: src/prefs.js:218 src/prefs.js:219 src/prefs.js:234 src/prefs.js:247
-#: src/prefs.js:291 src/prefs.js:432
 msgid "Show thumbnails when app icon is hovered"
 msgstr "Zeige Vorschau wenn Maus über Anwendungssymbol"
 
-#: src/prefs.js:220
 msgid "Show thumbnails of 'interesting' windows only"
 msgstr "Zeige Vorschau nur bei 'interessanten' Fenstern"
 
-#: src/prefs.js:222
 msgid "Use arrow-style thumbnails app indicator"
 msgstr "Vorschau-Anwendungs-Indikator im Pfeilstil"
 
-#: src/prefs.js:224
 msgid "Customize thumbnail panel theme"
 msgstr "Vorschau-Thema anpassen"
 
-#: src/prefs.js:226
 msgid "Match main panel background"
 msgstr "An Hauptpanel-Hintergrundfarbe anpassen"
 
-#: src/prefs.js:227
 msgid "Background color and opacity"
 msgstr "Hintergrundfarbe und -transparenz"
 
-#: src/prefs.js:227
 msgid "Choose thumbnail panel background color"
 msgstr "Vorschau-Hintergrundfarbe wählen"
 
-#: src/prefs.js:228
 msgid "Text color and size"
 msgstr "Textfarbe und -größe"
 
-#: src/prefs.js:228
 msgid "Choose thumbnail panel text color"
 msgstr "Vorschau-Textfarbe wählen"
 
-#: src/prefs.js:229
 msgid "Border color and width"
 msgstr "Randfarbe und -breite"
 
-#: src/prefs.js:229
 msgid "Choose thumbnail panel border color"
 msgstr "Vorschau-Randfarbe und -breite wählen"
 
-#: src/prefs.js:230
 msgid "Border radius"
 msgstr "Randradius"
 
-#: src/prefs.js:230
 msgid "and"
 msgstr "und"
 
-#: src/prefs.js:230
 msgid "Padding"
 msgstr "Abstand zum Rand"
 
-#: src/prefs.js:235
 msgid "Same height thumbnails"
 msgstr "Gleiche Höhe für Vorschaubilder"
 
-#: src/prefs.js:236
 msgid "Thumbnail maximum width"
 msgstr "Maximale Breite der Vorschaubilder"
 
-#: src/prefs.js:237
 msgid "Thumbnail maximum height"
 msgstr "Maximale Höhe der Vorschaubilder"
 
-#: src/prefs.js:238
 msgid "Thumbnail maximum visible height"
 msgstr "Maximal sichtbare Höhe der Vorschaubilder"
 
-#: src/prefs.js:240
 msgid "Default thumbnail opacity"
 msgstr "Standard-Vorschau-Transparenz"
 
-#: src/prefs.js:241
 msgid "Minimized thumbnail opacity"
 msgstr "Transparenz für minimierte Vorschaubilder"
 
-#: src/prefs.js:243
 msgid "Distance between thumbnails"
 msgstr "Entfernung zwischen Vorschaubildern"
 
-#: src/prefs.js:243
 msgid "% of thumbnail size"
 msgstr "% der Vorschaugröße"
 
-#: src/prefs.js:244
 msgid "Thumbnail top padding (px)"
 msgstr "Abstand nach oben (px)"
 
-#: src/prefs.js:248
 msgid "Thumbnails show delay in ms"
 msgstr "Verzögerung der Vorschau in ms"
 
-#: src/prefs.js:252
 msgid "Animate thumbnails on mouse over"
 msgstr "Vorschau bei Mausberührung animieren"
 
-#: src/prefs.js:263 src/prefs.js:404
 msgid "Behavior"
 msgstr "Verhalten"
 
-#: src/prefs.js:264 src/prefs.js:404
 msgid "Mouse"
 msgstr "Maus"
 
-#: src/prefs.js:270 src/prefs.js:292
 msgid "Left button"
 msgstr "Linksklick"
 
-#: src/prefs.js:271 src/prefs.js:277 src/prefs.js:286
 msgid "Click : Double click"
 msgstr "Kilck : Doppelklick"
 
-#: src/prefs.js:272 src/prefs.js:278
 msgid "Ctrl + Click : Double click"
 msgstr "Strg + Klick : Doppelklick"
 
-#: src/prefs.js:273 src/prefs.js:279
 msgid "Shift + Click : Double click"
 msgstr "Shift + Klick : Doppelklick"
 
-#: src/prefs.js:274 src/prefs.js:280
 msgid "Ctrl + Shift + Click : Double click"
 msgstr "Strg + Shift + Klick : Doppelklick"
 
-#: src/prefs.js:276 src/prefs.js:298
 msgid "Middle button"
 msgstr "Mittlere Maustaste"
 
-#: src/prefs.js:282
 msgid "Disable option"
 msgstr "Option deaktivieren"
 
-#: src/prefs.js:282 src/prefs.js:408
 msgid "Scroll to change workspace"
 msgstr "Scrollen, um die Arbeitsfläche zu wechseln"
 
-#: src/prefs.js:283
 msgid "Scroll up : down"
 msgstr "Scrollen hoch : runter"
 
-#: src/prefs.js:285 src/prefs.js:304
+msgid "Do not launch apps with scroll"
+msgstr "Anwendungen durch Scrollen nicht starten"
+
 msgid "Right button"
 msgstr "Rechtsklick"
 
-#: src/prefs.js:293 src/prefs.js:299 src/prefs.js:305
 msgid "Click"
 msgstr "Klick"
 
-#: src/prefs.js:294
 msgid "Ctrl + Click"
 msgstr "Strg + Klick"
 
-#: src/prefs.js:295
 msgid "Shift + Click"
 msgstr "Shift + Klick"
 
-#: src/prefs.js:296
 msgid "Ctrl + Shift + Click"
 msgstr "Strg + Shift + Klick"
 
-#: src/prefs.js:301
 msgid "Scroll up"
 msgstr "Hochscrollen"
 
-#: src/prefs.js:302
 msgid "Scroll down"
 msgstr "Runterscrollen"
 
-#: src/prefs.js:311 src/prefs.js:404
 msgid "Fine-tuning"
 msgstr "Feineinstellung"
 
-#: src/prefs.js:312 src/prefs.js:404
 msgid "Mouse events"
 msgstr "Mausereignisse"
 
-#: src/prefs.js:313 src/prefs.js:404
 msgid "Use mouse drag-and-drop"
 msgstr "Ziehen und Fallen lassen mit der Maus benutzen"
 
-#: src/prefs.js:314
 msgid "Register mouse events on button release"
 msgstr "Mausereignisse beim Loslassen der Maustaste erfassen"
 
-#: src/prefs.js:316 src/prefs.js:317
 msgid "Long left button click = right button click"
 msgstr "Langer Linksklick = Rechtsklick"
 
-#: src/prefs.js:320
 msgid ""
 "Scroll timeout: the time after one scroll event during which other scroll "
 "events are rejected."
@@ -729,46 +577,36 @@ msgstr ""
 "Scroll-Auszeit: Die Zeit nach dem Scrollen, in der andere Scroll-Ereignisse "
 "abgewiesen werden."
 
-#: src/prefs.js:322
 msgid "Mouse scroll timeout"
 msgstr "Mausscroll-Auszeit"
 
-#: src/prefs.js:325
 msgid "Single vs Double clicks"
 msgstr "Einzel- gegen Doppelklick"
 
-#: src/prefs.js:328
 msgid ""
 "This will measure the SHORTEST time between two consecutive SINGLE clicks."
 msgstr "Dies wird die KÜRZESTE Zeit zwischen zwei einzelnen Klicks messen."
 
-#: src/prefs.js:330
 msgid "A fast series of SINGLE clicks"
 msgstr "Eine schnelle Folge von Einzelklicks"
 
-#: src/prefs.js:332 src/prefs.js:348
 msgid "click here"
 msgstr "hier klicken"
 
-#: src/prefs.js:339
 msgid "Consequent single clicks time:"
 msgstr "Ermittle Zeit für Einzelklicks:"
 
-#: src/prefs.js:344
 msgid ""
 "This will measure the LONGEST time between the two clicks of one DOUBLE "
 "click."
 msgstr "Dies wird die LÄNGSTE Zeit zwischen zwei Doppelklicks messen."
 
-#: src/prefs.js:346
 msgid "A series of DOUBLE clicks"
 msgstr "Eine Folge von Doppelklicks"
 
-#: src/prefs.js:355
 msgid "Double clicks time:"
 msgstr "Doppelklickzeit:"
 
-#: src/prefs.js:360
 msgid ""
 "Based on the data provided above we set the following value (you can adjust "
 "it manually):"
@@ -776,105 +614,81 @@ msgstr ""
 "Resultierend aus den obigen Daten wurde folgender Wert bestimmt (kann "
 "manuell angepasst werden):"
 
-#: src/prefs.js:362
 msgid "Single/Double clicks threshold:"
 msgstr "Einzel-/Doppelklick-Schwellwert:"
 
-#: src/prefs.js:373
 msgid "Disable all animation"
 msgstr "Alle Animationen deaktivieren"
 
-#: src/prefs.js:374
 msgid "Use alternative animation engine (experimental)"
 msgstr "Alternatives Animationsprogramm nutzen (experimentell)"
 
-#: src/prefs.js:376
 msgid "Lower FPS = better responsiveness, higher FPS = smoother animation"
 msgstr ""
 "Wenig Bilder/s = gute Reaktionsgeschwindigkeit, mehr Bilder/s = geschmeidige "
 "Animation"
 
-#: src/prefs.js:377
 msgid "Frames per second"
 msgstr "Bilder pro Sekunde"
 
-#: src/prefs.js:380
 msgid "Debug"
 msgstr "Fehlerbehebung"
 
-#: src/prefs.js:381
 msgid "These options are for developers only."
 msgstr "Diese Optionen sind nur für Entwickler gedacht."
 
-#: src/prefs.js:383
 msgid ""
 "Debugging panel shows a hierarchical structure of internal function calls."
 msgstr ""
 "Das Fehlerbehebungspanel zeigt eine hierarische Struktur von internen "
 "Funktionsaufrufen."
 
-#: src/prefs.js:384
 msgid "The panel has a small toolbar which allows one to:"
 msgstr "Das Panel hat eine kleine Werkzeugleiste, die einem folgendes erlaubt:"
 
-#: src/prefs.js:386
 msgid "pin the panel (so that it is always visible)"
 msgstr "Das Panel anpinnen (so dass es immer sichtbar ist)"
 
-#: src/prefs.js:387
 msgid "stop, resume and clear all messages"
 msgstr "stoppen, reaktivieren und alle Meldungen löschen"
 
-#: src/prefs.js:388
 msgid "access extension preferences"
 msgstr "Erweiterungseinstellungen aufrufen"
 
-#: src/prefs.js:389
 msgid "restart the extension"
 msgstr "Erweiterung neustarten"
 
-#: src/prefs.js:391
 msgid "Debugging panel"
 msgstr "Fehlerbehebungs-Panel"
 
-#: src/prefs.js:393
 msgid "By default the panel is placed at the right side (of the last monitor)."
 msgstr ""
 "Standardmäßig ist das Panel rechts platziert (auf dem letzten Monitor)."
 
-#: src/prefs.js:394
 msgid "Move the panel to the bottom left"
 msgstr "Panel nach links unten verschieben"
 
-#: src/prefs.js:395
 msgid "Debug panel width"
 msgstr "Breite des Fehlerbehebungs-Panels"
 
-#: src/prefs.js:395
 msgid "% of the monitor width"
 msgstr "% der Monitorbreite"
 
-#: src/prefs.js:396
 msgid "Force all messages"
 msgstr "Alle Meldungen erzwingen"
 
-#: src/prefs.js:396
 msgid "ouch!"
 msgstr "autsch!"
 
-#: src/prefs.js:405
 msgid "Rearrange icons on the panel using mouse"
 msgstr "Symbole auf der Leiste mit der Maus neu anordnen"
 
-#: src/prefs.js:408
 msgid "Scroll over YAWL panel to change workspace"
 msgstr "Über YAWL-Leiste scrollen, um die Arbeitsfläche zu wechseln"
 
-#: src/prefs.js:410
 msgid "Scroll to find other windows"
 msgstr "Andere Fenster durch Scrollen finden"
 
-#: src/prefs.js:410
 msgid ""
 "find app's windows on other workspaces by scrolling over its icon when its "
 "thumbnails are shown"
@@ -882,47 +696,36 @@ msgstr ""
 "Andere Fenster der Anwendung finden beim Scrollen über das Symbol während "
 "die Vorschau angezeigt wird"
 
-#: src/prefs.js:414
 msgid "Window demanding attention"
 msgstr "Fenster benötigt Aufmerksamkeit"
 
-#: src/prefs.js:414
 msgid "blink"
 msgstr "Blinken"
 
-#: src/prefs.js:416
 msgid "Blinking rate (times per minute)"
 msgstr "Blinkrate (pro Minute)"
 
-#: src/prefs.js:419
 msgid "requires extension"
 msgstr "benötigt Erweiterung"
 
-#: src/prefs.js:419 src/prefs.js:465 src/prefs.js:475
 msgid "author"
 msgstr "Autor"
 
-#: src/prefs.js:421
 msgid "always show"
 msgstr "immer anzeigen"
 
-#: src/prefs.js:423
 msgid "Use smaller icons if not running"
 msgstr "Kleinere Symbole nutzen, wenn Anwendung nicht läuft"
 
-#: src/prefs.js:426
 msgid "Windows indicators"
 msgstr "Fensterindikatoren"
 
-#: src/prefs.js:428
 msgid "Choose windows indicator color"
 msgstr "Fensterindikatorfarbe wählen"
 
-#: src/prefs.js:433
 msgid "Window Peeking"
 msgstr "Fenster-Peeking"
 
-#: src/prefs.js:433
 msgid ""
 "scroll up/down over a thumbnail to turn previews on/off and to reduce panel "
 "opacity while previewing"
@@ -930,46 +733,37 @@ msgstr ""
 "Hoch-/runterscrollen, um Hervorhebung des Fensters an-/auszuschalten und die "
 "Transparenz während der Vorschau zu reduzieren"
 
-#: src/prefs.js:435
 msgid "Preview window when its thumbnail is hovered"
 msgstr "Fenster hervorheben, wenn die Maus das Vorschaubild berührt"
 
-#: src/prefs.js:436
 msgid "Dim background: color and opacity"
 msgstr "Hintergrund abblenden: Farbe und Transparenz"
 
-#: src/prefs.js:436
 msgid "Choose dimmed background color"
 msgstr "Abgeblendete Hintergrundfarbe wählen"
 
-#: src/prefs.js:437
 msgid "Reduced thumbnails panel opacity"
 msgstr "Reduzierte Vorschautransparenz"
 
-#: src/prefs.js:444
 msgid "Did you know?"
 msgstr "Wussten Sie schon?"
 
-#: src/prefs.js:446
 msgid "is designed to be simple to use yet highly customizable."
 msgstr ""
 "wurde mit dem Ziel entwickelt, einfach zu benutzen und sehr anpassungsfähig "
 "zu sein."
 
-#: src/prefs.js:450
 msgid ""
 "settings are currently available to customize feel and look of the extension."
 msgstr ""
 "Einstellungen sind verfügbar, mit denen das Aussehen und das "
 "Benutzungsgefühl angepasst werden kann."
 
-#: src/prefs.js:451
 msgid "Exploring the options also helps you to uncover some hidden features."
 msgstr ""
 "Beim Durchstöbern der Einstellungen kann man auf versteckte Funktionen "
 "stoßen."
 
-#: src/prefs.js:452
 msgid ""
 "For example, <b>did you know</b> that there is an option to preview a window "
 "when its thumbnail is hovered, and that you can easily switch it on and off "
@@ -979,11 +773,9 @@ msgstr ""
 "Vorschaubild von der Maus berührt wird und diese Funktion kann bequem durch "
 "Maus-Scrollen über dem Vorschaubild ein- und ausgeschaltet werden."
 
-#: src/prefs.js:456
 msgid "is active workspace centric."
 msgstr "konzentriert sich auf die jeweils aktuelle Arbeitsfläche."
 
-#: src/prefs.js:459
 msgid ""
 "It highlights icons of apps and shows windows open on the current active "
 "workspace."
@@ -991,7 +783,6 @@ msgstr ""
 "Offene Anwendungen und Fenster der aktuellen Arbeitsfläche werden "
 "hervorgehoben."
 
-#: src/prefs.js:460
 msgid ""
 "App icons highlighted on the top panel are indicative of what workspace you "
 "are currently on and what task/activity it is intended for."
@@ -1000,14 +791,12 @@ msgstr ""
 "Arbeitsfläche man sich gerade befindet und welche Aktivität/Aufgabe hierfür "
 "gedacht ist."
 
-#: src/prefs.js:461
 msgid ""
 "You can even optionally hide app icons not present on the active workspace."
 msgstr ""
 "Anwedungssymbole von anderen Arbeitsflächen können optional auch "
 "ausgeblendet werden."
 
-#: src/prefs.js:462
 msgid ""
 "Most of the extension's functionality (such as cycling through windows) is "
 "also active-workspace-oriented."
@@ -1015,27 +804,22 @@ msgstr ""
 "Die meiste Funktionalität (wie das Durchschalten zwischen den Fenstern) "
 "konzentriert sich ebenfalls auf die aktive Arbeitsfläche."
 
-#: src/prefs.js:463
 msgid "For quick access to favorites"
 msgstr "Für schnellen Zugriff auf die Favoriten"
 
-#: src/prefs.js:464
 msgid ""
 "please consider installing in addition this highly recommended extension:"
 msgstr "sollte diese wärmstens empfohlene Erweiterung installiert werden:"
 
-#: src/prefs.js:469
 msgid "tries to seamlessly integrate into the GNOME Shell panel."
 msgstr "versucht, sich nahtlos in die GNOME-Shell-Leiste einzufügen."
 
-#: src/prefs.js:472
 msgid ""
 "It is embedded into the panel right where there is space for it not claimed "
 "by anything else, and uses panel theme by default."
 msgstr ""
 "Es ist dort eingebettet, wo Platz dafür ist und nutzt das Standardthema."
 
-#: src/prefs.js:473
 msgid ""
 "It further allows you to hide some unnecessary buttons on the left and shift "
 "the central panel to the right to give itself more space."
@@ -1044,7 +828,6 @@ msgstr ""
 "zentrale Leiste nach rechts zu verschieben, um für sich selbst Platz zu "
 "schaffen."
 
-#: src/prefs.js:474
 msgid ""
 "You can tweak the panel even more by installing some of the following "
 "recommended extensions:"
@@ -1052,11 +835,9 @@ msgstr ""
 "Die Leiste kann noch weiter angepasst werden durch die Installation der "
 "folgenden, ebenfalls wärmstens empfohlenen Erweiterungen:"
 
-#: src/prefs.js:479
 msgid "is a part of greater FOSS."
 msgstr "ist ein Teil der Freien Software-Welt."
 
-#: src/prefs.js:482
 msgid ""
 "And as such it is completely free to use, study, distribute and modify "
 "provided you acknowledge all the copyrights and your actions comply with the "
@@ -1066,7 +847,6 @@ msgstr ""
 "um die Urheberrechte und entsprechend den geltenden Gesetzen und den "
 "Bestimmungen der GNU GPL."
 
-#: src/prefs.js:485
 msgid ""
 "Your contribution in the form of feature suggestions, bug reports, "
 "translations, donations or even development is highly appreciated."
@@ -1074,7 +854,6 @@ msgstr ""
 "Eine eigene Beteiligung in Form von Vorschlägen, Fehlerberichten, "
 "Übersetzungen, Spenden oder Weiterentwicklung wird sehr begrüßt."
 
-#: src/prefs.js:488
 msgid ""
 "The development of this extension would not be possible without this "
 "wonderful FOSS:"
@@ -1082,17 +861,22 @@ msgstr ""
 "Die Entwicklung dieser Erweiterung wäre nicht möglich ohne diese wundervolle "
 "Freie Software:"
 
-#: src/prefs.js:489
 msgid "and, of course,"
 msgstr "und natürlich die"
+
+#~ msgid "Rotate windows forward : backward"
+#~ msgstr "Rotiere Fenster vorwärts : rückwärts"
+
+#~ msgid "Rotate windows backward : forward"
+#~ msgstr "Rotiere Fenster rückwärts : vorwärts"
+
+#~ msgid "Clip icons: bottom (px)"
+#~ msgstr "Symbole beschneiden: unten (px)"
 
 #~ msgid "Enable app icons from all workspaces under Icons > Panel"
 #~ msgstr ""
 #~ "Anwendungssymbole von allen Arbeitsflächen können unter Symbole > Leiste "
 #~ "aktiviert werden"
-
-#~ msgid "Clip icons: top (px)"
-#~ msgstr "Symbole beschneiden: oben (px)"
 
 #~ msgid "Enable thumbnails under Thumbnails > Panel"
 #~ msgstr "Vorschau kann unter Vorschau > Leiste aktiviert werden"
