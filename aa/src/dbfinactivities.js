@@ -141,15 +141,17 @@ const dbFinActivities = new Lang.Class({
 		this._signals = new dbFinSignals.dbFinSignals();
         this._timeout = new dbFinTimeout.dbFinTimeout();
 
+		this.hovered = []; // actors "hovering" Activities button
+
         this._bin = new St.Bin({ reactive: true, track_hover: true });
         if (this._bin) {
             this._activitiesActor.add_child(this._bin);
             this._bin.add_style_class_name('face');
             this._bin._delegate = this._activitiesActor;
             this._signals.connectNoId({ emitter: this._bin, signal: 'enter-event',
-                                        callback: this._activitiesActorEnterEvent, scope: this });
+                                        callback: this.hoverEnter, scope: this });
             this._signals.connectNoId({ emitter: this._bin, signal: 'leave-event',
-                                        callback: this._activitiesActorLeaveEvent, scope: this });
+                                        callback: this.hoverLeave, scope: this });
         }
 
         this._activitiesContainer.add_style_class_name('alternative-activities-container');
@@ -157,7 +159,6 @@ const dbFinActivities = new Lang.Class({
         this._activitiesContainer.reactive = true;
         this._activitiesContainer.track_hover = true;
 
-        this._activitiesActor.add_style_class_name('alternative-activities');
         this._activitiesActor.clip_to_allocation = true;
         this._activitiesActor.reactive = true;
         this._activitiesActor.track_hover = true;
@@ -207,12 +208,6 @@ const dbFinActivities = new Lang.Class({
                     this._activitiesContainer.add_style_class_name(dbFinConsts.arrayStyleBackgrounds[global.yawlAA._styleBackground][1]);
                 }
             }
-            if (this._activitiesActor) {
-                dbFinConsts.arrayStyleBackgrounds.forEach(Lang.bind(this, function (row) { this._activitiesActor.remove_style_class_name(row[1]); }));
-                if (global.yawlAA && global.yawlAA._styleBackground) {
-                    this._activitiesActor.add_style_class_name(dbFinConsts.arrayStyleBackgrounds[global.yawlAA._styleBackground][1]);
-                }
-            }
         };
         // below: this._updatedStyleCustomCss
         this._updatedExtensionManagerSort = function () {
@@ -242,6 +237,11 @@ const dbFinActivities = new Lang.Class({
                                   true);
         this._ensureVisible();
 
+        this._signals.connectNoId({ emitter: Main.overview, signal: 'showing',
+                                    callback: this.hoverEnter, scope: this });
+        this._signals.connectNoId({ emitter: Main.overview, signal: 'hiding',
+                                    callback: this.hoverLeave, scope: this });
+
         global.yawlAA.watch(this);
     	_D('<');
     },
@@ -260,6 +260,7 @@ const dbFinActivities = new Lang.Class({
             this._clicked.destroy();
             this._clicked = null;
         }
+        this.hoverLeaveAll();
         this._unloadCustomCss();
         this._favorites = [];
         if (this._frequencies) {
@@ -282,7 +283,6 @@ const dbFinActivities = new Lang.Class({
             this._bin = null;
         }
         if (this._activitiesActor) {
-            this._activitiesActor.remove_style_class_name('alternative-activities');
             this._activitiesActor.name = 'panelActivities';
             this._activitiesActor = null;
         }
@@ -310,18 +310,38 @@ const dbFinActivities = new Lang.Class({
         _D('<');
     },
 
-    _activitiesActorEnterEvent: function() {
-        _D('>' + this.__name__ + '._activitiesActorEnterEvent()');
-        if (this._activitiesActor) {
-            this._activitiesActor.add_style_pseudo_class('hover');
+    hoverEnter: function(actor) {
+        _D('>' + this.__name__ + '.hoverEnter()');
+		if (!actor || !this.hovered || this.hovered.indexOf(actor) != -1) {
+            _D('<');
+            return;
         }
+        this.hovered.push(actor);
+        if (typeof actor.connect == 'function') try { actor._yawlAAHoverLeaveDestroyId = actor.connect('destroy', Lang.bind(this, this.hoverLeave)); } catch (e) { }
+        if (this._activitiesContainer) this._activitiesContainer.add_style_class_name('active');
         _D('<');
     },
 
-    _activitiesActorLeaveEvent: function() {
-        _D('>' + this.__name__ + '._activitiesActorLeaveEvent()');
-        if (this._activitiesActor) {
-            this._activitiesActor.remove_style_pseudo_class('hover');
+    hoverLeave: function(actor) {
+        _D('>' + this.__name__ + '.hoverLeave()');
+		let (index = actor && this.hovered ? this.hovered.indexOf(actor) : -1) {
+            if (index != -1) {
+                this.hovered.splice(index, 1);
+                if (actor._yawlAAHoverLeaveDestroyId && typeof actor.disconnect == 'function') try { actor.disconnect(actor._yawlAAHoverLeaveDestroyId); } catch (e) { }
+            }
+            if (index == -1 || this.hovered && this.hovered.length) {
+                _D('<');
+                return;
+            }
+        }
+        if (this._activitiesContainer) this._activitiesContainer.remove_style_class_name('active');
+        _D('<');
+    },
+
+    hoverLeaveAll: function() {
+        _D('>' + this.__name__ + '.hoverLeaveAll()');
+        if (this.hovered) {
+            this.hovered.slice().forEach(Lang.bind(this, function (actor) { this.hoverLeave(actor); })); // not optimal but stable
         }
         _D('<');
     },
@@ -477,7 +497,7 @@ const dbFinActivities = new Lang.Class({
                 this.menu = menu;
                 menu._dbFinActivities = this;
 
-                menu.actor.add_style_class_name('alternative-activities');
+                menu.actor.add_style_class_name('alternative-activities-menu');
                 if (global.yawlAA && global.yawlAA._styleBackground) {
                     menu.actor.add_style_class_name(dbFinConsts.arrayStyleBackgrounds[global.yawlAA._styleBackground][1]);
                 }
@@ -529,6 +549,20 @@ const dbFinActivities = new Lang.Class({
 
                 this._menuManager = Main.panel && Main.panel.menuManager || null;
                 if (this._menuManager) this._menuManager.addMenu(menu);
+
+                this._signals.connectId('menu-state', { emitter: menu, signal: 'open-state-changed',
+                                                        callback: function (menu, state) {
+                                                            if (state) this.hoverEnter(menu);
+                                                            else this.hoverLeave(menu);
+                                                        }, scope: this });
+                this._signals.connectId('menu-destroy', {   emitter: menu, signal: 'destroy',
+                                                            callback: function (menu) {
+                                                                if (this._signals) {
+                                                                    this._signals.disconnectId('menu-destroy');
+                                                                    this._signals.disconnectId('menu-state');
+                                                                }
+                                                                this.hoverLeave(menu);
+                                                            }, scope: this });
             } // if (menu && menu.actor)
         } // let (menu)
         _D('<');

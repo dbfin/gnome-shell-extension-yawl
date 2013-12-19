@@ -30,17 +30,17 @@
     background: url('images/gimp.png');
 }
 
-.alternative-activities-container.custom:hover {
+.alternative-activities-container.custom.active {
     background: url('images/gimp_hover.png');
 }
 
 /* Activities button actor's style: the actor is clipped to allocation */
 /* #panelActivities: when the Activities button style is not forced to be like other panel buttons */
 /* #panelActivitiesAlternative: when the Activities button style is forced to be like other panel buttons */
-#panelActivities.alternative-activities.custom,
-#panelActivities.alternative-activities.custom:hover,
-#panelActivitiesAlternative.alternative-activities.custom,
-#panelActivitiesAlternative.alternative-activities.custom:hover {
+.alternative-activities-container.custom        #panelActivities,
+.alternative-activities-container.custom.active #panelActivities,
+.alternative-activities-container.custom        #panelActivitiesAlternative,
+.alternative-activities-container.custom.active #panelActivitiesAlternative {
     width: 56px;
     -minimum-hpadding: 0px;
     -natural-hpadding: 0px;
@@ -49,17 +49,17 @@
 }
 
 /* Activities button label's style */
-#panelActivities.alternative-activities.custom StLabel,
-#panelActivities.alternative-activities.custom StLabel:hover,
-#panelActivitiesAlternative.alternative-activities.custom StLabel,
-#panelActivitiesAlternative.alternative-activities.custom StLabel:hover {
+.alternative-activities-container.custom        #panelActivities            StLabel,
+.alternative-activities-container.custom.active #panelActivities            StLabel,
+.alternative-activities-container.custom        #panelActivitiesAlternative StLabel,
+.alternative-activities-container.custom.active #panelActivitiesAlternative StLabel {
     padding: 0 0 0 32px;
     background: transparent;
 }
 
 /* Popup menu */
-.popup-menu.alternative-activities.custom {
+.popup-menu.alternative-activities-menu.custom {
 }
 
-.popup-menu.alternative-activities.custom .popup-menu-item {
+.popup-menu.alternative-activities-menu.custom .popup-menu-item {
 }

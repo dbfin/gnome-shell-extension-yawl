@@ -24,70 +24,81 @@
  *
  */
 
-/* Activities button actor's style */
-#panelActivities.alternative-activities {
+/* Activities button container's style: the container is not clipped to allocation */
+/* The style does not depend on whether the Activities button is forced to be like other panel buttons */
+.alternative-activities-container,
+.alternative-activities-container.active {
 }
 
-#panelActivities.alternative-activities:hover {
-}
-
-/* Activities button actor's style with default panel button styling */
-#panelActivitiesAlternative.alternative-activities {
-}
-
-#panelActivitiesAlternative.alternative-activities:hover {
+/* Activities button actor's style: the actor is clipped to allocation */
+/* #panelActivities: when the Activities button style is not forced to be like other panel buttons */
+/* #panelActivitiesAlternative: when the Activities button style is forced to be like other panel buttons */
+.alternative-activities-container        #panelActivities,
+.alternative-activities-container.active #panelActivities,
+.alternative-activities-container        #panelActivitiesAlternative,
+.alternative-activities-container.active #panelActivitiesAlternative {
 }
 
 /* Activities button label's style */
-#panelActivities.alternative-activities StLabel,
-#panelActivitiesAlternative.alternative-activities StLabel {
+.alternative-activities-container        #panelActivities            StLabel,
+.alternative-activities-container.active #panelActivities            StLabel,
+.alternative-activities-container        #panelActivitiesAlternative StLabel,
+.alternative-activities-container.active #panelActivitiesAlternative StLabel {
 }
 
-/* Activities button frame actor's style */
-#panelActivities.alternative-activities.frame,
-#panelActivitiesAlternative.alternative-activities.frame {
+/* Popup menu */
+.popup-menu.alternative-activities-menu {
+}
+
+.popup-menu.alternative-activities-menu .popup-menu-item {
+    font-size: 92%;
+}
+
+
+
+/* Activities button frame style */
+.alternative-activities-container.frame,
+.alternative-activities-container.frame.active {
+    background: transparent;
+}
+
+.alternative-activities-container.frame        #panelActivities,
+.alternative-activities-container.frame.active #panelActivities,
+.alternative-activities-container.frame        #panelActivitiesAlternative,
+.alternative-activities-container.frame.active #panelActivitiesAlternative {
     -minimum-hpadding: 1px;
     -natural-hpadding: 3px;
     background: transparent;
 }
 
-#panelActivities.alternative-activities.frame:hover,
-#panelActivitiesAlternative.alternative-activities.frame:hover {
-    -minimum-hpadding: 1px;
-    -natural-hpadding: 3px;
-    background: transparent;
-}
-
-/* Activities button frame label's style */
-#panelActivities.alternative-activities.frame StLabel,
-#panelActivitiesAlternative.alternative-activities.frame StLabel {
+.alternative-activities-container.frame        #panelActivities            StLabel,
+.alternative-activities-container.frame.active #panelActivities            StLabel,
+.alternative-activities-container.frame        #panelActivitiesAlternative StLabel,
+.alternative-activities-container.frame.active #panelActivitiesAlternative StLabel {
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 3px;
     padding: 0 11px;
     background: rgba(128, 128, 128, 0.21);
 }
 
-/* Activities button transparent actor's style */
-#panelActivities.alternative-activities.transparent,
-#panelActivitiesAlternative.alternative-activities.transparent {
+
+
+/* Activities button transparent style */
+.alternative-activities-container.transparent,
+.alternative-activities-container.transparent.active {
     background: transparent;
 }
 
-#panelActivities.alternative-activities.transparent:hover,
-#panelActivitiesAlternative.alternative-activities.transparent:hover {
+.alternative-activities-container.transparent        #panelActivities,
+.alternative-activities-container.transparent.active #panelActivities,
+.alternative-activities-container.transparent        #panelActivitiesAlternative,
+.alternative-activities-container.transparent.active #panelActivitiesAlternative {
     background: transparent;
 }
 
-/* Activities button transparent label's style */
-#panelActivities.alternative-activities.transparent StLabel,
-#panelActivitiesAlternative.alternative-activities.transparent StLabel {
+.alternative-activities-container.transparent        #panelActivities            StLabel,
+.alternative-activities-container.transparent.active #panelActivities            StLabel,
+.alternative-activities-container.transparent        #panelActivitiesAlternative StLabel,
+.alternative-activities-container.transparent.active #panelActivitiesAlternative StLabel {
     background: transparent;
-}
-
-/* Popup menu */
-.popup-menu.alternative-activities {
-}
-
-.popup-menu.alternative-activities .popup-menu-item {
-    font-size: 92%;
 }
