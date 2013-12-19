@@ -4,10 +4,10 @@
 # Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
 #
 msgid ""
-msgstr "Project-Id-Version: YAWL 14\n"
+msgstr "Project-Id-Version: YAWL 15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-08 13:37+0200\n"
-"PO-Revision-Date: 2013-12-08 13:37+0200\n"
+"POT-Creation-Date: 2013-12-19 00:18+0200\n"
+"PO-Revision-Date: 2013-12-19 00:18+0200\n"
 "Last-Translator: Svitozar Cherepii\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -510,6 +510,9 @@ msgstr "Зміна робочого простору коліщатком миш
 msgid "Scroll up : down"
 msgstr "Прокрутити вверх : вниз"
 
+msgid "Do not launch apps with scroll"
+msgstr "Не запускати програми з допомогою проктутки"
+
 msgid "Right button"
 msgstr "Права кнопка"
 
@@ -651,15 +654,15 @@ msgid "Rearrange icons on the panel using mouse"
 msgstr "Сортувати піктограми панелі мишою"
 
 msgid "Scroll over YAWL panel to change workspace"
-msgstr "Прогортання коліщатком миші над панелю перемикає робочий простір"
+msgstr "Прокрутка коліщатком миші над панелю перемикає робочий простір"
 
 msgid "Scroll to find other windows"
-msgstr "Прогортання з пошуком вікон"
+msgstr "Прокрутка з пошуком вікон"
 
 msgid ""
 "find app's windows on other workspaces by scrolling over its icon when its "
 "thumbnails are shown"
-msgstr "пошук вікон програм на інших робочих просторах, гортаючи коліщатко над піктограмою, коли панель вікон програми відкрита"
+msgstr "знайти вікна програм на інших робочих просторах за допомогою прокрутки над піктограмою, при відкритій панелі вікон"
 
 msgid "Window demanding attention"
 msgstr "Вікно, що потребує уваги"
@@ -694,7 +697,7 @@ msgstr "Підглядання вікна"
 msgid ""
 "scroll up/down over a thumbnail to turn previews on/off and to reduce panel "
 "opacity while previewing"
-msgstr "прогортання вверх/вниз вмикає/вимикає підглядання і міняє прозорість панелі"
+msgstr "прокрутка вверх/вниз вмикає/вимикає підглядання і міняє прозорість панелі"
 
 msgid "Preview window when its thumbnail is hovered"
 msgstr "Підглядання вікна при наведенні вказівника на мініатюру"
