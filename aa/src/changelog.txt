@@ -1,0 +1,11 @@
+v1	2013-12-19
+		- Initial version.
+		- Activities button showing current workspace number.
+        - Scroll over the Activities button to change workspace.
+		- Right click menu with the list of all workspaces and icons of running apps.
+		- Right click menu with the list of installed extensions.
+		- Quick access to extension preferences as well as enabling/disabling/restarting/reloading.
+		- Show all or selected (favorite) extensions only.
+		- Sort extensions by name or frequency of access.
+		- Additional menu options to access Advanced settings.
+		- Several built-in and custom themes.

@@ -33,8 +33,8 @@ const _ = Gettext.gettext;
 const arrayShellVersion = imports.misc.config.PACKAGE_VERSION.split('.').map(function (v) { return parseInt(v); });
 
 const arrayContributors = [
-    [   'Jonatan Zeidler',                  _("German translation")         ],
-    [   'Svitozar Cherepii',                _("Ukrainian translation")      ]
+    [   'Svitozar Cherepii',                _("Ukrainian translation") + ', ' + _("quality testing")    ],
+    [   'Jonatan Zeidler',                  _("German translation")                                     ]
 ];
 
 const arrayStyleBackgrounds = [
