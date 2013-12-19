@@ -1,6 +1,6 @@
 Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
 
-YAWL, a group of Gnome-Shell extensions, is provided as
+YAWL, a group of GNOME Shell extensions, is provided as
 free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License (GPL)
 as published by the Free Software Foundation, version 3

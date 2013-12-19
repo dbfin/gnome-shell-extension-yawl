@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -94,13 +94,13 @@ const dbFinYAWLPanel = new Lang.Class({
         }
 
 		this.labelTitle = params.title || params.title === ''
-				? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label-title', text: '' + params.title })
+				? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label-title', text: '' + params.title || ' ' })
 				: null;
 		if (this.labelTitle) {
 			if (this.actor && this.labelTitle.container) this.actor.add_child(this.labelTitle.container);
 		}
 		this.label = params.label || params.label === ''
-			? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label', text: '' + params.label })
+			? new dbFinSlicerLabel.dbFinSlicerLabel({ style_class: 'yawl-panel-label', text: '' + params.label || ' ' })
 			: null;
 		if (this.label) {
 			this._labelText = '' + params.label;
@@ -725,17 +725,17 @@ const dbFinYAWLPanel = new Lang.Class({
         }
     },
 
-    animateToState: function(state, callback, scope, time, transition) {
+    animateToState: function(state, callback, scope, time, transition, rounded) {
         _D('>' + this.__name__ + '.animateToState()');
 		if (time === undefined || time === null) time = this.animationTime;
 		if (transition === undefined || transition === null) {
 			transition = this.animationEffect;
 		}
-		dbFinAnimation.animateToState(this, state, callback, scope, time, transition);
+		dbFinAnimation.animateToState(this, state, callback, scope, time, transition, rounded);
         _D('<');
     },
 
-    animateContainerToState: function(state, callback, scope, time, transition) {
+    animateContainerToState: function(state, callback, scope, time, transition, rounded) {
         _D('>' + this.__name__ + '.animateContainerToState()');
 		if (!this.container) {
 			_D('<');
@@ -745,7 +745,7 @@ const dbFinYAWLPanel = new Lang.Class({
 		if (transition === undefined || transition === null) {
 			transition = this.animationEffect;
 		}
-		dbFinAnimation.animateToState(this.container, state, callback, scope, time, transition);
+		dbFinAnimation.animateToState(this.container, state, callback, scope, time, transition, rounded);
         _D('<');
     }
 });

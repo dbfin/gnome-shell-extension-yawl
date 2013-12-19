@@ -1,9 +1,0 @@
-src/dbfin#%#name.js
-../lib/convenience2.js
-src/dbfinconsts.js
-../lib/dbfindebug.js
-../lib/dbfinsettings.js
-../lib/dbfinsignals.js
-../lib/dbfinutilsprefs.js
-src/extension.js
-src/prefs.js

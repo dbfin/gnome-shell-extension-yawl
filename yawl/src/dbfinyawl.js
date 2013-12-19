@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -25,12 +25,12 @@
  */
 
 const Lang = imports.lang;
-const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
 const GLib = imports.gi.GLib;
 const Meta = imports.gi.Meta;
+const St = imports.gi.St;
 
 const Util = imports.misc.util;
 
@@ -89,6 +89,10 @@ const dbFinYAWL = new Lang.Class({
                                                                     hideinoverview: true });
         if (global.yawl.panelApps) {
             global.yawl.panelApps.handleDragOver = Lang.bind(this, this._handleDragOverApps);
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
+										callback: this._hideInOverviewPanelApps, scope: this });
+			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
+										callback: this._showOutOfOverviewPanelApps, scope: this });
         }
 
         global.yawl.panelWindows = new dbFinYAWLPanel.dbFinYAWLPanel({  panelname: 'panelYAWLWindows',
@@ -180,26 +184,21 @@ const dbFinYAWL = new Lang.Class({
 		this._updatedDebugBottom = function () { if (global._yawlDebugView) global._yawlDebugView.updatePosition(); };
 
         this._updatedMouseScrollWorkspace =
-        this._updatedMouseDragAndDrop =
-		this._updatedMouseClickRelease =
-        this._updatedMouseLongClick =
+                this._updatedMouseDragAndDrop =
+                this._updatedMouseScrollTimeout =
                 this._updatedIconsDragAndDrop = function () {
-            // No drag and drop for GS 3.6, sorry
-            if (global.yawl && global.yawl._iconsDragAndDrop
-                && dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
-                global.yawl.set('icons-drag-and-drop', false);
-                return;
-            }
 		    if (this._clicked) {
 			    this._clicked.destroy();
 			    this._clicked = null;
 		    }
             if (global.yawl && global.yawl.panelApps) {
-                this._clicked = new dbFinClicked.dbFinClicked(global.yawl.panelApps.container, this._buttonClicked, this, /*clicks = */false, /*doubleClicks = */true,
-                                /*scroll = */global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
+                this._clicked = new dbFinClicked.dbFinClicked(global.yawl.panelApps.container, this._buttonClicked, this, /*clicks = */true, /*doubleClicks = */false,
+                                /*scroll = */global.yawl._mouseScrollWorkspace,
                                 /*dragAndDrop = */false,
-                                /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
-                                /*longClick = */global.yawl._mouseLongClick);
+                                /*clickOnRelease = */false,
+                                /*longClick = */false,
+                                /*clicksTimeThreshold = */null/*global.yawl._mouseClicksTimeThreshold*/,
+                                /*scrollTimeout = */global.yawl._mouseScrollTimeout);
                 if (global.yawl._mouseDragAndDrop && global.yawl._iconsDragAndDrop) {
                     global.yawl.panelApps._childrenObjects.forEach(function (appButton, signals) {
                         if (appButton && appButton._trackerApp) {
@@ -316,11 +315,11 @@ const dbFinYAWL = new Lang.Class({
                     if (this._tracker && this._tracker.apps) {
 						this._tracker.apps.forEach(function (metaApp, trackerApp) {
 							if (trackerApp) {
-								trackerApp[hide ? 'hideWindowsGroup' : '_cancelShowThumbnailsTimeout'].call(trackerApp);
+								trackerApp[hide ? 'hideWindowsGroup' : '_cancelShowWindows'].call(trackerApp);
 							}
 						});
 					}
-                    workspace.activate(global.get_current_time());
+                    workspace.activate(global.get_current_time && global.get_current_time() || 0);
                 }
 			} // let (workspace)
 		} // let (workspaceIndexNow, workspaceIndex, hide, trackerApp)
@@ -337,13 +336,30 @@ const dbFinYAWL = new Lang.Class({
             state.clicks = 2;
         }
         if (state.scroll) {
-            if (state.up) {
-				Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(-1); }));
-            }
-            else {
-				Mainloop.timeout_add(33, Lang.bind(this, function() { this.changeWorkspace(1); }));
-            }
-        }
+            this.changeWorkspace(state.up ? -1 : 1);
+        } // if (state.scroll)
+        else if (state.left) {
+            let (focusWindow = Main.modalCount == 0 && global.display && global.display.focus_window,
+                 [ x, y, m ] = global.get_pointer()) {
+                if (focusWindow && focusWindow.is_attached_dialog()) focusWindow = focusWindow.get_transient_for();
+                if (focusWindow && focusWindow.maximized_vertically && Meta.GrabOp) {
+                    let (box = focusWindow.get_outer_rect()) {
+                        if (x > box.x && x < box.x + box.width) {
+                            global.display.begin_grab_op(global.screen,
+                                                         focusWindow,
+                                                         Meta.GrabOp.MOVING,
+                                                         false, /* pointer grab */
+                                                         true, /* frame action */
+                                                         1, /* button */
+                                                         0 | (state.ctrl ? Clutter.ModifierType.CONTROL_MASK : 0)
+                                                           | (state.shift ? Clutter.ModifierType.SHIFT_MASK : 0), /* state */
+                                                         global.get_current_time && global.get_current_time() || 0,
+                                                         x, y);
+                        }
+                    } // let (box)
+                } // if (focusWindow && focusWindow.maximized_vertically)
+            } // let (focusWindow, [ x, y, m ])
+        } // if (state.scroll) else if (state.left)
         _D('<');
     },
 
@@ -441,6 +457,39 @@ const dbFinYAWL = new Lang.Class({
 		} // let (style)
         _D('<');
 	},
+
+    _showOutOfOverviewPanelApps: function () {
+        _D('>' + this.__name__ + '.showOutOfOverviewPanelApps()');
+        if (!global.yawl) {
+            _D('<');
+            return;
+        }
+        if (global.yawl.panelApps && global.yawl.panelApps._childrenObjects && global.yawl.panelApps._childrenObjects._keys) {
+            global.yawl.panelApps._childrenObjects._keys.forEach(function (appButton) {
+                if (appButton && appButton.actor) appButton.actor.reactive = true;
+            });
+        }
+        _D('<');
+    },
+
+    _hideInOverviewPanelApps: function () {
+        _D('>' + this.__name__ + '._hideInOverviewPanelApps()');
+        if (!global.yawl) {
+            _D('<');
+            return;
+        }
+        if (global.yawl._iconsOverviewShow) {
+            if (global.yawl.panelApps) global.yawl.panelApps._showOutOfOverview();
+        }
+        else {
+            if (global.yawl.panelApps && global.yawl.panelApps._childrenObjects && global.yawl.panelApps._childrenObjects._keys) {
+                global.yawl.panelApps._childrenObjects._keys.forEach(function (appButton) {
+                    if (appButton && appButton.actor) appButton.actor.reactive = false;
+                });
+            }
+        }
+        _D('<');
+    },
 
     _handleDragOverApps: function(source, actor, x, y, time) {
         _D('@' + this.__name__ + '._handleDragOverApps()');

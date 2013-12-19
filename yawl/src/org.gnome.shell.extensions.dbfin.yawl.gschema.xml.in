@@ -102,6 +102,11 @@
       <_summary>Opacity of not running favorite app icons.</_summary>
       <_description>Opacity of not running favorite app icons.</_description>
     </key>
+    <key name="icons-clip-top" type="s">
+      <default>'0'</default>
+      <_summary>Clip icons: top (px).</_summary>
+      <_description>Clip icons on top (in pixels).</_description>
+    </key>
     <key name="icons-clip-bottom" type="s">
       <default>'0'</default>
       <_summary>Clip icons: bottom (px).</_summary>
@@ -157,6 +162,11 @@
       <default>'3'</default>
       <_summary>Icons on hover animation effect.</_summary>
       <_description>Icons animation effect when hovered.</_description>
+    </key>
+    <key name="icons-overview-show" type="b">
+      <default>true</default>
+      <_summary>Whether to show icons in Overview.</_summary>
+      <_description>If true icons are shown in Overview.</_description>
     </key>
 
     <key name="windows-show" type="b">
@@ -347,6 +357,11 @@
       <default>'4'</default>
       <_summary>App mouse scroll function.</_summary>
       <_description>App mouse scroll function.</_description>
+    </key>
+    <key name="mouse-app-scroll-no-launch" type="b">
+      <default>false</default>
+      <_summary>Do not launch apps with scroll.</_summary>
+      <_description>Do not launch apps with scroll.</_description>
     </key>
 
     <key name="mouse-app-right" type="s">

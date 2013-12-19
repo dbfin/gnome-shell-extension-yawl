@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -33,7 +33,8 @@ const _ = Gettext.gettext;
 const arrayShellVersion = imports.misc.config.PACKAGE_VERSION.split('.').map(function (v) { return parseInt(v); });
 
 const arrayContributors = [
-	[	'Jonatan Zeidler',								_("German translation")			]
+	[	'Jonatan Zeidler',								_("German translation")			],
+	[	'Svitozar Cherepii',							_("Ukrainian translation")		]
 ];
 
 const arrayAnimationTransitions = [
@@ -63,15 +64,15 @@ const arrayAppClickFunctions = [
     [   _("Show next : all non-minimized windows"), 	'nextWindowNonMinimized',       'showAllWindowsNonMinimized'    ],
     [   _("Show next : all windows"),	            	'nextWindow',                   'showAllWindows'                ],
     [   _("Show all/next non-minimized : all windows"),	'showAllNextNonMinimized',      'showAllWindows'                ],
-    [   _("Rotate windows forward : backward"),     	'rotateWindowsForward',         'rotateWindowsBackward'         ],
-    [   _("Rotate windows backward : forward"),     	'rotateWindowsBackward',        'rotateWindowsForward'          ],
+    [   _("Show next : prev non-minimized window"),    	'nextWindowNonMinimizedWaitDoubleClick','prevWindowNonMinimized'],
+    [   _("Show next : prev window"),                	'nextWindowWaitDoubleClick',    'prevWindow'                    ],
     [   _("Minimize top : all windows"),	        	'minimizeTopWindow',            'minimizeAllWindows'            ],
     [   _("(Un)Maximize top : all windows"),        	'maximizeTopWindow',            'maximizeAllWindows'            ],
     [   _("Open new window : none"),	            	'openNewWindowThisWorkspace',   ''                              ],
     [   _("Open new window (new workspace) : none"),	'openNewWindowNewWorkspace',    ''                              ],
     [   _("Open menu : none"),                       	'openMenu',                     ''                              ],
 	[	_("Quit : none"),								'quitApplication',				''								],
-    [   _("Show next (minimize if single) : all windows"),  'nextWindowMinimize',       'showAllWindows'                ]
+    [   _("Show next (minimize if single) : all windows"),  'nextWindowMinimizeSingle', 'showAllWindows'                ]
 ];
 
 const arrayWindowClickFunctions = [
@@ -128,6 +129,7 @@ const Settings = [
     [ 'icons-opacity', 84, { min: 50, max: 100 }, 'icons' ],
     [ 'icons-opacity-other', 42, { min: 10, max: 100 }, 'icons' ],
     [ 'icons-opacity-inactive', 42, { min: 10, max: 100 }, 'icons' ],
+    [ 'icons-clip-top', 0, { min: 0, max: 7 }, 'icons' ],
     [ 'icons-clip-bottom', 0, { min: 0, max: 7 }, 'icons' ],
     [ 'icons-align', 0, { min: 0, max: 100 }, 'icons' ],
     [ 'icons-distance', 11, { min: 0, max: 100 }, 'icons' ],
@@ -140,6 +142,8 @@ const Settings = [
     [ 'icons-hover-fit', false, { }, 'icons>animation' ],
     [ 'icons-hover-animation-time', 33, { min: 0, max: 200 }, 'icons>animation' ],
     [ 'icons-hover-animation-effect', 3, { min: 0, max: arrayAnimationTransitions.length - 1 }, 'icons>animation' ],
+
+    [ 'icons-overview-show', true, { }, 'icons>overview' ],
 
     [ 'windows-show', true, { }, 'thumbnails>panel' ],
     [ 'windows-show-interesting', false, { }, 'thumbnails>panel' ],
@@ -182,6 +186,7 @@ const Settings = [
     [ 'mouse-app-middle-shift', 7, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-middle-ctrl-shift', 3, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
     [ 'mouse-app-scroll', 4, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
+    [ 'mouse-app-scroll-no-launch', false, { }, 'mouse' ],
 
     [ 'mouse-app-right', 10, { min: 0, max: arrayAppClickFunctions.length - 1 }, 'mouse' ],
 

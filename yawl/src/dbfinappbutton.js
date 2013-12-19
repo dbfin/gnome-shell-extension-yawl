@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -65,10 +65,16 @@ const dbFinAppButton = new Lang.Class({
 		// this.actor and this.container related stuff
         if (this.container) {
             this.container.add_style_class_name('panel-button-container');
+            this._signals.connectNoId({	emitter: this.container, signal: 'enter-event',
+                                        callback: function (actor) { if (this._slicerIcon) this._slicerIcon.hoverEnter(actor); }, scope: this });
+            this._signals.connectNoId({	emitter: this.container, signal: 'leave-event',
+                                        callback: function (actor) { if (this._slicerIcon) this._slicerIcon.hoverLeave(actor); }, scope: this });
         }
         if (this.actor) {
             this._bindReactiveId = this.actor.bind_property('reactive', this.actor, 'can-focus', 0);
             this.actor.reactive = true;
+            this.actor._delegate = this;
+            this.actor.x_align = Clutter.ActorAlign.CENTER;
         }
 
 		this._minHPadding = 0;
@@ -81,7 +87,6 @@ const dbFinAppButton = new Lang.Class({
 		this._slicerIcon = new dbFinSlicerIcon.dbFinSlicerIcon();
         if (this._slicerIcon && this._slicerIcon.container) {
             if (this.actor) this.actor.add_child(this._slicerIcon.container);
-            if (this._slicerIcon.actor) this._slicerIcon.actor._delegate = this;
 /*            if (Main.panel && Main.panel.actor && Main.panel.actor.get_stage()) {
                 this._slicerIcon.container.min_height = Main.panel.actor.get_height();
             }*/
@@ -91,20 +96,24 @@ const dbFinAppButton = new Lang.Class({
 
         this._clicked = null;
         this._updatedMouseScrollWorkspace =
-        this._updatedMouseDragAndDrop =
-		this._updatedMouseClickRelease =
-        this._updatedMouseLongClick =
+                this._updatedMouseDragAndDrop =
+                this._updatedMouseClickRelease =
+                this._updatedMouseLongClick =
+                this._updatedMouseScrollTimeout =
+                this._updatedMouseClicksTimeThreshold =
                 this._updatedIconsDragAndDrop = function () {
 			if (this._clicked) {
 				this._clicked.destroy();
 				this._clicked = null;
 			}
-            if (global.yawl && this._slicerIcon && this._slicerIcon.actor) {
-                this._clicked = new dbFinClicked.dbFinClicked(this._slicerIcon.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */true,
-                                /*scroll = */!global.yawl._mouseScrollWorkspace, /*sendSingleClicksImmediately = */true,
+            if (global.yawl && this.actor) {
+                this._clicked = new dbFinClicked.dbFinClicked(this.actor, this._buttonClicked, this, /*single = */true, /*doubleClicks = */true,
+                                /*scroll = */!global.yawl._mouseScrollWorkspace,
                                 /*dragAndDrop = */global.yawl._mouseDragAndDrop && global.yawl._iconsDragAndDrop,
                                 /*clickOnRelease = */global.yawl._mouseClickRelease || global.yawl._mouseDragAndDrop,
-                                /*longClick = */global.yawl._mouseLongClick);
+                                /*longClick = */global.yawl._mouseLongClick,
+                                /*clicksTimeThreshold = */global.yawl._mouseClicksTimeThreshold,
+                                /*scrollTimeout = */global.yawl._mouseScrollTimeout);
             }
 		};
 
@@ -112,8 +121,9 @@ const dbFinAppButton = new Lang.Class({
 
         this._updatedIconsSize =
                 this._updatedIconsFaded = this._updateIcon;
+		this._updatedIconsClipTop = function () { if (global.yawl && this._slicerIcon) this._slicerIcon.setClipTop(global.yawl._iconsClipTop); };
 		this._updatedIconsClipBottom = function () {
-            if (this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom);
+            if (global.yawl && this._slicerIcon) this._slicerIcon.setClipBottom(global.yawl._iconsClipBottom);
             this._updatePivotPoint();
             if (this._trackerApp) this._trackerApp.updateBadges();
         };
@@ -306,25 +316,24 @@ const dbFinAppButton = new Lang.Class({
             return;
         }
         if (state.dnd) {
-            if (this._trackerApp) {
-                switch (state.dnd) {
-                    case 1: // drag
-				        if (this.menu && this.menu.isOpen) this.menu.close();
-                        if (this.menuWindows && this.menuWindows.isOpen) this.menuWindows.close();
-                        this._dragging = true;
-                        break;
-                    case 2: // cancelled or drop
-                    case 3:
-                        if (this._dragging) {
-                            this._dragging = false;
-				            this._trackerApp.hideWindowsGroup(0);
-                            this._trackerApp.updateVisibility();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+            switch (state.dnd) {
+                case 1: // drag
+                    if (this.menu && this.menu.isOpen) this.menu.close();
+                    if (this.menuWindows && this.menuWindows.isOpen) this.menuWindows.close();
+                    this._dragging = true;
+                    break;
+                case 2: // cancelled or drop
+                case 3:
+                    if (this._dragging) {
+                        this._dragging = false;
+                        if (this._slicerIcon) this._slicerIcon.hoverLeaveAll();
+                        this._trackerApp.hideWindowsGroup(0);
+                        this._trackerApp.updateVisibility();
+                    }
+                    break;
+                default:
+                    break;
+            } // switch (state.dnd)
             _D('<');
             return;
         }
@@ -341,9 +350,8 @@ const dbFinAppButton = new Lang.Class({
 								this._trackerApp.hideWindowsGroup();
 								if (this.menu && this.menu.isOpen && functionName !== 'openMenu') this.menu.close();
                                 if (this.menuWindows && this.menuWindows.isOpen
-                                    && functionName !== 'nextWindowNonMinimized'
-                                    && functionName !== 'nextWindow') this.menuWindows.close();
-                                Lang.bind(this._trackerApp, this._trackerApp[functionName])();
+                                    && !/^nextWindow/.test(functionName)) this.menuWindows.close();
+                                Lang.bind(this._trackerApp, this._trackerApp[functionName])(state);
                             }
                         } // let (functionName)
                     } // if (functionRow.length && functionRow.length > state.clicks)
@@ -356,6 +364,29 @@ const dbFinAppButton = new Lang.Class({
 	_onButtonPress: function() {
 		// nothing to do here
 	},
+
+    getDragActor: function() {
+        _D('>' + this.__name__ + '.getDragActor()');
+        let (icon = this.metaApp && this.metaApp.create_icon_texture(
+                    Math.round(global.yawl && global.yawl._iconsSize || 24)
+             )) {
+            if (icon) {
+                icon.opacity = 128;
+                icon.scale_x = this._slicerIcon && this._slicerIcon.getZoom() || 1.0;
+                icon.scale_y = this._slicerIcon && this._slicerIcon.getZoom() || 1.0;
+                _D('<');
+                return icon;
+            }
+            _D('<');
+            return this.actor;
+        }
+    },
+
+    getDragActorSource: function() {
+        _D('>' + this.__name__ + '.getDragActorSource()');
+        _D('<');
+        return this.container || undefined;
+    },
 
     // Parameters:
     //      name: a string or a number

@@ -1,5 +1,5 @@
 AC_PREREQ(2.63)
-AC_INIT([gnome-shell-extension-yawl],13,[https://github.com/dbfin/gnome-shell-extension-yawl])
+AC_INIT([gnome-shell-extension-yawl],15,[https://github.com/dbfin/gnome-shell-extension-yawl])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([config])

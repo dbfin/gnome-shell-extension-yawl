@@ -15,6 +15,7 @@ dist_extension_DATA = \
 	dbfinmovecenter.js \
 	dbfinpanelbuttontoggle.js \
 	dbfinpanelenhancements.js \
+	../../lib/dbfinpopupmenu.js \
 	dbfinpreview.js \
 	../../lib/dbfinsettings.js \
 	../../lib/dbfinsignals.js \
@@ -22,6 +23,7 @@ dist_extension_DATA = \
 	../../lib/dbfinslicericon.js \
 	../../lib/dbfinslicerlabel.js \
 	../../lib/dbfinstyle.js \
+	../../lib/dbfintimeout.js \
 	dbfintracker.js \
 	dbfintrackerapp.js \
 	dbfintrackerwindow.js \
@@ -61,7 +63,8 @@ images = \
 	../../images/gplv3.png \
 	../../images/thumbnail_16.png \
 	../../images/icon_16.png \
-	../../images/animation_engine.png
+	../../images/animation_engine.png \
+	../../images/overview.png
 
 imagedir = $(extensiondir)/images
 dist_image_DATA = $(images)

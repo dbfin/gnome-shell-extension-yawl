@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -26,6 +26,7 @@
 
 const Lang = imports.lang;
 
+const Clutter = imports.gi.Clutter;
 const St = imports.gi.St;
 const Shell = imports.gi.Shell;
 
@@ -39,40 +40,12 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinConsts = Me.imports.dbfinconsts;
+const dbFinPopupMenu = Me.imports.dbfinpopupmenu;
 
 const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
 const _ = Gettext.gettext;
 
 const _D = Me.imports.dbfindebug._D;
-
-const dbFinPopupMenuScrollableSection = new Lang.Class({
-    Name: 'dbFin.PopupMenuScrollableSection',
-    Extends: PopupMenu.PopupMenuSection,
-
-    _init: function() {
-        this.parent();
-		this.actor = new St.ScrollView({ style_class: 'popup-menu-section-scroll' });
-		if (this.actor) {
-			this.actor.add_actor(this.box);
-			this.actor._delegate = this;
-			this.actor.clip_to_allocation = true;
-		}
-		else if (this.box) {
-			this.actor = this.box;
-	        this.actor._delegate = this;
-		}
-    },
-
-    destroy: function() {
-		if (this.actor && this.actor.has_style_class_name('popup-menu-section-scroll')) {
-            this.actor.remove_actor(this.box);
-			this.actor.destroy();
-			this.actor = this.box;
-	        this.actor._delegate = this;
-		}
-        this.parent();
-    }
-});
 
 const dbFinMenuBuilder = new Lang.Class({
 	Name: 'dbFin.MenuBuilder',
@@ -112,6 +85,17 @@ const dbFinMenuBuilder = new Lang.Class({
                 menu._yawlOpenWas = menu.open;
                 menu.open = this.open;
             }
+            menu.connect('destroy', Lang.bind(menu, function () {
+                this._yawlMetaApp = null;
+                this._yawlTrackerApp = null;
+                this._yawlTracker = null;
+                this._yawlCreatePinMenu = null;
+                this._yawlUpdateAddons = null;
+                if (this._yawlOpenWas) {
+                    this.open = this._yawlOpenWas;
+                    this._yawlOpenWas = null;
+                }
+            }));
         }
         _D('<');
     },
@@ -127,7 +111,7 @@ const dbFinMenuBuilder = new Lang.Class({
             if (global.yawl._appQuicklists && !menu._yawlMenuQuicklists) {
                 let (mf = this._getMenuFunction('quicklists', 'setQuicklist')) {
                     if (mf) {
-                        menu._yawlMenuQuicklists = new dbFinPopupMenuScrollableSection();
+                        menu._yawlMenuQuicklists = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
                         if (menu._yawlMenuQuicklists) {
                             mf(metaApp, menu._yawlMenuQuicklists);
                             if (menu._yawlMenuQuicklists.isEmpty()) {
@@ -222,12 +206,23 @@ const dbFinMenuBuilder = new Lang.Class({
         } // let (metaApp, menu)
     },
 
+    // bounded to menu
 	open: function(animate) {
 		if (this) {
             _D('>' + this.__name__ + '.open()');
 			if (this._menuWindows) {
+				if (typeof this._menuWindows.removeAll === 'function') this._menuWindows.removeAll();
 				if (typeof this._menuWindows.destroy === 'function') this._menuWindows.destroy();
 				this._menuWindows = null;
+			}
+			if (this._menuPinSeparator) {
+				if (typeof this._menuPinSeparator.destroy === 'function') this._menuPinSeparator.destroy();
+				this._menuPinSeparator = null;
+			}
+			if (this._menuPin) {
+				if (typeof this._menuPin.removeAll === 'function') this._menuPin.removeAll();
+				if (typeof this._menuPin.destroy === 'function') this._menuPin.destroy();
+				this._menuPin = null;
 			}
 			if (this._yawlMetaApp && this._yawlTracker) {
 				// addons
@@ -246,10 +241,9 @@ const dbFinMenuBuilder = new Lang.Class({
 						]);
 					})); // if (tracker) this._yawlMetaApp.get_windows().forEach(metaWindow)
 					if (windows.length) {
-						this._menuWindows = new PopupMenu.PopupMenuSection();
+						this._menuWindows = new dbFinPopupMenu.dbFinPopupMenuScrollableSection();
 						windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
-						let (wIndexWas = windows[0][0],
-                             focusedWindow = global.display && global.display.focus_window || null) {
+						let (wIndexWas = windows[0][0]) {
 							windows.forEach(Lang.bind(this, function ([ wIndex, metaWindow ]) {
 								if (wIndex !== wIndexWas) {
 									wIndexWas = wIndex;
@@ -260,13 +254,31 @@ const dbFinMenuBuilder = new Lang.Class({
 									let (menuItem = this._menuWindows.addAction(title, Lang.bind(this, function () {
 														if (this._yawlTracker) this._yawlTracker.activateWindow(metaWindow);
                                                     }))) {
-                                        if (focusedWindow && (metaWindow === focusedWindow
-                                                              || metaWindow === focusedWindow.get_transient_for())) {
-                                            if (menuItem.setShowDot) menuItem.setShowDot(true);
-                                            else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.DOT);
+                                        let (updateFocusIndicator = (function (metaWindow, menuItem) { return function () {
+                                                 let (focusedWindow = menuItem && global.display && global.display.focus_window || null) {
+                                                     if (focusedWindow && (metaWindow === focusedWindow
+                                                                           || metaWindow === focusedWindow.get_transient_for())) {
+                                                         if (menuItem.setShowDot) menuItem.setShowDot(true);
+                                                         else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.DOT);
+                                                     }
+                                                     else if (menuItem) {
+                                                         if (menuItem.setShowDot) menuItem.setShowDot(false);
+                                                         else if (menuItem.setOrnament && PopupMenu.Ornament) menuItem.setOrnament(PopupMenu.Ornament.NONE);
+                                                     }
+                                                 }
+                                             }; })(metaWindow, menuItem)) {
+                                            if (global.display && menuItem) {
+                                                menuItem._yawlUpdateFocusIndicatorSignalId = global.display.connect('notify::focus-window', updateFocusIndicator);
+                                                menuItem.connect('destroy', Lang.bind(menuItem, function () {
+                                                    if (this._yawlUpdateFocusIndicatorSignalId && global.display) {
+                                                        global.display.disconnect(this._yawlUpdateFocusIndicatorSignalId);
+                                                    }
+                                                }));
+                                            }
+                                            updateFocusIndicator();
                                         }
 										if (tracker && this._yawlTracker.hasAppWindowAttention(tracker.get_window_app(metaWindow), metaWindow)) {
-                                            let (icon = new St.Icon({ icon_name: 'dialog-warning', icon_size: 16, x_align: St.Align.END })) {
+                                            let (icon = new St.Icon({ icon_name: 'dialog-warning', icon_size: 16, x_align: Clutter.ActorAlign.END, x_expand: true })) {
                                                 if (icon) {
                                                     if (menuItem.addActor) menuItem.addActor(icon);
                                                     else if (menuItem.actor) menuItem.actor.add_actor(icon);
@@ -276,27 +288,26 @@ const dbFinMenuBuilder = new Lang.Class({
 									}
 								}
 							})); // windows.forEach([ wIndex, metaWindow ])
-						} // let (wIndexWas, focusedWindow)
+						} // let (wIndexWas)
 					} // if (windows.length)
 				} // let (windows, tracker)
                 // add pin menu
                 if (this._yawlCreatePinMenu && this._yawlTrackerApp && this._yawlTrackerApp._isStable()) {
-                    if (!this._menuWindows) {
-                        this._menuWindows = new PopupMenu.PopupMenuSection();
-                    }
-                    else if (!this._menuWindows.isEmpty()) {
-                        this._menuWindows.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-                    }
+                    this._menuPin = new PopupMenu.PopupMenuSection();
                     if (this._yawlTrackerApp.pin) {
-                        this._menuWindows.addAction(_("Remove from Favorites"), Lang.bind(this, function() {
+                        this._menuPin.addAction(_("Remove from Favorites"), Lang.bind(this, function() {
                             if (this._yawlMetaApp) AppFavorites.getAppFavorites().removeFavorite(this._yawlMetaApp.get_id());
                         }));
                     }
                     else {
-                        this._menuWindows.addAction(_("Add to Favorites"), Lang.bind(this, function() {
+                        this._menuPin.addAction(_("Add to Favorites"), Lang.bind(this, function() {
                             if (this._yawlMetaApp) AppFavorites.getAppFavorites().addFavorite(this._yawlMetaApp.get_id());
                         }));
                     }
+                }
+                if (this._menuPin) {
+                    this.addMenuItem(this._menuPin, 0);
+                    this.addMenuItem(this._menuPinSeparator = new PopupMenu.PopupSeparatorMenuItem(), 0);
                 }
                 if (this._menuWindows) {
                     this.addMenuItem(this._menuWindows, 0);

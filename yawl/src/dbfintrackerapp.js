@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -26,7 +26,6 @@
 
 const Cairo = imports.cairo;
 const Lang = imports.lang;
-const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
 const Clutter = imports.gi.Clutter;
@@ -44,6 +43,7 @@ const dbFinAnimationEquations = Me.imports.dbfinanimationequations;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinSignals = Me.imports.dbfinsignals;
 const dbFinSlicerLabel = Me.imports.dbfinslicerlabel;
+const dbFinTimeout = Me.imports.dbfintimeout;
 const dbFinUtils = Me.imports.dbfinutils;
 const dbFinYAWLPanel = Me.imports.dbfinyawlpanel;
 
@@ -60,6 +60,7 @@ const dbFinTrackerApp = new Lang.Class({
     _init: function(metaApp, tracker, state) {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
+        this._timeout = new dbFinTimeout.dbFinTimeout();
 		this.metaApp = metaApp;
 		this._tracker = tracker;
         this.state = state || 0;
@@ -147,14 +148,8 @@ const dbFinTrackerApp = new Lang.Class({
 										callback: this._updateFocused, scope: this });
 		}
 
-        this._nextWindowsTimeout = null;
 		this._resetNextWindows();
 
-        this._showThumbnailsTimeout = null;
-
-		this._createMenuTimeout = null;
-
-		this._attentionTimeout = null;
 		this.attention(!!(this._tracker && this._tracker.hasAppAttention(this.metaApp)));
 
 		this._updatedIconsShowAll =
@@ -184,9 +179,12 @@ const dbFinTrackerApp = new Lang.Class({
 			this._signals = null;
 		}
         this._resetNextWindows();
-        this._cancelShowThumbnailsTimeout();
-		this._cancelCreateMenuTimeout();
+        this._cancelShowWindows();
         this.attention(false);
+        if (this._timeout) {
+            this._timeout.destroy();
+            this._timeout = null;
+        }
         if (this.appButton) {
 			if (this.appButton.menuWindows) {
 	            if (this._menuWindowsManager) this._menuWindowsManager.removeMenu(this.appButton.menuWindows);
@@ -404,7 +402,7 @@ const dbFinTrackerApp = new Lang.Class({
                 if (active) {
                     if (global.yawl._iconsWindowsIndicator === 2) {
                         if (!this._badgesWindowsNumber) {
-                            this._badgesWindowsNumber = new dbFinSlicerLabel.dbFinSlicerLabel({ text: '' },
+                            this._badgesWindowsNumber = new dbFinSlicerLabel.dbFinSlicerLabel({ text: ' ' },
                                                             { style_class: 'badge-icon-windows-number',
                                                               x_align: St.Align.MIDDLE,
                                                               y_align: St.Align.MIDDLE });
@@ -494,23 +492,13 @@ const dbFinTrackerApp = new Lang.Class({
 
 	updateMenu: function() {
         _D('>' + this.__name__ + '.updateMenu()');
-		this._cancelCreateMenuTimeout();
-		this._createMenuTimeout = Mainloop.timeout_add(777, Lang.bind(this, this._createMenu));
+        if (this._timeout) this._timeout.add('create-menu', 777, this._createMenu, this);
         _D('<');
 	},
 
-    _cancelCreateMenuTimeout: function() {
-        _D('>' + this.__name__ + '._cancelCreateMenuTimeout()');
-        if (this._createMenuTimeout) {
-            Mainloop.source_remove(this._createMenuTimeout);
-            this._createMenuTimeout = null;
-        }
-        _D('<');
-    },
-
 	_createMenu: function() {
 		_D('>' + this.__name__ + '._createMenu()');
-		this._cancelCreateMenuTimeout();
+        if (this._timeout) this._timeout.remove('create-menu');
         if (!this.appButton || !global.yawl || !global.yawl.menuBuilder) {
             _D('<');
             return;
@@ -542,9 +530,11 @@ const dbFinTrackerApp = new Lang.Class({
 		if (!state) {
 			// make sure we are still "active" if focused
 			this._updateFocused();
+            if (this.appButton && this.appButton._slicerIcon) this.appButton._slicerIcon.hoverLeave(menu);
 		}
 		else {
 			this.hideWindowsGroup(0);
+            if (this.appButton && this.appButton._slicerIcon) this.appButton._slicerIcon.hoverEnter(menu);
 		}
         _D('<');
     },
@@ -611,7 +601,7 @@ const dbFinTrackerApp = new Lang.Class({
 
     attention: function(state) {
         _D('>' + this.__name__ + '.attention()');
-        this._cancelAttentionTimeout();
+        if (this._timeout) this._timeout.remove('attention');
         this._attention = !!state;
         if (this.appButton) {
             if (this.appButton.actor) {
@@ -634,16 +624,7 @@ const dbFinTrackerApp = new Lang.Class({
 			this._attentionAnimationDirection = 1;
             this._attentionAnimationLevels = Math.round(545.45454545454545 / global.yawl._iconsAttentionBlinkRate);
             this._attentionAnimationConstant = this._attentionAnimationLevels / 240;
-            this._attentionTimeout = Mainloop.timeout_add(55, Lang.bind(this, this._attentionAnimation));
-        }
-        _D('<');
-    },
-
-    _cancelAttentionTimeout: function() {
-        _D('>' + this.__name__ + '._cancelAttentionTimeout()');
-        if (this._attentionTimeout) {
-            Mainloop.source_remove(this._attentionTimeout);
-            this._attentionTimeout = null;
+            if (this._timeout) this._timeout.add('attention', 55, this._attentionAnimation, this);
         }
         _D('<');
     },
@@ -898,17 +879,16 @@ const dbFinTrackerApp = new Lang.Class({
 
     showWindowsGroup: function(time) {
         _D('>' + this.__name__ + '.showWindowsGroup()');
-		this._cancelShowThumbnailsTimeout();
+        this._cancelShowWindows();
         if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen
             || !this.windows || !this.windows.length) {
             _D('<');
             return;
         }
 		if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows) {
-			this._showThumbnailsTimeout = Mainloop.timeout_add(
+            if (this._timeout) this._timeout.add('show-windows',
                     time === 0 ? 0 : Math.max(33, global.yawl.panelWindows.hidden && global.yawl._windowsShowDelay || 0),
-                    Lang.bind(this, function() {
-                        this._cancelShowThumbnailsTimeout();
+                    function () {
                         if (this.appButton && this.appButton.menu && this.appButton.menu.isOpen) return;
                         if (this.appButton && this.appButton.menuWindows && this.appButton.menuWindows.isOpen) return;
                         this.positionWindowsGroup(); // position it before showing if it is hidden
@@ -929,7 +909,9 @@ const dbFinTrackerApp = new Lang.Class({
 						}
                         global.yawl.panelWindows.show(time, null, null, null, this.yawlPanelWindowsGroup);
                         global.yawl.panelWindows._lastWindowsGroupTrackerApp = this;
-                    })
+                    },
+                    this,
+                    true
             );
         } // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
         _D('<');
@@ -937,16 +919,23 @@ const dbFinTrackerApp = new Lang.Class({
 
     hideWindowsGroup: function(time) {
         _D('>' + this.__name__ + '.hideWindowsGroup()');
-		this._cancelShowThumbnailsTimeout();
-		if (this.yawlPanelWindowsGroup && global.yawl.panelWindows) {
-			this._showThumbnailsTimeout = Mainloop.timeout_add(
+        this._cancelShowWindows();
+		if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows) {
+            if (this._timeout) this._timeout.add('show-windows',
 			        time === 0 ? 0 : 77,
-			        Lang.bind(this, function() {
-						this._cancelShowThumbnailsTimeout();
+			        function() {
 						global.yawl.panelWindows.hide(time, null, null, null, true, this.yawlPanelWindowsGroup);
-					})
+					},
+                    this,
+                    true
 			);
-		} // if (this.yawlPanelWindowsGroup && global.yawl.panelWindows)
+		} // if (this.yawlPanelWindowsGroup && global.yawl && global.yawl.panelWindows)
+        _D('<');
+    },
+
+    _cancelShowWindows: function() {
+        _D('>' + this.__name__ + '._cancelShowWindows()');
+        if (this._timeout) this._timeout.remove('show-windows');
         _D('<');
     },
 
@@ -981,32 +970,14 @@ const dbFinTrackerApp = new Lang.Class({
 
     _resetNextWindows: function() {
         _D('>' + this.__name__ + '._resetNextWindows()');
-        this._cancelNextWindowsTimeout();
+        if (this._timeout) this._timeout.remove('next-windows-expire');
+        this._nextWindows = [];
 		this._nextWindowsWorkspace = null;
-        this._nextWindowsLength = 0;
-        this._nextWindowsIndex = 0;
+        this._nextWindowsIndex = undefined;
         _D('<');
     },
 
-    _cancelNextWindowsTimeout: function() {
-        _D('>' + this.__name__ + '._cancelNextWindowsTimeout()');
-        if (this._nextWindowsTimeout) {
-            Mainloop.source_remove(this._nextWindowsTimeout);
-            this._nextWindowsTimeout = null;
-        }
-        _D('<');
-    },
-
-    _cancelShowThumbnailsTimeout: function() {
-        _D('>' + this.__name__ + '._cancelShowThumbnailsTimeout()');
-        if (this._showThumbnailsTimeout) {
-            Mainloop.source_remove(this._showThumbnailsTimeout);
-            this._showThumbnailsTimeout = null;
-        }
-        _D('<');
-    },
-
-    _nextWindow: function(minimized/* = false*/, showall/* = false*/, minimize/* = false*/) {
+    _nextWindow: function(minimized/* = false*/, showall/* = false*/, minimizeSingle/* = false*/, backward/* = false*/, donotlaunch/* = false*/) {
         _D('>' + this.__name__ + '._nextWindow()');
         if (this.appButton && this.appButton.menuWindows && this.appButton.menuWindows.isOpen) {
             this.appButton.menuWindows.close();
@@ -1020,23 +991,27 @@ const dbFinTrackerApp = new Lang.Class({
                     else if (this._tracker) this._tracker.activateWindow(windows[0]);
                     this._resetNextWindows();
 				} // if (!this.focused)
-                else if (windows.length == 1 && minimize) {
+                else if (windows.length == 1 && minimizeSingle) {
                     if (this._tracker) this._tracker.minimizeWindow(windows[0]);
                     this._resetNextWindows();
-                } // if (!this.focused) else if (windows.length == 1 && minimize)
+                } // if (!this.focused) else if (windows.length == 1 && minimizeSingle)
 				else {
-					if (!this._nextWindowsIndex || !this._nextWindowsLength
-					    	|| this._nextWindowsLength != windows.length
-					    	|| this._nextWindowsWorkspace != global.screen.get_active_workspace()) {
+					if (this._nextWindowsIndex === undefined || !this._nextWindows
+                            || this._nextWindows.length !== windows.length
+                            || this._nextWindowsWorkspace != global.screen.get_active_workspace()) {
+						this._nextWindows = windows;
 						this._nextWindowsWorkspace = global.screen.get_active_workspace();
-						this._nextWindowsLength = windows.length;
 						this._nextWindowsIndex = 0;
 					}
-					if (this._tracker) this._tracker.activateWindow(windows[Math.min(++this._nextWindowsIndex, this._nextWindowsLength - 1)]);
+                    let (index = !backward ? ++this._nextWindowsIndex : --this._nextWindowsIndex,
+                         length = this._nextWindows.length) {
+                        if (index == -1) index = this._nextWindowsIndex = length - 1;
+                        else if (index == length) index = this._nextWindowsIndex = 0;
+                        if (this._tracker) this._tracker.activateWindow(this._nextWindows[index]);
+                    }
                     if (showall) this._showAllWindows(minimized);
-					this._cancelNextWindowsTimeout();
-					this._nextWindowsTimeout = Mainloop.timeout_add(3333, Lang.bind(this, this._resetNextWindows));
-				} // if (!this.focused) else if (windows.length == 1 && minimize) else
+                    if (this._timeout) this._timeout.add('next-windows-expire', 3333, this._resetNextWindows, this);
+				} // if (!this.focused) else if (windows.length == 1 && minimizeSingle) else
 			}
 			else if (windows.length
                      && global.yawl && global.yawl._iconsShowAll) { // windows are all not from the current workspace
@@ -1052,41 +1027,70 @@ const dbFinTrackerApp = new Lang.Class({
 					}
 				}
 			}
-            else { // no windows at all? open a new window
-                this.openNewWindowThisWorkspace();
+            else if (this.metaApp) { // no windows at all? open a new window
+                if (!donotlaunch && !this.metaApp.is_on_workspace(global.screen.get_active_workspace())) {
+                    this.openNewWindowThisWorkspace();
+                }
             }
 		} // let (windows)
         _D('<');
     },
 
-    nextWindowNonMinimized: function() {
+    _prevWindow: function(minimized/* = false*/, showall/* = false*/, minimizeSingle/* = false*/, backward/* = true*/, donotlaunch/* = false*/) {
+        _D('>' + this.__name__ + '._prevWindow()');
+        this._nextWindow(minimized, showall, minimizeSingle, backward === undefined || !!backward, donotlaunch);
+        _D('<');
+    },
+
+    nextWindowNonMinimized: function(state) {
         _D('>' + this.__name__ + '.nextWindowNonMinimized()');
-        this._nextWindow();
+        this._nextWindow(false, false, false, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
-    nextWindow: function() {
+    nextWindow: function(state) {
         _D('>' + this.__name__ + '.nextWindow()');
-        this._nextWindow(true);
+        this._nextWindow(true, false, false, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
-    nextWindowMinimize: function() {
-        _D('>' + this.__name__ + '.nextWindowMinimize()');
-        this._nextWindow(true, false, true);
+    nextWindowNonMinimizedWaitDoubleClick: function(state) {
+        _D('>' + this.__name__ + '.nextWindowNonMinimizedWaitDoubleClick()');
+        if (state.scroll || !this._timeout) this.nextWindowNonMinimized(state);
+        else this._timeout.add('next-window', global.yawl && global.yawl._mouseClicksTimeThreshold || 377, (function (state) { return function () { this.nextWindowNonMinimized(state); }; })(state), this, true);
+        _D('<');
+    },
+
+    nextWindowWaitDoubleClick: function(state) {
+        _D('>' + this.__name__ + '.nextWindowWaitDoubleClick()');
+        if (state.scroll || !this._timeout) this.nextWindow(state);
+        else this._timeout.add('next-window', global.yawl && global.yawl._mouseClicksTimeThreshold || 377, (function (state) { return function () { this.nextWindow(state); }; })(state), this, true);
+        _D('<');
+    },
+
+    prevWindowNonMinimized: function(state) {
+        _D('>' + this.__name__ + '.prevWindowNonMinimized()');
+        if (this._timeout) this._timeout.remove('next-window');
+        this._prevWindow(false, false, false, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
+        _D('<');
+    },
+
+    prevWindow: function(state) {
+        _D('>' + this.__name__ + '.prevWindow()');
+        if (this._timeout) this._timeout.remove('next-window');
+        this._prevWindow(true, false, false, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
+        _D('<');
+    },
+
+    nextWindowMinimizeSingle: function(state) {
+        _D('>' + this.__name__ + '.nextWindowMinimizeSingle()');
+        this._nextWindow(true, false, true, false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
 	_showAllWindows: function(minimized/* = false*/) {
         _D('>' + this.__name__ + '._showAllWindows()');
-		let (windows = this._listWindowsFresh(minimized)) {
-            if (windows.length) {
-                this.metaApp.activate();
-    			for (let i = windows.length - 1; i >= 0; --i) {
-                    if (this._tracker) this._tracker.activateWindow(windows[i]);
-                }
-            } // if (windows.length)
-		} // let (windows)
+        if (this._tracker) this._tracker.activateWindows(this._listWindowsFresh(minimized));
         _D('<');
 	},
 
@@ -1102,57 +1106,21 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-    _showAllNext: function(minimized/* = false*/) {
+    _showAllNext: function(minimized/* = false*/, donotlaunch/* = false*/) {
         _D('>' + this.__name__ + '._showAllNext()');
-		this._nextWindow(minimized, true);
+		this._nextWindow(minimized, true, false, false, donotlaunch);
         _D('<');
     },
 
-    showAllNextNonMinimized: function() {
+    showAllNextNonMinimized: function(state) {
         _D('>' + this.__name__ + '.showAllNextNonMinimized()');
-		this._showAllNext();
+		this._showAllNext(false, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
-    showAllNext: function() {
+    showAllNext: function(state) {
         _D('>' + this.__name__ + '.showAllNext()');
-		this._showAllNext(true);
-        _D('<');
-    },
-
-	_rotateWindows: function(backward/* = false*/) {
-        _D('>' + this.__name__ + '._rotateWindows()');
-		let (windows = this._listWindowsFresh()) {
-            if (windows.length) {
-				if (!this.focused) {
-					if (this._tracker) this._tracker.activateWindow(windows[0]);
-				} // if (!this.focused)
-				else {
-                    if (backward) {
-                        if (windows.length > 1) {
-                            if (this._tracker) this._tracker.activateWindow(windows[windows.length - 1]);
-                        }
-                    }
-                    else {
-                        for (let i = windows.length - 1; i > 0; --i) {
-                            if (this._tracker) this._tracker.activateWindow(windows[i]);
-                        }
-                    }
-				} // if (!this.focused) else
-            } // if (windows.length)
-		} // let (windows)
-        _D('<');
-	},
-
-    rotateWindowsForward: function() {
-        _D('>' + this.__name__ + '.rotateWindowsForward()');
-		this._rotateWindows();
-        _D('<');
-    },
-
-    rotateWindowsBackward: function() {
-        _D('>' + this.__name__ + '.rotateWindowsBackward()');
-		this._rotateWindows(true);
+		this._showAllNext(true, global.yawl && global.yawl._mouseAppScrollNoLaunch && !!state.scroll);
         _D('<');
     },
 
@@ -1230,7 +1198,7 @@ const dbFinTrackerApp = new Lang.Class({
 				return;
 			}
 			let (workspace = global.screen.get_workspace_by_index(workspaceIndex)) {
-				if (workspace) workspace.activate(global.get_current_time());
+				if (workspace) workspace.activate(global.get_current_time && global.get_current_time() || 0);
 			}
 		} // if (workspaceIndex !== undefined)
 		if (this.metaApp.state != Shell.AppState.STOPPED) this.metaApp.open_new_window(-1);

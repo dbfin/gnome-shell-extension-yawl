@@ -5,7 +5,7 @@
 # Useful when the version of an extension changes
 #
 # Copyright (c) 2012-2013 Vadim@dbFin <vadim@dbfin.com>
-# This file is distributed under the same license as dbFin YAWL Gnome-Shell Extensions.
+# This file is distributed under the same license as dbFin YAWL GNOME Shell Extensions.
 #
 # Notes:
 #   Also adds messages to src/changelog.txt for current version
@@ -41,7 +41,7 @@ cd "./$1/"
 echo 'Changing version'
 
 # getting older version
-vd=$( cat include.mk | grep '^\s*extensionversion\s*=\s*' )
+vd=$( cat include.mk | grep '^ *extensionversion *= *' )
 vd=${vd#*extensionversion = }
 
 read -p "Older version: [$vd] " v
@@ -76,7 +76,7 @@ sed -i "s|\(^\s*AC_INIT\s*(\s*\[\s*gnome-shell-extension-yawl\s*\]\s*,\s*\)$v\([
 
 # working with src/changelog.txt (if it exists)
 if [ -f src/changelog.txt ]; then
-  m=$( cat src/changelog.txt | grep "^v$vn\s\+.*" )
+  m=$( cat src/changelog.txt | grep "^v$vn \+.*" )
   if [ -z "$m" ]; then
     read -p 'src/changelog.txt does not contain messages for current version, would you like to add some? ' yn
     if [[ "$yn" =~ ^[yY]$ ]]; then

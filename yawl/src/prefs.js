@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -170,7 +170,7 @@ function buildPrefsWidget() {
                 builder.addCheckBox(_("Move central panel"), 'move-center');
                 builder.addCheckBox(_("Hide Activities button"), 'hide-activities');
                 builder.shift();
-				// Gnome-Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
+				// GNOME Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
 				if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
                     builder.addCheckBox(_("Preserve Hot Corner"), 'preserve-hot-corner', 'hide-activities');
 				}
@@ -187,12 +187,12 @@ function buildPrefsWidget() {
                 builder.addScale(_("Icon size"), 'icons-size', 16, 96, 8);
                 builder.addCheckBox(_("Faded icons"), 'icons-faded');
 				builder.addScale(_("Default icon opacity") + ' <span color="red">*</span>', 'icons-opacity', 50, 100, 1, '@advanced');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ '@advanced', '@!icons-show-all' ], true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ '@advanced', 'icons-show-all', '@!icons-show-all' ], true);
 				builder.addScale(_("Icon opacity if app is not on current workspace") + ' <span color="red">*</span>', 'icons-opacity-other', 10, 100, 1, [ '@advanced', 'icons-show-all' ]);
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Add-ons") + ' > ' + _("Icons") + ' > ' + _("Favorite apps") + '</span>', [ '@advanced', '@!icons-favorites' ], true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Add-ons") + ' > ' + _("Icons") + ' > ' + _("Favorite apps") + '</span>', [ '@advanced', 'icons-favorites', '@!icons-favorites' ], true);
 				builder.addScale(_("Icon opacity if app is not running") + ' <span color="red">*</span>', 'icons-opacity-inactive', 10, 100, 1, [ '@advanced', 'icons-favorites' ]);
                 builder.addSeparator();
-                builder.addScale(_("Clip icons: bottom (px)"), 'icons-clip-bottom', 0, 7, 1);
+                builder.addScaleScale(_("Clip icons") + ': ' + _("top") + ' &amp; ' + _("bottom") + ' (' + _("px") + ')', 'icons-clip-top', 'icons-clip-bottom', 0, 7, 1, 0, 7, 1);
                 builder.addSeparator();
                 builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
                 builder.addScale(_("Distance between icons") + '\n(' + _("% of icon size") + ')', 'icons-distance', 0, 100, 1);
@@ -210,6 +210,9 @@ function buildPrefsWidget() {
 	                builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')' + ' <span color="red">*</span>', 'icons-hover-animation-time', 0, 200, 1, [ '@advanced', 'icons-hover-animation' ]);
                     builder.addComboBoxText(_("Mouse over animation effect") + ' <span color="red">*</span>', 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, [ '@advanced', 'icons-hover-animation' ]);
 				builder.unshift();
+
+            builder.addPage(_("Overview"), 'overview.png');
+                builder.addCheckBox(_("Show icons in Overview"), 'icons-overview-show');
 
             builder.closeNotebook();
 
@@ -279,8 +282,11 @@ function buildPrefsWidget() {
 						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0);
 						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
 						builder.addSeparator();
-	                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option ") + _("Add-ons") + ' > ' + _("Panel") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
+	                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option") + ' ' + _("Add-ons") + ' > ' + _("Panel") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
 						builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0, '!mouse-scroll-workspace');
+                        builder.shift();
+                            builder.addCheckBox(_("Do not launch apps with scroll"), 'mouse-app-scroll-no-launch', '!mouse-scroll-workspace');
+                        builder.unshift();
 
 					builder.addPage(_("Right button"), 'mouse-right.png');
 						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-right', dbFinConsts.arrayAppClickFunctions, 0);
@@ -400,14 +406,14 @@ function buildPrefsWidget() {
 
 		builder.addPage(_("Add-ons"));
             builder.addNotebook(_("Panel"), 'panel.png');
-                if (dbFinConsts.arrayShellVersion[0] > 3 || dbFinConsts.arrayShellVersion[1] > 6) {
-                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable option") + ' ' + _("Behavior") + ' > ' + _("Mouse") + ' > ' + _("Fine-tuning") + ' <span color="red">*</span>' + ' > ' + _("Mouse events") + ' > ' +_("Use mouse drag-and-drop") + '</span>', '@!mouse-drag-and-drop', true);
-                    builder.addCheckBox('<b>' + _("Rearrange icons on the panel using mouse") + '</b>', 'icons-drag-and-drop', 'mouse-drag-and-drop');
-                    builder.addSeparator();
-                }
+                builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable option") + ' ' + _("Behavior") + ' > ' + _("Mouse") + ' > ' + _("Fine-tuning") + ' <span color="red">*</span>' + ' > ' + _("Mouse events") + ' > ' +_("Use mouse drag-and-drop") + '</span>', [ 'mouse-drag-and-drop', '@!mouse-drag-and-drop' ], true);
+                builder.addCheckBox('<b>' + _("Rearrange icons on the panel using mouse") + '</b>', 'icons-drag-and-drop', 'mouse-drag-and-drop');
+                builder.addSeparator();
 				builder.addCheckBox('<b>' + _("Scroll to change workspace") + '</b>: ' + _("Scroll over YAWL panel to change workspace"), 'mouse-scroll-workspace');
                 builder.shift();
-                    builder.addCheckBox('<b>' + _("Scroll to find other windows") + '</b>: ' + _("find app's windows on other workspaces by scrolling over its icon when its thumbnails are shown"), 'mouse-scroll-workspace-search', 'mouse-scroll-workspace');
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ 'icons-show-all', '@!icons-show-all' ], true);
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
+                    builder.addCheckBox('<b>' + _("Scroll to find other windows") + '</b>: ' + _("find app's windows on other workspaces by scrolling over its icon when its thumbnails are shown"), 'mouse-scroll-workspace-search', [ 'mouse-scroll-workspace', 'icons-show-all', 'windows-show' ]);
                 builder.unshift();
 
             builder.addPage(_("Icons"), 'icon.png');
@@ -466,7 +472,7 @@ function buildPrefsWidget() {
 								 + '</span>', null, true, 3);
 			builder.unshift();
 			builder.addLabel('YAWL (<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist)'
-							 + ' ' + _("tries to seamlessly integrate into the Gnome-Shell panel."), null, true, 3);
+							 + ' ' + _("tries to seamlessly integrate into the GNOME Shell panel."), null, true, 3);
 			builder.shift();
 				builder.addLabel('<span size="small">' +
 								 _("It is embedded into the panel right where there is space for it not claimed by anything else, and uses panel theme by default.")
@@ -486,7 +492,7 @@ function buildPrefsWidget() {
 								 + '</span>', null, true, 3);
 				builder.addLabel('<span size="small">' +
 								 _("The development of this extension would not be possible without this wonderful FOSS:")
-								 + ' ' + '<b>Anjuta</b>, <b>Inkscape</b>, <b>Gimp</b>, <b>OmegaT</b>, <b>Ubuntu</b>, <b>Fedora</b> ' + _("and, of course,") + ' <b>Gnome-Shell</b>!'
+								 + ' ' + '<b>Anjuta</b>, <b>Inkscape</b>, <b>Gimp</b>, <b>OmegaT</b>, <b>Ubuntu</b>, <b>Fedora</b> ' + _("and, of course,") + ' <b>GNOME Shell</b>!'
 								 + '</span>', null, true, 3);
 			builder.unshift();
 

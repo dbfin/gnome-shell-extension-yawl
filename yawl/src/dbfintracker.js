@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -25,7 +25,6 @@
  */
 
 const Lang = imports.lang;
-const Mainloop = imports.mainloop;
 const Signals = imports.signals;
 
 const GLib = imports.gi.GLib;
@@ -41,6 +40,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const dbFinArrayHash = Me.imports.dbfinarrayhash;
 const dbFinPreview = Me.imports.dbfinpreview;
 const dbFinSignals = Me.imports.dbfinsignals;
+const dbFinTimeout = Me.imports.dbfintimeout;
 const dbFinTrackerApp = Me.imports.dbfintrackerapp;
 const dbFinTrackerWindow = Me.imports.dbfintrackerwindow;
 
@@ -57,14 +57,13 @@ const dbFinTracker = new Lang.Class({
     _init: function() {
         _D('>' + this.__name__ + '._init()');
 		this._signals = new dbFinSignals.dbFinSignals();
+        this._timeout = new dbFinTimeout.dbFinTimeout();
         this._tracker = Shell.WindowTracker.get_default();
         this._appSystem = Shell.AppSystem.get_default();
 		this.apps = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, trackerApp ] ]
 		this.windows = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaWindow, trackerWindow ] ]
 		this.state = 0; // when refreshing we increase the state to indicate apps and windows that are no longer there
         this.stateInfo = '';
-		this._refreshIdle = null;
-        this._refreshTimeout = null;
 		this._refreshStateInfo = '';
 
         this._attentions = new dbFinArrayHash.dbFinArrayHash(); // [ [ metaApp, { signals:, metaWindows: [ metaWindow's ] } ] ]
@@ -109,8 +108,9 @@ const dbFinTracker = new Lang.Class({
 			this._signals.destroy();
 			this._signals = null;
 		}
-        if (this._refreshIdle || this._refreshTimeout) {
-            this._cancelRefreshTimeout();
+        if (this._timeout) {
+            this._timeout.destroy();
+            this._timeout = null;
         }
         if (this.preview) {
             this.preview.destroy();
@@ -180,7 +180,6 @@ const dbFinTracker = new Lang.Class({
 
 	_refresh: function(metaWorkspace/* = global.screen.get_active_workspace()*/) {
         _D('@' + this.__name__ + '._refresh()');
-        this._cancelRefreshTimeout();
 		this.stateInfo = this._refreshStateInfo;
 		this._refreshStateInfo = '';
 		if (!this.apps || !this.windows) {
@@ -266,15 +265,6 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	},
 
-    _cancelRefreshTimeout: function() {
-        _D('@' + this.__name__ + '._cancelRefreshTimeout()');
-        Mainloop.source_remove(this._refreshTimeout);
-        this._refreshTimeout = null;
-		Mainloop.source_remove(this._refreshIdle);
-		this._refreshIdle = null;
-        _D('<');
-    },
-
 	_clean: function() { // returns [ appsOut, windowsOut ]
         _D('>' + this.__name__ + '._clean()');
 		if (!this.apps || !this.windows) {
@@ -355,30 +345,17 @@ const dbFinTracker = new Lang.Class({
         _D('<');
 	},
 
-	_refreshOnIdle: function() {
-		_D('>' + this.__name__ + '._refreshOnIdle()');
-		this._refresh();
-		_D('<');
-	},
-
-	_refreshOnTimeout: function() {
-		_D('>' + this.__name__ + '._refreshOnTimeout()');
-		this._refresh();
-		_D('<');
-	},
-
 	update: function(stateInfo/* = 'update() call with no additional info.'*/) {
         _D('>' + this.__name__ + '.update()');
         if (!stateInfo) stateInfo = 'update() call with no additional info.';
-		if (!this._refreshIdle && !this._refreshTimeout) {
+		if (!this._refreshStateInfo) {
 			this._refreshStateInfo = '' + stateInfo;
 		}
 		else {
-            this._cancelRefreshTimeout();
 			this._refreshStateInfo += '\n' + stateInfo;
 		}
-		this._refreshIdle = Mainloop.idle_add(Lang.bind(this, this._refreshOnIdle));
-        this._refreshTimeout = Mainloop.timeout_add(777, Lang.bind(this, this._refreshOnTimeout));
+        if (this._timeout) this._timeout.add('refresh', 777, this._refresh, this, true, true);
+        else this._refresh();
         _D('<');
 	},
 
@@ -687,8 +664,32 @@ const dbFinTracker = new Lang.Class({
     activateWindow: function (metaWindow) {
         _D('>' + this.__name__ + '.activateWindow()');
         if (metaWindow) {
-            Main.activateWindow(metaWindow, global.get_current_time());
-            metaWindow.foreach_transient(Lang.bind(this, function (metaWindow) { this.activateWindow(metaWindow); }));
+            this._timeout.remove('activate-window');
+            Main.activateWindow(metaWindow);
+            let (transientWindows = []) {
+                metaWindow.foreach_transient(function (metaWindow) { transientWindows.push(metaWindow); });
+                this.activateWindows(transientWindows);
+            }
+        }
+        _D('<');
+    },
+
+    activateWindows: function (metaWindows) {
+        _D('>' + this.__name__ + '.activateWindow()');
+        if (metaWindows && metaWindows.length) {
+            let (metaWindow = null) {
+                for (let i = metaWindows.length; --i >= 0;) {
+                    if (metaWindows[i]) {
+                        metaWindow = metaWindows[i];
+                        this.activateWindow(metaWindow);
+                    }
+                }
+                // make sure the top window is focused
+                if (metaWindow && this._timeout) {
+                    this._timeout.add('activate-window', 0, (function (metaWindow, activateWindow) {
+                            return function () { activateWindow(metaWindow); }; })(metaWindow, Lang.bind(this, this.activateWindow)), null, false, true);
+                }
+            }
         }
         _D('<');
     },

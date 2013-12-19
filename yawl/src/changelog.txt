@@ -19,7 +19,7 @@ v3  	2013-05-20
 v4  	2013-05-21
     	- Fix: position of thumbnails when the top panel is on the right monitor
 v5	2013-05-24
-    	- Gnome-Shell 3.8 compatibility
+    	- GNOME Shell 3.8 compatibility
 v6	2013-05-29
     	- Dimmed background while previewing windows
     	- Smoother preview animation and hiding in Overview
@@ -62,3 +62,18 @@ v13	2013-11-06
 		- Adjustable smaller icons size
 		- Option to close thumbnails once a thumbnail is clicked to show its window
 		- Fix reordering of icons when backed-window apps are present
+v14	2013-11-19
+		- GNOME Shell 3.10 compatibility
+		- Updated German + Ukrainian translation
+v15	2013-12-09
+		- Improved user experience
+		- Fixed icons dragging in GS 3.6
+		- Fixed window focusing issues on GS 3.10
+		- Fixed issue with trembling thumbnails in GS 3.10
+		- Fixed dragging maximized windows from the top panel
+		- Fixed touchpad/smooth scrolling
+		- Use whole panel buttons for clicking/dragging instead of just icon
+		- Provide clip on top option back
+		- Fixed panel being accessible in Overview when hidden
+		- Added option to show icons in Overview
+		- Changed window rotation to next/previous window for better user experience

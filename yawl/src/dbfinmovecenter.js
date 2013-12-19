@@ -1,10 +1,10 @@
 /* -*- mode: js2; js2-basic-offset: 4; c-basic-offset: 4; tab-width: 4; indent-tabs-mode: nil -*-  */
 /*
- * YAWL Gnome-Shell Extensions
+ * YAWL GNOME Shell Extensions
  *
  * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
- * YAWL, a group of Gnome-Shell extensions, is provided as
+ * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License (GPL)
  * as published by the Free Software Foundation, version 3
@@ -164,18 +164,36 @@ const dbFinMoveCenter = new Lang.Class({
 
     _updateActivities: function() {
         _D('>' + this.__name__ + '._updateActivities()');
-		// Gnome-Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
-		if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
-			if (global.yawl._hideActivities && global.yawl._preserveHotCorner) {
-				if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
-			}
-			else if (this._hotcorner) {
-				this._hotcorner.destroy();
-				this._hotcorner = null;
-			}
-		}
-		if (global.yawl._hideActivities) this._panelbuttonstoggle.hide('activities', 'left');
-		else this._panelbuttonstoggle.restore('activities');
+        if (!global.yawl) {
+            _D('global.yawl == null');
+            _D('<');
+            return;
+        }
+        let (hideActivities = global.yawl._hideActivities) {
+            // GNOME Shell 3.8+: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
+            if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
+                if (hideActivities && global.yawl._preserveHotCorner) {
+                    if (!this._hotcorner) this._hotcorner = new dbFinHotCorner();
+                }
+                else if (this._hotcorner) {
+                    this._hotcorner.destroy();
+                    this._hotcorner = null;
+                }
+            }
+            if (hideActivities) {
+                this._panelbuttonstoggle.hide('activities', 'left');
+            }
+            else {
+                this._panelbuttonstoggle.restore('activities');
+                // make sure the Activities button is the first one
+                let (activities = Main.panel && Main.panel.statusArea && Main.panel.statusArea['activities']) {
+                    if (activities && activities.container
+                        && Main.panel._leftBox === activities.container.get_parent()) {
+                        Main.panel._leftBox.set_child_at_index(activities.container, 0);
+                    }
+                }
+            }
+        }
         _D('<');
     },
 
@@ -189,7 +207,7 @@ const dbFinMoveCenter = new Lang.Class({
 	// GNOMENEXT: modified from ui/panel.js: class Panel
     _allocate: function (actor, box, flags) {
         _D('@' + this.__name__ + '._allocate()');
-        if (!Main.panel) {
+        if (!Main.panel || !global.yawl) {
             _D('<');
             return;
         }
@@ -218,7 +236,7 @@ const dbFinMoveCenter = new Lang.Class({
 				wly = Math.max(wly, wl + wy);
 				[ xl, xr ] = drl ? [ w, w ] : [ 0, 0 ];
 				if (wl) {
-					if (drl) xl = w - wl; else xr = wl;
+					if (drl) xl -= wl; else xr = wl;
 					dbFinUtils.setBox(boxChild, xl, 0, xr, h);
 					Main.panel._leftBox.allocate(boxChild, flags);
 				}

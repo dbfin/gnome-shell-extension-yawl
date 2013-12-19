@@ -12,6 +12,7 @@ src/dbfinmenubuilder.js
 src/dbfinmovecenter.js
 src/dbfinpanelbuttontoggle.js
 src/dbfinpanelenhancements.js
+../lib/dbfinpopupmenu.js
 src/dbfinpreview.js
 ../lib/dbfinsettings.js
 ../lib/dbfinsignals.js
@@ -19,6 +20,7 @@ src/dbfinpreview.js
 ../lib/dbfinslicericon.js
 ../lib/dbfinslicerlabel.js
 ../lib/dbfinstyle.js
+../lib/dbfintimeout.js
 src/dbfintracker.js
 src/dbfintrackerapp.js
 src/dbfintrackerwindow.js
