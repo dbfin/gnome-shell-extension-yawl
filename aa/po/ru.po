@@ -4,7 +4,7 @@
 # Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
 #
 msgid ""
-msgstr "Project-Id-Version: Alternative Activities 1\n"
+msgstr "Project-Id-Version: Alternative Activities 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-19 18:14-0600\n"
 "PO-Revision-Date: 2013-12-19 18:14-0600\n"

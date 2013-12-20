@@ -1,11 +1,11 @@
 EXTENSION_ID = gnome-shell-extension-aa
 EXTENSION_ID_SHORT = aa
 
-extensionversion = 1
+extensionversion = 2
 
 extensionbase = @dbfin.com
 uuid = $(EXTENSION_ID_SHORT)$(extensionbase)
-extensionurl = https://github.com/dbfin/gnome-shell-extension-yawl
+extensionurl = https://github.com/dbfin/gnome-shell-extension-yawl/tree/aa
 
 topextensiondir = $(datadir)/gnome-shell/extensions
 extensiondir = $(topextensiondir)/$(uuid)

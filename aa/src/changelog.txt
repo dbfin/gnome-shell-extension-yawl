@@ -9,3 +9,5 @@ v1	2013-12-19
 		- Sort extensions by name or frequency of access.
 		- Additional menu options to access Advanced settings.
 		- Several built-in and custom themes.
+v2	2013-12-19
+		- Updated Russian translation.
