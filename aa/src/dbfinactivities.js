@@ -89,29 +89,49 @@ const dbFinPopupSubMenuMenuItemAutoClose = new Lang.Class({
             }
         }
         if (this._openWas) {
-            this.actor.set_height(-1);
-            let (ahn = this.actor.get_preferred_height(-1)[1]) {
+            if (!animate) {
                 this._openWas(animate);
-                dbFinAnimation.animateToState(this.actor, { _arrow_rotation: 90, height: ahn }, function () {
-                    if (this.actor) {
-                        this.actor.set_height(-1);
-                    }
-                }, this, 100, 'linear', true);
-                dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 90 }, null, null, 100, 'linear');
+            }
+            else {
+                this.actor.set_height(-1);
+                let (ahn = this.actor.get_preferred_height(-1)[1]) {
+                    this._openWas(animate);
+                    dbFinAnimation.animateToState(this.actor, { _arrow_rotation: 90, height: ahn }, function () {
+                        if (this.actor) {
+                            this.actor.set_height(-1);
+                            // emit 'open-state-changed' signal on GS 3.6 & 3.8
+                            if (dbFinConsts.arrayShellVersion[0] == 3
+                                && dbFinConsts.arrayShellVersion[1] <= 8) {
+                                this.emit('open-state-changed', true);
+                            }
+                        }
+                    }, this, 100, 'linear', true);
+                    dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 90 }, null, null, 100, 'linear');
+                }
             }
         }
     },
     _submenuClose: function (animate) {
         if (this._removeTopSubmenuOpenedLast) this._removeTopSubmenuOpenedLast();
         if (this._closeWas) {
-            this._closeWas(animate);
-            dbFinAnimation.animateToState(this.actor, { _arrow_rotation: 0, height: 0 }, function () {
-                if (this.actor) {
-                    this.actor.hide();
-                    this.actor.set_height(-1);
-                }
-            }, this, 100, 'linear', true);
-            dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 0 }, null, null, 100, 'linear');
+            if (!animate) {
+                this._closeWas(animate);
+            }
+            else {
+                this._closeWas(animate);
+                dbFinAnimation.animateToState(this.actor, { _arrow_rotation: 0, height: 0 }, function () {
+                    if (this.actor) {
+                        this.actor.hide();
+                        this.actor.set_height(-1);
+                        // emit 'open-state-changed' signal on GS 3.6 & 3.8
+                        if (dbFinConsts.arrayShellVersion[0] == 3
+                            && dbFinConsts.arrayShellVersion[1] <= 8) {
+                            this.emit('open-state-changed', false);
+                        }
+                    }
+                }, this, 100, 'linear', true);
+                dbFinAnimation.animateToState(this._arrow, { rotation_angle_z: 0 }, null, null, 100, 'linear');
+            }
         }
     },
     _removeTopSubmenuOpenedLast: function () {
