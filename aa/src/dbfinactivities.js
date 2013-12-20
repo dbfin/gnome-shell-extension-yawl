@@ -81,8 +81,10 @@ const dbFinPopupSubMenuMenuItemAutoClose = new Lang.Class({
     // bounded to this.menu
     _submenuOpen: function (animate) {
         let (top = this._getTopMenu()) {
-            if (top && top._yawlAASubmenuOpenedLast && top._yawlAASubmenuOpenedLast !== this) {
-                top._yawlAASubmenuOpenedLast.close(animate);
+            if (top) {
+                if (top._yawlAASubmenuOpenedLast && top._yawlAASubmenuOpenedLast !== this) {
+                    top._yawlAASubmenuOpenedLast.close(animate);
+                }
                 top._yawlAASubmenuOpenedLast = this;
             }
         }
