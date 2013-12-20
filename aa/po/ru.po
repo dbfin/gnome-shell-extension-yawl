@@ -6,8 +6,8 @@
 msgid ""
 msgstr "Project-Id-Version: Alternative Activities 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-09 22:35-0600\n"
-"PO-Revision-Date: 2013-12-09 22:35-0600\n"
+"POT-Creation-Date: 2013-12-19 18:14-0600\n"
+"PO-Revision-Date: 2013-12-19 18:14-0600\n"
 "Last-Translator: Vadim Cherepanov @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -15,11 +15,82 @@ msgstr "Project-Id-Version: Alternative Activities 1\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit"
 
-msgid "German translation"
-msgstr "перевод на немецкий"
+msgid "Cannot show Activities button, something actively hides it."
+msgstr "Не могу восстановить кнопку Обзор, что-то активно прячет ее."
+
+msgid ""
+"This might be another extension forcing the native GNOME Shell's Activities "
+"button to be hidden."
+msgstr "Возможно, это другое расширение, которое принудительно прячет встроенную кнопку Обзор GNOME Shell."
+
+msgid "Alternative Activities uses the original Activities button."
+msgstr "Alternative Activities использует оригинальную кнопку Обзор."
+
+msgid "Please disable anything that might mess with it."
+msgstr "Пожалуйста, отключите все, что может препятствовать ее использованию."
+
+msgid "Temporary disabling..."
+msgstr "Временно отключаюсь..."
+
+msgid "Restart GNOME Shell to try again."
+msgstr "Перезапустите GNOME Shell, чтобы попробовать снова."
+
+msgid "Disabled extensions"
+msgstr "Отключенные расширения"
+
+msgid "Advanced settings"
+msgstr "Дополнительные настройки"
+
+msgid "Extension preferences"
+msgstr "Настройки расширения"
+
+msgid "Soft restart"
+msgstr "Мягкая перезагрузка"
+
+msgid "Hard restart"
+msgstr "Жесткая перезагрузка"
+
+msgid "Hide extension"
+msgstr "Скрыть расширение"
+
+msgid "Disable extension"
+msgstr "Отключить расширение"
+
+msgid "Extensions"
+msgstr "Расширения"
+
+msgid "Other extensions"
+msgstr "Другие расширения"
 
 msgid "Ukrainian translation"
 msgstr "перевод на украинский"
+
+msgid "quality testing"
+msgstr "тестирование качества"
+
+msgid "German translation"
+msgstr "перевод на немецкий"
+
+msgid "Default"
+msgstr "По умолчанию"
+
+msgid "Frame"
+msgstr "Рамка"
+
+msgid "Transparent"
+msgstr "Прозрачная"
+
+msgid "Custom css file"
+msgstr "Пользовательский css файл"
+
+msgid "No sort"
+msgstr "Без сортировки"
+
+msgid "Sort by frequency of access"
+msgstr "Сортировка по частоте доступа"
+
+msgid "Sort by name"
+msgstr "Сортировка по имени"
 
 msgid "Settings were reset successfully!"
 msgstr "Настройки успешно возвращены в исходное состояние!"
@@ -120,9 +191,6 @@ msgstr "Для резервного копирования и синхрониз
 msgid "To reset all settings please enable"
 msgstr "Чтобы вернуть все настройки в исходное состояние, пожалуйста, включите"
 
-msgid "Advanced settings"
-msgstr "Дополнительные параметры"
-
 msgid "Reset settings"
 msgstr "Восстановить все настройки"
 
@@ -141,8 +209,36 @@ msgstr "Импорт"
 msgid "This will overwrite the file with settings"
 msgstr "Создать/обновить файл с настройками"
 
-msgid "Fine-tuning"
-msgstr "Настройка"
+msgid "General"
+msgstr "Общие"
+
+msgid "Force Activities button look like other panel buttons"
+msgstr "Сделать кнопку Обзор, выглядящей также, как остальные кнопки панели"
+
+msgid "Choose Activities button background"
+msgstr "Выберите фон кнопки Обзор"
+
+msgid ""
+"Please keep your custom css files outside of the installation directory."
+msgstr "Пожалуйста, храните ваши пользовательские css файлы вне директории с установленным расширением."
+
+msgid "Choose css file"
+msgstr "Выберите css файл"
+
+msgid "Show Extension Manager in the menu"
+msgstr "Показывать Менеджер Расширений в меню"
+
+msgid "Choose extension sort method"
+msgstr "Выберите тип сортировки расширений"
+
+msgid "Show options for favorite extensions only"
+msgstr "Показывать опции только для избранных расширений"
+
+msgid "Show additional commands in the menu"
+msgstr "Показывать дополнительные команды в меню"
+
+msgid "Advanced"
+msgstr "Дополнительные"
 
 msgid ""
 "Scroll timeout: the time after one scroll event during which other scroll "
