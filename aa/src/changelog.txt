@@ -11,3 +11,6 @@ v1	2013-12-19
 		- Several built-in and custom themes.
 v2	2013-12-19
 		- Updated Russian translation.
+v3	2013-12-20
+		- Autoclose open submenus when another one is open on GS 3.6 and 3.8 (similar to GS 3.10).
+		- Emit menu state changed signals on GS 3.6 and 3.8.

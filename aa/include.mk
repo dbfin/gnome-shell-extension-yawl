@@ -1,7 +1,7 @@
 EXTENSION_ID = gnome-shell-extension-aa
 EXTENSION_ID_SHORT = aa
 
-extensionversion = 2
+extensionversion = 3
 
 extensionbase = @dbfin.com
 uuid = $(EXTENSION_ID_SHORT)$(extensionbase)
