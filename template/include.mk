@@ -5,7 +5,7 @@ extensionversion = 1
 
 extensionbase = @dbfin.com
 uuid = $(EXTENSION_ID_SHORT)$(extensionbase)
-extensionurl = https://github.com/dbfin/gnome-shell-extension-yawl
+extensionurl = https://github.com/dbfin/gnome-shell-extension-yawl/tree/#%#name
 
 topextensiondir = $(datadir)/gnome-shell/extensions
 extensiondir = $(topextensiondir)/$(uuid)
