@@ -89,6 +89,8 @@ const dbFinYAWL = new Lang.Class({
                                                                     hideinoverview: true });
         if (global.yawl.panelApps) {
             global.yawl.panelApps.handleDragOver = Lang.bind(this, this._handleDragOverApps);
+            this._signals.connectNoId({ emitter: global.yawl.panelApps.container, signal: 'notify::allocation',
+                                        callback: this._updatePanelAppsGravity, scope: this });
 			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
 										callback: this._hideInOverviewPanelApps, scope: this });
 			this._signals.connectNoId({	emitter: Main.overview, signal: 'hiding',
@@ -119,9 +121,11 @@ const dbFinYAWL = new Lang.Class({
 										callback: this._panelWindowsStyleChanged, scope: this });
         }
 
+        this._updatedYawlPanelPosition =
+                this._updatedYawlPanelWidth =
+                this._updatedIconsAlign = this._updatePanelAppsGravity;
 		this._updatedIconsAnimationTime = function () { if (global.yawl.panelApps) global.yawl.panelApps.animationTime = global.yawl._iconsAnimationTime; };
 		this._updatedIconsAnimationEffect = function () { if (global.yawl.panelApps) global.yawl.panelApps.animationEffect = global.yawl._iconsAnimationEffect; };
-        this._updatedIconsAlign = function () { if (global.yawl.panelApps) global.yawl.panelApps.animateToState({ gravity: global.yawl._iconsAlign / 100. }); };
 		this._updatedIconsSize = function () { if (global.yawl.panelWindows) global.yawl.panelWindows.gravityIndicatorWidth = global.yawl._iconsSize; };
 		this._updatedWindowsIndicatorArrow = this._panelWindowsStyleChanged;
         this._updatedWindowsTheming =
@@ -360,6 +364,30 @@ const dbFinYAWL = new Lang.Class({
                 } // if (focusWindow && focusWindow.maximized_vertically)
             } // let (focusWindow, [ x, y, m ])
         } // if (state.scroll) else if (state.left)
+        _D('<');
+    },
+
+    _updatePanelAppsGravity: function () {
+        _D('@' + this.__name__ + '._updatePanelAppsGravity()');
+        if (!global.yawl || !global.yawl.panelApps) {
+            _D('<');
+            return;
+        }
+        let (gravity = (global.yawl._iconsAlign || 0) / 100.) {
+            // adjust gravity so that icons are aligned according to panel position/width/alignment settings
+            let (mpw = Main.panel && Main.panel.actor && Main.panel.actor.get_stage() && Main.panel.actor.get_width(),
+                 allocation = Main.panel && Main.panel._yawlPanel && Main.panel._yawlPanel.get_stage() && Main.panel._yawlPanel.allocation) {
+                if (mpw && allocation && allocation.x2 - allocation.x1) {
+                    let (pp = global.yawl._yawlPanelPosition || 0,
+                         pw = global.yawl._yawlPanelWidth || 0,
+                         x = allocation.x1,
+                         w = allocation.x2 - allocation.x1) {
+                        gravity = dbFinUtils.inRange(((pp + pw * gravity) * mpw / 100. - x) / w, 0, 100, 0);
+                    }
+                } // if (mpw && w)
+            } // let (mpw, w)
+            global.yawl.panelApps.animateToState({ gravity: gravity });
+        } // let (gravity)
         _D('<');
     },
 
