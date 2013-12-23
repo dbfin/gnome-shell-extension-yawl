@@ -41,6 +41,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const dbFinAnimation = Me.imports.dbfinanimation;
+const dbFinAnimationEquations = Me.imports.dbfinanimationequations;
 const dbFinAppButton = Me.imports.dbfinappbutton;
 const dbFinConsts = Me.imports.dbfinconsts;
 const dbFinClicked = Me.imports.dbfinclicked;
@@ -86,9 +87,23 @@ const dbFinYAWL = new Lang.Class({
         global.yawl.panelApps = new dbFinYAWLPanel.dbFinYAWLPanel({ panelname: 'panelYAWL',
                                                                     parent: Main.panel || null,
                                                                     parentproperty: '_yawlPanel',
-                                                                    hideinoverview: true });
+                                                                    hideinoverview: true,
+                                                                    gravityindicator: true,
+                                                                    gravityindicatorarrow: true,
+                                                                    gravityindicatorwidth: 18,
+                                                                    gravityindicatorheight: 6,
+                                                                    title: '' });
         if (global.yawl.panelApps) {
             global.yawl.panelApps.handleDragOver = Lang.bind(this, this._handleDragOverApps);
+            if (global.yawl.panelApps._gravityIndicator) {
+                global.yawl.panelApps._gravityIndicator.opacity = 0;
+                global.yawl.panelApps.gravityIndicatorColor = new Clutter.Color({ red: 255, green: 255, blue: 255, alpha: 255 });
+            }
+            if (global.yawl.panelApps.labelTitle) {
+                global.yawl.panelApps.labelTitle.hide();
+                global.yawl.panelApps.labelTitle.opacity = 0;
+                global.yawl.panelApps.labelTitle.height = 0;
+            }
             this._signals.connectNoId({ emitter: global.yawl.panelApps.container, signal: 'notify::allocation',
                                         callback: this._updatePanelAppsGravity, scope: this });
 			this._signals.connectNoId({	emitter: Main.overview, signal: 'showing',
@@ -384,11 +399,75 @@ const dbFinYAWL = new Lang.Class({
                          w = allocation.x2 - allocation.x1) {
                         gravity = dbFinUtils.inRange(((pp + pw * gravity) * mpw / 100. - x) / w, 0, 100, 0);
                     }
-                } // if (mpw && w)
-            } // let (mpw, w)
-            global.yawl.panelApps.animateToState({ gravity: gravity });
+                }
+            }
+            // show visual indicators of the panel position/width/alignment if needed
+            if (this._yawlPanelPositionWas !== global.yawl._yawlPanelPosition
+                || this._yawlPanelWidthWas !== global.yawl._yawlPanelWidth
+                || this._iconsAlignWas !== global.yawl._iconsAlign) {
+                global.yawl.panelApps.animateToState({ gravity: gravity });
+                if (this._iconsAlignWas !== undefined) {
+                    dbFinAnimation.animateToState(this, { yawlPanelIndicators: 100 }, function () {
+                        dbFinAnimation.animateToState(this, { yawlPanelIndicators: 0 }, function () {
+                        }, this, 1500, dbFinAnimationEquations.delay('linear', 2 / 3), true);
+                    }, this, 333, 'linear', true);
+                }
+                this._yawlPanelPositionWas = global.yawl._yawlPanelPosition;
+                this._yawlPanelWidthWas = global.yawl._yawlPanelWidth;
+                this._iconsAlignWas = global.yawl._iconsAlign;
+            }
+            else {
+                // use animation here to destroy any other possible animations
+                global.yawl.panelApps.animateToState({ gravity: gravity }, null, null, 0, 'linear', null);
+            }
         } // let (gravity)
         _D('<');
+    },
+
+    get yawlPanelIndicators() { return this._yawlPanelIndicators || 0; },
+    set yawlPanelIndicators(yawlPanelIndicators) {
+        this._yawlPanelIndicators = dbFinUtils.inRange(parseInt(yawlPanelIndicators), 0, 100, 0);
+        if (global.yawl && global.yawl.panelApps) {
+            let (heightTop = Math.round(this._yawlPanelIndicators / 12),
+                 opacity = this._yawlPanelIndicators * 2) {
+                // container border opacity
+                if (global.yawl.panelApps.container) {
+                    if (opacity) {
+                        if (!this._yawlPanelIndicatorsStyle) {
+                            this._yawlPanelIndicatorsStyle = new dbFinStyle.dbFinStyle(global.yawl.panelApps.container);
+                        }
+                        this._yawlPanelIndicatorsStyle.set({    'border-color': 'rgba(255, 255, 255, ' + (opacity / 255) + ')',
+                                                                'background-gradient-start': 'rgba(0, 0, 0, ' + (opacity / 700) + ')'});
+                        this._yawlPanelIndicatorsStyle.apply();
+                    }
+                    else if (this._yawlPanelIndicatorsStyle) {
+                        if (this._yawlPanelIndicatorsStyle._style) this._yawlPanelIndicatorsStyle._style.removeAll();
+                        this._yawlPanelIndicatorsStyle.apply();
+                        this._yawlPanelIndicatorsStyle.destroy();
+                        this._yawlPanelIndicatorsStyle = null;
+                    }
+                }
+                // label opacity and height
+                if (global.yawl.panelApps.labelTitle) {
+                    if (global.yawl.panelApps.labelTitle.actor) {
+                        global.yawl.panelApps.labelTitle.actor.opacity = opacity;
+                        global.yawl.panelApps.labelTitle.actor.height = heightTop;
+                    }
+                    if (opacity) global.yawl.panelApps.labelTitle.show();
+                    else global.yawl.panelApps.labelTitle.hide();
+                }
+                // actor opacity
+                if (global.yawl.panelApps.actor) {
+                    global.yawl.panelApps.actor.opacity = 255 - (opacity >> 1);
+                }
+                // gravity indicator opacity and size
+                if (global.yawl.panelApps._gravityIndicator) {
+                    global.yawl.panelApps._gravityIndicator.opacity = opacity;
+                    global.yawl.panelApps.gravityIndicatorHeight = (heightTop * 3) >> 2;
+                    global.yawl.panelApps.gravityIndicatorWidth = global.yawl.panelApps.gravityIndicatorHeight * 3;
+                }
+            } // let (heightTop, opacity)
+        } // if (global.yawl && global.yawl.panelApps)
     },
 
 	_mainPanelStyleChanged: function() {

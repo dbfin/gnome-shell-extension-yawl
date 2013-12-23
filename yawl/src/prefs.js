@@ -165,7 +165,7 @@ function buildPrefsWidget() {
             builder.addNotebook(_("Panel"), 'panel.png');
 				builder.addCheckBox(_("Show app icons from all workspaces"), 'icons-show-all');
                 builder.addSeparator();
-                builder.addScaleScale(_("YAWL-panel position and width"), 'yawl-panel-position', 'yawl-panel-width', 0, 50, 1, 1, 100, 1);
+                builder.addScaleScale(_("YAWL-panel position and width") + ' (%)', 'yawl-panel-position', 'yawl-panel-width', 0, 50, 1, 1, 100, 1);
                 builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
                 builder.addSeparator();
                 builder.addCheckBox(_("Move central panel"), 'move-center');
