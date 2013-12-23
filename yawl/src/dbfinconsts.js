@@ -114,6 +114,7 @@ const Settings = [
     [ 'icons-show-all', true, { }, 'panel' ],
     [ 'yawl-panel-position', 21, { min: 0, max: 50 }, 'panel' ],
     [ 'yawl-panel-width', 100, { min: 1, max: 100 }, 'panel' ],
+    [ 'icons-align', 0, { min: 0, max: 100 }, 'panel' ],
     [ 'move-center', true, { }, 'panel' ],
     [ 'hide-activities', false, { }, 'panel' ],
     [ 'preserve-hot-corner', true, { }, 'panel' ],
@@ -131,7 +132,6 @@ const Settings = [
     [ 'icons-opacity-inactive', 42, { min: 10, max: 100 }, 'icons' ],
     [ 'icons-clip-top', 0, { min: 0, max: 7 }, 'icons' ],
     [ 'icons-clip-bottom', 0, { min: 0, max: 7 }, 'icons' ],
-    [ 'icons-align', 0, { min: 0, max: 100 }, 'icons' ],
     [ 'icons-distance', 11, { min: 0, max: 100 }, 'icons' ],
 
     [ 'icons-animation-time', 333, { min: 0, max: 1000 }, 'icons>animation' ],

@@ -31,6 +31,11 @@
       <_summary>YAWL-panel width in percentage.</_summary>
       <_description>The width of the YAWL panel as percentage of the top panel width.</_description>
     </key>
+    <key name="icons-align" type="s">
+      <default>'0'</default>
+      <_summary>Align icons on the panel.</_summary>
+      <_description>Icons center alignment on the panel (%).</_description>
+    </key>
     <key name="move-center" type="b">
       <default>true</default>
       <_summary>Move central panel to the right.</_summary>
@@ -111,11 +116,6 @@
       <default>'0'</default>
       <_summary>Clip icons: bottom (px).</_summary>
       <_description>Clip icons on bottom (in pixels).</_description>
-    </key>
-    <key name="icons-align" type="s">
-      <default>'0'</default>
-      <_summary>Align icons on the panel.</_summary>
-      <_description>Icons center alignment on the panel (%).</_description>
     </key>
     <key name="icons-distance" type="s">
       <default>'11'</default>

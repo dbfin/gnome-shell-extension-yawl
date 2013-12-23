@@ -166,6 +166,7 @@ function buildPrefsWidget() {
 				builder.addCheckBox(_("Show app icons from all workspaces"), 'icons-show-all');
                 builder.addSeparator();
                 builder.addScaleScale(_("YAWL-panel position and width"), 'yawl-panel-position', 'yawl-panel-width', 0, 50, 1, 1, 100, 1);
+                builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
                 builder.addSeparator();
                 builder.addCheckBox(_("Move central panel"), 'move-center');
                 builder.addCheckBox(_("Hide Activities button"), 'hide-activities');
@@ -194,7 +195,6 @@ function buildPrefsWidget() {
                 builder.addSeparator();
                 builder.addScaleScale(_("Clip icons") + ': ' + _("top") + ' &amp; ' + _("bottom") + ' (' + _("px") + ')', 'icons-clip-top', 'icons-clip-bottom', 0, 7, 1, 0, 7, 1);
                 builder.addSeparator();
-                builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
                 builder.addScale(_("Distance between icons") + '\n(' + _("% of icon size") + ')', 'icons-distance', 0, 100, 1);
 
             builder.addPage(_("Animation"), 'animation.png');
