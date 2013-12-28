@@ -91,18 +91,12 @@ const dbFinYAWL = new Lang.Class({
                                                                     gravityindicator: true,
                                                                     gravityindicatorarrow: true,
                                                                     gravityindicatorwidth: 18,
-                                                                    gravityindicatorheight: 6,
-                                                                    title: '' });
+                                                                    gravityindicatorheight: 6 });
         if (global.yawl.panelApps) {
             global.yawl.panelApps.handleDragOver = Lang.bind(this, this._handleDragOverApps);
             if (global.yawl.panelApps._gravityIndicator) {
                 global.yawl.panelApps._gravityIndicator.opacity = 0;
                 global.yawl.panelApps.gravityIndicatorColor = new Clutter.Color({ red: 255, green: 255, blue: 255, alpha: 255 });
-            }
-            if (global.yawl.panelApps.labelTitle) {
-                global.yawl.panelApps.labelTitle.hide();
-                global.yawl.panelApps.labelTitle.opacity = 0;
-                global.yawl.panelApps.labelTitle.height = 0;
             }
             this._signals.connectNoId({ emitter: global.yawl.panelApps.container, signal: 'notify::allocation',
                                         callback: this._updatePanelAppsGravity, scope: this });
@@ -447,18 +441,9 @@ const dbFinYAWL = new Lang.Class({
                         this._yawlPanelIndicatorsStyle = null;
                     }
                 }
-                // label opacity and height
-                if (global.yawl.panelApps.labelTitle) {
-                    if (global.yawl.panelApps.labelTitle.actor) {
-                        global.yawl.panelApps.labelTitle.actor.opacity = opacity;
-                        global.yawl.panelApps.labelTitle.actor.height = heightTop;
-                    }
-                    if (opacity) global.yawl.panelApps.labelTitle.show();
-                    else global.yawl.panelApps.labelTitle.hide();
-                }
                 // actor opacity
                 if (global.yawl.panelApps.actor) {
-                    global.yawl.panelApps.actor.opacity = 255 - (opacity >> 1);
+                    global.yawl.panelApps.actor.opacity = 255 - ((opacity * 3) >> 2);
                 }
                 // gravity indicator opacity and size
                 if (global.yawl.panelApps._gravityIndicator) {
