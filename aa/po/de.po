@@ -4,25 +4,104 @@
 # Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
 #
 msgid ""
-msgstr "Project-Id-Version: Alternative Activities 1\n"
+msgstr ""
+"Project-Id-Version: Alternative Activities 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-09 22:35-0600\n"
-"PO-Revision-Date: 2013-12-09 22:35-0600\n"
+"POT-Creation-Date: 2014-01-18 17:11+0100\n"
+"PO-Revision-Date: 2014-01-18 17:30+0100\n"
 "Last-Translator: Jonatan Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language-Team: dbFin\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+msgid "Cannot show Activities button, something actively hides it."
+msgstr ""
+"Kann Aktivitätenschaltfläche nicht anzeigen, sie wird aktiv ausgeblendet."
+
+msgid ""
+"This might be another extension forcing the native GNOME Shell's Activities "
+"button to be hidden."
+msgstr ""
+"Das könnte eine andere Erweiterung sein, welche die Aktivitätenschaltfläche "
+"ausblendet."
+
+msgid "Alternative Activities uses the original Activities button."
+msgstr "Alternative Aktivitäten nutzt die originale Aktivitätenschaltfläche."
+
+msgid "Please disable anything that might mess with it."
+msgstr "Bitte deaktivieren Sie alles, was stören könnte."
+
+msgid "Temporary disabling..."
+msgstr "Temporär deaktiviert..."
+
+msgid "Restart GNOME Shell to try again."
+msgstr "Starten Sie die GNOME Shell neu, um es nochmal zu versuchen."
+
+msgid "Disabled extensions"
+msgstr "Deaktivierte Erweiterungen:"
+
+msgid "Advanced settings"
+msgstr "Erweiterte Einstellungen"
+
+msgid "Extension preferences"
+msgstr "Erweiterungseinstellungen"
+
+msgid "Soft restart"
+msgstr "Weicher Neustart"
+
+msgid "Hard restart"
+msgstr "Harter Neustart"
+
+msgid "Hide extension"
+msgstr "Erweiterung ausblenden"
+
+msgid "Disable extension"
+msgstr "Erweiterung deaktivieren"
+
+msgid "Extensions"
+msgstr "Erweiterungen"
+
+msgid "Other extensions"
+msgstr "Andere Erweiterungen"
+
+msgid "Ukrainian translation"
+msgstr "Ukrainische Übersetzung"
+
+msgid "quality testing"
+msgstr "Qualitätstest"
 
 msgid "German translation"
 msgstr "Deutsche Übersetzung"
+
+msgid "Default"
+msgstr "Vorgabe"
+
+msgid "Frame"
+msgstr "Rahmen"
+
+msgid "Transparent"
+msgstr "Transparent"
+
+msgid "Custom css file"
+msgstr "CSS-Datei wählen"
+
+msgid "No sort"
+msgstr "Keine Sortierung"
+
+msgid "Sort by frequency of access"
+msgstr "Nach Nutzungshäufigkeit sortieren"
+
+msgid "Sort by name"
+msgstr "Nach Name sortieren"
 
 msgid "Settings were reset successfully!"
 msgstr "Einstellungen wurden zurückgesetzt!"
 
 msgid "Please specify settings directory and file name."
-msgstr "Bitte einen Verzeichnis- und Dateinamen für die Einstellungen eingeben."
+msgstr ""
+"Bitte einen Verzeichnis- und Dateinamen für die Einstellungen eingeben."
 
 msgid "Cannot create Gio.File object for file"
 msgstr "Konnte Gio.File-Objekt für die Datei nicht anlegen"
@@ -72,41 +151,59 @@ msgstr "Besonderen Dank an"
 msgid ""
 "If you would like to translate the program to your language feel free to do "
 "so: please use GitHub or email me for instructions."
-msgstr "Zum Übersetzen der Erweiterung in eine andere Sprache einfach GitHub nutzen oder mir eine E-Mail schreiben für weitere Instruktionen."
+msgstr ""
+"Zum Übersetzen der Erweiterung in eine andere Sprache einfach GitHub nutzen "
+"oder mir eine E-Mail schreiben für weitere Instruktionen."
 
 msgid ""
 "This is free software -- free as in beer and free as in freeman -- "
 "distributed under the terms of the GNU General Public License (GPL) version "
 "3."
-msgstr "Dies ist freie Software, veröffentlicht unter den Bestimmungen der GNU General Public License 3 (GPL 3)."
+msgstr ""
+"Dies ist freie Software, veröffentlicht unter den Bestimmungen der GNU "
+"General Public License 3 (GPL 3)."
 
 msgid ""
 "A copy of the License is distributed along with the software (file GNUGPLv3) "
 "and is also available at <a href='http://www.gnu.org/licenses/'><span "
 "color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</"
 "span></a>."
-msgstr "Eine Kopie der Lizenz ist in dieser Software enthalten (Datei GNUGPLv3) und kann hier heruntergeladen werden: <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>."
+msgstr ""
+"Eine Kopie der Lizenz ist in dieser Software enthalten (Datei GNUGPLv3) und "
+"kann hier heruntergeladen werden: <a href='http://www.gnu.org/"
+"licenses/'><span color='#000000' underline='none'>http://www.gnu.org/"
+"licenses/gpl.html</span></a>."
 
 msgid ""
 "You are free to use, modify or otherwise distribute the code of this "
 "software provided that your actions comply with all applicable laws and GPL."
-msgstr "Der Quellcode dieser Software darf benutzt, verändert und anderweitig verbreiten werden entsprechend den geltenden Gesetzen und den Bestimmungen der GPL."
+msgstr ""
+"Der Quellcode dieser Software darf benutzt, verändert und anderweitig "
+"verbreiten werden entsprechend den geltenden Gesetzen und den Bestimmungen "
+"der GPL."
 
 msgid ""
 "In particular, you must include the above copyright notice and a copy of the "
 "License in all copies or substantial portions of the software, whether "
 "original or modified."
-msgstr "Insbesondere muss der obige Urheber-Hinweis und eine Kopie der Lizenz für alle originalen und modifizierten Teile der Software enthalten sein."
+msgstr ""
+"Insbesondere muss der obige Urheber-Hinweis und eine Kopie der Lizenz für "
+"alle originalen und modifizierten Teile der Software enthalten sein."
 
 msgid ""
 "This software is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS "
 "FOR A PARTICULAR PURPOSE."
-msgstr "Diese Software wurde in der Hoffnung veröffentlicht, nützlich zu sein, aber OHNE JEDE GARANTIE: Ebenso ohne Gewährleistung, dass diese Software für einen bestimmten Zweck geeignet ist."
+msgstr ""
+"Diese Software wurde in der Hoffnung veröffentlicht, nützlich zu sein, aber "
+"OHNE JEDE GARANTIE: Ebenso ohne Gewährleistung, dass diese Software für "
+"einen bestimmten Zweck geeignet ist."
 
 msgid ""
 "For more details please see the GNU General Public License (GPL) version 3."
-msgstr "Für mehr Details lesen Sie bitte die GNU General Public License (GPL) version 3."
+msgstr ""
+"Für mehr Details lesen Sie bitte die GNU General Public License (GPL) "
+"version 3."
 
 msgid "Export/Import"
 msgstr "Exportieren/Importieren"
@@ -116,9 +213,6 @@ msgstr "Sichern, synchronisieren und teilen von Einstellungen."
 
 msgid "To reset all settings please enable"
 msgstr "Bitte aktivieren, um alle Einstellungen zurückzusetzen"
-
-msgid "Advanced settings"
-msgstr "Erweiterte Einstellungen"
 
 msgid "Reset settings"
 msgstr "Einstellungen zurücksetzen"
@@ -138,13 +232,49 @@ msgstr "Importieren"
 msgid "This will overwrite the file with settings"
 msgstr "Dies wird die Datei mit den Einstellungen überschreiben"
 
-msgid "Fine-tuning"
-msgstr "Feineinstellung"
+msgid "General"
+msgstr "Allgemein"
+
+msgid "Force Activities button look like other panel buttons"
+msgstr ""
+"Aktivitätenschaltfläche an die anderen Schaltflächen auf der Leiste anpassen"
+
+msgid "Choose Activities button background"
+msgstr "Hintergrundfarbe der Aktivitätenschaltfläche wählen"
+
+msgid ""
+"Please keep your custom css files outside of the installation directory."
+msgstr ""
+"Bitte legen Sie eigene CSS-Dateien außerhalb des Erweiterungsverzeichnisses "
+"ab."
+
+msgid "Choose css file"
+msgstr "CSS-Datei wählen"
+
+msgid "Show Extension Manager in the menu"
+msgstr "Erweiterungsverwaltung im Menü anzeigen"
+
+msgid "Choose extension sort method"
+msgstr "Methode der Erweiterungssortierung wählen"
+
+msgid "Show options for favorite extensions only"
+msgstr "Optionen nur für favorisierte Erweiterungen anzeigen"
+
+msgid "Show additional commands in the menu"
+msgstr "Zusätzliche Befehle im Menü anzeigen"
+
+msgid "Advanced"
+msgstr "Erweitert"
 
 msgid ""
 "Scroll timeout: the time after one scroll event during which other scroll "
 "events are rejected."
-msgstr "Scroll-Auszeit: Die Zeit nach dem Scrollen, in der andere Scroll-Ereignisse abgewiesen werden."
+msgstr ""
+"Scroll-Auszeit: Die Zeit nach dem Scrollen, in der andere Scroll-Ereignisse "
+"abgewiesen werden."
 
 msgid "Mouse scroll timeout"
 msgstr "Mausscroll-Auszeit"
+
+#~ msgid "Fine-tuning"
+#~ msgstr "Feineinstellung"
