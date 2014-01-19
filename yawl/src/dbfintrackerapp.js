@@ -327,7 +327,7 @@ const dbFinTrackerApp = new Lang.Class({
             this.appButton.badgeHide('window-indicator-' + i);
         }
         let (stopped = this.metaApp.state == Shell.AppState.STOPPED
-                       || this.state < this._tracker.state) {
+                       || !this._tracker || this.state < this._tracker.state) {
             // if   ( something wrong )
             //      || ( app is stopped
             //           || on another workspace
@@ -340,7 +340,11 @@ const dbFinTrackerApp = new Lang.Class({
             if (!this.metaApp || !this.state || !this.windows || !this._tracker || !global.yawl
                 || (    stopped
                         || !this.windows.length
-                           && !global.yawl._iconsShowAll
+                            && (    !global.yawl._iconsShowAll
+                                    ||  !this.metaApp.get_windows().filter(Lang.bind(this, function (metaWindow) {
+                                            return this._tracker.isWindowInteresting(metaWindow);
+                                        })).length
+                               )
                    )
                    &&
                    (    !this.pin
