@@ -177,6 +177,7 @@ const dbFinYAWL = new Lang.Class({
         this._panelEnhancements = new dbFinPanelEnhancements.dbFinPanelEnhancements();
 
         this._tracker = new dbFinTracker.dbFinTracker();
+        global.yawl._tracker = this._tracker;
 
         global.yawl.menuBuilder = new dbFinMenuBuilder.dbFinMenuBuilder();
 
@@ -244,6 +245,7 @@ const dbFinYAWL = new Lang.Class({
 			this._tracker.destroy();
 			this._tracker = null;
 		}
+        global.yawl._tracker = null;
         if (this._panelEnhancements) {
             this._panelEnhancements.destroy();
             this._panelEnhancements = null;
