@@ -205,7 +205,11 @@ const dbFinTracker = new Lang.Class({
 		this.state ? this.state++ : (this.state = 1);
 		let (appsIn = [], appsOut = [], windowsIn = [], windowsOut = []) {
 			this._appSystem.get_running().forEach(Lang.bind(this, function (metaApp) {
-				if (!metaApp || metaApp.state == Shell.AppState.STOPPED) return;
+                this.updateAppAttention(metaApp);
+				if (!metaApp || metaApp.state == Shell.AppState.STOPPED
+                    || !metaApp.get_windows().some(Lang.bind(this, function (metaWindow) {
+                        return this.isWindowInteresting(metaWindow);
+                    }))) return;
 				let (trackerApp = this.apps.get(metaApp)) {
 					if (!trackerApp) { // new app
 						appsIn.push(metaApp);
@@ -480,7 +484,10 @@ const dbFinTracker = new Lang.Class({
 
     addAppWindowAttention: function(metaApp, metaWindow) {
         _D('>' + this.__name__ + '.addAppWindowAttention()');
-        if (this._attentions && metaApp && metaWindow && metaApp.state != Shell.AppState.STOPPED) {
+        if (this._attentions && metaApp && metaWindow && metaApp.state != Shell.AppState.STOPPED
+            && (this.isWindowInteresting(metaWindow)
+                || ((metaWindow = metaWindow.get_transient_for())
+                    && this.isWindowInteresting(metaWindow)))) {
             let (attentionProperties = this._attentions.get(metaApp)) {
                 if (!attentionProperties || !attentionProperties.signals
                     	|| !attentionProperties.metaWindows) {
@@ -506,7 +513,7 @@ const dbFinTracker = new Lang.Class({
                     if (trackerWindow) trackerWindow.attention(true);
                 }
             } // let (attentionProperties)
-        } // if (this._attentions && metaApp && metaWindow)
+        }
         _D('<');
     },
 
@@ -582,7 +589,8 @@ const dbFinTracker = new Lang.Class({
 			if (attentionProperties && attentionProperties.metaWindows) {
 				let (windows = metaApp.get_windows()) {
 					attentionProperties.metaWindows.slice().forEach(Lang.bind(this, function (metaWindow) {
-						if (windows.indexOf(metaWindow) == -1) {
+						if (windows.indexOf(metaWindow) == -1
+                                || !this.isWindowInteresting(metaWindow)) {
 							this.removeAppWindowAttention(metaApp, metaWindow);
 						}
 					}));

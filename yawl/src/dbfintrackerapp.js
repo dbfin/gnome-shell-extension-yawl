@@ -317,8 +317,7 @@ const dbFinTrackerApp = new Lang.Class({
 
 	updateVisibility: function() {
         _D('>' + this.__name__ + '.updateVisibility()');
-		if (!this.appButton || !this.appButton._slicerIcon) {
-			_D(!this.appButton ? 'this.appButton == null' : 'this.appButton._slicerIcon == null');
+		if (!this.metaApp || !this.appButton || !this.appButton._slicerIcon) {
 			_D('<');
 			return;
 		}
@@ -326,8 +325,11 @@ const dbFinTrackerApp = new Lang.Class({
         for (let i = 0; i < 5; ++i) {
             this.appButton.badgeHide('window-indicator-' + i);
         }
-        let (stopped = this.metaApp.state == Shell.AppState.STOPPED
-                       || !this._tracker || this.state < this._tracker.state) {
+        let (stopped =  this.metaApp.state == Shell.AppState.STOPPED
+                        || !this._tracker || this.state < this._tracker.state
+                        || !(this.windows && this.windows.length) && !this.metaApp.get_windows().some(Lang.bind(this, function (metaWindow) {
+                            return this._tracker.isWindowInteresting(metaWindow);
+                        }))) {
             // if   ( something wrong )
             //      || ( app is stopped
             //           || on another workspace
@@ -340,11 +342,7 @@ const dbFinTrackerApp = new Lang.Class({
             if (!this.metaApp || !this.state || !this.windows || !this._tracker || !global.yawl
                 || (    stopped
                         || !this.windows.length
-                            && (    !global.yawl._iconsShowAll
-                                    ||  !this.metaApp.get_windows().filter(Lang.bind(this, function (metaWindow) {
-                                            return this._tracker.isWindowInteresting(metaWindow);
-                                        })).length
-                               )
+                           && !global.yawl._iconsShowAll
                    )
                    &&
                    (    !this.pin
@@ -943,28 +941,29 @@ const dbFinTrackerApp = new Lang.Class({
 
 	_listWindowsFresh: function(minimized/* = false*/, allworkspacesifempty/* = false*/) {
         _D('>' + this.__name__ + '._listWindowsFresh()');
-		if (!this.metaApp || this.metaApp.state == Shell.AppState.STOPPED) {
+		if (!this.metaApp || !this._tracker || this.metaApp.state == Shell.AppState.STOPPED) {
 			_D('<');
 			return [];
 		}
-		let (windows = []) {
+		let (windows = this.metaApp.get_windows().filter(Lang.bind(this, function (metaWindow) {
+                 return this._tracker.isWindowInteresting(metaWindow) && (minimized || metaWindow.showing_on_its_workspace());
+             }))) {
 			let (workspace = global.screen.get_active_workspace()) {
-				windows = this.metaApp.get_windows().filter(function (window) {
-					return window.get_workspace() == workspace && (minimized || window.showing_on_its_workspace());
-                });
+				let (windowsWorkspace = windows.filter(function (metaWindow) {
+                        return metaWindow.get_workspace() == workspace;
+                     })) {
+                    if (windowsWorkspace.length) {
+                        windows = windowsWorkspace;
+                    }
+                    else if (!allworkspacesifempty) {
+                        windows = [];
+                    }
+                    else {
+                        windows = windows.map(function (metaWindow) { return [ metaWindow.get_workspace().index(), metaWindow ]; });
+                        windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
+                    }
+                } // let (windowsWorkspace)
 			} // let (workspace)
-			if (!windows.length && allworkspacesifempty) {
-				if (minimized) {
-					windows = this.metaApp.get_windows();
-				}
-				else {
-					windows = this.metaApp.get_windows().filter(function (window) {
-						return window.showing_on_its_workspace();
-					});
-				}
-				windows = windows.map(function (metaWindow) { return [ metaWindow.get_workspace().index(), metaWindow ]; });
-				windows.sort(function (imwA, imwB) { return imwA[0] - imwB[0]; });
-			}
 	        _D('<');
 			return windows;
 		} // let (windows)
@@ -986,7 +985,11 @@ const dbFinTrackerApp = new Lang.Class({
             _D('<');
             return;
         }
-		let (windows = this._listWindowsFresh(minimized, true)) {
+		let (windowsAll = this._listWindowsFresh(true, true),
+             windows = []) {
+            if (minimized) windows = windowsAll;
+            else if (windowsAll.length && windowsAll[0].length) windows = windowsAll.filter(function (wsw) { return wsw[1].showing_on_its_workspace(); });
+            else windows = windowsAll.filter(function (metaWindow) { return metaWindow.showing_on_its_workspace(); });
 			if (windows.length && !windows[0].length) { // windows are from the current workspace
 				if (!this.focused) {
                     if (showall) this._showAllWindows(minimized);
@@ -1030,7 +1033,7 @@ const dbFinTrackerApp = new Lang.Class({
 				}
 			}
             else if (this.metaApp) { // no windows at all? open a new window
-                if (!donotlaunch && !this.metaApp.is_on_workspace(global.screen.get_active_workspace())) {
+                if (!donotlaunch && (!windowsAll.length || windowsAll[0].length)) {
                     this.openNewWindowThisWorkspace();
                 }
             }
@@ -1186,7 +1189,7 @@ const dbFinTrackerApp = new Lang.Class({
         _D('<');
     },
 
-	_openNewWindow: function(workspaceIndex/* = -1*/) {
+	_openNewWindow: function(workspaceIndex/* = undefined*/) {
         _D('>' + this.__name__ + '._openNewWindow()');
 		if (!this.metaApp) {
 			_D('this.metaApp === null');
