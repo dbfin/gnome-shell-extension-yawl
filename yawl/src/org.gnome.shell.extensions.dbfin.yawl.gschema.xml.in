@@ -179,6 +179,11 @@
       <_summary>Whether to show thumbnails of interesting windows only.</_summary>
       <_description>If true only the thumbnails of so-called interesting windows are shown.</_description>
     </key>
+    <key name="windows-show-skip-taskbar" type="b">
+      <default>false</default>
+      <_summary>Whether to show thumbnails of skip-taskbar windows.</_summary>
+      <_description>If true the thumbnails of skip-taskbar windows are shown.</_description>
+    </key>
     <key name="windows-indicator-arrow" type="b">
       <default>false</default>
       <_summary>Whether to use arrow-style thumbnail application indicator.</_summary>

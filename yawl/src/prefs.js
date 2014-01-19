@@ -221,6 +221,7 @@ function buildPrefsWidget() {
                 builder.addCheckBox(_("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>', 'windows-show', '@advanced');
 	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show', '@!advanced' ], true);
 				builder.addCheckBox(_("Show thumbnails of 'interesting' windows only") + ' <span color="red">*</span>', 'windows-show-interesting', [ '@advanced', 'windows-show' ]);
+                builder.addCheckBox(_("Show thumbnails of 'skip-taskbar' windows") + ' <span color="red">*</span>', 'windows-show-skip-taskbar', [ '@advanced', 'windows-show' ]);
                 builder.addSeparator('@advanced');
                 builder.addCheckBox(_("Use arrow-style thumbnails app indicator") + ' <span color="red">*</span>', 'windows-indicator-arrow', [ '@advanced', 'windows-show' ]);
                 builder.addSeparator('@advanced');

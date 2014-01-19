@@ -147,6 +147,7 @@ const Settings = [
 
     [ 'windows-show', true, { }, 'thumbnails>panel' ],
     [ 'windows-show-interesting', false, { }, 'thumbnails>panel' ],
+    [ 'windows-show-skip-taskbar', false, { }, 'thumbnails>panel' ],
     [ 'windows-indicator-arrow', false, { }, 'thumbnails>panel' ],
     [ 'windows-theming', true, { }, 'thumbnails>panel' ],
     [ 'windows-background-panel', true, { }, 'thumbnails>panel' ],

@@ -71,6 +71,7 @@ const dbFinTracker = new Lang.Class({
 		this.preview = new dbFinPreview.dbFinPreview();
 
         this._updatedIconsOrder = function () { if (this.apps) this.apps.forEach(function (metaApp, trackerApp) { if (trackerApp) trackerApp._moveToStablePosition(); }); }
+        this._updatedWindowsShowSkipTaskbar = function () { this.update('Tracker: updated windows-show-skip-taskbar.'); }
         this._updatedWindowsShowInteresting = function () { this.update('Tracker: updated windows-show-interesting.'); }
 		this._updatedWindowsPreview = function () { if (this.preview && !global.yawl._windowsPreview) this.preview.hide(); }
 		this._updatedWindowsPreviewDimColor = function () { if (this.preview) this.preview.dimColor = global.yawl._windowsPreviewDimColor; }
@@ -167,13 +168,15 @@ const dbFinTracker = new Lang.Class({
 	},
 
 	isWindowInteresting: function(metaWindow) {
-		return	!!metaWindow
-				&& (!global.yawl
-				    || !global.yawl._windowsShowInteresting
-				    ||	!metaWindow.is_skip_taskbar()
-						&& this._tracker
-						&& this._tracker.is_window_interesting(metaWindow)
-				    );
+        return  !!metaWindow
+                && (
+                    !global.yawl || !global.yawl._windowsShowInteresting
+                    || !this._tracker || this._tracker.is_window_interesting(metaWindow)
+                )
+                && (
+                    !metaWindow.is_skip_taskbar()
+                    || global.yawl && global.yawl._windowsShowSkipTaskbar
+                );
 		// note also, that metaWindow must have app in this.apps, so that
 		// it is not orphant and its app must be "interesting" as well
 	},
