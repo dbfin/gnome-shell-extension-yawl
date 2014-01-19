@@ -991,7 +991,7 @@ const dbFinTrackerApp = new Lang.Class({
             else if (windowsAll.length && windowsAll[0].length) windows = windowsAll.filter(function (wsw) { return wsw[1].showing_on_its_workspace(); });
             else windows = windowsAll.filter(function (metaWindow) { return metaWindow.showing_on_its_workspace(); });
 			if (windows.length && !windows[0].length) { // windows are from the current workspace
-				if (!this.focused) {
+				if (!windows[0].has_focus()) {
                     if (showall) this._showAllWindows(minimized);
                     else if (this._tracker) this._tracker.activateWindow(windows[0]);
                     this._resetNextWindows();
