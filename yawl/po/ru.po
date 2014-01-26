@@ -1,13 +1,13 @@
 # Translation for dbFin YAWL GNOME Shell extension
-# Copyright (C) 2013 Vadim Cherepanov @ dbFin.com
+# Copyright (C) 2013-2014 Vadim Cherepanov @ dbFin.com
 # This file is distributed under the same license as dbFin YAWL GNOME Shell Extension.
-# Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
+# Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013-2014
 #
 msgid ""
-msgstr "Project-Id-Version: YAWL 16\n"
+msgstr "Project-Id-Version: YAWL 17\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-19 16:37-0600\n"
-"PO-Revision-Date: 2013-12-19 16:37-0600\n"
+"POT-Creation-Date: 2014-01-26 16:41-0600\n"
+"PO-Revision-Date: 2014-01-26 16:41-0600\n"
 "Last-Translator: Vadim Cherepanov @ dbFin <vadim@dbfin.com>\n"
 "Language-Team: dbFin\n"
 "Language: \n"
@@ -294,6 +294,9 @@ msgstr "Показывать иконки со всех рабочих стол�
 msgid "YAWL-panel position and width"
 msgstr "Позиция и ширина панели YAWL"
 
+msgid "Align icons on the panel (%)"
+msgstr "Выравнивание иконок на панели (%)"
+
 msgid "Move central panel"
 msgstr "Сдвинуть центральную панель"
 
@@ -354,9 +357,6 @@ msgstr "низ"
 msgid "px"
 msgstr "px"
 
-msgid "Align icons on the panel (%)"
-msgstr "Выравнивание иконок на панели (%)"
-
 msgid "Distance between icons"
 msgstr "Расстояние между иконками"
 
@@ -407,6 +407,9 @@ msgstr "Показывать миниатюры при наведении мыш
 
 msgid "Show thumbnails of 'interesting' windows only"
 msgstr "Показывать миниатюры только \"интересных\" окон"
+
+msgid "Show thumbnails of 'skip-taskbar' windows"
+msgstr "Показывать миниатюры окон, не предназначенных для панели задач"
 
 msgid "Use arrow-style thumbnails app indicator"
 msgstr "Индикатор-стрелка для текущего приложения"

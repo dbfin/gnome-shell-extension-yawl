@@ -3,7 +3,7 @@
 # This script creates .po files in po/ subdirectory given the list of languages
 # in po/LINGUAS and list of source files in po/POTFILES.in
 #
-# Copyright (c) 2012 Vadim@dbFin <vadim@dbfin.com>
+# Copyright (c) 2012-2014 Vadim@dbFin <vadim@dbfin.com>
 # This file is distributed under the same license as dbFin YAWL GNOME Shell Extensions.
 #
 # Notes:
@@ -31,9 +31,9 @@ while read l; do
           && echo -e "\e[0;32mpo/$l.po\e[0m was created successfully, ready to be translated" \
           && sed -i \
              -e 's|SOME DESCRIPTIVE TITLE.|Translation for dbFin YAWL GNOME Shell extension|' \
-             -e 's|YEAR THE PACKAGE'"'"'S COPYRIGHT HOLDER|'"$(date +%Y)"' Vadim Cherepanov @ dbFin.com|' \
+             -e 's|YEAR THE PACKAGE'"'"'S COPYRIGHT HOLDER|'2013-"$(date +%Y)"' Vadim Cherepanov @ dbFin.com|' \
              -e 's|the PACKAGE package|dbFin YAWL GNOME Shell Extension|' \
-             -e 's|FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.|Vadim Cherepanov @ dbFin <vadim@dbfin.com>, '"$(date +%Y)"'|' \
+             -e 's|FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.|Vadim Cherepanov @ dbFin <vadim@dbfin.com>, '2013-"$(date +%Y)"'|' \
              -e 's|PACKAGE VERSION|YAWL '"$vd"'|' \
              -e 's|YEAR-MO-DA HO:MI+ZONE|'"$(date +%Y-%m-%d\ %H:%M%z)"'|' \
              -e 's|FULL NAME <EMAIL@ADDRESS>|Vadim Cherepanov @ dbFin <vadim@dbfin.com>|' \

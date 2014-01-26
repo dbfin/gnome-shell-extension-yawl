@@ -1,4 +1,14 @@
 #!/bin/bash --
+#
+# This script installs extension overriding the whole extension directory
+# in ~/.local/share/gnome-shell/extensions/.
+#
+# Note: if there is an error during execution of the script,
+#       consult readme.MD for further details.
+#
+# Copyright (c) 2012-2014 Vadim@dbFin <vadim@dbfin.com>
+# This file is distributed under the same license as dbFin YAWL GNOME Shell Extensions.
+#
 
 function ok() { echo -e "\e[32m$1\e[0m"; exit 0; }
 function error() { echo -e "Error \e[31m$1\e[0m at step $2"; exit $2; }

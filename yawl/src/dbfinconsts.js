@@ -2,7 +2,7 @@
 /*
  * YAWL GNOME Shell Extensions
  *
- * Copyright (C) 2013 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
+ * Copyright (C) 2013-2014 Vadim Cherepanov @ dbFin <vadim@dbfin.com>
  *
  * YAWL, a group of GNOME Shell extensions, is provided as
  * free software: you can redistribute it and/or modify it

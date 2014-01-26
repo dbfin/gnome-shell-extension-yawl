@@ -83,3 +83,7 @@ v16	2013-12-19
 		- Option to disable launching apps by scrolling over their icon.
 		- Keep icon "hovered" while its menu is open.
 		- Updated German, Russian and Ukrainian translations.
+v17	2014-01-26
+		- GS 3.10.3 compatibility.
+		- Additional option to show/hide "skip-taskbar" windows.
+		- Visual panel arrangement.
