@@ -161,20 +161,19 @@ function buildPrefsWidget() {
 
         builder.addPageWelcome('yawl', '<span color="#347">Y</span>et <span color="#347">A</span>nother <span color="#347">W</span>indow <span color="#347">L</span>ist');
 
-		builder.addPage(_("Icons"));
-            builder.addNotebook(_("Panel"), 'panel.png');
-				builder.addCheckBox(_("Show app icons from all workspaces"), 'icons-show-all');
-                builder.addSeparator();
+		builder.addPage(_("Panel"));
+
+            builder.addNotebook(_("Behavior"), 'overview.png');
+                builder.addCheckBox(_("Move central panel"), 'move-center');
                 builder.addScaleScale(_("YAWL-panel position and width") + ' (%)', 'yawl-panel-position', 'yawl-panel-width', 0, 50, 1, 1, 100, 1);
                 builder.addScale(_("Align icons on the panel (%)"), 'icons-align', 0, 100, 1);
                 builder.addSeparator();
-                builder.addCheckBox(_("Move central panel"), 'move-center');
                 builder.addCheckBox(_("Hide Activities button"), 'hide-activities');
                 builder.shift();
-				// GNOME Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
-				if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
+			    // GNOME Shell 3.8: Hot Corner is not contained in Activities button anymore, no need to "preserve" it
+			    if (dbFinConsts.arrayShellVersion[0] == 3 && dbFinConsts.arrayShellVersion[1] == 6) {
                     builder.addCheckBox(_("Preserve Hot Corner"), 'preserve-hot-corner', 'hide-activities');
-				}
+			    }
                 builder.unshift();
                 builder.addCheckBox(_("Hide AppMenu button"), 'hide-app-menu');
                 builder.addSeparator();
@@ -184,42 +183,179 @@ function buildPrefsWidget() {
                     builder.addColorButtonScale(_("Bottom color and opacity"), 'panel-color', 'panel-opacity', _("Choose panel background color"), 0, 100, 1, 'panel-background');
                 builder.unshift();
 
-            builder.addPage(_("Icons"), 'icon.png');
+            builder.addPage(_("Mouse"), 'mouse.png');
+                builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable option") + ' ' + _("Panel") + ' > ' + _("Mouse") + ' <span color="red">*</span>' + ' > ' +_("Use mouse drag-and-drop") + '</span>', [ 'mouse-drag-and-drop', '@!mouse-drag-and-drop' ], true);
+		        builder.addCheckBox('<b>' + _("Scroll to change workspace") + '</b>: ' + _("Scroll over YAWL panel to change workspace"), 'mouse-scroll-workspace');
+                builder.shift();
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Behavior") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ 'icons-show-all', '@!icons-show-all' ], true);
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Behavior") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
+                    builder.addCheckBox('<b>' + _("Scroll to find other windows") + '</b>: ' + _("find app's windows on other workspaces by scrolling over its icon when its thumbnails are shown"), 'mouse-scroll-workspace-search', [ 'mouse-scroll-workspace', 'icons-show-all', 'windows-show' ]);
+                builder.unshift();
+                builder.addSeparator('@advanced');
+                builder.addCheckBox(_("Use mouse drag-and-drop") + ' <span color="red">*</span>', 'mouse-drag-and-drop', ['@advanced']);
+                builder.addCheckBox(_("Register mouse events on button release") + ' <span color="red">*</span>', 'mouse-click-release', ['!mouse-drag-and-drop', '@advanced']);
+		        builder.shift('@advanced');
+			        builder.addCheckBox(_("Long left button click = right button click") + ' <span color="red">*</span>', 'mouse-long-click', [ '@mouse-drag-and-drop','@advanced' ]);
+			        builder.addCheckBox(_("Long left button click = right button click") + ' <span color="red">*</span>', 'mouse-long-click', [ '@!mouse-drag-and-drop', 'mouse-click-release','@advanced' ]);
+		        builder.unshift('@advanced');
+                builder.addSeparator('@advanced');
+                builder.addLabel(_("Scroll timeout: the time after one scroll event during which other scroll events are rejected."), '@advanced');
+		        builder.shift('@advanced');
+                    builder.addScale(_("Mouse scroll timeout") + ' <span color="red">*</span>', 'mouse-scroll-timeout', 25, 1000, 25, ['@advanced']);
+		        builder.unshift('@advanced');
+
+            builder.addPage(_("Tuning") + ' <span color="red">*</span>', 'mouse-tuning.png', '@advanced');
+                let threshold = new dbFinClicksThreshold();
+                builder.getWidget()._threshold = threshold;
+		        builder.addLabel(_("This will measure the SHORTEST time between two consecutive SINGLE clicks."));
+		        builder.shift();
+			        widgets = builder.addRow(_("A fast series of SINGLE clicks"),
+						           [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
+								        [ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
+								        [ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
+							        ]);
+                    if (widgets && widgets.length) {
+				        widgets[1].hexpand = true;
+				        widgets[1].xalign = 0.0;
+			        }
+                    widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
+                    if (widgets && widgets.length) {
+				        threshold.scaleSingle = widgets[widgets.length - 1];
+			        }
+		        builder.unshift();
+		        builder.addLabel(_("This will measure the LONGEST time between the two clicks of one DOUBLE click."));
+		        builder.shift();
+			        widgets = builder.addRow(_("A series of DOUBLE clicks"),
+						           [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
+								        [ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
+								        [ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
+							        ]);
+                    if (widgets && widgets.length) {
+				        widgets[1].hexpand = true;
+				        widgets[1].xalign = 0.0;
+			        }
+                    widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
+                    if (widgets && widgets.length) {
+				        threshold.scaleDouble = widgets[widgets.length - 1];
+			        }
+		        builder.unshift();
+		        builder.addLabel(_("Based on the data provided above we set the following value (you can adjust it manually):"));
+		        builder.shift();
+                    widgets = builder.addScale(_("Single/Double clicks threshold:"), 'mouse-clicks-time-threshold', 150, 550, 1);
+			        if (widgets && widgets.length) {
+				        threshold.scaleThreshold = widgets[widgets.length - 1];
+			        }
+		        builder.unshift();
+
+            builder.addPage(_("Animation") + ' <span color="red">*</span>', 'animation_engine.png', '@advanced');
+                    builder.addCheckBox(_("Disable all animation"), 'animation-disable');
+                    builder.addCheckBox(_("Use alternative animation engine (experimental)"), 'animation-alternative-test', '!animation-disable');
+                    builder.shift();
+                        builder.addLabel(_("Lower FPS = better responsiveness, higher FPS = smoother animation"), [ '!animation-disable', 'animation-alternative-test' ]);
+                        builder.addScale(_("Frames per second"), 'animation-alternative-fps', 10, 50, 1, [ '!animation-disable', 'animation-alternative-test' ]);
+                    builder.unshift();
+
+		    builder.addPage(_("Debug") + ' <span color="red">*</span>', 'debug.png', '@advanced');
+		        builder.addLabel(_("These options are for developers only."));
+		        builder.addSeparator();
+		        builder.addLabel(_("Debugging panel shows a hierarchical structure of internal function calls."));
+		        builder.addLabel(_("The panel has a small toolbar which allows one to:"));
+		        builder.shift();
+			        builder.addLabel('\u00b7 ' + _("pin the panel (so that it is always visible)"));
+			        builder.addLabel('\u00b7 ' + _("stop, resume and clear all messages"));
+			        builder.addLabel('\u00b7 ' + _("access extension preferences"));
+			        builder.addLabel('\u00b7 ' + _("restart the extension"));
+		        builder.unshift();
+		        builder.addCheckBox(_("Debugging panel"), 'debug');
+		        builder.shift();
+			        builder.addLabel(_("By default the panel is placed at the right side (of the last monitor)."), 'debug');
+			        builder.addCheckBox(_("Move the panel to the bottom left"), 'debug-bottom', 'debug');
+			        builder.addScale(_("Debug panel width") + '\n(' + _("% of the monitor width") + ')', 'debug-width', 10, 70, 1, 'debug');
+			        builder.addCheckBox(_("Force all messages") + ' (\u26a0 ' + _("ouch!") + ')', 'debug-force', 'debug');
+		        builder.unshift();
+
+            builder.closeNotebook();
+
+        builder.addPage(_("Icons"));
+            builder.addNotebook(_("Behavior"), 'panel.png');
+                builder.addCheckBox(_("Show icons in Overview"), 'icons-overview-show');
+			    builder.addCheckBox(_("Show app icons from all workspaces"), 'icons-show-all');
+		        builder.addCheckBox('<b>' + _("Favorite apps") + '</b>: ' + _("always show"), 'icons-favorites');
+                builder.shift();
+                    builder.addCheckBoxScale(_("Use smaller icons if not running"), 'icons-favorites-smaller', 'icons-favorites-size', 1, 3, 1, 'icons-favorites', false, true);
+                builder.unshift();
+                builder.addSeparator();
                 builder.addScale(_("Icon size"), 'icons-size', 16, 96, 8);
+                builder.addScale(_("Distance between icons") + '\n(' + _("% of icon size") + ')', 'icons-distance', 0, 100, 1);
+                builder.addSeparator();
+                builder.addCheckBox('<b>' + _("Window demanding attention") + '</b>: ' + _("blink"), 'icons-attention-blink');
+                builder.shift();
+                builder.addScale(_("Blinking rate (times per minute)"), 'icons-attention-blink-rate', 15, 125, 1, 'icons-attention-blink');
+                builder.unshift();
+                builder.addSeparator();
+		        builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
+
+            builder.addPage(_("Look"), 'icon.png');
                 builder.addCheckBox(_("Faded icons"), 'icons-faded');
-				builder.addScale(_("Default icon opacity") + ' <span color="red">*</span>', 'icons-opacity', 50, 100, 1, '@advanced');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ '@advanced', 'icons-show-all', '@!icons-show-all' ], true);
-				builder.addScale(_("Icon opacity if app is not on current workspace") + ' <span color="red">*</span>', 'icons-opacity-other', 10, 100, 1, [ '@advanced', 'icons-show-all' ]);
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Add-ons") + ' > ' + _("Icons") + ' > ' + _("Favorite apps") + '</span>', [ '@advanced', 'icons-favorites', '@!icons-favorites' ], true);
-				builder.addScale(_("Icon opacity if app is not running") + ' <span color="red">*</span>', 'icons-opacity-inactive', 10, 100, 1, [ '@advanced', 'icons-favorites' ]);
+		        builder.addScale(_("Default icon opacity") + ' <span color="red">*</span>', 'icons-opacity', 50, 100, 1, '@advanced');
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Behavior") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ '@advanced', 'icons-show-all', '@!icons-show-all' ], true);
+		        builder.addScale(_("Icon opacity if app is not on current workspace") + ' <span color="red">*</span>', 'icons-opacity-other', 10, 100, 1, [ '@advanced', 'icons-show-all' ]);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Behavior") + ' > ' + _("Favorite apps") + '</span>', [ '@advanced', 'icons-favorites', '@!icons-favorites' ], true);
+			    builder.addScale(_("Icon opacity if app is not running") + ' <span color="red">*</span>', 'icons-opacity-inactive', 10, 100, 1, [ '@advanced', 'icons-favorites' ]);
                 builder.addSeparator();
                 builder.addScaleScale(_("Clip icons") + ': ' + _("top") + ' &amp; ' + _("bottom") + ' (' + _("px") + ')', 'icons-clip-top', 'icons-clip-bottom', 0, 7, 1, 0, 7, 1);
                 builder.addSeparator();
-                builder.addScale(_("Distance between icons") + '\n(' + _("% of icon size") + ')', 'icons-distance', 0, 100, 1);
+builder.addComboBoxText('<b>' + _("Windows indicators") + '</b>', 'icons-windows-indicator', dbFinConsts.arrayWindowsIndicatorTypes, 0);
+                builder.shift();
+			        builder.addColorButton(_("Choose windows indicator color"), 'icons-windows-indicator-color', _("Choose windows indicator color"));
+                builder.unshift();
 
             builder.addPage(_("Animation"), 'animation.png');
                 builder.addScale(_("Animation time in ms (0: no animation)") + ' <span color="red">*</span>', 'icons-animation-time', 0, 1000, 1, '@advanced', true);
                 builder.addComboBoxText(_("Animation effect") + ' <span color="red">*</span>', 'icons-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, '@advanced');
                 builder.addSeparator('@advanced');
-				builder.addCheckBox(_("Animate icons on mouse over"), 'icons-hover-animation');
-				builder.shift();
-					builder.addScale(_("Change size (%)"), 'icons-hover-size', 100, 200, 1, 'icons-hover-animation');
-					builder.addScale(_("Change opacity"), 'icons-hover-opacity', 50, 100, 1, 'icons-hover-animation');
-					builder.addCheckBox(_("Show full width if partially hidden") + ' <span color="red">*</span>', 'icons-hover-fit', [ '@advanced', 'icons-hover-animation' ]);
+		        builder.addCheckBox(_("Animate icons on mouse over"), 'icons-hover-animation');
+			    builder.shift();
+				    builder.addScale(_("Change size (%)"), 'icons-hover-size', 100, 200, 1, 'icons-hover-animation');
+				    builder.addScale(_("Change opacity"), 'icons-hover-opacity', 50, 100, 1, 'icons-hover-animation');
+				    builder.addCheckBox(_("Show full width if partially hidden") + ' <span color="red">*</span>', 'icons-hover-fit', [ '@advanced', 'icons-hover-animation' ]);
 	                builder.addSeparator('@advanced');
 	                builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')' + ' <span color="red">*</span>', 'icons-hover-animation-time', 0, 200, 1, [ '@advanced', 'icons-hover-animation' ]);
                     builder.addComboBoxText(_("Mouse over animation effect") + ' <span color="red">*</span>', 'icons-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, [ '@advanced', 'icons-hover-animation' ]);
-				builder.unshift();
+			    builder.unshift();
 
-            builder.addPage(_("Overview"), 'overview.png');
-                builder.addCheckBox(_("Show icons in Overview"), 'icons-overview-show');
+            builder.addPage(_("Mouse"), 'mouse.png');
+				builder.addNotebook(_("Left button"), 'mouse-left.png');
+					builder.addComboBoxText(_("Click : Double click"), 'mouse-app-left', dbFinConsts.arrayAppClickFunctions, 0);
+					builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-left-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
+					builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-left-shift', dbFinConsts.arrayAppClickFunctions, 0);
+					builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-left-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
+                builder.addSeparator('@advanced');
+                builder.addCheckBox(_("Rearrange icons on the panel using mouse") + ' <span color="red">*</span>', 'icons-drag-and-drop', [ '@advanced', 'mouse-drag-and-drop' ]);
+
+				builder.addPage(_("Middle button"), 'mouse-middle.png');
+					builder.addComboBoxText(_("Click : Double click"), 'mouse-app-middle', dbFinConsts.arrayAppClickFunctions, 0);
+					builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-middle-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
+					builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0);
+					builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
+					builder.addSeparator();
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option") + ' ' + _("Panel") + ' > ' + ("Mouse") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
+					builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0, '!mouse-scroll-workspace');
+                    builder.shift();
+                        builder.addCheckBox(_("Do not launch apps with scroll"), 'mouse-app-scroll-no-launch', '!mouse-scroll-workspace');
+                    builder.unshift();
+
+				builder.addPage(_("Right button"), 'mouse-right.png');
+					builder.addComboBoxText(_("Click : Double click"), 'mouse-app-right', dbFinConsts.arrayAppClickFunctions, 0);
+
+				builder.closeNotebook();
 
             builder.closeNotebook();
 
 		builder.addPage(_("Thumbnails"));
-			builder.addNotebook(_("Panel"), 'panel_thumbnail.png');
+			builder.addNotebook(_("Behavior"), 'panel_thumbnail.png');
                 builder.addCheckBox(_("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>', 'windows-show', '@advanced');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show', '@!advanced' ], true);
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Behavior") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show', '@!advanced' ], true);
 				builder.addCheckBox(_("Show thumbnails of 'interesting' windows only") + ' <span color="red">*</span>', 'windows-show-interesting', [ '@advanced', 'windows-show' ]);
                 builder.addCheckBox(_("Show thumbnails of 'skip-taskbar' windows") + ' <span color="red">*</span>', 'windows-show-skip-taskbar', [ '@advanced', 'windows-show' ]);
                 builder.addSeparator('@advanced');
@@ -234,8 +370,8 @@ function buildPrefsWidget() {
                     builder.addScaleScale(_("Border radius") + ' ' + _("and") + ' ' + _("Padding") + ' <span color="red">*</span>', 'windows-border-radius', 'windows-padding', 0, 10, 1, 0, 20, 1, [ '@advanced', 'windows-show', 'windows-theming' ]);
                 builder.unshift();
 
-			builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
+			builder.addPage(_("Look"), 'thumbnail.png', 'windows-show');
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Behavior") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
                 builder.addCheckBox(_("Same height thumbnails") + ' <span color="red">*</span>', 'windows-thumbnails-fit-height', [ '@advanced' ]);
                 builder.addScale(_("Thumbnail maximum width"), 'windows-thumbnails-width', 50, 500, 25, '!windows-thumbnails-fit-height', true);
 				builder.addScale(_("Thumbnail maximum height"), 'windows-thumbnails-height', 40, 400, 20, null, true);
@@ -246,203 +382,47 @@ function buildPrefsWidget() {
                 builder.addSeparator('@advanced');
                 builder.addScale(_("Distance between thumbnails") + '\n(' + _("% of thumbnail size") + ')', 'windows-thumbnails-distance', 0, 50, 1);
                 builder.addScale(_("Thumbnail top padding (px)") + ' <span color="red">*</span>', 'windows-thumbnails-padding-top', 0, 20, 1, '@advanced');
-
-			builder.addPage(_("Animation"), 'animation_thumbnail.png', 'windows-show');
-	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
+            builder.addPage(_("Animation"), 'animation_thumbnail.png', 'windows-show');
+                builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Behavior") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
                 builder.addScale(_("Thumbnails show delay in ms"), 'windows-show-delay', 0, 1000, 1, null, true);
                 builder.addScale(_("Animation time in ms (0: no animation)") + ' <span color="red">*</span>', 'windows-animation-time', 0, 500, 1, '@advanced', true);
                 builder.addComboBoxText(_("Animation effect") + ' <span color="red">*</span>', 'windows-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, '@advanced');
                 builder.addSeparator();
-				builder.addLabel(_("Animate thumbnails on mouse over"));
+	            builder.addLabel(_("Animate thumbnails on mouse over"));
                 builder.shift();
-					builder.addScale(_("Change opacity"), 'windows-hover-opacity', 50, 100, 1);
-					builder.addCheckBox(_("Show full width if partially hidden") + ' <span color="red">*</span>', 'windows-hover-fit', '@advanced');
-	                builder.addSeparator('@advanced');
-	                builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')' + ' <span color="red">*</span>', 'windows-hover-animation-time', 0, 200, 1, '@advanced');
+			        builder.addScale(_("Change opacity"), 'windows-hover-opacity', 50, 100, 1);
+	                builder.addCheckBox(_("Show full width if partially hidden") + ' <span color="red">*</span>', 'windows-hover-fit', '@advanced');
+                    builder.addSeparator('@advanced');
+                    builder.addScale(_("Mouse over animation time") + '\n(' + _("% of animation time") + ')' + ' <span color="red">*</span>', 'windows-hover-animation-time', 0, 200, 1, '@advanced');
                     builder.addComboBoxText(_("Mouse over animation effect") + ' <span color="red">*</span>', 'windows-hover-animation-effect', dbFinConsts.arrayAnimationTransitions, 0, '@advanced');
                 builder.unshift();
 
-            builder.closeNotebook();
+            builder.addPage(_("Mouse"), 'mouse.png', 'windows-show');
+	            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Behavior") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
+				builder.addNotebook(_("Left button"), 'mouse-left.png');
+					builder.addComboBoxText(_("Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0);
+					builder.addComboBoxText(_("Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0);
+					builder.addComboBoxText(_("Shift + Click"), 'mouse-window-left-shift', dbFinConsts.arrayWindowClickFunctions, 0);
+					builder.addComboBoxText(_("Ctrl + Shift + Click"), 'mouse-window-left-ctrl-shift', dbFinConsts.arrayWindowClickFunctions, 0);
 
-        builder.addPage(_("Behavior"));
-            builder.addNotebook(_("Mouse"), 'mouse.png');
-				builder.addNotebook();
+				builder.addPage(_("Middle button"), 'mouse-middle.png');
+					builder.addComboBoxText(_("Click"), 'mouse-window-middle', dbFinConsts.arrayWindowClickFunctions, 0);
+					builder.addSeparator();
+					builder.addComboBoxText(_("Scroll up"), 'mouse-window-scroll-up', dbFinConsts.arrayWindowClickFunctions, 0);
+					builder.addComboBoxText(_("Scroll down"), 'mouse-window-scroll-down', dbFinConsts.arrayWindowClickFunctions, 0);
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Behavior") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
+                    builder.addSeparator();
+		            builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing") + '.', 'windows-show', true);
+                    builder.shift();
+			            builder.addCheckBox(_("Preview window when its thumbnail is hovered") + ' <span color="red">*</span>', 'windows-preview', [ '@advanced', 'windows-show' ]);
+			            builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, [ 'windows-preview', 'windows-show' ]);
+			            builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 5, 75, 1, [ 'windows-preview', 'windows-show' ]);
+                    builder.unshift();
 
-				builder.setWidthRight(5);
+				builder.addPage(_("Right button"), 'mouse-right.png');
+					builder.addComboBoxText(_("Click"), 'mouse-window-right', dbFinConsts.arrayWindowClickFunctions, 0);
 
-                builder.addPage(_("Icons"), 'icon_16.png');
-					builder.addNotebook(_("Left button"), 'mouse-left.png');
-						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-left', dbFinConsts.arrayAppClickFunctions, 0);
-						builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-left-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
-						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-left-shift', dbFinConsts.arrayAppClickFunctions, 0);
-						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-left-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
-
-					builder.addPage(_("Middle button"), 'mouse-middle.png');
-						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-middle', dbFinConsts.arrayAppClickFunctions, 0);
-						builder.addComboBoxText(_("Ctrl + Click : Double click"), 'mouse-app-middle-ctrl', dbFinConsts.arrayAppClickFunctions, 0);
-						builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0);
-						builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
-						builder.addSeparator();
-	                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option") + ' ' + _("Add-ons") + ' > ' + _("Panel") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
-						builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0, '!mouse-scroll-workspace');
-                        builder.shift();
-                            builder.addCheckBox(_("Do not launch apps with scroll"), 'mouse-app-scroll-no-launch', '!mouse-scroll-workspace');
-                        builder.unshift();
-
-					builder.addPage(_("Right button"), 'mouse-right.png');
-						builder.addComboBoxText(_("Click : Double click"), 'mouse-app-right', dbFinConsts.arrayAppClickFunctions, 0);
-
-					builder.closeNotebook();
-
-                builder.addPage(_("Thumbnails"), 'thumbnail_16.png', 'windows-show');
-		            builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
-					builder.addNotebook(_("Left button"), 'mouse-left.png');
-						builder.addComboBoxText(_("Click"), 'mouse-window-left', dbFinConsts.arrayWindowClickFunctions, 0);
-						builder.addComboBoxText(_("Ctrl + Click"), 'mouse-window-left-ctrl', dbFinConsts.arrayWindowClickFunctions, 0);
-						builder.addComboBoxText(_("Shift + Click"), 'mouse-window-left-shift', dbFinConsts.arrayWindowClickFunctions, 0);
-						builder.addComboBoxText(_("Ctrl + Shift + Click"), 'mouse-window-left-ctrl-shift', dbFinConsts.arrayWindowClickFunctions, 0);
-
-					builder.addPage(_("Middle button"), 'mouse-middle.png');
-						builder.addComboBoxText(_("Click"), 'mouse-window-middle', dbFinConsts.arrayWindowClickFunctions, 0);
-						builder.addSeparator();
-						builder.addComboBoxText(_("Scroll up"), 'mouse-window-scroll-up', dbFinConsts.arrayWindowClickFunctions, 0);
-						builder.addComboBoxText(_("Scroll down"), 'mouse-window-scroll-down', dbFinConsts.arrayWindowClickFunctions, 0);
-
-					builder.addPage(_("Right button"), 'mouse-right.png');
-						builder.addComboBoxText(_("Click"), 'mouse-window-right', dbFinConsts.arrayWindowClickFunctions, 0);
-
-					builder.closeNotebook();
-
-				builder.setWidthRight(4);
-
-                builder.addPage(_("Fine-tuning") + ' <span color="red">*</span>', 'tuning.png', '@advanced');
-    				builder.addNotebook(_("Mouse events"));
-	                    builder.addCheckBox(_("Use mouse drag-and-drop"), 'mouse-drag-and-drop');
-	                    builder.addCheckBox(_("Register mouse events on button release"), 'mouse-click-release', '!mouse-drag-and-drop');
-					    builder.shift();
-						    builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', [ '@mouse-drag-and-drop' ]);
-						    builder.addCheckBox(_("Long left button click = right button click"), 'mouse-long-click', [ '@!mouse-drag-and-drop', 'mouse-click-release' ]);
-					    builder.unshift();
-	                    builder.addSeparator();
-                        builder.addLabel(_("Scroll timeout: the time after one scroll event during which other scroll events are rejected."));
-					    builder.shift();
-                            builder.addScale(_("Mouse scroll timeout"), 'mouse-scroll-timeout', 25, 1000, 25);
-					    builder.unshift();
-
-                    builder.addPage(_("Single vs Double clicks"));
-                        let threshold = new dbFinClicksThreshold();
-                        builder.getWidget()._threshold = threshold;
-					    builder.addLabel(_("This will measure the SHORTEST time between two consecutive SINGLE clicks."));
-					    builder.shift();
-						    widgets = builder.addRow(_("A fast series of SINGLE clicks"),
-									       [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-single.gif'), 1 ],
-											    [ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
-											    [ (new dbFinClickMeter.dbFinClickMeter(250, 625, threshold.clickSingle, threshold)).widget, 1 ]
-										    ]);
-	                        if (widgets && widgets.length) {
-							    widgets[1].hexpand = true;
-							    widgets[1].xalign = 0.0;
-						    }
-	                        widgets = builder.addScale(_("Consequent single clicks time:"), 'mouse-clicks-time-single', 250, 750, 1, null, true);
-	                        if (widgets && widgets.length) {
-							    threshold.scaleSingle = widgets[widgets.length - 1];
-						    }
-					    builder.unshift();
-					    builder.addLabel(_("This will measure the LONGEST time between the two clicks of one DOUBLE click."));
-					    builder.shift();
-						    widgets = builder.addRow(_("A series of DOUBLE clicks"),
-									       [	[ Gtk.Image.new_from_file(Me.path + '/images/mouse-clicks-double.gif'), 1 ],
-											    [ new Gtk.Label({ label: _("click here") + '  \u2192 ', halign: Gtk.Align.END, hexpand: false }), 2 ],
-											    [ (new dbFinClickMeter.dbFinClickMeter(100, 400, threshold.clickDouble, threshold)).widget, 1 ]
-										    ]);
-	                        if (widgets && widgets.length) {
-							    widgets[1].hexpand = true;
-							    widgets[1].xalign = 0.0;
-						    }
-	                        widgets = builder.addScale(_("Double clicks time:"), 'mouse-clicks-time-double', 100, 450, 1, null, true);
-	                        if (widgets && widgets.length) {
-							    threshold.scaleDouble = widgets[widgets.length - 1];
-						    }
-					    builder.unshift();
-					    builder.addLabel(_("Based on the data provided above we set the following value (you can adjust it manually):"));
-					    builder.shift();
-	                        widgets = builder.addScale(_("Single/Double clicks threshold:"), 'mouse-clicks-time-threshold', 150, 550, 1);
-						    if (widgets && widgets.length) {
-							    threshold.scaleThreshold = widgets[widgets.length - 1];
-						    }
-					    builder.unshift();
-
-                    builder.closeNotebook();
-
-                builder.closeNotebook();
-
-            builder.addPage(_("Animation") + ' <span color="red">*</span>', 'animation_engine.png', '@advanced');
-                builder.addCheckBox(_("Disable all animation"), 'animation-disable');
-                builder.addCheckBox(_("Use alternative animation engine (experimental)"), 'animation-alternative-test', '!animation-disable');
-                builder.shift();
-                    builder.addLabel(_("Lower FPS = better responsiveness, higher FPS = smoother animation"), [ '!animation-disable', 'animation-alternative-test' ]);
-                    builder.addScale(_("Frames per second"), 'animation-alternative-fps', 10, 50, 1, [ '!animation-disable', 'animation-alternative-test' ]);
-                builder.unshift();
-
-			builder.addPage(_("Debug") + ' <span color="red">*</span>', 'debug.png', '@advanced');
-				builder.addLabel(_("These options are for developers only."));
-				builder.addSeparator();
-				builder.addLabel(_("Debugging panel shows a hierarchical structure of internal function calls."));
-				builder.addLabel(_("The panel has a small toolbar which allows one to:"));
-				builder.shift();
-					builder.addLabel('\u00b7 ' + _("pin the panel (so that it is always visible)"));
-					builder.addLabel('\u00b7 ' + _("stop, resume and clear all messages"));
-					builder.addLabel('\u00b7 ' + _("access extension preferences"));
-					builder.addLabel('\u00b7 ' + _("restart the extension"));
-				builder.unshift();
-				builder.addCheckBox(_("Debugging panel"), 'debug');
-				builder.shift();
-					builder.addLabel(_("By default the panel is placed at the right side (of the last monitor)."), 'debug');
-					builder.addCheckBox(_("Move the panel to the bottom left"), 'debug-bottom', 'debug');
-					builder.addScale(_("Debug panel width") + '\n(' + _("% of the monitor width") + ')', 'debug-width', 10, 70, 1, 'debug');
-					builder.addCheckBox(_("Force all messages") + ' (\u26a0 ' + _("ouch!") + ')', 'debug-force', 'debug');
-				builder.unshift();
-
-            builder.closeNotebook();
-
-		builder.addPage(_("Add-ons"));
-            builder.addNotebook(_("Panel"), 'panel.png');
-                builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Enable option") + ' ' + _("Behavior") + ' > ' + _("Mouse") + ' > ' + _("Fine-tuning") + ' <span color="red">*</span>' + ' > ' + _("Mouse events") + ' > ' +_("Use mouse drag-and-drop") + '</span>', [ 'mouse-drag-and-drop', '@!mouse-drag-and-drop' ], true);
-                builder.addCheckBox('<b>' + _("Rearrange icons on the panel using mouse") + '</b>', 'icons-drag-and-drop', 'mouse-drag-and-drop');
-                builder.addSeparator();
-				builder.addCheckBox('<b>' + _("Scroll to change workspace") + '</b>: ' + _("Scroll over YAWL panel to change workspace"), 'mouse-scroll-workspace');
-                builder.shift();
-                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Icons") + ' > ' + _("Panel") + ' > ' +_("Show app icons from all workspaces") + '</span>', [ 'icons-show-all', '@!icons-show-all' ], true);
-                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
-                    builder.addCheckBox('<b>' + _("Scroll to find other windows") + '</b>: ' + _("find app's windows on other workspaces by scrolling over its icon when its thumbnails are shown"), 'mouse-scroll-workspace-search', [ 'mouse-scroll-workspace', 'icons-show-all', 'windows-show' ]);
-                builder.unshift();
-
-            builder.addPage(_("Icons"), 'icon.png');
-                builder.addCheckBox('<b>' + _("Window demanding attention") + '</b>: ' + _("blink"), 'icons-attention-blink');
-                builder.shift();
-        			builder.addScale(_("Blinking rate (times per minute)"), 'icons-attention-blink-rate', 15, 125, 1, 'icons-attention-blink');
-                builder.unshift();
-                builder.addSeparator();
-			    builder.addCheckBox('<b>Quicklists</b>: ' + _("requires extension") + ' Quicklists (' + _("author") + ': Damian)', 'app-quicklists');
-                builder.addSeparator();
-			    builder.addCheckBox('<b>' + _("Favorite apps") + '</b>: ' + _("always show"), 'icons-favorites');
-                builder.shift();
-                    builder.addCheckBoxScale(_("Use smaller icons if not running"), 'icons-favorites-smaller', 'icons-favorites-size', 1, 3, 1, 'icons-favorites', false, true);
-                builder.unshift();
-                builder.addSeparator();
-                builder.addComboBoxText('<b>' + _("Windows indicators") + '</b>', 'icons-windows-indicator', dbFinConsts.arrayWindowsIndicatorTypes, 0);
-                builder.shift();
-				    builder.addColorButton(_("Choose windows indicator color"), 'icons-windows-indicator-color', _("Choose windows indicator color"));
-                builder.unshift();
-
-            builder.addPage(_("Thumbnails"), 'thumbnail.png', 'windows-show');
-			    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 '  + _("Enable option") + ' ' + _("Thumbnails") + ' > ' + _("Panel") + ' > ' + _("Show thumbnails when app icon is hovered") + ' <span color="red">*</span>' + '</span>', [ 'windows-show', '@!windows-show' ], true);
-			    builder.addLabel('<b>' + _("Window Peeking") + '</b>: ' + _("scroll up/down over a thumbnail to turn previews on/off and to reduce panel opacity while previewing") + '.', 'windows-show', true);
-                builder.shift();
-				    builder.addCheckBox(_("Preview window when its thumbnail is hovered") + ' <span color="red">*</span>', 'windows-preview', [ '@advanced', 'windows-show' ]);
-				    builder.addColorButtonScale(_("Dim background: color and opacity"), 'windows-preview-dim-color', 'windows-preview-dim-opacity', _("Choose dimmed background color"), 0, 75, 1, [ 'windows-preview', 'windows-show' ]);
-				    builder.addScale(_("Reduced thumbnails panel opacity"), 'windows-preview-panel-opacity', 5, 75, 1, [ 'windows-preview', 'windows-show' ]);
-                builder.unshift();
+				builder.closeNotebook();
 
             builder.closeNotebook();
 
