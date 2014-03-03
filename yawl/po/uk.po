@@ -1,19 +1,24 @@
 # Translation for dbFin YAWL GNOME Shell extension
-# Copyright (C) 2013 Vadim Cherepanov @ dbFin.com
+# Copyright (C) 2013-2014 Vadim Cherepanov @ dbFin.com
 # This file is distributed under the same license as dbFin YAWL GNOME Shell Extension.
-# Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013
+# Vadim Cherepanov @ dbFin <vadim@dbfin.com>, 2013-2014
+# Svitozar Cherepii <letmepicknicename@gmail.com>, 2014.
 #
 msgid ""
-msgstr "Project-Id-Version: YAWL 15\n"
+msgstr ""
+"Project-Id-Version: YAWL 17\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-19 00:18+0200\n"
-"PO-Revision-Date: 2013-12-19 00:18+0200\n"
-"Last-Translator: Svitozar Cherepii\n"
-"Language-Team: dbFin\n"
+"POT-Creation-Date: 2014-03-02 22:22+0200\n"
+"PO-Revision-Date: 2014-03-03 03:08+0200\n"
+"Last-Translator: Svitozar Cherepii <letmepicknicename@gmail.com>\n"
+"Language-Team: українська <vadim@dbfin.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 msgid "German translation"
 msgstr "переклад на німецьку"
@@ -216,37 +221,54 @@ msgstr "Особлива вдячність"
 msgid ""
 "If you would like to translate the program to your language feel free to do "
 "so: please use GitHub or email me for instructions."
-msgstr "Якщо Ви бажаєте перекласти програму на вашу мову, будь-ласка використовуйте GitHub або надішліть мені листа для подальших інструкцій"
+msgstr ""
+"Якщо Ви бажаєте перекласти програму на вашу мову, будь-ласка використовуйте "
+"GitHub або надішліть мені листа для подальших інструкцій"
 
 msgid ""
 "This is free software -- free as in beer and free as in freeman -- "
 "distributed under the terms of the GNU General Public License (GPL) version "
 "3."
-msgstr "Це безкоштовне та вільне програмне забезпечення (ПЗ), розповсюджуване під Ліцензією GNU General Public License 3 (GPL 3)."
+msgstr ""
+"Це безкоштовне та вільне програмне забезпечення (ПЗ), розповсюджуване під "
+"Ліцензією GNU General Public License 3 (GPL 3)."
 
 msgid ""
 "A copy of the License is distributed along with the software (file GNUGPLv3) "
 "and is also available at <a href='http://www.gnu.org/licenses/'><span "
 "color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</"
 "span></a>."
-msgstr "Копія Ліцензії поширюєтся разом із програмним забезпеченням (файл GNUGPLv3), а також доступна за адресою <a href='http://www.gnu.org/licenses/'><span color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</span></a>."
+msgstr ""
+"Копія Ліцензії поширюєтся разом із програмним забезпеченням (файл GNUGPLv3), "
+"а також доступна за адресою <a href='http://www.gnu.org/licenses/'><span "
+"color='#000000' underline='none'>http://www.gnu.org/licenses/gpl.html</"
+"span></a>."
 
 msgid ""
 "You are free to use, modify or otherwise distribute the code of this "
 "software provided that your actions comply with all applicable laws and GPL."
-msgstr "Ви можете вільно використовувати, модифікувати чи іншим чином поширювати код цього програмного забезпечення за умови, що ваші дії не суперечать закону і GPL."
+msgstr ""
+"Ви можете вільно використовувати, модифікувати чи іншим чином поширювати код "
+"цього програмного забезпечення за умови, що ваші дії не суперечать закону і "
+"GPL."
 
 msgid ""
 "In particular, you must include the above copyright notice and a copy of the "
 "License in all copies or substantial portions of the software, whether "
 "original or modified."
-msgstr "Зокрема, Ви повинні включити вказане вище повідомлення про авторське право і копію ліцензії у всі копії або значущі частини даного програмного забезпечення, будь то оригінальні або змінені."
+msgstr ""
+"Зокрема, Ви повинні включити вказане вище повідомлення про авторське право і "
+"копію ліцензії у всі копії або значущі частини даного програмного "
+"забезпечення, будь то оригінальні або змінені."
 
 msgid ""
 "This software is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY: without even implied warranty of MERCHANTABILITY or FITNESS "
 "FOR A PARTICULAR PURPOSE."
-msgstr "Ця програма поширюється в надії, що вона буде корисною, але БЕЗ БУДЬ-ЯКИХ ГАРАНТІЙ: навіть без гарантій КОМЕРЦІЙНОЇ ЦІННОСТІ чи ПРИДАТНОСТІ ДЛЯ КОНКРЕТНИХ ЦІЛЕЙ."
+msgstr ""
+"Ця програма поширюється в надії, що вона буде корисною, але БЕЗ БУДЬ-ЯКИХ "
+"ГАРАНТІЙ: навіть без гарантій КОМЕРЦІЙНОЇ ЦІННОСТІ чи ПРИДАТНОСТІ ДЛЯ "
+"КОНКРЕТНИХ ЦІЛЕЙ."
 
 msgid ""
 "For more details please see the GNU General Public License (GPL) version 3."
@@ -259,7 +281,7 @@ msgid "Back up, sync and share settings."
 msgstr "Для резервного копіювання і синхронізації."
 
 msgid "To reset all settings please enable"
-msgstr "Щоб повернути всі налаштування в вихідний стан, будь ласка, увімкніть"
+msgstr "Щоб повернути до вихідного стану, увімкніть"
 
 msgid "Advanced settings"
 msgstr "Додаткові налаштування"
@@ -268,7 +290,7 @@ msgid "Reset settings"
 msgstr "Відновити всі налаштування"
 
 msgid "This will overwrite all current settings"
-msgstr "Відновити налаштування з файлу"
+msgstr "Поточні буде втрачено"
 
 msgid "Status:"
 msgstr "Статус:"
@@ -280,22 +302,22 @@ msgid "Import"
 msgstr "Імпорт"
 
 msgid "This will overwrite the file with settings"
-msgstr "Створити/оновити файл с налаштуваннями"
-
-msgid "Icons"
-msgstr "Піктограми"
+msgstr "Файл перезапишеться"
 
 msgid "Panel"
 msgstr "Панель"
 
-msgid "Show app icons from all workspaces"
-msgstr "Показувати піктограми з усіх робочих просторів"
+msgid "Behavior"
+msgstr "Поведінка"
+
+msgid "Move central panel"
+msgstr "Розширити YAWL на всю панель"
 
 msgid "YAWL-panel position and width"
 msgstr "Позиція і ширина панелі YAWL"
 
-msgid "Move central panel"
-msgstr "Зсунути центральну панель"
+msgid "Align icons on the panel (%)"
+msgstr "Вирівнювання піктограм на панелі (%)"
 
 msgid "Hide Activities button"
 msgstr "Сховати кнопку Діяльність"
@@ -304,7 +326,7 @@ msgid "Preserve Hot Corner"
 msgstr "Залишити «гарячий» куток"
 
 msgid "Hide AppMenu button"
-msgstr "Сховати кнопку меню програми"
+msgstr "Сховати кнопку меню програм"
 
 msgid "Custom panel background"
 msgstr "Змінити тло панелі"
@@ -318,44 +340,174 @@ msgstr "Виберіть колір тла панелі"
 msgid "Bottom color and opacity"
 msgstr "Колір і непрозорість знизу"
 
-msgid "Icon size"
-msgstr "Розмір піктограм"
-
-msgid "Faded icons"
-msgstr "Затінені піктограми"
-
-msgid "Default icon opacity"
-msgstr "Непрозорість піктограм"
+msgid "Mouse"
+msgstr "Миша"
 
 msgid "Enable option"
 msgstr "Увімкніть опцію"
 
-msgid "Icon opacity if app is not on current workspace"
-msgstr "Непрозорість піктограми програми на іншому робочому просторі"
+msgid "Use mouse drag-and-drop"
+msgstr "Використовувати перетягування мишкою"
 
-msgid "Add-ons"
-msgstr "Додатки"
+msgid "Scroll to change workspace"
+msgstr "Зміна робочого простору коліщатком миші"
+
+msgid "Scroll over YAWL panel to change workspace"
+msgstr "Прокрутка коліщатком миші над панелю перемикає робочий простір"
+
+msgid "Icons"
+msgstr "Піктограми"
+
+msgid "Show app icons from all workspaces"
+msgstr "Показувати піктограми з усіх робочих просторів"
+
+msgid "Thumbnails"
+msgstr "Мініатюри"
+
+msgid "Show thumbnails when app icon is hovered"
+msgstr "Показувати мініатюри при наведенні вказівника на піктограму"
+
+msgid "Scroll to find other windows"
+msgstr "Прокрутка з пошуком інших вікон"
+
+msgid ""
+"find app's windows on other workspaces by scrolling over its icon when its "
+"thumbnails are shown"
+msgstr ""
+"знайти вікна програм на інших робочих просторах за допомогою прокрутки над "
+"піктограмою, при відкритій панелі вікон"
+
+msgid "Register mouse events on button release"
+msgstr "Реєструвати сигнали миші при відпусканні кнопки"
+
+msgid "Long left button click = right button click"
+msgstr "Довгий натиск лівою кнопкою = права кнопка"
+
+msgid ""
+"Scroll timeout: the time after one scroll event during which other scroll "
+"events are rejected."
+msgstr ""
+"Тривалість прокрутки: час після прокрутки, протягом якого інші сигнали "
+"прокрутки не приймаються."
+
+msgid "Mouse scroll timeout"
+msgstr "Тривалість прокрутки миші"
+
+msgid "Tuning"
+msgstr "Тюнінг"
+
+msgid ""
+"This will measure the SHORTEST time between two consecutive SINGLE clicks."
+msgstr "Вимірювання НАЙМЕНШОГО часу між двома ОДИНАРНИМИ кліками."
+
+msgid "A fast series of SINGLE clicks"
+msgstr "Швидка серія ОДИНАРНИХ кліків"
+
+msgid "click here"
+msgstr "клікайте тут"
+
+msgid "Consequent single clicks time:"
+msgstr "Тривалість між послідовними кліками:"
+
+msgid ""
+"This will measure the LONGEST time between the two clicks of one DOUBLE "
+"click."
+msgstr ""
+"Вимірювання НАЙБІЛЬШОГО інтервалу між двома кліками одного ПОДВІЙНОГО кліку."
+
+msgid "A series of DOUBLE clicks"
+msgstr "Серія ПОДВІЙНИХ кліків"
+
+msgid "Double clicks time:"
+msgstr "Тривалість подвійних кліків:"
+
+msgid ""
+"Based on the data provided above we set the following value (you can adjust "
+"it manually):"
+msgstr ""
+"На основі вказаних даних встановлено наступне значення (можна змінювати "
+"вручну):"
+
+msgid "Single/Double clicks threshold:"
+msgstr "Межа одиночних/подвійних кліків:"
+
+msgid "Animation"
+msgstr "Анімація"
+
+msgid "Disable all animation"
+msgstr "Відключити анімацію повністю"
+
+msgid "Use alternative animation engine (experimental)"
+msgstr "Використовувати альтернативний метод анімації (експериментальний)"
+
+msgid "Lower FPS = better responsiveness, higher FPS = smoother animation"
+msgstr "Нижче FPS = кращий відклик, вище FPS = плавніша анімація"
+
+msgid "Frames per second"
+msgstr "Кадрів в секунду (FPS)"
+
+msgid "Debug"
+msgstr "Відлагодження"
+
+msgid "These options are for developers only."
+msgstr "Ця сторінка опцій тільки для розробників."
+
+msgid ""
+"Debugging panel shows a hierarchical structure of internal function calls."
+msgstr ""
+"Панель відлагодження показує ієрархічну структуру внутрішніх викликів "
+"функцій."
+
+msgid "The panel has a small toolbar which allows one to:"
+msgstr "Панель має невеликий набір інструментів, що дозволяють:"
+
+msgid "pin the panel (so that it is always visible)"
+msgstr "закріпити панель (зробити її постійно видимою)"
+
+msgid "stop, resume and clear all messages"
+msgstr "зупинити, продовжити і очистити всі повідомлення"
+
+msgid "access extension preferences"
+msgstr "викликати вікно параметрів розширення"
+
+msgid "restart the extension"
+msgstr "перезапустити розширення"
+
+msgid "Debugging panel"
+msgstr "Панель відлагодження"
+
+msgid "By default the panel is placed at the right side (of the last monitor)."
+msgstr "По замовчуванню, панель розміщується справа (на останньому моніторі)."
+
+msgid "Move the panel to the bottom left"
+msgstr "Перемістити панель вниз і вліво"
+
+msgid "Debug panel width"
+msgstr "Ширина панелі відлагодження"
+
+msgid "% of the monitor width"
+msgstr "% від ширини монітора"
+
+msgid "Force all messages"
+msgstr "Форсувати всі повідомлення"
+
+msgid "ouch!"
+msgstr "обережно!"
+
+msgid "Show icons in Overview"
+msgstr "Показувати піктограми в огляді Діяльності"
 
 msgid "Favorite apps"
 msgstr "Улюблені програми"
 
-msgid "Icon opacity if app is not running"
-msgstr "Непрозорість піктограми зупиненої програми"
+msgid "always show"
+msgstr "завжди показувати"
 
-msgid "Clip icons"
-msgstr "Обрізати піктограми"
+msgid "Use smaller icons if not running"
+msgstr "Менші піктограми для не запущених"
 
-msgid "top"
-msgstr "верх"
-
-msgid "bottom"
-msgstr "низ"
-
-msgid "px"
-msgstr "пікс"
-
-msgid "Align icons on the panel (%)"
-msgstr "Вирівнювання піктограм на панелі (%)"
+msgid "Icon size"
+msgstr "Розмір піктограм"
 
 msgid "Distance between icons"
 msgstr "Відстань між піктограмами"
@@ -363,8 +515,53 @@ msgstr "Відстань між піктограмами"
 msgid "% of icon size"
 msgstr "% від розміру піктограми"
 
-msgid "Animation"
-msgstr "Анімація"
+msgid "Window demanding attention"
+msgstr "Вікна, що потребують уваги"
+
+msgid "blink"
+msgstr "блимати"
+
+msgid "Blinking rate (times per minute)"
+msgstr "Частота блимання (раз в хвилину)"
+
+msgid "requires extension"
+msgstr "потрібне розширення"
+
+msgid "author"
+msgstr "автор"
+
+msgid "Look"
+msgstr "Вигляд"
+
+msgid "Faded icons"
+msgstr "Затінення піктограм"
+
+msgid "Default icon opacity"
+msgstr "Непрозорість піктограм"
+
+msgid "Icon opacity if app is not on current workspace"
+msgstr "Непрозорість піктограми програми на іншому робочому просторі"
+
+msgid "Icon opacity if app is not running"
+msgstr "Непрозорість піктограми не запущеної програми"
+
+msgid "Clip icons"
+msgstr "Обрізати піктограми"
+
+msgid "top"
+msgstr "зверху"
+
+msgid "bottom"
+msgstr "знизу"
+
+msgid "px"
+msgstr "пікс"
+
+msgid "Windows indicators"
+msgstr "Вказівники вікон"
+
+msgid "Choose windows indicator color"
+msgstr "Виберіть колір вказівників вікон"
 
 msgid "Animation time in ms (0: no animation)"
 msgstr "Тривалість анімації (0: без анімації)"
@@ -382,7 +579,7 @@ msgid "Change opacity"
 msgstr "Змінити непрозорість"
 
 msgid "Show full width if partially hidden"
-msgstr "Показати у всю ширину"
+msgstr "Розширити, якщо частково сховано"
 
 msgid "Mouse over animation time"
 msgstr "Тривалість анімації при наведенні вказівника"
@@ -393,20 +590,44 @@ msgstr "% від тривалості анімації"
 msgid "Mouse over animation effect"
 msgstr "Ефект анімації при наведенні вказівника"
 
-msgid "Overview"
-msgstr "Огляд"
+msgid "Left button"
+msgstr "Ліва кнопка"
 
-msgid "Show icons in Overview"
-msgstr "Показувати піктограми в огляді Діяльності"
+msgid "Click : Double click"
+msgstr "Клік : Подвійний клік"
 
-msgid "Thumbnails"
-msgstr "Мініатюри"
+msgid "Ctrl + Click : Double click"
+msgstr "Ctrl + Клік : Подвійний клік"
 
-msgid "Show thumbnails when app icon is hovered"
-msgstr "Показувати мініатюри при наведенні вказівника на піктограму"
+msgid "Shift + Click : Double click"
+msgstr "Shift + Клік : Подвійний клік"
+
+msgid "Ctrl + Shift + Click : Double click"
+msgstr "Ctrl + Shift + Клік : Подвійний клік"
+
+msgid "Rearrange icons on the panel using mouse"
+msgstr "Сортувати піктограми за допомогою вказівника"
+
+msgid "Middle button"
+msgstr "Середня кнопка"
+
+msgid "Disable option"
+msgstr "Вимкніть опцію"
+
+msgid "Scroll up : down"
+msgstr "Прокрутити вверх : вниз"
+
+msgid "Do not launch apps with scroll"
+msgstr "Не запускати програми прокруткою"
+
+msgid "Right button"
+msgstr "Права кнопка"
 
 msgid "Show thumbnails of 'interesting' windows only"
 msgstr "Показувати мініатюри тільки \"цікавих\" вікон"
+
+msgid "Show thumbnails of 'skip-taskbar' windows"
+msgstr "Показувати мініатюри \"поза-панельних\" вікон"
 
 msgid "Use arrow-style thumbnails app indicator"
 msgstr "Індикатор-стрілка для поточної програми"
@@ -469,52 +690,13 @@ msgid "% of thumbnail size"
 msgstr "% від розміру мініатюр"
 
 msgid "Thumbnail top padding (px)"
-msgstr "Відступ (padding) зверху (пікселі)"
+msgstr "Відступ зверху (пікселі)"
 
 msgid "Thumbnails show delay in ms"
 msgstr "Затримка перед показом мініатюр (мс)"
 
 msgid "Animate thumbnails on mouse over"
 msgstr "Анімувати при наведенні вказівника"
-
-msgid "Behavior"
-msgstr "Поведінка"
-
-msgid "Mouse"
-msgstr "Миша"
-
-msgid "Left button"
-msgstr "Ліва кнопка"
-
-msgid "Click : Double click"
-msgstr "Клік : Подвійний клік"
-
-msgid "Ctrl + Click : Double click"
-msgstr "Ctrl + Клік : Подвійний клік"
-
-msgid "Shift + Click : Double click"
-msgstr "Shift + Клік : Подвійний клік"
-
-msgid "Ctrl + Shift + Click : Double click"
-msgstr "Ctrl + Shift + Клік : Подвійний клік"
-
-msgid "Middle button"
-msgstr "Середня кнопка"
-
-msgid "Disable option"
-msgstr "Вимкніть опцію"
-
-msgid "Scroll to change workspace"
-msgstr "Зміна робочого простору коліщатком миші"
-
-msgid "Scroll up : down"
-msgstr "Прокрутити вверх : вниз"
-
-msgid "Do not launch apps with scroll"
-msgstr "Не запускати програми з допомогою проктутки"
-
-msgid "Right button"
-msgstr "Права кнопка"
 
 msgid "Click"
 msgstr "Клік"
@@ -534,170 +716,14 @@ msgstr "Прокрутити вверх"
 msgid "Scroll down"
 msgstr "Прокрутити вниз"
 
-msgid "Fine-tuning"
-msgstr "Налаштування"
-
-msgid "Mouse events"
-msgstr "Події миші"
-
-msgid "Use mouse drag-and-drop"
-msgstr "Використовувати переміщення мишкою"
-
-msgid "Register mouse events on button release"
-msgstr "Реєструвати сигнали миші при відпусканні кнопки"
-
-msgid "Long left button click = right button click"
-msgstr "Довгий натиск лівою кнопрою = права кнопка"
-
-msgid ""
-"Scroll timeout: the time after one scroll event during which other scroll "
-"events are rejected."
-msgstr "Тривалість прокрутки: час після прокрутки, протягом якого інші сигнали прокрутки не приймаються."
-
-msgid "Mouse scroll timeout"
-msgstr "Тривалість прокрутки миші"
-
-msgid "Single vs Double clicks"
-msgstr "Одинарні/подвійні кліки"
-
-msgid ""
-"This will measure the SHORTEST time between two consecutive SINGLE clicks."
-msgstr "Вимірювання НАЙМЕНШОГО часу між двома ОДИНАРНИМИ кліками."
-
-msgid "A fast series of SINGLE clicks"
-msgstr "Швидка серія ОДИНАРНИХ кліків"
-
-msgid "click here"
-msgstr "клікайте тут"
-
-msgid "Consequent single clicks time:"
-msgstr "Тривалість між послідовними кліками:"
-
-msgid ""
-"This will measure the LONGEST time between the two clicks of one DOUBLE "
-"click."
-msgstr "Вимірювання НАЙБІЛЬШОГО інтервалу між двома кліками одного ПОДВІЙНОГО кліку."
-
-msgid "A series of DOUBLE clicks"
-msgstr "Серія ПОДВІЙНИХ кліків"
-
-msgid "Double clicks time:"
-msgstr "Тривалість подвійних кліків:"
-
-msgid ""
-"Based on the data provided above we set the following value (you can adjust "
-"it manually):"
-msgstr "На основі вказаних даних встановлено наступне значення (можна змінювати вручну):"
-
-msgid "Single/Double clicks threshold:"
-msgstr "Межа одиночних/подвійних кліків:"
-
-msgid "Disable all animation"
-msgstr "Відключити анімацію повністю"
-
-msgid "Use alternative animation engine (experimental)"
-msgstr "Використовувати альтернативний метод анімації (експериментальний)"
-
-msgid "Lower FPS = better responsiveness, higher FPS = smoother animation"
-msgstr "Нижче FPS = кращий відклик, вище FPS = плавніша анімація"
-
-msgid "Frames per second"
-msgstr "Кадрів в секунду (FPS)"
-
-msgid "Debug"
-msgstr "Відлагодження"
-
-msgid "These options are for developers only."
-msgstr "Ця сторінка опцій тільки для розробників."
-
-msgid ""
-"Debugging panel shows a hierarchical structure of internal function calls."
-msgstr "Панель відлагодження показує ієрархічну структуру внутрішніх викликів функцій."
-
-msgid "The panel has a small toolbar which allows one to:"
-msgstr "Панель має невеликий набір інструментів, що дозволяють:"
-
-msgid "pin the panel (so that it is always visible)"
-msgstr "закріпити панель (зробити її постійно видимою)"
-
-msgid "stop, resume and clear all messages"
-msgstr "зупинити, продовжити і очистити всі повідомлення"
-
-msgid "access extension preferences"
-msgstr "викликати вікно параметрів розширення"
-
-msgid "restart the extension"
-msgstr "перезапустити розширення"
-
-msgid "Debugging panel"
-msgstr "Панель відлагодження"
-
-msgid "By default the panel is placed at the right side (of the last monitor)."
-msgstr "По замовчуванню, панель розміщується справа (на останньому моніторі)."
-
-msgid "Move the panel to the bottom left"
-msgstr "Перемістити панель вниз і вліво"
-
-msgid "Debug panel width"
-msgstr "Ширина панелі відлагодження"
-
-msgid "% of the monitor width"
-msgstr "% від ширини монітора"
-
-msgid "Force all messages"
-msgstr "Форсувати всі повідомлення"
-
-msgid "ouch!"
-msgstr "обережно!"
-
-msgid "Rearrange icons on the panel using mouse"
-msgstr "Сортувати піктограми панелі мишою"
-
-msgid "Scroll over YAWL panel to change workspace"
-msgstr "Прокрутка коліщатком миші над панелю перемикає робочий простір"
-
-msgid "Scroll to find other windows"
-msgstr "Прокрутка з пошуком вікон"
-
-msgid ""
-"find app's windows on other workspaces by scrolling over its icon when its "
-"thumbnails are shown"
-msgstr "знайти вікна програм на інших робочих просторах за допомогою прокрутки над піктограмою, при відкритій панелі вікон"
-
-msgid "Window demanding attention"
-msgstr "Вікно, що потребує уваги"
-
-msgid "blink"
-msgstr "блимати"
-
-msgid "Blinking rate (times per minute)"
-msgstr "Частота блимання (раз в хвилину)"
-
-msgid "requires extension"
-msgstr "потребує розширення"
-
-msgid "author"
-msgstr "автор"
-
-msgid "always show"
-msgstr "завжди показувати"
-
-msgid "Use smaller icons if not running"
-msgstr "Використовувати піктограми меншого розміру"
-
-msgid "Windows indicators"
-msgstr "Індикатори вікон"
-
-msgid "Choose windows indicator color"
-msgstr "Виберіть колір індикаторів вікон"
-
 msgid "Window Peeking"
 msgstr "Підглядання вікна"
 
 msgid ""
 "scroll up/down over a thumbnail to turn previews on/off and to reduce panel "
 "opacity while previewing"
-msgstr "прокрутка вверх/вниз вмикає/вимикає підглядання і міняє прозорість панелі"
+msgstr ""
+"прокрутка вверх/вниз вмикає/вимикає підглядання і міняє прозорість панелі"
 
 msgid "Preview window when its thumbnail is hovered"
 msgstr "Підглядання вікна при наведенні вказівника на мініатюру"
@@ -715,20 +741,26 @@ msgid "Did you know?"
 msgstr "Чи знаєте Ви?"
 
 msgid "is designed to be simple to use yet highly customizable."
-msgstr "призначений бути простим в користуванні, тим не менш чудово налаштовуваним."
+msgstr ""
+"призначений бути простим в користуванні, тим не менш чудово налаштовуваним."
 
 msgid ""
 "settings are currently available to customize feel and look of the extension."
 msgstr "опцій доступно для адаптації під будь-який смак і колір."
 
 msgid "Exploring the options also helps you to uncover some hidden features."
-msgstr "Досліджування налаштувань дозволить Вам відкрити ряд схованих можливостей розширення."
+msgstr ""
+"Досліджування налаштувань дозволить Вам відкрити ряд схованих можливостей "
+"розширення."
 
 msgid ""
 "For example, <b>did you know</b> that there is an option to preview a window "
 "when its thumbnail is hovered, and that you can easily switch it on and off "
 "just by scrolling the middle mouse button over the thumbnail?"
-msgstr "Наприклад, <b>чи знаєте Ви</b>, що є опція підглядання вікна при наведенні вказівника на його мініатюру, і що Ви можете легко вмикати і вимикати цю можливість простим поворотом коліщатка вказівника?"
+msgstr ""
+"Наприклад, <b>чи знаєте Ви</b>, що опція підглядання вікна при наведенні "
+"вказівника на його мініатюру легко вмикатється і вимикається простим "
+"поворотом коліщатка миші?"
 
 msgid "is active workspace centric."
 msgstr "орієнтований на активний робочий простір."
@@ -736,21 +768,29 @@ msgstr "орієнтований на активний робочий прост
 msgid ""
 "It highlights icons of apps and shows windows open on the current active "
 "workspace."
-msgstr "Розширення підсвічує програми і показує вікна, відкриті на поточному робочому просторі."
+msgstr ""
+"Розширення підсвічує програми і показує вікна, відкриті на поточному "
+"робочому просторі."
 
 msgid ""
 "App icons highlighted on the top panel are indicative of what workspace you "
 "are currently on and what task/activity it is intended for."
-msgstr "Піктограми програм на панелі показують, на якому робочому просторі Ви знаходитесь, і для якої задачі цей простір призначений."
+msgstr ""
+"Піктограми програм на панелі показують, на якому робочому просторі Ви "
+"знаходитесь, і для якої задачі цей простір призначений."
 
 msgid ""
 "You can even optionally hide app icons not present on the active workspace."
-msgstr "Ви можете навіть зовсім сховати піктограми програм, які не присутні на поточному робочому просторі."
+msgstr ""
+"Ви можете навіть зовсім сховати піктограми програм, які не присутні на "
+"поточному робочому просторі."
 
 msgid ""
 "Most of the extension's functionality (such as cycling through windows) is "
 "also active-workspace-oriented."
-msgstr "Також більшість дій (таких, як циклічний перебір вікон) виконується на активному робочому просторі."
+msgstr ""
+"Також більшість дій (таких, як циклічний перебір вікон) виконується на "
+"активному робочому просторі."
 
 msgid "For quick access to favorites"
 msgstr "Для швидкого доступу до улюблених програм"
@@ -765,17 +805,23 @@ msgstr "обережно інтегровано в панель GNOME Shell."
 msgid ""
 "It is embedded into the panel right where there is space for it not claimed "
 "by anything else, and uses panel theme by default."
-msgstr "Розширення вбудовується там, де для нього є незайняте нічим іншим місце, і використовує тему головної панелі по замовчуванню."
+msgstr ""
+"Воно вбудовано в панель в вільне, незайняте нічим іншим місце, і "
+"використовує тему головної панелі по замовчуванню."
 
 msgid ""
 "It further allows you to hide some unnecessary buttons on the left and shift "
 "the central panel to the right to give itself more space."
-msgstr "Воно дозволяє звільнити трохи місця для себе, забравши непотрібні кнопки зліва і зсунути центральну панель вправо."
+msgstr ""
+"Воно дозволяє звільнити трохи місця для себе, забравши непотрібні кнопки "
+"зліва і зсунути центральну панель вправо."
 
 msgid ""
 "You can tweak the panel even more by installing some of the following "
 "recommended extensions:"
-msgstr "Ви можете навіть більше змінити зовнішній вигляд панелі, встановивши одне з цих рекомендованих розширень:"
+msgstr ""
+"Ви можете навіть більше змінити зовнішній вигляд панелі, встановивши одне з "
+"цих рекомендованих розширень:"
 
 msgid "is a part of greater FOSS."
 msgstr "є частиною більшого FOSS (вільне і відкрите ПЗ)."
@@ -784,17 +830,24 @@ msgid ""
 "And as such it is completely free to use, study, distribute and modify "
 "provided you acknowledge all the copyrights and your actions comply with the "
 "applicable law and GNU GPL."
-msgstr "Ви можете вільно використовувати, вивчати, розповсюджувати і змінювати його при умові признання і підтвердження всіх установлених прав власності і при умові, що Ви дієте в рамках закону і в узгодженні з умовами GPL."
+msgstr ""
+"Ви можете вільно використовувати, вивчати, розповсюджувати і змінювати його "
+"при умові признання і підтвердження всіх установлених прав власності і при "
+"умові, що Ви дієте в рамках закону і в узгодженні з умовами GPL."
 
 msgid ""
 "Your contribution in the form of feature suggestions, bug reports, "
 "translations, donations or even development is highly appreciated."
-msgstr "Ваша підтримка в формі порад, звітів про помилки, перекладі, добровільних внесків чи подальшої розробки завжди високо цінуєтся."
+msgstr ""
+"Ваша підтримка в формі порад, звітів про помилки, перекладі, добровільних "
+"внесків чи подальшої розробки завжди високо цінуєтся."
 
 msgid ""
 "The development of this extension would not be possible without this "
 "wonderful FOSS:"
-msgstr "Розробка розширення не була би можливою без цього чудового вільного і безкоштовного ПЗ:"
+msgstr ""
+"Розробка розширення не була би можливою без цього чудового вільного і "
+"безкоштовного ПЗ:"
 
 msgid "and, of course,"
 msgstr "і, звісно,"
