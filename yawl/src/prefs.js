@@ -339,7 +339,7 @@ builder.addComboBoxText('<b>' + _("Windows indicators") + '</b>', 'icons-windows
 					builder.addComboBoxText(_("Shift + Click : Double click"), 'mouse-app-middle-shift', dbFinConsts.arrayAppClickFunctions, 0);
 					builder.addComboBoxText(_("Ctrl + Shift + Click : Double click"), 'mouse-app-middle-ctrl-shift', dbFinConsts.arrayAppClickFunctions, 0);
 					builder.addSeparator();
-                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option") + ' ' + _("Panel") + ' > ' + ("Mouse") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
+                    builder.addLabel('<span size="small" background="#fff0f0">\u26a0 ' + _("Disable option") + ' ' + _("Panel") + ' > ' + _("Mouse") + ' > ' + _("Scroll to change workspace") + '</span>', [ '!mouse-scroll-workspace', '@mouse-scroll-workspace' ], true);
 					builder.addComboBoxText(_("Scroll up : down"), 'mouse-app-scroll', dbFinConsts.arrayAppClickFunctions, 0, '!mouse-scroll-workspace');
                     builder.shift();
                         builder.addCheckBox(_("Do not launch apps with scroll"), 'mouse-app-scroll-no-launch', '!mouse-scroll-workspace');
