@@ -87,3 +87,6 @@ v17	2014-01-26
 		- GS 3.10.3 compatibility.
 		- Additional option to show/hide "skip-taskbar" windows.
 		- Visual panel arrangement.
+v18	2014-12-07
+		- GNOME 3.12 compatibility.
+		- GNOME 3.14 compatibility.
